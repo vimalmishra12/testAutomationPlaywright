@@ -180,6 +180,20 @@ function attachBrowserCompat() {
     b.getWindowSize = async () => global.page.viewportSize() || { width: 0, height: 0 };
     b.setWindowSize = async () => true; // no-op: headed maximizes, headless uses fixed viewport
     b.maximizeWindow = async () => true; // no-op: handled at launch/context level
+    // WDIO browser.waitUntil(condFn, {timeout, interval, timeoutMsg}) — poll a condition.
+    b.waitUntil = async (condFn, opts = {}) => {
+        const timeout = opts.timeout || 5000;
+        const interval = opts.interval || 100;
+        const deadline = Date.now() + timeout;
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            let ok = false;
+            try { ok = await condFn(); } catch (_) { ok = false; }
+            if (ok) return ok;
+            if (Date.now() > deadline) throw new Error(opts.timeoutMsg || "waitUntil timed out");
+            await global.page.waitForTimeout(interval);
+        }
+    };
 }
 
 exports.mochaHooks = {

@@ -47,9 +47,10 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     let res;
 
-    // Ensure the hideSelection element is clickable
-    const hideSelectionElement = await $(this.hideSelection);
-    await hideSelectionElement.waitForClickable({ timeout: 5000 });
+    // [2026-06-11] Playwright port: was hideSelectionElement.waitForClickable() — a WDIO
+    // element method that doesn't exist on a Playwright Locator. Route through the action
+    // library (action.click auto-waits anyway, so this is just an explicit readiness check).
+    await action.waitForClickable(this.hideSelection, 5000);
 
     res = await action.click(this.hideSelection);
 
@@ -136,8 +137,9 @@ click_showSelection: async function () {
     try {
         if (res !== true) throw new Error("Failed to click on Show Selection");
         await logger.logInto(await stackTrace.get(), "ShowSelection is clicked");
-        const canvasElement = await $(this.drawingToolPresentation);
-        await canvasElement.waitForDisplayed({ timeout: 5000 });
+        // [2026-06-11] Playwright port: was canvasElement.waitForDisplayed() (WDIO element
+        // method) — routed through the action library.
+        await action.waitForDisplayed(this.drawingToolPresentation, 5000);
         await action.dragAndDropWithPath(this.drawingToolPresentation, 100, 100, 300, 300); // Adjust coords if needed
         const isShowBoxPresent = await browser.waitUntil(
             async () => await action.isExisting(this.showSelectionBoxSelector),

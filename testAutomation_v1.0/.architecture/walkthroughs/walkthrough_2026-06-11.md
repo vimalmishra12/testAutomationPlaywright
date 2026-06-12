@@ -406,6 +406,39 @@ Fixes:
 Result: drawing/player Before hooks now COMPLETE (TST_DASH_TC_5 + TST_EBOO_* all pass).
 The fix also hardens the already-green eBook suites against the same race.
 
+### notes suite — FIXED to 14/14 (fill → pressSequentially)
+- Diagnosis: 5 failures were all click-timeouts (Save Notes / View More / deletes) + a
+  downstream data mismatch (TST_NOTE_TC_9 `null == Test Note1`). Root cause: the Angular
+  notes editor only ENABLES the Save button on real key events; `action.setValue`
+  (`locator.fill()`) fires a single input event and leaves Save disabled → its click
+  times out, so no note is saved, so the data assertion fails downstream.
+- Fix (page object only): `notes.page.js set_eBookAddNotesTextarea` now clears then types
+  char-by-char (`action.addValue` = `pressSequentially`), firing the key events that
+  enable Save. **Result: notes 8 → 14 passing (full green), 30s, no timeouts.**
+- Lesson: the "data" failure was a symptom, not the cause — verify why before assuming
+  data/port. This fill→type pattern likely recurs in other editor/enable-on-keypress flows.
+
+### tools suite — 16 → 50 passing (WDIO-isms + browser.waitUntil)
+- The earlier "16/23" was tools SUITES aborting early; with the fixes all 5 tools suites
+  run (50/62 now, 12 remain).
+- `showHideSelection.page.js`: `$(sel).waitForClickable()` and `$(sel).waitForDisplayed()`
+  (WDIO element methods, absent on Playwright Locators) → routed through
+  `action.waitForClickable`/`action.waitForDisplayed`.
+- `playwright.setup.js`: added `browser.waitUntil(condFn, {timeout,interval,timeoutMsg})`
+  to the compat shim (general — any suite using WDIO's waitUntil now works).
+- Remaining 12 tools fails: page-nav button click timeouts (next/prev/pageNo) + a couple
+  show-selection cases — a separate actionability layer to diagnose.
+
+### Reusable migration-port patterns (catalogue)
+1. `$(sel).setValue()` → `action.setInputFiles`/`action.setValue`
+2. `$(sel).isDisplayed()` → `action.isDisplayed`
+3. `$$()` (was array) → `action.findElements` (`.all()`)
+4. `getKthElement → action.click(Locator)` → el()/els() accept Locators
+5. `fill()` leaves Angular buttons disabled → `pressSequentially` (char-by-char)
+6. `element.waitForClickable()/.waitForDisplayed()` → `action.waitForClickable/Displayed`
+7. `browser.waitUntil/pause/url/execute/...` → compat shim on global.browser
+8. iframe content → `switchToFrame` (FrameLocator) + `root()` in baseActionLibrary
+
 ### Remaining hard long-tail (dedicated follow-up)
 - **eBook-launch stabilised**: drawing & player Before hooks now complete; player
   improved 6 → 8. The launch flakiness fix also hardens the green reader suites.

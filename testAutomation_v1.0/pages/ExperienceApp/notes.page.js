@@ -206,7 +206,12 @@ module.exports = {
   set_eBookAddNotesTextarea: async function (value) {
     var res;
     await logger.logInto(await stackTrace.get());
-    res = await action.setValue(this.eBookAddNotesTextarea, value);
+    // [2026-06-11] Playwright migration: type char-by-char (pressSequentially) instead
+    // of fill(). The notes editor is Angular-bound and only ENABLES the Save button on
+    // real key events; fill() fires a single input event and leaves Save disabled (its
+    // click then times out — TST_NOTE_TC_4/6/7/8). addValue() = pressSequentially.
+    await action.clearValue(this.eBookAddNotesTextarea);
+    res = await action.addValue(this.eBookAddNotesTextarea, value);
 
     if (true == res) {
       await logger.logInto(
