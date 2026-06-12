@@ -97,15 +97,12 @@
         "id": "TST_EBOO_TC_4",
         "description": "",
         "testFile": "./test/ExperienceApp/eBook.test.js",
-        "testData": [
-          
-        ]
+        "testData": []
       }
     ],
     "AfterEach": [],
     "After": []
   },
-
   "Suite2": {
     "Name": "Validation of eBook Page (Notes)",
     "TestCaseRepo": [
@@ -218,7 +215,7 @@
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": [
           {
-             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
             "jsonPath": "C1.login.user.validStudent1"
           }
         ]
@@ -304,12 +301,10 @@
         "testFile": "./test/ExperienceApp/eBook.test.js",
         "testData": []
       }
-      
     ],
     "AfterEach": [],
     "After": []
-  }, 
-
+  },
   "Suite3": {
     "Name": "Validation of eBook Page Viewer control features",
     "TestCaseRepo": [
@@ -328,7 +323,6 @@
         "testFile": "./test/ExperienceApp/landing.test.js",
         "testData": []
       },
-
       {
         "id": "TST_LOGI_TC_1",
         "description": "Add Instrcutor User Name",
@@ -388,7 +382,6 @@
           }
         ]
       },
-      
       {
         "id": "TST_EBOO_TC_22",
         "description": "Validate that the eBook Toggle Layout button is clickable & returns double page",

@@ -1,7 +1,9 @@
 'use strict';
 const winston = require('winston');
 var logger = require('../utils/logger.js');
-const config = require('../../wdio.conf.js').config;
+// [2026-06-11] Playwright migration (Prompt 4 / Phase 2). Was wdio.conf.js — moved
+// to a standalone framework config so wdio.conf.js can be retired (decision D10).
+const config = require('../runner/frameworkConfig.js').config;
 var toLog;
 //logger function
 // var toLog = {
@@ -17,9 +19,22 @@ var trace;
 
 //logger details
 function logMessageTrace(trace, msg) {
+    // [2026-06-11] Playwright migration (Prompt 4 / Phase 1).
+    // The old env string read WDIO-only fields (browser.sessionId /
+    // browser.capabilities.browserName / browser.config.testEnv) which do not exist
+    // on the Playwright Browser. Rebuilt from Playwright-safe globals so logging never
+    // throws. (loggerFunction.js is a core util, NOT in the protected list.)
+    var browserName = "chromium";
+    var testEnvName = (global.argv && global.argv.testEnv) || "";
+    var resW = (global.resolution && global.resolution.width) || "";
+    var resH = (global.resolution && global.resolution.height) || "";
+    var envStr = (typeof build != "undefined" && build != undefined &&
+                  typeof jobName != "undefined" && jobName != undefined)
+        ? "#" + build + "," + jobName + "," + browserName + "," + testEnvName + ",[" + resW + "*" + resH + "]"
+        : browserName + "," + testEnvName + ",[" + resW + "*" + resH + "]";
     var toLog = {
-        sessionId: browser.sessionId,
-        ...(build != undefined && jobName != undefined ? { env: "#" + build + ',' + jobName + ',' + browser.capabilities.browserName + ',' + browser.capabilities.browserVersion + ',' + browser.config.testEnv + ',[' + resolution.width + '*' + resolution.height + "]" } : { env: browser.capabilities.browserName + ',' + browser.capabilities.browserVersion + ',' + browser.config.testEnv + ',[' + resolution.width + '*' + resolution.height + "]" }),
+        sessionId: global.__pwSessionId || "",
+        env: envStr,
         logger: "",
         trace: "",
         msg: ''

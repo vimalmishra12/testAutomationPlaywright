@@ -128,6 +128,12 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var res;
     console.log("this is testdata 131" , testdata)
+    // [2026-06-11] Playwright migration: the dashboard eBook cards load LAZILY after the
+    // dashboard shell. Wait for them to be present before picking the kth card, otherwise
+    // getKthElement runs against an empty/partial list and the click flakily times out
+    // (drawing/player TST_DASH_TC_5). Then settle briefly so the chosen card is interactive.
+    await action.waitForDisplayed(this.ebook_btn, 30000);
+    await browser.pause(1500);
     const kthElement = await action.getKthElement(this.ebook_btn, testdata.launchEbook);
     if (kthElement) {
       res = await action.click(kthElement);

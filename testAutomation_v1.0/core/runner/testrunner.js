@@ -43,21 +43,14 @@ class specRunner {
           //this.retries(1);
           //This is before hook of Mocha runner
           before(async function () {
+            // [2026-06-11] Playwright migration (Prompt 4 / Phase 1) — confirmed by user.
+            // Context-per-suite (decision D4) replaces browser.reloadSession(): suite 0
+            // uses the initial context created in playwright.setup.js; every later suite
+            // gets a fresh context + page via global.createFreshContext(). Window sizing
+            // is handled by the context viewport, so the WDIO maximizeWindow() /
+            // setWindowSize() calls are removed.
             if (count != 0) {
-              await browser.reloadSession();
-            }
-            if (global.maximizeWindow == true && global.view == "desktop") {
-              //this will cause browser to maximize on the client screen resolution
-              await browser.maximizeWindow();
-              global.resolution = await browser.getWindowSize();
-            } else if (
-              global.resolution.width != undefined &&
-              global.resolution.height != undefined
-            ) {
-              await browser.setWindowSize(
-                parseInt(global.resolution.width),
-                parseInt(global.resolution.height)
-              );
+              await global.createFreshContext();
             }
 
             console.log(
@@ -275,6 +268,13 @@ class specRunner {
 
             //This is test hook of Mocha runner
             it(getName, async function () {
+              // [2026-06-11] Playwright migration — confirmed by user. Optional retries
+              // (decision D8) resolved from the Test node, then the suite. `this` is the
+              // Mocha test context (regular function), so this.retries(n) applies here.
+              if (execJsonData[suiteIndex].Test[testIndex].retries != undefined)
+                this.retries(parseInt(execJsonData[suiteIndex].Test[testIndex].retries, 10));
+              else if (execJsonData[suiteIndex].retries != undefined)
+                this.retries(parseInt(execJsonData[suiteIndex].retries, 10));
               console.log(
                 " Testcase    : Start " +
                   execJsonData[suiteIndex].Test[testIndex].id
@@ -384,6 +384,10 @@ class specRunner {
             }
             if (argv.visual == "applitools")
               await that.visualTest.closeApplitoolsEyes();
+
+            // [2026-06-11] Playwright migration — confirmed by user. Stop + save this
+            // suite's Playwright trace when --trace=true (decision D6 → ./traces/).
+            if (global.stopAndSaveTrace) await global.stopAndSaveTrace(suiteIndex);
 
             console.log("====== Test " + suiteIndex + " Ended ======");
             console.log(" ");

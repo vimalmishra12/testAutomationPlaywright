@@ -11,7 +11,9 @@ var finalObject = {};
 const logglyToken = argv.logglyToken;
 
 
-const config = require('../../wdio.conf.js').config;
+// [2026-06-11] Playwright migration (Prompt 4 / Phase 2). Was wdio.conf.js — moved
+// to a standalone framework config so wdio.conf.js can be retired (decision D10).
+const config = require('../runner/frameworkConfig.js').config;
 const logDir = 'logs';
 var date = new Date();
 var dateFormat = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}_${date.getHours()}h_${date.getMinutes()}m_${date.getSeconds()}s_${date.getMilliseconds()}ms`;

@@ -1,125 +1,113 @@
 {
-    "Suite1": {
-      "Name": "Validation of hide sheek   Page",
-      "TestCaseRepo": [
-        "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
-      ],
-      "Before": [
-        {
-          "id": "launchUrl",
-          "description": "",
-          "testFile": "./core/runner/launchUrl.js",
-          "testData": []
-        },
-        {
-          "id": "TST_LAND_TC_3",
-          "description": "",
-          "testFile": "./test/ExperienceApp/landing.test.js",
-          "testData": []
-        },
-        {
-          "id": "TST_LOGI_TC_1",
-          "description": "Add Instrcutor User Name",
-          "testFile": "./test/ExperienceApp/login.test.js",
-          "testData": [
-            {
-              "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
-              "jsonPath": "C1.login.user.validStudent1"
-            }
-          ]
-        },
-        {
-          "id": "TST_LOGI_TC_2",
-          "description": "Add Instrcutor Password",
-          "testFile": "./test/ExperienceApp/login.test.js",
-          "testData": [
-            {
-              "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
-              "jsonPath": "C1.login.user.validStudent1"
-            }
-          ]
-        },
-        {
-          "id": "TST_LOGI_TC_5",
-          "description": "",
-          "testFile": "./test/ExperienceApp/login.test.js",
-          "testData": []
-        }
-        ,
-        {
-          "id": "TST_DASH_TC_5",
-          "description": "",
-          "testFile": "./test/ExperienceApp/dashboard.test.js",
-          "testData": [
+  "Suite1": {
+    "Name": "Validation of hide sheek   Page",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Instrcutor User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
             "jsonPath": "C1.login.user.validStudent1"
           }
         ]
-        },
-        {
-          "id": "TST_EBOO_TC_1",
-          "description": "",
-          "testFile": "./test/ExperienceApp/eBook.test.js",
-          "testData": []
-        },
-        {
-          "id": "TST_EBOO_TC_3",
-          "description": "",
-          "testFile": "./test/ExperienceApp/eBook.test.js",
-          "testData": []
-        }, 
-        {
-          "id": "TST_EBOO_TC_22",
-          "description": "Validate that the eBook Toggle Layout button is clickable & returns double page",
-          "testFile": "./test/ExperienceApp/eBook.test.js",
-          "testData": [
-            {
-              "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
-              "jsonPath": "C1.appContent.eBookViewerControls"
-            }
-          ]
-        },
-        
-        {
-          "id": "TST_EBOO_TC_23",
-          "description": "",
-          "testFile": "./test/ExperienceApp/eBook.test.js",
-          "testData": []
-        }
-       
-      
-      ],
-      "BeforeEach": [],
-      "Test": [
-        
-       
-       {
-            "id": "TST_SHOW_TC_2",
-            "description": "",
-            "testFile": "./test/ExperienceApp/showHideSelection.test.js",
-            "testData": []
-        },
-        {
-          "id": "TST_SHOW_TC_3",
-          "description": "",
-          "testFile": "./test/ExperienceApp/showHideSelection.test.js",
-          "testData": []
-        },
-        {
-          "id": "TST_SHOW_TC_1",
-          "description": "",
-          "testFile": "./test/ExperienceApp/showHideSelection.test.js",
-          "testData": []
-        }
-      
-       
-
-      ],
-      "AfterEach": [],
-      "After": []
-    }
-
-   
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Instrcutor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_22",
+        "description": "Validate that the eBook Toggle Layout button is clickable & returns double page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.eBookViewerControls"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_23",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SHOW_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/showHideSelection.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SHOW_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/showHideSelection.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SHOW_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/showHideSelection.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
   }
-  
+}

@@ -92,13 +92,19 @@ you intend to change and why, and wait for explicit confirmation before proceedi
 
 | File | Layer | Why Protected |
 |---|---|---|
-| `wdio.conf.js` | Configuration | Controls entire test execution — a wrong change silently breaks all tests |
+| `.mocharc.js` | Configuration | Mocha config — a wrong change breaks all test execution |
+| `core/runner/playwright.setup.js` | Core | Owns the Playwright browser lifecycle + all framework globals (the role `wdio.conf.js` held). Changes affect every run |
+| `core/runner/run.js` | Core | The Mocha entry point — wrong change breaks all execution |
 | `env.conf.js` | Configuration | Controls environment resolution and all global variables |
 | `core/actionLibrary/baseActionLibrary.js` | Core | Every single page object in the framework depends on this |
 | `core/actionLibrary/baseAssertionLibrary.js` | Core | Every single test case assertion depends on this |
 | `core/runner/testrunner.js` | Core | The execution engine — changes affect every test run |
 | `core/runner/specGenerator.js` | Core | Entry point for spec execution |
 | `core/runner/launchUrl.js` | Core | Controls how the browser navigates to the application |
+
+> **Retired & deleted (2026-06-11, Prompt 4 / Phase 2):** `wdio.conf.js` is gone —
+> WebDriverIO was replaced by Playwright-as-library under Mocha (ADR-012). The file
+> was hard-deleted (recoverable from git history if ever needed).
 
 ### Mandatory Confirmation Format
 
@@ -243,7 +249,7 @@ Anything that was discussed but not completed, or that requires a future decisio
 1. **If unsure about a selector**: inspect the live site, use `qid` or `data-tid` attribute-based selectors (preferred), fall back to class-based selectors
 2. **If unsure about test data structure**: examine existing data files in `testResources/testcaseData/ExperienceApp/<env>/` for the JSON nesting pattern
 3. **If unsure about execution flow**: study `loginTest.json` or `activeClass.json` as reference execution files
-4. **If unsure about a global variable**: `browser`, `$`, `$$`, `logger`, `stackTrace`, `assertion`, `argv`, `jsonParserUtil`, `selectorDir`, `appUrl`, `moduleOff` are all globals set by `wdio.conf.js` / `env.conf.js`
+4. **If unsure about a global variable**: `page`, `$`, `$$`, `browser`, `logger`, `stackTrace`, `assertion`, `argv`, `jsonParserUtil`, `selectorDir`, `appUrl`, `moduleOff` are all globals set by `core/runner/playwright.setup.js` / `env.conf.js`. (`page` is the Playwright page; `$`/`$$` are `page.locator` factories; `browser` is the Playwright Browser with WDIO-compat helpers like `browser.pause`.)
 5. **If a pattern doesn't exist**: consult `.architecture/decisions.md` before inventing new patterns
 6. **If a protected file needs changing**: always ask first — never assume the change is small enough to skip confirmation
 7. **Before validating a Jira ticket**, read `.architecture/product-knowledge.md`

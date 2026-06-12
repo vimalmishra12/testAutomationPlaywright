@@ -23,17 +23,21 @@ module.exports = {
     return res;
   },
 
+  // [2026-06-11] Playwright migration (Prompt 4 / Phase 1) — page-object edit.
+  // Previously used the raw `$()` locator's WDIO-only methods (.isDisplayed()/.click()),
+  // which do not exist on a Playwright Locator. Routed through the action library
+  // instead (action.isDisplayed → isVisible; action.click). Listed in the walkthrough.
   acceptCookies: async function() {
-    await action.waitForDisplayed('a[qid="cookies-2"]') ; 
-    const cookieButtonSelector = 'a[qid="cookies-2"]'; // Replace with the actual selector
-    const isCookieBannerVisible = await $(cookieButtonSelector).isDisplayed();
-    console.log("iscookie" , isCookieBannerVisible )
-
-    if (isCookieBannerVisible) {
-      console.log("clicking")
-
-        const res = await $(cookieButtonSelector).click();
-        console.log("clickedd" , res)
+    const cookieButtonSelector = 'a[qid="cookies-2"]';
+    // action.isDisplayed returns false (never throws) when the banner is absent,
+    // so no upfront waitForDisplayed is needed — avoids a needless timeout when the
+    // cookie banner does not appear.
+    const isCookieBannerVisible = await action.isDisplayed(cookieButtonSelector);
+    console.log("iscookie", isCookieBannerVisible);
+    if (isCookieBannerVisible === true) {
+      console.log("clicking");
+      const res = await action.click(cookieButtonSelector);
+      console.log("clickedd", res);
     }
 },
 

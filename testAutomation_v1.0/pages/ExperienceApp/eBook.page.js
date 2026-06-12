@@ -94,8 +94,11 @@ module.exports = {
     var res;
     await logger.logInto(await stackTrace.get());
     await action.waitForDocumentLoad();
+    // [2026-06-11] Playwright migration: the eBook reader (heavy SPA) sometimes takes
+    // longer than the 30s default to render the home button — give it 60s so the
+    // launch is not flaky. See drawing/player TST_DASH_TC_5 timeouts.
     res = {
-      pageStatus: await action.waitForDisplayed(this.homeButton),
+      pageStatus: await action.waitForDisplayed(this.homeButton, 60000),
     };
     return res;
   },

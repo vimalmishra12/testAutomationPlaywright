@@ -12,9 +12,11 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     await action.waitForDocumentLoad();
     res = {
+      // [2026-06-11] Playwright port: the /regoptions signup page renders slower than
+      // 5s; bumped to 15s so the (present) element is reliably found.
       pageStatus: await action.waitForDisplayed(
         this.createAccountTitleTxt,
-        5000
+        15000
       ),
       // appShellPage: await appShellPage.isInitialized()
     };

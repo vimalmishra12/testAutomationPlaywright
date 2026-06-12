@@ -10,14 +10,14 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 
 **Core Purpose**: Execute parameterized test suites against web applications by composing reusable test case functions with externalized selectors, test data, and execution orchestration — all without modifying core framework code.
 
-**Tech Stack**:
+**Tech Stack** _(updated 2026-06-11 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha)_:
 - Runtime: Node.js
-- Test Framework: Mocha (via `@wdio/mocha-framework`)
-- Browser Automation: WebDriverIO v7
-- Assertions: Chai (wrapped in `baseAssertionLibrary.js`)
-- Reporting: Allure, Timeline, Spec reporters
-- Visual Testing: Novus, Applitools (optional)
-- CI Runners: Local ChromeDriver, LambdaTest cloud
+- Test Framework: **standalone Mocha** (entry: `core/runner/run.js`; config: `.mocharc.js`)
+- Browser Automation: **Playwright used as a library** (`require('playwright')`, NOT `@playwright/test`)
+- Assertions: **standalone `expect` from `@playwright/test`** (import only, wrapped in `baseAssertionLibrary.js`) — Chai removed
+- Reporting: Spec (Mocha) + Allure (`allure-mocha`); optional Mochawesome HTML (screenshots); Playwright tracing via `--trace`. Timeline reporter retired
+- Visual Testing: **Phase 3** — `page.screenshot()` + `pixelmatch` (Novus/Applitools retired/under review)
+- CI Runners: local Playwright Chromium/Chrome; cloud (LambdaTest/BrowserStack) is **Phase 3**
 
 ---
 
@@ -137,23 +137,26 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 
 ## Runtime Structure
 
-### Global Variables (set by `wdio.conf.js` / `env.conf.js`)
+### Global Variables (set by `core/runner/playwright.setup.js` / `env.conf.js`) — updated 2026-06-11 (ADR-012)
 
 | Global | Type | Set By | Purpose |
 |---|---|---|---|
-| `browser` | WebDriverIO Browser | WDIO | Browser automation API |
-| `$` / `$$` | Function | WDIO | Element selectors |
+| `page` | Playwright Page | playwright.setup.js | The current page (per-suite context) |
+| `browser` | Playwright Browser | playwright.setup.js | Browser handle + WDIO-compat helpers (`browser.pause`, `browser.url`, …) |
+| `$` / `$$` | Function | playwright.setup.js | `page.locator(sel)` factories (`.all()` for lists) |
+| `__pwContext` | Playwright BrowserContext | playwright.setup.js | Current context (named `__pwContext` because `context` is reserved by Mocha BDD) |
 | `describe`, `it`, `before`, `after` | Function | Mocha | Test lifecycle |
 | `appUrl` | String | env.conf.js | Target URL from `env.json` |
+| `headers` | Object | env.conf.js | Cloudflare access headers (qa/rel) → context `extraHTTPHeaders` |
 | `selectorDir` | String | env.conf.js / testrunner | Path to selector JSON file |
 | `testExecDir` | String | env.conf.js | Path to execution files directory |
-| `argv` | Object | yargs | CLI arguments (appType, testEnv, testExecFile, etc.) |
-| `logger` | Object | wdio.conf.js | Winston-based logger |
-| `stackTrace` | Object | wdio.conf.js | Stack trace utility |
-| `assertion` | Object | wdio.conf.js | Assertion library (may be noop if `skipAssertion=true`) |
-| `jsonParserUtil` | Object | wdio.conf.js | JSON file parser utility |
+| `argv` | Object | yargs (env.conf.js) | CLI arguments (appType, testEnv, testExecFile, trace, report, headless …) |
+| `logger` | Object | testrunner.js (loggerFunction) | Winston-based logger |
+| `stackTrace` | Object | env.conf.js | Stack trace utility |
+| `assertion` | Object | env.conf.js | Assertion library (Playwright `expect`; noop if `skipAssertion=true`) |
+| `jsonParserUtil` | Object | env.conf.js | JSON file parser utility |
 | `moduleOff` | Object | env.conf.js | Module skip flags from env.json |
-| `path` | Module | wdio.conf.js | Node.js path module |
+| `path` | Module | env.conf.js | Node.js path module |
 
 ### Execution Lifecycle
 
@@ -216,8 +219,11 @@ must follow the confirmation protocol defined in `AGENTS.md` before touching the
 
 | File | Layer | Impact of a Wrong Change |
 |---|---|---|
-| `wdio.conf.js` | Configuration | Breaks entire test execution silently |
+| `.mocharc.js` | Configuration | Breaks Mocha configuration / all test execution |
+| `core/runner/playwright.setup.js` | Core | Owns the Playwright browser lifecycle + all globals — breaks every run |
+| `core/runner/run.js` | Core | The Mocha entry point — breaks all execution |
 | `env.conf.js` | Configuration | Breaks environment resolution and all global variables |
+| _`wdio.conf.js`_ | _Retired_ | _Replaced by Playwright/Mocha (ADR-012); hard-deleted (recoverable from git history)_ |
 | `core/actionLibrary/baseActionLibrary.js` | Core | Breaks every page object in the framework |
 | `core/actionLibrary/baseAssertionLibrary.js` | Core | Breaks every assertion in every test case |
 | `core/runner/testrunner.js` | Core | Breaks all test runs |

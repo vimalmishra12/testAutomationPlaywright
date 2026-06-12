@@ -17,7 +17,6 @@
         "testFile": "./test/ExperienceApp/landing.test.js",
         "testData": []
       },
-
       {
         "id": "TST_LOGI_TC_1",
         "description": "Add Instrcutor User Name",
@@ -159,14 +158,12 @@
         "testFile": "./test/ExperienceApp/commonActivity.test.js",
         "testData": []
       },
-
       {
         "id": "TST_COMM_TC_4",
         "description": "",
         "testFile": "./test/ExperienceApp/commonActivity.test.js",
         "testData": []
       },
-
       {
         "id": "TST_COMM_TC_3",
         "description": "",

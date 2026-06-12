@@ -149,3 +149,48 @@
 - Test Cases should not assume they run in a specific order unless documented  
 - The `Before` section of execution files is effectively a "setup" script built from existing TCs  
 - New test flows should ALWAYS check for existing TCs before creating new ones  
+
+---
+
+## ADR-012: Playwright as a Library under standalone Mocha
+
+**Status:** Accepted (2026-06-11)
+**Context:** WebDriverIO v7 was the automation driver. We wanted Playwright's modern,
+auto-waiting locator engine, tracing, and standalone `expect` — without losing the
+JSON-driven execution engine (ADR-001/007/011) that is the heart of the framework.
+**Decision:** Adopt Playwright used **as a library** (`require('playwright')`) driven
+by **standalone Mocha**. We deliberately do **NOT** use `@playwright/test`: it is itself
+a runner and would replace Mocha and break the JSON engine.
+- **Cherry-picked from `@playwright/test`:** standalone `expect` (auto-retrying
+  assertions, wrapped in baseAssertionLibrary), Playwright tracing (`--trace`), and
+  (Phase 3) `pixelmatch` for visual compare.
+- **Consciously gave up:** fixtures, workers/parallelism, `toHaveScreenshot`, and the
+  built-in HTML reporter. (Mochawesome provides a Java-free HTML report instead.)
+**Consequences:**
+- One browser per run; a NEW context + page per suite (replaces `reloadSession()`).
+- New globals `page`/`$`/`$$`/`browser` published by `core/runner/playwright.setup.js`.
+- A `node core/runner/run.js` entry point replaces the `wdio` binary; `.mocharc.js`
+  holds Mocha config; argv parsed by yargs in env.conf.js (no Mocha CLI collision).
+- Cloudflare (qa/rel) headers via context `extraHTTPHeaders` (replaces WDIO CDP hack).
+- Cloud execution (LambdaTest/BrowserStack) and visual (Novus/Applitools) are Phase 3.
+
+### Amendments triggered by ADR-012
+
+**ADR-003 (amended 2026-06-11):** the action library now wraps Playwright
+`page.locator()`. *Deprecated wording: "Wraps WebDriverIO `$()` commands."* Method
+names, parameters, and the true/Error return contract (ADR-009) are unchanged.
+
+**ADR-005 (amended 2026-06-11):** new globals `page`, `$`, `$$`, `browser` are set by
+`playwright.setup.js`. `$`/`$$` are Playwright-locator factories; `browser` is the
+Playwright Browser (with WDIO-compat helpers like `browser.pause` attached).
+*Deprecated wording: "`browser`, `$`, `$$` … set by WDIO."* Note: the per-suite
+BrowserContext is held on `global.__pwContext` because `context` is reserved by
+Mocha's BDD interface.
+
+**ADR-008 (amended 2026-06-11):** standalone `expect` from `@playwright/test` replaces
+Chai inside baseAssertionLibrary. The `skipAssertion` noop-at-module-load behaviour is
+unchanged. *Deprecated wording: "Wraps Chai assertions."*
+
+**ADR-010 (amended 2026-06-11):** context-per-suite replaces `browser.reloadSession()`.
+*Deprecated wording: "`testrunner.js` calls `browser.reloadSession()` before each suite."*
+Each later suite closes its context and opens a fresh one (same isolation intent).

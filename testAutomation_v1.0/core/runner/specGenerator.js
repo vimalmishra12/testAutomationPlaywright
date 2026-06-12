@@ -28,7 +28,11 @@ var glob = require("glob");
 var path = require('path');
 var rimraf = require("rimraf");
 const { argv } = require("yargs");
-const { convertPackageHashToObject } = require("@wdio/cli/build/utils");
+// [2026-06-11] Playwright migration (Prompt 4 / Phase 1) — confirmed by user.
+// Removed the unused `@wdio/cli/build/utils` import so spec generation no longer
+// depends on the WebDriverIO package (decision D10). The generated tempRunner
+// spec — full testrunner.js source + `new specRunner("<file>.json")` — is
+// runner-agnostic and executes unchanged under standalone Mocha.
 
 module.exports = {
 

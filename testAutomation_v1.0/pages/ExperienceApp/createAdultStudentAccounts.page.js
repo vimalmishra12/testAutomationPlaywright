@@ -56,35 +56,24 @@ module.exports = {
    * Returns true on success, Error on failure.
    */
   upload_csvFile: async function (csvFilePath) {
+    // [2026-06-11] Playwright migration (Prompt 4 / Phase 2) — page-object port.
+    // Playwright's setInputFiles sets files DIRECTLY on a hidden <input type=file>
+    // and fires the native change event, so the old WDIO dance (uploadFile →
+    // browser.execute unhide → $(input).setValue → re-hide) is no longer needed.
     await logger.logInto(await stackTrace.get(), "uploading: " + csvFilePath);
-    var remotePath;
     try {
-      // Transfer local file to WebDriver session and get the remote path
-      remotePath = await action.uploadFile(path.resolve(csvFilePath));
-      if (typeof remotePath !== "string") {
-        await logger.logInto(await stackTrace.get(), "uploadFile failed for: " + csvFilePath, "error");
-        return remotePath;
+      const res = await action.setInputFiles(this.csvFileInput, csvFilePath);
+      if (res !== true) {
+        await logger.logInto(await stackTrace.get(), "setInputFiles failed for: " + csvFilePath, "error");
+        return res;
       }
-      // The file input is hidden (class="d-none") so setValue throws "element not interactable".
-      // Temporarily make it visible via JS, set the value, then restore visibility so the
-      // app's own Angular/React binding picks up the change event. See NEMO-24306.
-      await browser.execute(function (sel) {
-        var el = document.querySelector(sel);
-        el.style.cssText = "display:block!important;visibility:visible!important;opacity:1!important;";
-      }, this.csvFileInput);
-      await (await $(this.csvFileInput)).setValue(remotePath);
-      await browser.execute(function (sel) {
-        document.querySelector(sel).style.cssText = "";
-      }, this.csvFileInput);
-      // setValue triggers the Angular change event — upload starts automatically.
-      // Step 1: wait for the uploading modal to APPEAR (confirms upload has started).
-      //         Without this first wait, the reverse-wait below returns immediately
-      //         if called before the modal has even rendered, causing a race condition
-      //         where the error text is read before the form has rendered. NEMO-24306.
+      // Upload starts automatically on the change event.
+      // Step 1: wait for the uploading modal to APPEAR (confirms upload started) — without
+      //         this the reverse-wait below can return before the modal even renders.
       await action.waitForDisplayed(".uploading-file-modal");
-      // Step 2: wait for the modal to DISAPPEAR (confirms upload has fully completed).
+      // Step 2: wait for the modal to DISAPPEAR (confirms upload completed).
       await action.waitForDisplayed(".uploading-file-modal", undefined, true);
-      // Step 3: pause 2s for Angular to finish rendering inline validation error text.
+      // Step 3: let Angular finish rendering inline validation error text.
       await browser.pause(2000);
       await action.waitForDocumentLoad();
       await logger.logInto(await stackTrace.get(), "CSV uploaded successfully: " + csvFilePath);
@@ -109,10 +98,12 @@ module.exports = {
       //    Scroll the first one into view so the assertion-step screenshot is clear.
       var inlineCount = await action.getElementCount(this.inlineErrorText);
       if (inlineCount > 0) {
-        await action.scrollIntoView(this.inlineErrorText, { block: "center" });
-        var elements = await $$(this.inlineErrorText);
+        await action.scrollIntoView(this.inlineErrorText);
+        // [2026-06-11] Playwright port: $$ no longer returns an array — use
+        // action.findElements (locator.all()) and read each via innerText().
+        var elements = await action.findElements(this.inlineErrorText);
         for (var i = 0; i < elements.length; i++) {
-          var text = await elements[i].getText();
+          var text = await elements[i].innerText();
           if (text && text.trim()) {
             errors.push(text.trim());
           }

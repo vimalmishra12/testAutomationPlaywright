@@ -43,7 +43,7 @@
         "footerOurApproaches": "a[qid=\"cFooter-5\"]",
         "footerSiteFeedback": "a[qid=\"cFooter-4\"]",
         "footerFAQs": "a[qid=\"cFooter-9\"][aria-label=\"FAQs\"]",
-        "footerCambridgeOneSchool": "a[qid=\"cFooter-10\"][class*=\"insti-btn\"]",
+        "footerCambridgeOneSchool": "a[qid=\"cFooter-9\"][class*=\"insti-btn\"]",
         "footerHelp": "a[qid=\"cFooter-6\"]",
         "footerCambridgeUniversity": ".copyright.mb-0"
       },
@@ -250,7 +250,6 @@
         "acceptBtn": "button[qid=\"idsh-3\"]",
         "goToDashboard": "a[qid=\"iscs-3\"]"
       },
-
       "progress": {
         "progress": "h1[qid='clView-6']"
       },

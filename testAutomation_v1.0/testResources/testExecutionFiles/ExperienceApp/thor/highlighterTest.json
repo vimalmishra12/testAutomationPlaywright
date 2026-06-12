@@ -83,35 +83,30 @@
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_10",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_3",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_14",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_1",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_19",
         "description": "",
@@ -123,7 +118,6 @@
           }
         ]
       },
-
       {
         "id": "TST_DRAW_TC_5",
         "description": "",
@@ -136,7 +130,6 @@
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_EBOO_TC_5",
         "description": "",
@@ -172,14 +165,12 @@
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_20",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_EBOO_TC_5",
         "description": "",
@@ -232,14 +223,12 @@
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       },
-
       {
         "id": "TST_DRAW_TC_20",
         "description": "",
         "testFile": "./test/ExperienceApp/drawingTool.test.js",
         "testData": []
       }
-
     ],
     "AfterEach": [],
     "After": []

@@ -52,32 +52,18 @@ module.exports = {
    * for the rationale on bypassing action.setValue for hidden file inputs.
    */
   upload_csvFile: async function (csvFilePath) {
+    // [2026-06-11] Playwright migration (Prompt 4 / Phase 2) — page-object port.
+    // Same as createAdultStudentAccounts: Playwright setInputFiles handles the hidden
+    // file input directly; the WDIO unhide + $(input).setValue dance is removed.
     await logger.logInto(await stackTrace.get(), "uploading: " + csvFilePath);
-    var remotePath;
     try {
-      // Transfer local file to WebDriver session and get the remote path
-      remotePath = await action.uploadFile(path.resolve(csvFilePath));
-      if (typeof remotePath !== "string") {
-        await logger.logInto(await stackTrace.get(), "uploadFile failed for: " + csvFilePath, "error");
-        return remotePath;
+      const res = await action.setInputFiles(this.csvFileInput, csvFilePath);
+      if (res !== true) {
+        await logger.logInto(await stackTrace.get(), "setInputFiles failed for: " + csvFilePath, "error");
+        return res;
       }
-      // The file input is hidden (class="d-none") — temporarily expose it so setValue works,
-      // then restore to hidden. Same fix as createAdultStudentAccounts.page.js — see NEMO-24306.
-      await browser.execute(function (sel) {
-        var el = document.querySelector(sel);
-        el.style.cssText = "display:block!important;visibility:visible!important;opacity:1!important;";
-      }, this.csvFileInput);
-      await (await $(this.csvFileInput)).setValue(remotePath);
-      await browser.execute(function (sel) {
-        document.querySelector(sel).style.cssText = "";
-      }, this.csvFileInput);
-      // setValue triggers the Angular change event — upload starts automatically.
-      // Step 1: wait for the uploading modal to APPEAR (confirms upload has started).
-      //         Mirrors the fix in createAdultStudentAccounts.page.js — see NEMO-24306.
       await action.waitForDisplayed(".uploading-file-modal");
-      // Step 2: wait for the modal to DISAPPEAR (confirms upload has fully completed).
       await action.waitForDisplayed(".uploading-file-modal", undefined, true);
-      // Step 3: pause 2s for Angular to finish rendering inline validation error text.
       await browser.pause(2000);
       await action.waitForDocumentLoad();
       await logger.logInto(await stackTrace.get(), "CSV uploaded successfully: " + csvFilePath);
@@ -101,9 +87,10 @@ module.exports = {
       var inlineCount = await action.getElementCount(this.inlineErrorText);
       if (inlineCount > 0) {
         await action.scrollIntoView(this.inlineErrorText, { block: "center" });
-        var elements = await $$(this.inlineErrorText);
+        // [2026-06-11] Playwright port: action.findElements (locator.all()) + innerText().
+        var elements = await action.findElements(this.inlineErrorText);
         for (var i = 0; i < elements.length; i++) {
-          var text = await elements[i].getText();
+          var text = await elements[i].innerText();
           if (text && text.trim()) {
             errors.push(text.trim());
           }

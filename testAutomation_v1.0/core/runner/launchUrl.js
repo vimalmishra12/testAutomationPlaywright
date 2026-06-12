@@ -1,20 +1,12 @@
 "use strict";
+// [2026-06-11] Playwright migration (Prompt 4 / Phase 1) — confirmed by user.
+// Navigation now uses the Playwright page (decision D2) instead of browser.url().
 
 module.exports = {
 
-	
 	launchUrl: async function () {
-		await browser.url(appUrl);
+		// global.page is published by playwright.setup.js (decision D3).
+		await global.page.goto(appUrl, { waitUntil: "load" });
 		await logger.logInto(stackTrace.get(), "appURL:" + appUrl);
-		/*if (global.maximizeWindow == true && global.view == 'desktop') { //this will cause browser to maximize on the client screen resolution
-			browser.maximizeWindow();
-			global.resolution = browser.getWindowSize();
-		}
-		else if (global.resolution.width != undefined && global.resolution.height != undefined) {
-			browser.setWindowSize(parseInt(global.resolution.width), parseInt(global.resolution.height));
-		}*/
-		/*else { // currently this command is not working for mobile devices
-			global.resolution = browser.getWindowSize();			
-		}*/
 	}
 }

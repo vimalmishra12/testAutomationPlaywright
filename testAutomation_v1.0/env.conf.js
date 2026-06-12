@@ -169,6 +169,18 @@ if (argv.visual) {
 }
 
 global.setupCDPHeaders = async () => {
+  // [2026-06-11] Playwright migration (Prompt 4 / Phase 1) — confirmed by user.
+  // Under Playwright there is no WebDriverIO `browser` / Puppeteer bridge, so this
+  // WDIO-CDP header-injection path is a safe no-op. Cloudflare header injection (if
+  // ever needed for qa/rel) moves to Playwright context `extraHTTPHeaders` in a
+  // later step. The guard also prevents a ReferenceError on the undeclared `browser`.
+  if (typeof browser === "undefined" || !browser) {
+    if (global.headers && Object.keys(global.headers).length) {
+      console.log("⚠️ [CDP] Playwright mode — Cloudflare headers will be applied at context level; skipping WDIO CDP path");
+    }
+    return;
+  }
+
   // Prevent duplicate initialization/listeners
   // if (global._cdpHeadersSetup) {
   //   console.log('🔧 [CDP] setupCDPHeaders already run; skipping duplicate initialization');

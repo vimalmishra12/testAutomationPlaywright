@@ -47,7 +47,9 @@ module.exports = {
         await logger.logInto(await stackTrace.get());
         //let res;
         res = await action.click(this.signupBtn);
-        browser.pause(1000);
+        // [2026-06-11] Playwright port: browser.pause is async now — must be awaited
+        // (under WDIO it was blocking). Without await the navigation isn't given time.
+        await browser.pause(1000);
         if (true == res) {
             await logger.logInto(await stackTrace.get(), " signupBtn is clicked");
             res = await require('./signup.page').isInitialized();

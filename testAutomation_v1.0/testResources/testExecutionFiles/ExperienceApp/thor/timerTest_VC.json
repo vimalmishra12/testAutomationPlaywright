@@ -74,12 +74,9 @@
         "testFile": "./test/ExperienceApp/eBook.test.js",
         "testData": []
       }
-    
     ],
     "BeforeEach": [],
     "Test": [
-      
-     
       {
         "id": "TST_TIME_TC_9",
         "description": "",
@@ -91,12 +88,14 @@
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      },{
+      },
+      {
         "id": "TST_TIME_TC_7",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      },{
+      },
+      {
         "id": "TST_TIME_TC_3",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
@@ -107,23 +106,26 @@
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      }
-      ,{
+      },
+      {
         "id": "TST_TIME_TC_2",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      },{
+      },
+      {
         "id": "TST_TIME_TC_7",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      },{
+      },
+      {
         "id": "TST_TIME_TC_6",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
-      },{
+      },
+      {
         "id": "TST_TIME_TC_5",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
@@ -159,16 +161,12 @@
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
       },
-
       {
         "id": "TST_TIME_TC_4",
         "description": "",
         "testFile": "./test/ExperienceApp/timer.test.js",
         "testData": []
       }
-      
-
-
     ],
     "AfterEach": [],
     "After": []

@@ -8,6 +8,12 @@ node_modules/
 
 # Allure and test output artifacts
 allure-results/
+allure-report/
 output/
 logs/
 local.log
+
+# Playwright migration (Prompt 4) run artefacts — never commit
+traces/
+mochawesome-report/
+test/tempRunner/
