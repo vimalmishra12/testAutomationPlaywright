@@ -35,6 +35,29 @@ function els(selector) {
     return isLocator(selector) ? selector : root().locator(selector);
 }
 
+// [2026-06-11] Reproduces WDIO's getCSSProperty `.parsed` object from a computed-style
+// string. Colours -> { type:'color', rgba, hex }; lengths -> { type:'number', value, unit };
+// otherwise { type:'string', value }. hex is lowercase 6-digit to match existing testdata
+// (e.g. "#6019b5"); rgba is space-free to match rgba comparisons (e.g. "rgba(251,246,228,1)").
+function toHex2(n) { return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0"); }
+function parseCssValue(value) {
+    const v = String(value || "").trim();
+    const colour = v.match(/rgba?\(([^)]+)\)/i);
+    if (colour) {
+        const parts = colour[1].split(",").map((s) => parseFloat(s.trim()));
+        const r = parts[0], g = parts[1], b = parts[2];
+        const a = parts[3] !== undefined ? parts[3] : 1;
+        return {
+            type: "color",
+            rgba: `rgba(${r},${g},${b},${a})`,
+            hex: "#" + toHex2(r) + toHex2(g) + toHex2(b)
+        };
+    }
+    const len = v.match(/^(-?[\d.]+)([a-z%]*)$/i);
+    if (len) return { type: "number", value: parseFloat(len[1]), unit: len[2] || "", string: v };
+    return { type: "string", value: v, string: v };
+}
+
 //base action
 module.exports = {
 
@@ -326,15 +349,18 @@ module.exports = {
 
     getCSSProperty: async function (selector, propertyname) {
         try {
-            // WDIO returned an object { value }. Mirror that shape so callers that
-            // read `.value` keep working; value comes from computed style.
+            // [2026-06-11] Playwright migration: WDIO's getCSSProperty returned a RICH
+            // object — `{ property, value, parsed: { hex, rgba, ... } }`. Page objects read
+            // `.parsed.hex` (hover-colour checks, NEMO-24388) and `.value`. Rebuild that
+            // shape from the computed style so those call sites keep working.
             let value = await el(selector).evaluate(
                 (node, prop) => window.getComputedStyle(node).getPropertyValue(prop),
                 propertyname
             );
+            value = (value || "").trim();
             message = "element:" + selector + " propertyname:" + propertyname + " value:" + value;
             await logger.logInto(await stackTrace.get(), message);
-            return { property: propertyname, value: value };
+            return { property: propertyname, value: value, parsed: parseCssValue(value) };
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
             return err;

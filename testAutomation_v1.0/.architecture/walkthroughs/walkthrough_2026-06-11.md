@@ -439,6 +439,22 @@ The fix also hardens the already-green eBook suites against the same race.
 7. `browser.waitUntil/pause/url/execute/...` → compat shim on global.browser
 8. iframe content → `switchToFrame` (FrameLocator) + `root()` in baseActionLibrary
 
+### getCSSProperty rich-shape restore (NEMO-24388 hover colors + eBook color check)
+- WDIO's `getCSSProperty` returned `{ property, value, parsed: { hex, rgba, ... } }`;
+  the Phase 1 port returned only `{ property, value }`, so `sts.hoverColor.parsed.hex`
+  (used by all 8 NEMO-24388 wizard-step page objects) and the eBook `.parsed.rgba` check
+  read `undefined`.
+- Fix (`baseActionLibrary.js`): added `parseCssValue()` and return `parsed` from
+  getCSSProperty. Colours → `{ rgba, hex }` (hex lowercase 6-digit, rgba space-free to
+  match testdata like `#6019b5` / `rgba(251,246,228,1)`); lengths → `{ value, unit }`.
+  Verified: `rgb(96,25,181)` → `#6019b5`, `rgba(251,246,228,1)` → exact.
+
+### Footer "Cambridge One for schools" selector — class-based (works logged-out AND logged-in)
+- The qid differs between the logged-OUT landing footer (cFooter-9) and the logged-IN
+  dashboard footer (NEMO-24388's TST_FOOT_TC_7), so a qid selector can't serve both. Changed
+  to `a[class*="insti-btn"]` (qid-independent). Footer suite still 4/4; unblocks NEMO-24388's
+  Before hook.
+
 ### Remaining hard long-tail (dedicated follow-up)
 - **eBook-launch stabilised**: drawing & player Before hooks now complete; player
   improved 6 → 8. The launch flakiness fix also hardens the green reader suites.

@@ -331,19 +331,28 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
   
   var res;
   try {
-    res = await action.click(this.cqaEbookEvolveDropdown);
-    if (res === true) {
-      let cardElement = await this.click_playlistTitle(testdata);
-      if (cardElement) {
-        // Example: get CSS property of matched element
-        let cssRes = await action.getCSSProperty(cardElement, "background-color");
-        res = cssRes;
-      }
+    // [2026-06-12] Playwright port fix: this assertion compares the returned value to an
+    // rgba colour string (testdata.expectedColor). Previously the method returned the click
+    // boolean (undefined when the dropdown wasn't ready) or the raw getCSSProperty object,
+    // so assertEqual saw `undefined`/`[object Object]` instead of the colour. Now we wait for
+    // the dropdown, open the playlist card, and return the parsed rgba string for comparison.
+    await action.waitForClickable(this.cqaEbookEvolveDropdown, 10000);
+    await action.click(this.cqaEbookEvolveDropdown);
+    let cardElement = await this.click_playlistTitle(testdata);
+    if (cardElement) {
+      let cssRes = await action.getCSSProperty(cardElement, "background-color");
+      // Return the rgba string so assertEqual(sts, expectedColor) compares like-for-like.
+      res = cssRes && cssRes.parsed ? cssRes.parsed.rgba : (cssRes && cssRes.value);
     } else {
-      console.warn("cqaEbookEvolveDropdown click failed, res =", res);
+      await logger.logInto(
+        await stackTrace.get(),
+        "cqaEbookEvolveDropdown playlist card not found",
+        "error"
+      );
+      res = false;
     }
   } catch (err) {
-    
+    await logger.logInto(await stackTrace.get(), "Error: " + err.message, "error");
     res = false;
   }
   return res;
