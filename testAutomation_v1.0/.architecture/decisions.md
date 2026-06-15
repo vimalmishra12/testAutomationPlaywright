@@ -25,9 +25,17 @@
 **Context:** CSS/XPath selectors change frequently as the application UI evolves. Hardcoding selectors in page objects creates a maintenance nightmare — a single selector change requires modifying code files.  
 **Decision:** All selectors are stored in a single JSON file (`C1Selectors.json`) organized by page name. Page objects load selectors via `jsonParserUtil.jsonParser(selectorDir)` and access them as `selectorFile.css.ComproC1.<page>.<element>`.  
 **Rationale:** Centralizing selectors means a UI change requires updating exactly one JSON file. The `selectorDir` global is resolved at runtime from `C1TCRepository.json`, allowing different selector files per module if needed.  
+**Application-namespace layering (clarified 2026-06-15):** the top-level `css` object is an
+**application namespace** layer — `css → { ComproC1, <future app>, … }`. Every C1 module MUST
+live under `css.ComproC1`, **never at the JSON root**. This is deliberate: a second application
+can be bifurcated later by adding a sibling namespace (e.g. `css.VHL` next to `css.ComproC1`)
+without colliding with C1 modules. Root-level module keys are a bug — relocate them under
+`css.ComproC1`. (The retired VHL feature had stray root keys; on its removal the remaining
+school-admin modules were moved back under `css.ComproC1`.)
+
 **Consequences:**  
 - Page objects MUST NOT contain hardcoded selector strings  
-- Adding a new page requires adding a new section in `C1Selectors.json`  
+- Adding a new page requires adding a new section **under `css.ComproC1`** in `C1Selectors.json`  
 - Selector naming must follow `css.ComproC1.<camelCasePage>.<camelCaseElement>` convention  
 - `[ASSUMED]` The `selectorDir` is currently set globally via the TC repository's `selectorFile` field and overridden per-TC by `testrunner.js`  
 

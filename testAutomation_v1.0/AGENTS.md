@@ -42,6 +42,13 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 - ALL selectors live in `testResources/selectors/ExperienceApp/C1Selectors.json`
 - Page Objects access selectors via `selectorFile.css.ComproC1.<pageName>.<elementName>`
 - Selector keys follow the pattern: `css.ComproC1.<pageName>.<elementName>`
+- **Every module MUST live under `css.ComproC1` — never at the JSON root.** The top-level
+  `css` object is an **application namespace** layer: `css → { ComproC1, <future app>, … }`.
+  This is a deliberate design so a second application can be bifurcated later by adding a
+  sibling namespace (e.g. `css.VHL` alongside `css.ComproC1`) without colliding with C1
+  modules. A new page's selectors go under `css.ComproC1.<pageName>`, **not** as a new
+  root-level key. When porting/adding a page object, confirm its selectors resolve via
+  `selectorFile.css.ComproC1.<pageName>` (root-level keys are a bug — relocate them).
 
 ### 3. Test Cases Are Stateless Functions
 
