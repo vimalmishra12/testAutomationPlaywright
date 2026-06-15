@@ -203,3 +203,15 @@ and lengths give `{ type:'number', value, unit, string }`. This preserves the WD
 shape that page objects consume via `.parsed.hex` / `.parsed.rgba` (e.g. NEMO-24388
 wizard hover-colour checks, eBook colour check). When porting a colour/size assertion,
 read `.parsed.*`, not the raw object.
+
+**ADR-007/D7 (Phase 3 — LambdaTest enabled 2026-06-15):** cloud execution now works via
+the **LambdaTest Playwright grid**, NOT the Selenium `/wd/hub` endpoint WDIO used. When the
+active capability has `webDriverService === "lambdatest"`, `playwright.setup.js` builds
+`wss://cdp.lambdatest.com/playwright?capabilities=<encoded JSON>` (browserName /
+browserVersion + `LT:Options` carrying `user`/`accessKey`/`platform`/`build`/`name` /
+`playwrightClientVersion`, derived from the capability profile + `LT_USERNAME`/`LT_ACCESS_KEY`)
+and calls `chromium.connect(wsEndpoint)` instead of `chromium.launch()`. `run.js`'s cloud
+guard now allows `chromedriver` + `lambdatest` (BrowserStack/Appium still gated). Credentials
+come from env vars or `env.json -> lambdaTestCredentials`. Run with
+`--browserCapability=lambdatest-chrome-1920`. *Deprecated wording: the `/wd/hub`, `hostname`,
+`portNumber` fields in the lambdatest capability profile are Selenium-era and unused by Playwright.*

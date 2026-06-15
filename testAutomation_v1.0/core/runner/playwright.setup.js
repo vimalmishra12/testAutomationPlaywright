@@ -69,6 +69,61 @@ function resolveChannel() {
 
 const TRACES_DIR = nodePath.join(process.cwd(), "traces");
 
+// ---------------------------------------------------------------------------
+// LambdaTest cloud execution (Phase 3 / decision D7).
+//   Playwright-as-a-library does NOT use the Selenium /wd/hub endpoint WDIO used.
+//   It connects to LambdaTest's PLAYWRIGHT grid over a websocket:
+//     wss://cdp.lambdatest.com/playwright?capabilities=<url-encoded JSON>
+//   where the JSON carries browserName/browserVersion + an LT:Options block with
+//   the user / accessKey / platform / build / name. We derive that from the active
+//   capability profile (capabilities.json) and the credentials wired by env.conf.js.
+// ---------------------------------------------------------------------------
+let playwrightClientVersion;
+try { playwrightClientVersion = require("playwright/package.json").version; } catch (_) { /* optional */ }
+
+function activeCapability() {
+    const name = global.argv && global.argv.browserCapability;
+    return (name && global.capabilitiesFile && global.capabilitiesFile[name]) || null;
+}
+
+function isLambdaTest() {
+    const cap = activeCapability();
+    return !!(cap && cap.webDriverService === "lambdatest");
+}
+
+function lambdaTestWsEndpoint() {
+    const cap = activeCapability();
+    const profileCap = (cap && cap.capabilities && cap.capabilities[0]) || {};
+    const ltProfile = profileCap["LT:Options"] || {};
+    const user = process.env.LT_USERNAME;
+    const accessKey = process.env.LT_ACCESS_KEY;
+    if (!user || !accessKey) {
+        throw new Error(
+            "LambdaTest credentials missing — set LT_USERNAME and LT_ACCESS_KEY " +
+            "(env vars, or env.json -> lambdaTestCredentials) before running a lambdatest capability."
+        );
+    }
+    // Selenium profiles use `platformName`; the Playwright grid expects `platform`.
+    const ltOptions = Object.assign({}, ltProfile, {
+        user,
+        accessKey,
+        platform: ltProfile.platform || ltProfile.platformName || "Windows 10",
+        name: ltProfile.name || ((global.argv && global.argv.testExecFile) || "C1 Playwright test"),
+    });
+    delete ltOptions.platformName;
+    if (playwrightClientVersion) ltOptions.playwrightClientVersion = playwrightClientVersion;
+
+    const capabilities = {
+        browserName: profileCap.browserName || "Chrome",
+        browserVersion: profileCap.browserVersion || "latest",
+        "LT:Options": ltOptions,
+    };
+    return (
+        "wss://cdp.lambdatest.com/playwright?capabilities=" +
+        encodeURIComponent(JSON.stringify(capabilities))
+    );
+}
+
 // Derive the FIXED viewport from the resolved capability (env.conf.js parses
 // capabilities.json "1920x1080" into global.resolution). Falls back to 1920x1080.
 function resolveViewport() {
@@ -96,6 +151,7 @@ function contextViewport() {
         const [w, h] = process.env.PWVIEWPORT.split("x").map((n) => parseInt(n, 10));
         if (Number.isFinite(w) && Number.isFinite(h)) return { width: w, height: h };
     }
+    if (isLambdaTest()) return resolveViewport(); // remote browser — use the fixed capability viewport
     if (MAXIMIZE_HEADED) return null; // page fills the maximized window — no distortion
     return resolveViewport();
 }
@@ -209,6 +265,18 @@ exports.mochaHooks = {
      */
     beforeAll: async function () {
         this.timeout(120000);
+        if (isLambdaTest()) {
+            // Phase 3 / D7 — connect to the LambdaTest Playwright grid instead of
+            // launching a local browser. channel/headless/args do not apply remotely.
+            this.timeout(180000); // cloud connect + session spin-up is slower
+            const wsEndpoint = lambdaTestWsEndpoint();
+            global.browser = await chromium.connect(wsEndpoint);
+            global.__isCloud = true;
+            attachBrowserCompat();
+            await global.createFreshContext();
+            console.log(`[pw-setup] Connected to LambdaTest (capability=${global.argv && global.argv.browserCapability}); globals browser/context/page/$/$$ set.`);
+            return;
+        }
         const channel = resolveChannel();
         const launchOpts = { headless: HEADLESS, args: launchArgs() };
         if (channel) launchOpts.channel = channel; // system Chrome for headed; bundled for headless

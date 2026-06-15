@@ -28,19 +28,21 @@ const fs = require("fs");
 // 1) Resolve env + globals (must run BEFORE anything reads global.appUrl etc.).
 require(path.join(process.cwd(), "env.conf.js"));
 
-// Cloud execution (LambdaTest / BrowserStack / Appium) is Phase 3 — not yet ported
-// to Playwright. Fail fast with a clear message instead of silently launching a
-// local browser for a cloud capability profile (decision D7 / Phase 3).
+// Cloud execution (decision D7 / Phase 3). LambdaTest IS supported via the Playwright
+// grid (chromium.connect in playwright.setup.js). Other remote services (BrowserStack /
+// Appium) are not yet ported — fail fast with a clear message rather than silently
+// launching a local browser for an unsupported cloud capability profile.
 (function guardCloudCapability() {
     const capName = global.argv && global.argv.browserCapability;
     const cap = capName && global.capabilitiesFile && global.capabilitiesFile[capName];
     const service = cap && cap.webDriverService;
-    if (service && service !== "chromedriver") {
+    const SUPPORTED = ["chromedriver", "lambdatest"];
+    if (service && !SUPPORTED.includes(service)) {
         console.error(
             `\nERROR!!! Capability "${capName}" uses webDriverService="${service}" (cloud/remote).\n` +
-            `Cloud execution (LambdaTest/BrowserStack/Appium) is Phase 3 of the Playwright\n` +
-            `migration and is not yet supported. Use a local desktop capability instead,\n` +
-            `e.g. --browserCapability=desktop-chrome-1920.\n`
+            `Only local (chromedriver) and LambdaTest are supported under Playwright so far.\n` +
+            `BrowserStack/Appium are not yet ported. Use --browserCapability=desktop-chrome-1920\n` +
+            `(local) or --browserCapability=lambdatest-chrome-1920 (cloud).\n`
         );
         process.exit(1);
     }
