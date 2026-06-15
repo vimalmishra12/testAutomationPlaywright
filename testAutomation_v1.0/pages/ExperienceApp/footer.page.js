@@ -174,10 +174,34 @@ return res;
 click_footerCambridgeOneSchool: async function () {
 await logger.logInto(await stackTrace.get());
 var res;
-res =await action.click(this.footerCambridgeOneSchool);
+var target = require('./footerCambridgeOneForSchool.page');
+
+// [2026-06-15] SPA-navigation flake hardening (NEMO-24388 before-hook, ~20% repro).
+// The footer "Cambridge One for schools" link is an Angular route. Playwright's click
+// auto-wait only checks DOM actionability (visible/stable/enabled) — NOT whether Angular
+// has bound the routerLink handler yet. So an early click can be a NO-OP: no navigation
+// fires, the target page's .heading-title never renders, and the 30s waitFor times out,
+// aborting the whole before-hook. Fix: let the page settle, click, verify the target page
+// initialised, and if it did not AND we are still on the dashboard (link still present =>
+// the click was a no-op), re-click once.
+await action.waitForDisplayed(this.footerCambridgeOneSchool, 10000);
+await action.waitForDocumentLoad();
+
+res = await action.click(this.footerCambridgeOneSchool);
 if (true == res) {
  await logger.logInto(await stackTrace.get(), " footerCambridgeOneSchool is clicked");
-res =await require ('./footerCambridgeOneForSchool.page').isInitialized();
+res = await target.isInitialized();
+if (!(res && res.pageStatus === true)) {
+  // Did the click actually navigate? If the footer link is still present we never left the
+  // dashboard (no-op click) — re-click once. If it is gone, navigation happened but the
+  // heading was slow; the isInitialized() above already waited, so fall through with its result.
+  var stillOnDashboard = (await action.getElementCount(this.footerCambridgeOneSchool)) > 0;
+  if (stillOnDashboard) {
+    await logger.logInto(await stackTrace.get(), "schools page did not load (no-op click); retrying footer click once", 'error');
+    res = await action.click(this.footerCambridgeOneSchool);
+    if (true == res) res = await target.isInitialized();
+  }
+}
 }
 else {
 await logger.logInto(await stackTrace.get(), res +"footerCambridgeOneSchool is NOT clicked", 'error');
