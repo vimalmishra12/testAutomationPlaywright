@@ -1,14 +1,11 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
-// Selectors resolved at load time from C1Selectors.json → schoolAdminDashboard (root level)
-// Note: this section lives at JSON root (not under css.ComproC1).
+// Selectors resolved at load time from C1Selectors.json → css.ComproC1.schoolAdminDashboard
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 module.exports = {
-  // Resolves to C1Selectors.json → schoolAdminDashboard.firstSchoolLink
-  firstSchoolLink: selectorFile.schoolAdminDashboard.firstSchoolLink,
-  // Resolves to C1Selectors.json → schoolAdminDashboard.teacherAdminToggle
-  teacherAdminToggle: selectorFile.schoolAdminDashboard.teacherAdminToggle,
+  firstSchoolLink: selectorFile.css.ComproC1.schoolAdminDashboard.firstSchoolLink,
+  teacherAdminToggle: selectorFile.css.ComproC1.schoolAdminDashboard.teacherAdminToggle,
 
   /**
    * Confirms the school admin dashboard ("My school accounts") has loaded.

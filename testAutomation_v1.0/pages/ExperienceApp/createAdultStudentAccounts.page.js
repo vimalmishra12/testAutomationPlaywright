@@ -1,21 +1,20 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
-// Selectors resolved at load time from C1Selectors.json → createAdultStudentAccounts (root level)
-// Note: this section lives at JSON root (not under css.ComproC1).
+// Selectors resolved at load time from C1Selectors.json → css.ComproC1.createAdultStudentAccounts
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 module.exports = {
-  // Resolves to C1Selectors.json → createAdultStudentAccounts.*
-  pageHeading:      selectorFile.createAdultStudentAccounts.pageHeading,
-  csvFileInput:     selectorFile.createAdultStudentAccounts.csvFileInput,
-  uploadFileBtn:    selectorFile.createAdultStudentAccounts.uploadFileBtn,
-  backBtn:          selectorFile.createAdultStudentAccounts.backBtn,
-  getCsvTemplateLink: selectorFile.createAdultStudentAccounts.getCsvTemplateLink,
+  // Resolves to C1Selectors.json → css.ComproC1.createAdultStudentAccounts.*
+  pageHeading:      selectorFile.css.ComproC1.createAdultStudentAccounts.pageHeading,
+  csvFileInput:     selectorFile.css.ComproC1.createAdultStudentAccounts.csvFileInput,
+  uploadFileBtn:    selectorFile.css.ComproC1.createAdultStudentAccounts.uploadFileBtn,
+  backBtn:          selectorFile.css.ComproC1.createAdultStudentAccounts.backBtn,
+  getCsvTemplateLink: selectorFile.css.ComproC1.createAdultStudentAccounts.getCsvTemplateLink,
   // inline error element rendered per field after CSV upload
-  inlineErrorText:  selectorFile.createAdultStudentAccounts.inlineErrorText,
+  inlineErrorText:  selectorFile.css.ComproC1.createAdultStudentAccounts.inlineErrorText,
   // Global-error modal — fires when the whole CSV is rejected (e.g. > 200 records)
-  uploadErrorModalTitle: selectorFile.createAdultStudentAccounts.uploadErrorModalTitle,
-  uploadErrorModalBody:  selectorFile.createAdultStudentAccounts.uploadErrorModalBody,
+  uploadErrorModalTitle: selectorFile.css.ComproC1.createAdultStudentAccounts.uploadErrorModalTitle,
+  uploadErrorModalBody:  selectorFile.css.ComproC1.createAdultStudentAccounts.uploadErrorModalBody,
 
   /**
    * Confirms the "Create adult student accounts" CSV upload page has loaded.

@@ -1,21 +1,20 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
-// Selectors resolved at load time from C1Selectors.json → createNewAccountsForChildren (root level)
-// Note: this section lives at JSON root (not under css.ComproC1).
+// Selectors resolved at load time from C1Selectors.json → css.ComproC1.createNewAccountsForChildren
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 module.exports = {
-  // Resolves to C1Selectors.json → createNewAccountsForChildren.*
-  pageHeading:      selectorFile.createNewAccountsForChildren.pageHeading,
-  csvFileInput:     selectorFile.createNewAccountsForChildren.csvFileInput,
-  uploadFileBtn:    selectorFile.createNewAccountsForChildren.uploadFileBtn,
-  backBtn:          selectorFile.createNewAccountsForChildren.backBtn,
-  getCsvTemplateLink: selectorFile.createNewAccountsForChildren.getCsvTemplateLink,
+  // Resolves to C1Selectors.json → css.ComproC1.createNewAccountsForChildren.*
+  pageHeading:      selectorFile.css.ComproC1.createNewAccountsForChildren.pageHeading,
+  csvFileInput:     selectorFile.css.ComproC1.createNewAccountsForChildren.csvFileInput,
+  uploadFileBtn:    selectorFile.css.ComproC1.createNewAccountsForChildren.uploadFileBtn,
+  backBtn:          selectorFile.css.ComproC1.createNewAccountsForChildren.backBtn,
+  getCsvTemplateLink: selectorFile.css.ComproC1.createNewAccountsForChildren.getCsvTemplateLink,
   // inline error element rendered per field after CSV upload
-  inlineErrorText:  selectorFile.createNewAccountsForChildren.inlineErrorText,
+  inlineErrorText:  selectorFile.css.ComproC1.createNewAccountsForChildren.inlineErrorText,
   // Global-error modal — fires when the whole CSV is rejected (e.g. > 200 records)
-  uploadErrorModalTitle: selectorFile.createNewAccountsForChildren.uploadErrorModalTitle,
-  uploadErrorModalBody:  selectorFile.createNewAccountsForChildren.uploadErrorModalBody,
+  uploadErrorModalTitle: selectorFile.css.ComproC1.createNewAccountsForChildren.uploadErrorModalTitle,
+  uploadErrorModalBody:  selectorFile.css.ComproC1.createNewAccountsForChildren.uploadErrorModalBody,
 
   /**
    * Confirms the "Create new accounts for children" CSV upload page has loaded.
