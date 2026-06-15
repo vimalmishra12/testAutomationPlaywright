@@ -194,3 +194,12 @@ unchanged. *Deprecated wording: "Wraps Chai assertions."*
 **ADR-010 (amended 2026-06-11):** context-per-suite replaces `browser.reloadSession()`.
 *Deprecated wording: "`testrunner.js` calls `browser.reloadSession()` before each suite."*
 Each later suite closes its context and opens a fresh one (same isolation intent).
+
+**ADR-009 (clarified 2026-06-13):** the true/Error return contract is the rule, but a
+few *data-returning* getters intentionally return richer values that page objects read
+directly. `getCSSProperty(selector, prop)` returns `{ property, value, parsed }`, where
+`parsed` is produced by `parseCssValue()` — colours give `{ type:'color', rgba, hex }`
+and lengths give `{ type:'number', value, unit, string }`. This preserves the WDIO
+shape that page objects consume via `.parsed.hex` / `.parsed.rgba` (e.g. NEMO-24388
+wizard hover-colour checks, eBook colour check). When porting a colour/size assertion,
+read `.parsed.*`, not the raw object.
