@@ -112,6 +112,36 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
 
     specFiles.forEach((f) => mocha.addFile(f));
 
+    // Visual (novus/pixelmatch) timeline report. WDIO drove this via the TimelineService
+    // onPrepare/onComplete service hooks; under standalone Mocha we invoke them here.
+    // onPrepare starts the changelog watcher; onComplete builds the index.html from the
+    // per-suite *-visualReport-*.log files written by visualTest.setVisualReportData.
+    let timelineSvc = null;
+    if (String(global.argv && global.argv.visual).toLowerCase() === "novus") {
+        try {
+            const { TimelineService } = require(process.cwd() + "/core/utils/visual-report-utility/report-service");
+            timelineSvc = new TimelineService();
+            timelineSvc.onPrepare();
+        } catch (e) {
+            console.log("[visual] timeline onPrepare failed:", e.message);
+            timelineSvc = null;
+        }
+    }
+
+    const buildVisualReport = async () => {
+        if (!timelineSvc) return;
+        try {
+            const fs = require("fs");
+            const visualDir = path.join(process.cwd(), global.reportOutputDir, "visual");
+            // Rebuild the changelog from disk so the report is robust to fs.watch races.
+            const logs = fs.readdirSync(visualDir).filter((f) => f.includes("visualReport"));
+            fs.writeFileSync(path.join(visualDir, "changelog.txt"), logs.join("\n") + "\n");
+            await timelineSvc.onComplete();
+        } catch (e) {
+            console.log("[visual] timeline report build failed:", e.message);
+        }
+    };
+
     // 3) Load files, then cross a macrotask boundary so the testrunner's
     //    `await jsonParser(...)`-deferred describe() calls flush before run().
     await mocha.loadFilesAsync();
@@ -119,7 +149,7 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
 
     const runner = mocha.run((failures) => {
         try { specGen.removingTempSpecs(); } catch (_) { /* best-effort cleanup */ }
-        process.exit(failures ? 1 : 0);
+        buildVisualReport().finally(() => process.exit(failures ? 1 : 0));
     });
 
     // Compact end-of-run summary (handy when the allure reporter is active).

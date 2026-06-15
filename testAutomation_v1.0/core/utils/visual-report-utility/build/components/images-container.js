@@ -11,7 +11,7 @@ const makeImageSource = (path, embed) => {
         try {
             const buffer = fs_1.default.readFileSync(path);
             let base64data = buffer.toString('base64');
-            return `data:image/jpeg;base64,${base64data}`;
+            return `data:image/png;base64,${base64data}`;
         }
         catch (e) {
             //do nothing

@@ -17,3 +17,7 @@ local.log
 traces/
 mochawesome-report/
 test/tempRunner/
+
+# Visual regression per-run artefacts (baselines in screenshots/baseline/ ARE committed)
+screenshots/screen/
+screenshots/diff/

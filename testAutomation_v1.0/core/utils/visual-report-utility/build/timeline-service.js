@@ -55,7 +55,7 @@ class TimelineService {
       {
         outputDir: process.cwd() + '/' + global.reportOutputDir + '/visual/',
         fileName: 'index.html',
-        embedImage: true,
+        embedImages: true,
         images: {
           quality: 100,
           resize: false,

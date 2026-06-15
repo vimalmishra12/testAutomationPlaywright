@@ -1,19 +1,35 @@
 "use strict";
 var rootDir = process.cwd();
 var mergeImg = require(path.join(rootDir, "/core/utils/mergeImage.js"));
+// Playwright-native visual diff engine (pixelmatch) — replaces WDIO's novus
+// browser.checkDocument(). See core/utils/visualCompare.js.
+var visualCompare = require(path.join(rootDir, "/core/utils/visualCompare.js"));
 var hideSelectors = [
   // 'class="copyright mb-0"'
 ];
 var excludeSelectors = [];
-const {
-  Eyes,
-  Target,
-  ClassicRunner,
-  By,
-  Configuration,
-  BatchInfo,
-} = require("@applitools/eyes-webdriverio");
-var eyes = new Eyes();
+
+// Applitools (eyes-playwright) is loaded LAZILY — only when --visual=applitools is
+// used — so the default pixelmatch path has no hard dependency on the SDK or an API
+// key. lazyEyes() throws a clear, actionable error if the path is used without setup.
+var Target = null;
+var eyes = null;
+function lazyEyes() {
+  if (eyes) return eyes;
+  let sdk;
+  try {
+    sdk = require("@applitools/eyes-playwright");
+  } catch (_) {
+    throw new Error(
+      "--visual=applitools requires the eyes-playwright SDK. Install it with " +
+      "`npm i -D @applitools/eyes-playwright` and set APPLITOOLS_API_KEY."
+    );
+  }
+  Target = sdk.Target;
+  eyes = new sdk.Eyes();
+  return eyes;
+}
+
 var action = require(rootDir + "/core/actionLibrary/baseActionLibrary");
 var labelsDir = "/screenshots/labels/" + global.view;
 
@@ -44,8 +60,11 @@ module.exports = {
     (logDataobj.start = startTime),
       (logDataobj.end = endTime),
       (logDataobj.duration = endTime - startTime);
-    logDataobj.capabilities = browser.capabilities;
-    logDataobj.capabilities.sessionId = browser.sessionId;
+    // WDIO exposed browser.capabilities / browser.sessionId; under Playwright we
+    // synthesise an equivalent block from the active capability profile.
+    logDataobj.capabilities =
+      (global.capabilitiesFile && global.argv && global.capabilitiesFile[global.argv.browserCapability]) || {};
+    logDataobj.capabilities.sessionId = (global.__pwContext && global.__pwContext._guid) || "playwright";
     logDataobj.capabilities.screenResolution = {
       width: global.resolution.width,
       height: global.resolution.height,
@@ -114,7 +133,7 @@ module.exports = {
       );
     }
     //console.log(" Mismatch Percentage for " + execJsonData[suiteIndex].Test[testIndex].id + " = " + result[0].misMatchPercentage);
-    var result = await browser.checkDocument({
+    var result = await visualCompare.checkDocument({
       exclude: excludeElements,
       hide: hideElements,
       misMatchTolerance: testObj.visualTolerance,
@@ -123,64 +142,40 @@ module.exports = {
 
     //await this.disableFullPageScrolling();
 
-    await browser.call(() =>
-      mergeImg.combineImages(
-        [
-          path.join(rootDir, labelsDir, "/baselineLbl.png"),
-          path.join(
-            rootDir,
-            global.baseScreenshotDir,
-            global.testFileName,
-            global.screenshotName
-          ),
-        ],
+    await mergeImg.combineImages(
+      [
+        path.join(rootDir, labelsDir, "/baselineLbl.png"),
         path.join(
           rootDir,
-          global.reportOutputDir,
-          "/visual/baseline-" + global.screenshotName
+          global.baseScreenshotDir,
+          global.testFileName,
+          global.screenshotName
         ),
-        "row"
-      )
-    );
-    console.log(
-      mergeImg.combineImages(
-        [
-          path.join(rootDir, labelsDir, "/baselineLbl.png"),
-          path.join(
-            rootDir,
-            global.baseScreenshotDir,
-            global.testFileName,
-            global.screenshotName
-          ),
-        ],
-
-        path.join(
-          rootDir,
-          global.reportOutputDir,
-          "/visual/baseline-" + global.screenshotName
-        ),
-        "row"
-      )
+      ],
+      path.join(
+        rootDir,
+        global.reportOutputDir,
+        "/visual/baseline-" + global.screenshotName
+      ),
+      "row"
     );
 
-    await browser.call(() =>
-      mergeImg.combineImages(
-        [
-          path.join(rootDir, labelsDir, "/testLbl.png"),
-          path.join(
-            rootDir,
-            global.testScreenshotDir,
-            global.testFileName,
-            global.screenshotName
-          ),
-        ],
+    await mergeImg.combineImages(
+      [
+        path.join(rootDir, labelsDir, "/testLbl.png"),
         path.join(
           rootDir,
-          global.reportOutputDir,
-          "/visual/test-" + global.screenshotName
+          global.testScreenshotDir,
+          global.testFileName,
+          global.screenshotName
         ),
-        "row"
-      )
+      ],
+      path.join(
+        rootDir,
+        global.reportOutputDir,
+        "/visual/test-" + global.screenshotName
+      ),
+      "row"
     );
 
     Arr[count].tests[testIndex] = Object.assign(
@@ -199,49 +194,32 @@ module.exports = {
     if (result[0].isWithinMisMatchTolerance == true) {
       Arr[count].tests[testIndex].state = "passed";
       Arr[count].tests[testIndex].screenshots = [
-        rootDir +
-          global.reportOutputDir +
-          "/visual/baseline-" +
-          global.screenshotName,
-        rootDir +
-          global.reportOutputDir +
-          "/visual/test-" +
-          global.screenshotName,
+        path.join(rootDir, global.reportOutputDir, "/visual/baseline-" + global.screenshotName),
+        path.join(rootDir, global.reportOutputDir, "/visual/test-" + global.screenshotName),
       ];
     } else {
       Arr[count].tests[testIndex].state = "failed";
       Arr[count].tests[testIndex].screenshots = [
-        rootDir +
-          global.reportOutputDir +
-          "/visual/baseline-" +
-          global.screenshotName,
-        rootDir +
-          global.reportOutputDir +
-          "/visual/test-" +
-          global.screenshotName,
-        rootDir +
-          global.reportOutputDir +
-          "/visual/diff-" +
-          global.screenshotName,
+        path.join(rootDir, global.reportOutputDir, "/visual/baseline-" + global.screenshotName),
+        path.join(rootDir, global.reportOutputDir, "/visual/test-" + global.screenshotName),
+        path.join(rootDir, global.reportOutputDir, "/visual/diff-" + global.screenshotName),
       ];
-      await browser.call(() =>
-        mergeImg.combineImages(
-          [
-            path.join(rootDir, labelsDir, "/diffLbl.png"),
-            path.join(
-              rootDir,
-              global.diffScreenshotDir,
-              global.testFileName,
-              global.screenshotName
-            ),
-          ],
+      await mergeImg.combineImages(
+        [
+          path.join(rootDir, labelsDir, "/diffLbl.png"),
           path.join(
             rootDir,
-            global.reportOutputDir,
-            "/visual/diff-" + global.screenshotName
+            global.diffScreenshotDir,
+            global.testFileName,
+            global.screenshotName
           ),
-          "row"
-        )
+        ],
+        path.join(
+          rootDir,
+          global.reportOutputDir,
+          "/visual/diff-" + global.screenshotName
+        ),
+        "row"
       );
     }
 
@@ -250,115 +228,106 @@ module.exports = {
       result[0].isWithinMisMatchTolerance == true &&
       global.view == "mobile"
     ) {
-      await browser.call(() =>
-        mergeImg.combineImages(
-          [
-            path.join(
-              rootDir,
-              global.reportOutputDir,
-              "/visual/baseline-" + global.screenshotName
-            ),
-            path.join(
-              rootDir,
-              global.reportOutputDir,
-              "/visual/test-" + global.screenshotName
-            ),
-          ],
+      await mergeImg.combineImages(
+        [
           path.join(
             rootDir,
             global.reportOutputDir,
-            "/visual/merge-" + global.screenshotName
+            "/visual/baseline-" + global.screenshotName
           ),
-          "col"
-        )
+          path.join(
+            rootDir,
+            global.reportOutputDir,
+            "/visual/test-" + global.screenshotName
+          ),
+        ],
+        path.join(
+          rootDir,
+          global.reportOutputDir,
+          "/visual/merge-" + global.screenshotName
+        ),
+        "col"
       );
       Arr[count].tests[testIndex].screenshots = [
-        rootDir +
-          global.reportOutputDir +
-          "/visual/merge-" +
-          global.screenshotName,
+        path.join(rootDir, global.reportOutputDir, "/visual/merge-" + global.screenshotName),
       ];
     } else if (
       result[0].isWithinMisMatchTolerance == false &&
       global.view == "mobile"
     ) {
-      await browser.call(() =>
-        mergeImg.combineImages(
-          [
-            path.join(
-              rootDir,
-              global.reportOutputDir,
-              "/visual/baseline-" + global.screenshotName
-            ),
-            path.join(
-              rootDir,
-              global.reportOutputDir,
-              "/visual/test-" + global.screenshotName
-            ),
-            path.join(
-              rootDir,
-              global.reportOutputDir,
-              "/visual/diff-" + global.screenshotName
-            ),
-          ],
+      await mergeImg.combineImages(
+        [
           path.join(
             rootDir,
             global.reportOutputDir,
-            "/visual/merge-" + global.screenshotName
+            "/visual/baseline-" + global.screenshotName
           ),
-          "col"
-        )
+          path.join(
+            rootDir,
+            global.reportOutputDir,
+            "/visual/test-" + global.screenshotName
+          ),
+          path.join(
+            rootDir,
+            global.reportOutputDir,
+            "/visual/diff-" + global.screenshotName
+          ),
+        ],
+        path.join(
+          rootDir,
+          global.reportOutputDir,
+          "/visual/merge-" + global.screenshotName
+        ),
+        "col"
       );
       Arr[count].tests[testIndex].screenshots = [
-        rootDir +
-          global.reportOutputDir +
-          "/visual/merge-" +
-          global.screenshotName,
+        path.join(rootDir, global.reportOutputDir, "/visual/merge-" + global.screenshotName),
       ];
     }
     return Arr[count];
   },
 
-  //take screenshot for Applitools
+  //take screenshot for Applitools (eyes-playwright — operates on global.page)
   generateScreenshotsApplitools: async function (testObj) {
-    //Ignore Region Capabilty- Applitools
+    const e = lazyEyes();
+    //Ignore Region Capability — Applitools
     if (testObj.visualTolerance) {
-      await browser.call(() =>
-        eyes.check(
-          testObj.id,
-          Target.window().fully().ignoreRegions(By.css(testObj.visualTolerance))
-        )
+      await e.check(
+        testObj.id,
+        Target.window().fully().ignoreRegions(testObj.visualTolerance)
       );
     }
-    //Default screenshot capture- Applitools
-    else
-      await browser.call(() => eyes.check(testObj.id, Target.window().fully()));
+    //Default screenshot capture — Applitools
+    else {
+      await e.check(testObj.id, Target.window().fully());
+    }
   },
 
-  //setting params to initiate Applitools
+  //setting params to initiate Applitools. Config comes from global.eyesConfig
+  //(optional) and APPLITOOLS_API_KEY; the eyes-playwright SDK reads the env var
+  //automatically, so an explicit apiKey is only set when provided.
   initiateApplitools: async function () {
     console.log("applitools Initiated..");
-    eyes.setConfiguration(browser.config.eyes);
-    eyes.setMatchLevel(browser.config.eyes.matchLevel);
-    eyes.setStitchMode(browser.config.eyes.stitchMode);
-    eyes.setBatch(browser.config.eyes.batch);
-    //eyes.setBaselineEnvName('MasterEnv');
-    eyes.setApiKey(browser.config.eyes.apiKey);
+    const e = lazyEyes();
+    const cfg = global.eyesConfig || {};
+    if (cfg.matchLevel) e.setMatchLevel(cfg.matchLevel);
+    if (cfg.batch) e.setBatch(cfg.batch);
+    const apiKey = process.env.APPLITOOLS_API_KEY || cfg.apiKey;
+    if (apiKey) e.setApiKey(apiKey);
   },
 
-  //open Applitools eyes
+  //open Applitools eyes against the current Playwright page
   openApplitoolsEyes: async function (suiteIndex, suiteName) {
-    await browser.call(() =>
-      eyes.open(browser, "Engage", suiteIndex + " - " + suiteName, {
-        width: argv.windowWidth,
-        height: argv.windowHeight,
-      })
-    );
+    const e = lazyEyes();
+    await e.open(global.page, "Engage", suiteIndex + " - " + suiteName, {
+      width: global.resolution.width,
+      height: global.resolution.height,
+    });
   },
 
   //closing Applitools Eyes
   closeApplitoolsEyes: async function () {
-    await browser.call(() => eyes.close());
+    if (eyes) await eyes.close();
   },
 
   //change scroolbarDiv property

@@ -215,3 +215,17 @@ guard now allows `chromedriver` + `lambdatest` (BrowserStack/Appium still gated)
 come from env vars or `env.json -> lambdaTestCredentials`. Run with
 `--browserCapability=lambdatest-chrome-1920`. *Deprecated wording: the `/wd/hub`, `hostname`,
 `portNumber` fields in the lambdatest capability profile are Selenium-era and unused by Playwright.*
+
+**ADR-008/D7 (Phase 3 — visual testing ported 2026-06-15):** the WDIO novus
+`browser.checkDocument()` (wdio-novus-visual-regression-service) is replaced by a
+Playwright-native pixelmatch engine in `core/utils/visualCompare.js`: `page.screenshot({fullPage})`
+→ pixelmatch/pngjs diff vs baseline → bootstrap baseline on first run → write diff on mismatch →
+return the same resemble-style `[{ misMatchPercentage, isWithinMisMatchTolerance, isSameDimensions,
+isExactSameImage }]`. Screenshot naming (`${suiteKey}-${pad2(tcNumber)}-${tcId}.png` under
+`testFileName/`) is reproduced from the retired novus `getScreenshotName`. `visualTest.js` keeps its
+report/merge logic but drops the WDIO `browser.call()`/`browser.checkDocument()` wrappers. The custom
+timeline report (`core/utils/visual-report-utility`) is driver-agnostic and reused as-is; its
+`onPrepare()`/`onComplete()` hooks (formerly WDIO service hooks) are now invoked from `run.js`,
+gated on `--visual=novus`. Applitools is ported to the lazy-loaded `@applitools/eyes-playwright`
+SDK on the `--visual=applitools` path (requires `npm i -D @applitools/eyes-playwright` +
+`APPLITOOLS_API_KEY`). Run with `npm run visualAcceptance_<env>`.
