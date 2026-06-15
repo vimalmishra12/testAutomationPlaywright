@@ -113,10 +113,10 @@ Before touching any protected file, you MUST present this exact format and wait:
 ```
 ⚠️ PROTECTED FILE — Confirmation Required
 
-File    : wdio.conf.js
-Section : reporters array
-Current : reporters: ['spec']
-Change  : reporters: ['spec', 'allure']
+File    : core/runner/run.js
+Section : reporter selection
+Current : default reporter = mochawesome
+Change  : also wire allure-mocha behind --report=allure
 Reason  : Adding Allure reporter as requested for CI pipeline
 
 Do you confirm this change? (yes / no)
@@ -334,12 +334,12 @@ When introducing a new test execution JSON file (e.g., myNewTest.json):
    scripts in package.json:
 
    Functional Script:
-   "myNewFeatureTest_qa": "npx wdio --appType=ExperienceApp --testEnv=qa
-   --testExecFile='myNewTest.json' --browserCapability=desktop-chrome-1920"
+   "myNewFeatureTest_qa": "node core/runner/run.js --appType=ExperienceApp --testEnv=qa
+   --testExecFile=myNewTest.json --browserCapability=desktop-chrome-1920"
 
    Visual Script:
-   "visualAcceptance_myNewFeature_qa": "npx wdio --appType=ExperienceApp
-   --testEnv=qa --testExecFile='myNewTest.json'
+   "visualAcceptance_myNewFeature_qa": "node core/runner/run.js --appType=ExperienceApp
+   --testEnv=qa --testExecFile=myNewTest.json
    --browserCapability=desktop-chrome-1920 --visual=novus --skipAssertion=true"
 
    Before writing any new script entry to package.json, you MUST present
@@ -349,8 +349,8 @@ When introducing a new test execution JSON file (e.g., myNewTest.json):
 
    File    : package.json
    Change  : Adding scripts —
-             "myNewFeatureTest_qa": "npx wdio ..."
-             "visualAcceptance_myNewFeature_qa": "npx wdio ... --visual=novus
+             "myNewFeatureTest_qa": "node core/runner/run.js ..."
+             "visualAcceptance_myNewFeature_qa": "node core/runner/run.js ... --visual=novus
              --skipAssertion=true"
    Reason  : New execution file introduced; visual TCs detected
 

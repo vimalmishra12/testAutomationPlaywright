@@ -6,18 +6,18 @@
 
 ## System Overview
 
-This is a **WebDriverIO v7-based end-to-end test automation framework** for the Cambridge One (C1) digital learning platform. It automates browser-based functional, accessibility, and visual regression testing across multiple environments (thor, qa, rel, production) using a JSON-driven, data-separated architecture.
+This is a **Playwright-as-a-library + Mocha end-to-end test automation framework** for the Cambridge One (C1) digital learning platform (migrated from WebDriverIO v7 — Prompt 4 / ADR-012). It automates browser-based functional, accessibility, and visual regression testing across multiple environments (thor, qa, rel, production) using a JSON-driven, data-separated architecture. Cloud execution runs on LambdaTest's Playwright grid; visual regression uses a pixelmatch engine feeding a custom timeline report.
 
 **Core Purpose**: Execute parameterized test suites against web applications by composing reusable test case functions with externalized selectors, test data, and execution orchestration — all without modifying core framework code.
 
-**Tech Stack** _(updated 2026-06-11 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha)_:
+**Tech Stack** _(updated 2026-06-15 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha; Phase 3 LambdaTest + visual testing complete)_:
 - Runtime: Node.js
 - Test Framework: **standalone Mocha** (entry: `core/runner/run.js`; config: `.mocharc.js`)
 - Browser Automation: **Playwright used as a library** (`require('playwright')`, NOT `@playwright/test`)
 - Assertions: **standalone `expect` from `@playwright/test`** (import only, wrapped in `baseAssertionLibrary.js`) — Chai removed
-- Reporting: Spec (Mocha) + Allure (`allure-mocha`); optional Mochawesome HTML (screenshots); Playwright tracing via `--trace`. Timeline reporter retired
-- Visual Testing: **Phase 3** — `page.screenshot()` + `pixelmatch` (Novus/Applitools retired/under review)
-- CI Runners: local Playwright Chromium/Chrome; cloud (LambdaTest/BrowserStack) is **Phase 3**
+- Reporting: **Mochawesome HTML is the DEFAULT** (inline screenshots; opt out with `--report=spec`/`allure`); Playwright tracing via `--trace`
+- Visual Testing (done 2026-06-15): `page.screenshot()` + `pixelmatch`/`pngjs` (`core/utils/visualCompare.js`) feeding the custom **timeline report** (`core/utils/visual-report-utility`), via `--visual=novus`; Applitools ported to lazy `eyes-playwright` via `--visual=applitools`
+- CI Runners: local Playwright Chromium/Chrome; cloud on **LambdaTest's Playwright grid** (done 2026-06-15, `--browserCapability=lambdatest-*`). BrowserStack/Appium not yet ported
 
 ---
 
@@ -29,8 +29,8 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 
 | Module | Responsibility | Must NOT Do |
 |---|---|---|
-| `core/actionLibrary/baseActionLibrary.js` | Wraps WebDriverIO `$()` commands (click, setValue, getText, waitFor*, getAttribute, etc.) with logging and error handling | Contain page-specific logic, know about selectors |
-| `core/actionLibrary/baseAssertionLibrary.js` | Wraps Chai assertions with logging; supports `skipAssertion` mode | Contain test-specific validation logic |
+| `core/actionLibrary/baseActionLibrary.js` | Wraps Playwright `page.locator()` commands (click, setValue, getText, waitFor*, getAttribute, getCSSProperty, etc.) with logging and error handling | Contain page-specific logic, know about selectors |
+| `core/actionLibrary/baseAssertionLibrary.js` | Wraps Playwright `expect` (standalone, from @playwright/test) with logging; supports `skipAssertion` mode | Contain test-specific validation logic |
 | `core/runner/testrunner.js` | Parses execution JSON, resolves test data, invokes Mocha describe/it blocks, manages browser sessions | Contain business logic or page knowledge |
 | `core/runner/launchUrl.js` | Navigates browser to `appUrl` (global set from `env.json`) | Know specific URLs |
 | `core/runner/specGenerator.js` | Instantiates `specRunner` with the execution file | Contain test logic |
@@ -81,7 +81,8 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 
 | File | Purpose |
 |---|---|
-| `wdio.conf.js` | WebDriverIO config — capabilities, reporters, hooks, global setup |
+| `core/runner/run.js` | Mocha entry point — selects reporter (mochawesome default; `--report=spec\|allure`), drives the visual timeline report, runs the suites |
+| `core/runner/playwright.setup.js` | Playwright browser lifecycle + all framework globals (the role `wdio.conf.js` held); LambdaTest cloud connect |
 | `env.conf.js` | Environment resolution — reads `env.json`, sets globals (`appUrl`, `selectorDir`, `testExecDir`, etc.) |
 | `env.json` | Environment URLs and settings per appType/environment |
 | `capabilities.json` | Browser capability profiles (desktop-chrome-1920, lambdatest-*, etc.) |
@@ -94,11 +95,12 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ npm run <script>                                                │
-│   → npx wdio --appType --testEnv --testExecFile --capability   │
+│   → node core/runner/run.js --appType --testEnv --testExecFile  │
+│       --browserCapability                                       │
 └─────────┬───────────────────────────────────────────────────────┘
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ wdio.conf.js                                                    │
+│ run.js → env.conf.js + playwright.setup.js                      │
 │   → Resolves env.json → sets globals (appUrl, selectorDir...)   │
 │   → Loads capabilities.json                                     │
 │   → Instantiates specRunner(testExecFile)                       │
@@ -160,7 +162,7 @@ This is a **WebDriverIO v7-based end-to-end test automation framework** for the 
 
 ### Execution Lifecycle
 
-1. **Session Init**: `wdio.conf.js` → resolves environment → launches browser
+1. **Session Init**: `run.js` → `env.conf.js` resolves environment → `playwright.setup.js` launches browser (or connects to LambdaTest)
 2. **Suite Iteration**: `testrunner.js` → iterates `Suite1`, `Suite2`... from execution JSON
 3. **Before Hooks**: Executes `Before[]` steps sequentially (launchUrl, login, navigate)
 4. **Test Execution**: For each `Test[]` step → `describe/it` → calls TC function with resolved testdata
@@ -240,7 +242,7 @@ must follow the confirmation protocol defined in `AGENTS.md` before touching the
 Execution JSON → TC Repository, Test Data JSON, Test Files
 Test Cases     → Page Objects, global assertion
 Page Objects   → baseActionLibrary, selectorFile, other Page Objects (lazy require)
-baseActionLibrary → WebDriverIO $(), browser, logger
+baseActionLibrary → Playwright page.locator() (via $/$$), browser, logger
 ```
 
 ### Forbidden Dependencies
