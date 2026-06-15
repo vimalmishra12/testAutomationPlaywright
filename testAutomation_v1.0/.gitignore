@@ -21,3 +21,9 @@ test/tempRunner/
 # Visual regression per-run artefacts (baselines in screenshots/baseline/ ARE committed)
 screenshots/screen/
 screenshots/diff/
+
+# Credential-bearing env backups must never be committed (env.json itself is tracked
+# with placeholders; real creds belong in env vars LT_USERNAME / LT_ACCESS_KEY)
+env copy.json
+env.local.json
+env.*.local.json

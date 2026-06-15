@@ -119,6 +119,19 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
     let timelineSvc = null;
     if (String(global.argv && global.argv.visual).toLowerCase() === "novus") {
         try {
+            // Clear the PREVIOUS run's artefacts first. The timeline report aggregates
+            // every *-visualReport-*.log in this dir, so stale logs from earlier runs
+            // would otherwise be summed into the report (ghost "skipped"/"unknown browser"
+            // entries). Baselines live in screenshots/baseline/ and are NOT touched.
+            const fs = require("fs");
+            const visualDir = path.join(process.cwd(), global.reportOutputDir, "visual");
+            if (fs.existsSync(visualDir)) {
+                for (const f of fs.readdirSync(visualDir)) {
+                    if (/visualReport.*\.log$|^(baseline|test|diff|merge)-.*\.png$|^changelog\.txt$|^index\.html$/.test(f)) {
+                        try { fs.unlinkSync(path.join(visualDir, f)); } catch (_) { /* best-effort */ }
+                    }
+                }
+            }
             const { TimelineService } = require(process.cwd() + "/core/utils/visual-report-utility/report-service");
             timelineSvc = new TimelineService();
             timelineSvc.onPrepare();

@@ -61,9 +61,27 @@ module.exports = {
       (logDataobj.end = endTime),
       (logDataobj.duration = endTime - startTime);
     // WDIO exposed browser.capabilities / browser.sessionId; under Playwright we
-    // synthesise an equivalent block from the active capability profile.
-    logDataobj.capabilities =
+    // synthesise an equivalent block. The timeline report's getBrowserNameAndCombo()
+    // reads capabilities.browserName / .browserVersion at the TOP level, but the
+    // capability profile nests those under capabilities[0]. Flatten them (and pull the
+    // REAL running browser version from Playwright) so the report shows e.g.
+    // "chromium 126.0.x" instead of "unknown browser name unknown browser version".
+    var profile =
       (global.capabilitiesFile && global.argv && global.capabilitiesFile[global.argv.browserCapability]) || {};
+    var innerCap = (profile.capabilities && profile.capabilities[0]) || {};
+    var browserVersion = "";
+    try {
+      if (global.browser && typeof global.browser.version === "function") {
+        browserVersion = global.browser.version();
+      }
+    } catch (_) { /* best-effort */ }
+    logDataobj.capabilities = {
+      browserName:
+        innerCap.browserName || profile.browserName || (global.argv && global.argv.browserCapability) || "chromium",
+      browserVersion:
+        browserVersion || innerCap.browserVersion || profile.browserVersion || "",
+      platformName: (innerCap["LT:Options"] && innerCap["LT:Options"].platformName) || process.platform,
+    };
     logDataobj.capabilities.sessionId = (global.__pwContext && global.__pwContext._guid) || "playwright";
     logDataobj.capabilities.screenResolution = {
       width: global.resolution.width,
