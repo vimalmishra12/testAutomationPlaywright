@@ -1,114 +1,131 @@
-# Engage Automation
-----
-## Run Default tests:
-1. npm install
-2. npm run [script name available in the package.json]
+# C1 (Engage) Test Automation
 
-Refer [google doc](https://docs.google.com/document/d/1Eh6gFHoB3nrjEXZpuPFgRtZBXzX3IplUABiJ4iyS7xU/edit#) section for Steps to Run C1 Automation Test on Mobile Devices for more details.
+End-to-end automation for the Cambridge One (C1) platform.
 
-----
-## Run Tests using Command Line parameters
+> **Stack (migrated 2026 — Prompt 4 / ADR-012):** **Playwright used as a library**
+> (`require('playwright')`, *not* `@playwright/test`) driven by **standalone Mocha**, on top
+> of the original JSON-driven, data-separated execution engine. WebDriverIO v7 was retired.
+> The project lives in `testAutomation_v1.0/`. See `testAutomation_v1.0/.architecture/`
+> (`system.md`, `decisions.md`, `AGENTS.md`, `walkthroughs/`) for the full architecture.
 
-### Mandatory parameters:
-#### appType
-Application name like engageExperienceApp, difusionExperienceApp, backoffice etc. It must be present in env.json.
-#### testEnv
-Application test environment like qa, staging, production etc. It must be present in env.json.
-#### testExecFile
-Test execution json that contains the list of all the testcases to be executed. It must be present in the testExecDir as mentioned in the env.json.
-```
-npm test -- --appType=engageExperienceApp -- testEnv=qa --testExecFile='End2End.json'
-```
-```
-npm test -- --appType=engageExperienceApp -- testEnv=qa --testExecFile='etextFeatureTest.json,'End2End.json'
-```
-----
-### Optional parameters:
-#### capability
-Browser capability for running the test. Check capabilities.json to view/set the desired capabilities.
-```
-npm test -- --appType=engageExperienceApp -- testEnv=qa --testExecFile='End2End.json' --capability='desktop-chrome-1366'
-```
->If this parameter is not used then the default capability **desktop-chrome-1920** will be used.
+---
 
-#### reportdir
-Custom folder name to store the reports. 
-```
-npm test -- --reportdir="E2E-report" --appType=engageExperienceApp -- testEnv=qa --testExecFile='End2End.json'
-```
-To generate report folder based on date-timestamp, use 
-- **--reportdir=%date:/=%-%time::=-%** for Linux
-- **--reportdir="%date:~-4%-%date:~7,2%-%date:~10,2%-%time:~0,2%-%time:~3,2%-%time:~6,2%"** for Windows
+## Quick start
 
->If this parameter is not used then report will generate in the default folder "TestReports".
-
-#### visual
-Parameter for executing the visual test. Allowed values are **novus** and **applitools**. Visual flag for a testcase should be set to true in the testcase repository or in the execution json.
- ```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --visual=novus
-```
-> - Visual test will be performed only if the functional test is passed or if --skipAssertion is set to true.
-> - If this parameter is used without --skipAssertion=true then both functional and visual tests will be executed.
-
-#### skipAssertion
-Parameter for disabling/skipping assertions for the entire test run.
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --visual=novus --skipAssertion=true
-```
-> This parameter should NOT be used without --visual parameter.
-
-#### testFilter
-Parameter for running selective suites/tests based on a keyword. For e.g. passing keyword "Suite1" will run Suite1, Suite11 etc. if they are present in the execution file.
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --testFilter="Suite1"
+```bash
+cd testAutomation_v1.0
+npm install
+npm run <scriptName>        # e.g. npm run loginFeatureTest_thor
 ```
 
-#### retry
-Parameter for re-running the entire test if any test is failed. This parameter will run the entire spec file once.
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --retry
-```
+- `npm test` only prints a hint — run a **feature script** from `package.json`, or call the
+  runner directly (below).
+- Scripts are named `<feature>Test_<env>` (e.g. `eBookFeatureTest_thor`, `FooterFeatureTest_prod`).
 
-#### noCompressImage
-Parameter for disabling the image compression of the timeline report.
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --noCompressImage
+### Run the runner directly
+```bash
+node core/runner/run.js --appType=ExperienceApp --testEnv=thor \
+  --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920
 ```
 
-#### logglyToken
-Parameter for setting loggly token. If used,the generated logs will be shipped to loggly. 
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json --logglyToken=XYZ
-```
+---
 
-#### loginDataFile
-Parameter for passing login data json via command line. When this parameter is passed then login data is picked from this file instead of test execution file.
-```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile=End2End.json' --loginDataFile='dummylogindata.json'
-```
+## Reports
 
-#### excludeTestFile
-Parameter for excluding one or more test execution files from a group of test execution files. This parameter can be used in parallel mode when multiple sessions of browser run concurrently.
+A **Mochawesome HTML report is generated by default** (no flag needed), with a screenshot
+embedded inline per test:
 
- ```
-npm test -- --reportdir=%date:/=%-%time::=-% --appType=engageExperienceApp  --testEnv=qa --testExecFile='./testResources/testExecutionFiles/engageExperienceApp/*' --excludeTestFile='etextFeatureTest.json,tocFeatureTest.json,dashboardFeatureTest.json'
+```
+output/reports/TestReports/mochawesome/report.html
 ```
 
-Supported Options for testExecFile & excludeTestFile
-1. 'E2E*.json'
-2. 'E2E*.json,land*.json'
-3. '*.json'
-4. 'etextFeatureTest.json,tocFeatureTest.json,dashboardFeatureTest.json'
+- Opt out with `--report=spec` (plain console) or switch with `--report=allure`.
+- **Visual** runs additionally produce the custom **timeline report** at
+  `output/reports/TestReports/visual/index.html`.
+- The whole `output/` tree is git-ignored (per-run artefacts).
 
-> Above options will use testExecDir from env.json for identifying the file location.
+---
 
-5. './testResources/testExecutionFiles/engageExperienceApp/'
-6. './testResources/testExecutionFiles/engageExperienceApp/*'
-7. './testResources/testExecutionFiles/engageExperienceApp,./testResources/testExecutionFiles/difusion'
-8. './testResources/testExecutionFiles/engageExperienceApp/*,./testResources/testExecutionFiles/difusion/*'
-9. './testResources/testExecutionFiles/engageExperienceApp/userOnboardingTest.json'
-10. './testResources/testExecutionFiles/engageExperienceApp/*.json'
-11. './testResources/testExecutionFiles/engageExperienceApp/land*.json'
-12. './testResources/testExecutionFiles/engageExperienceApp/land*.json,./testResources/testExecutionFiles/engageExperienceApp/etext*.json'
+## Command-line parameters
 
-----
+### Mandatory
+| Param | Meaning |
+|---|---|
+| `--appType` | Application name (e.g. `ExperienceApp`). Must exist in `env.json`. |
+| `--testEnv` | Environment: `thor`, `qa`, `rel`, `production`. Must exist in `env.json`. |
+| `--testExecFile` | Test execution JSON (lists the test cases). Resolved under `testExecDir` from `env.json`. |
+
+```bash
+node core/runner/run.js --appType=ExperienceApp --testEnv=qa --testExecFile=loginTest.json
+```
+
+### Optional
+| Param | Meaning |
+|---|---|
+| `--browserCapability` | Capability profile from `capabilities.json`. Default: `desktop-chrome-1920`. Use `lambdatest-chrome-1920` for cloud (see below). |
+| `--headless=true` | Run headless (or env `PWHEADLESS=1`). Default is headed (system Chrome). |
+| `--report=spec\|allure\|mochawesome` | Reporter override. Default is `mochawesome`. |
+| `--visual=novus\|applitools` | Run visual regression (see below). The test's `visualTest` flag must be `true` in the TC repo / execution JSON. |
+| `--skipAssertion=true` | Skip functional assertions for the run (use **with** `--visual`, to capture visuals regardless of functional state). |
+| `--trace=true` | Save a Playwright trace per suite under `traces/` (open with `npx playwright show-trace`). |
+| `--reportdir=<name>` | Custom report sub-folder under `output/reports/` (default `TestReports`). |
+| `--loginDataFile=<file>` | Override login data JSON via CLI instead of the execution file. |
+| `--excludeTestFile=<a.json,b.json>` | Exclude execution files when globbing a folder of them. |
+
+> Removed in the Playwright migration (no longer read by the runner):
+> `--capability` (renamed `--browserCapability`), `--testFilter`, `--retry`,
+> `--noCompressImage`. Per-test retries are configured in the execution JSON, not via a flag.
+
+---
+
+## Visual regression
+
+```bash
+npm run visualAcceptance_thor
+# or
+node core/runner/run.js --appType=ExperienceApp --testEnv=thor \
+  --testExecFile=highlighterTest.json --browserCapability=desktop-chrome-1920 \
+  --visual=novus --skipAssertion=true
+```
+
+- **`--visual=novus`** (default) — Playwright `page.screenshot()` + **pixelmatch** diff vs a
+  baseline (`core/utils/visualCompare.js`), feeding the custom timeline report.
+- **`--visual=applitools`** — Applitools `eyes-playwright` (requires
+  `npm i -D @applitools/eyes-playwright` and `APPLITOOLS_API_KEY`).
+
+**Baselines are NOT committed.** `screenshots/baseline/` is git-ignored — each environment /
+CI runner (Semaphore) and each engineer bootstraps and owns their own baselines. The **first**
+`--visual=novus` run captures the baseline (everything "passes" as new); **re-run** for a real
+comparison.
+
+---
+
+## Cloud execution (LambdaTest)
+
+Runs on LambdaTest's **Playwright grid** (not the old Selenium `/wd/hub`):
+
+```bash
+# credentials via environment variables (recommended — same as Semaphore CI)
+$env:LT_USERNAME="<username>"; $env:LT_ACCESS_KEY="<accessKey>"   # PowerShell
+node core/runner/run.js --appType=ExperienceApp --testEnv=thor \
+  --testExecFile=loginTest.json --browserCapability=lambdatest-chrome-1920 --headless=true
+```
+
+- Credentials resolve from env vars first, falling back to `env.json → lambdaTestCredentials`.
+- **Never commit real credentials** — keep `env.json` on placeholders; set `LT_USERNAME` /
+  `LT_ACCESS_KEY` as env vars locally and as pipeline secrets in Semaphore.
+- BrowserStack / Appium are not yet ported.
+
+---
+
+## testExecFile / excludeTestFile path forms
+
+Both accept a single file, a comma-separated list, a folder, or a glob (resolved under
+`testExecDir` from `env.json` unless an explicit `./...` path is given), e.g.:
+
+```
+loginTest.json
+E2E*.json,land*.json
+./testResources/testExecutionFiles/ExperienceApp/thor/
+./testResources/testExecutionFiles/ExperienceApp/thor/*.json
+```
