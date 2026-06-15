@@ -18,7 +18,11 @@ traces/
 mochawesome-report/
 test/tempRunner/
 
-# Visual regression per-run artefacts (baselines in screenshots/baseline/ ARE committed)
+# Visual regression artefacts — NOT committed. Each environment / CI runner
+# (e.g. Semaphore) and each engineer generates and owns their own baselines
+# locally (first --visual=novus run bootstraps them). This avoids cross-machine
+# rendering diffs being committed as "the" baseline.
+screenshots/baseline/
 screenshots/screen/
 screenshots/diff/
 

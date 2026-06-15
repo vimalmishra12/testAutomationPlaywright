@@ -229,3 +229,12 @@ timeline report (`core/utils/visual-report-utility`) is driver-agnostic and reus
 gated on `--visual=novus`. Applitools is ported to the lazy-loaded `@applitools/eyes-playwright`
 SDK on the `--visual=applitools` path (requires `npm i -D @applitools/eyes-playwright` +
 `APPLITOOLS_API_KEY`). Run with `npm run visualAcceptance_<env>`.
+
+**Baseline ownership (decided 2026-06-15):** visual baselines are **NOT committed**.
+`screenshots/baseline/` (along with the per-run `screen/` and `diff/`) is git-ignored.
+Each environment / CI runner (e.g. Semaphore) and each engineer generates and owns their
+own baselines locally — the first `--visual=novus` run bootstraps them. *Rationale:* cross-machine
+font/anti-aliasing/GPU rendering differences make a single committed baseline unreliable as the
+shared reference; owning baselines per runner avoids false diffs. *Trade-off:* a fresh checkout has
+no baselines, so the first visual run is a bootstrap (everything "passes" as new) — re-run to get a
+real comparison.
