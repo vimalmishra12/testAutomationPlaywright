@@ -34,12 +34,17 @@ const nodePath = require("path");
 // framework does not hard-depend on mochawesome when other reporters are used.
 let mochaAddContext = null;
 try { mochaAddContext = require("mochawesome/addContext"); } catch (_) { /* optional */ }
-// Attach screenshots when the mochawesome report is active — via either the CLI
-// flag (--report=mochawesome) or the env var (MOCHAWESOME=1). global.argv is set by
-// env.conf.js, which run.js requires before this file.
+// Attach screenshots when the mochawesome report is active. As of 2026-06-15 mochawesome
+// is the DEFAULT reporter (see run.js), so screenshots attach unless the user explicitly
+// opted into the spec or allure reporter. Keep this gate in sync with run.js's selection.
+// global.argv is set by env.conf.js, which run.js requires before this file.
+const _reportFlag = String((global.argv && global.argv.report) || "").toLowerCase();
+const _wantSpec = _reportFlag === "spec" || process.env.SPEC === "1";
+const _wantAllure = _reportFlag === "allure" || process.env.ALLURE === "1";
 const SHOTS_ENABLED =
+    _reportFlag === "mochawesome" ||
     process.env.MOCHAWESOME === "1" ||
-    String(global.argv && global.argv.report).toLowerCase() === "mochawesome";
+    (!_wantSpec && !_wantAllure);
 const SHOTS_DIR = nodePath.join(process.cwd(), "mochawesome-report", "screenshots");
 
 // Headed by default (decision D4 / POC). Force headless via either the CLI flag

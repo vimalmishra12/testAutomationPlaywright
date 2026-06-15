@@ -69,9 +69,18 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
     //   CLI flag : npm run poc:thor -- --report=mochawesome | allure | spec
     //   Env var  : MOCHAWESOME=1 / ALLURE=1  (bash-style)
     // The CLI flag wins when both are present.
+    //
+    // [2026-06-15] DEFAULT is now mochawesome (HTML report + inline base64 screenshots),
+    // so every `npm run <feature>` produces a report with no extra flags. Opt out with
+    // `--report=spec` (or SPEC=1) for the plain console reporter, or `--report=allure`.
     const reportFlag = String((global.argv && global.argv.report) || "").toLowerCase();
-    const wantMochawesome = reportFlag === "mochawesome" || process.env.MOCHAWESOME === "1";
+    const wantSpec = reportFlag === "spec" || process.env.SPEC === "1";
     const wantAllure = reportFlag === "allure" || process.env.ALLURE === "1";
+    // Mochawesome unless the user explicitly asked for spec/allure.
+    const wantMochawesome =
+        reportFlag === "mochawesome" ||
+        process.env.MOCHAWESOME === "1" ||
+        (!wantSpec && !wantAllure);
 
     let reporter = "spec";
     let reporterOptions = {};
