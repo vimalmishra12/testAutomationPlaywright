@@ -1,7 +1,7 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
 // Selectors resolved at load time from C1Selectors.json → schoolAdminDashboard (root level)
-// Note: this section lives at JSON root (not under css.ComproC1) — matches the vhlNotes pattern.
+// Note: this section lives at JSON root (not under css.ComproC1).
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 module.exports = {

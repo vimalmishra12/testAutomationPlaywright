@@ -1,7 +1,0 @@
-Label,cssSelector,tagName,group,relation,extraInfo,returnValue,teacherAppLangEN
-highlighterIcon,div.MuiBox-root.css-k008qs,button,vhlHighliter,,,,
-eraserButton,"button[data-tid=""annotation-toolbar-item-1""]",button,vhlHighliter,,,,
-highlighterBtn,"button[data-tid=""annotation-toolbar-item-0""]",button,vhlHighliter,,,,
-colorPicker,"div#color-picker-button[data-tid=""annotation-toolbar-color-picker""]",div,vhlHighliter,,,,
-removeAllButton,"button[data-tid=""annotation-toolbar-item-2""]",button,vhlHighliter,,,,
-closeIcon,div.IconBox-sc-17vm12b.iqIkjM,button,vhlHighliter,,,,

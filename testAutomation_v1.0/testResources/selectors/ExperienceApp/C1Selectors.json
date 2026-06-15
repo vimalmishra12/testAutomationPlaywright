@@ -997,42 +997,6 @@
       }
     }
   },
-  "vhlLoginTest": {
-    "welcome": "h1[class='u-txt-ctr']",
-    "userName": "input[id='user_session_username']",
-    "password": "input[id='user_session_password']",
-    "commit": "input[value='Login']"
-  },
-  "vhl_landingtest": {
-    "usernameLabel": "div.MuiBox-root.css-mv4q7",
-    "notes": "button[data-tid=\"button-toolbar-item-1-3\"]",
-    "closeNoteBox": "button[data-tid=\"notebox-button-cancel\"]",
-    "tableOfContentsPage1": "button[data-tid=\"button-toolbar-item-3-1\"]",
-    "closeTOC": "button[data-tid=\"TOC-button-close\"]"
-  },
-  "vhlhighlighter": {
-    "highlighterIcon": "div.MuiBox-root.css-k008qs",
-    "eraserButton": "button[data-tid=\"annotation-toolbar-item-1\"]",
-    "highlighterBtn": "button[data-tid=\"annotation-toolbar-item-0\"]",
-    "colorPicker": "div#color-picker-button[data-tid=\"annotation-toolbar-color-picker\"]",
-    "closeIcon": "svg.StyledCloseIcon-sc-1wz11ot",
-    "drawingToolPresentation": "div.konvajs-content canvas",
-    "removeAllButton": "button[data-tid=\"annotation-toolbar-item-2\"]"
-  },
-  "vhlNotes": {
-    "notesButton": "button[data-tid=\"button-toolbar-item-1-3\"]",
-    "dockButton": "button[data-tid=\"notebox-button-dock\"]",
-    "allPagesTab": "button[data-tid=\"button-product-1\"]",
-    "pageCoverTab": "button[data-tid=\"button-product-0\"]",
-    "addNoteBtn": "[data-tid=\"button-add-note\"]",
-    "addNotesTextarea": "#input-add-note",
-    "saveNoteBtn": "[data-tid=\"button-save\"]",
-    "notePreviewText": "span:contains(\"Sample VHL Automation Note#1\")",
-    "deleteNoteSvg": "[data-tid=\"btn-delete-2\"]",
-    "deleteNoteBtn": "[data-tid=\"button-primary-deleteNote\"]",
-    "closeButton": "button[data-tid=\"notebox-button-cancel\"]",
-    "addNotesCanvas": "div.konvajs-content canvas"
-  },
   "schoolAdminDashboard": {
     "firstSchoolLink": "[qid='aDashboard-1']",
     "teacherAdminToggle": "[qid='teacher-admin-toggle']"

@@ -1,5 +1,0 @@
-Label,cssSelector,tagName,group,relation,extraInfo,returnValue,teacherAppLangEN
-Welcome,h1[class='u-txt-ctr'],h1,LoginPage,,isInitialization,,
-Username,ua-form-item:nth-child(1) music-text-field-v3:nth-child(1),input,LoginPage,,,,
-Password,ua-form-item:nth-child(1) music-text-field-v3:nth-child(1),input,LoginPage,,,,
-commit,input[value='Login'],button,LoginPage,,,vhlReader.page,

@@ -1,6 +1,0 @@
-Label,cssSelector,tagName,group,relation,extraInfo,returnValue,teacherAppLangEN
-usernameLabel,div.MuiBox-root.css-mv4q7,div,vhl_landingtest,,isInitialization,,mtaparia_instructor
-notes,button[data-tid='button-toolbar-item-1-3'],button,vhl_landingtest,,,,Notes
-closeNoteBox,button[data-tid='notebox-button-cancel'],button,vhl_landingtest,,,,Close
-tableOfContentsPage1,button[data-tid='button-toolbar-item-3-1'],button,vhl_landingtest,,,,Table of Contents
-closeTOC,button[data-tid='TOC-button-close'],button,vhl_landingtest,,,,Close TOC

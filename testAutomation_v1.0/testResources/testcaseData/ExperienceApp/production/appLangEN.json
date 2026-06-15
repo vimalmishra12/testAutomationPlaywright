@@ -1,27 +1,5 @@
 {
     "C1": {
-  "VHL": {
-    "vhlLogin": {
-      "welcome": "Welcome",
-      "Username": "userName",
-      "Password": "password",
-      "commit": ""
-    },
-    "notesVhlTest": {
-      "notesButton": "Notes",
-      "addNoteButton": "Notes",
-      "dockButton": "Dock",
-      "pageCoverTab": "View Notes for Page Cover",
-      "allPagesTab": "View Notes for All Pages",
-      "closeButton": "Close"
-    },
-    "vhlhighlighter": {
-      "eraserButton": "Eraser",
-      "highlighterBtn": "Highlighter",
-      "colorPicker": "Color Picker",
-      "closeIcon": "Close Icon"
-    }
-  },
   "footer": {
     "footerTermsOfUse": "Terms of use",
     "footerPrivacyNotice": "Privacy notice",
