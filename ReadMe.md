@@ -46,6 +46,49 @@ output/reports/TestReports/mochawesome/report.html
 
 ---
 
+## Traces (step-by-step debugging)
+
+A Playwright **trace** records a screenshot filmstrip plus the DOM snapshot, network and
+console for **every action** in a suite — far richer than the single end-of-test report
+screenshot. Enable it with `--trace=true`; one trace zip is written per suite.
+
+### Enable
+
+```bash
+node core/runner/run.js --appType=ExperienceApp --testEnv=thor \
+  --testExecFile=landingTest.json --browserCapability=desktop-chrome-1920 --trace=true
+```
+
+Traces are written to the `traces/` folder, **one zip per suite**:
+
+```
+traces/Suite1.zip
+traces/Suite2.zip
+traces/Suite3.zip   ← e.g. the third suite in the execution file
+```
+
+> Tracing adds overhead, so leave it off for normal runs and turn it on only when
+> debugging. `traces/` is git-ignored.
+
+### View — two ways
+
+**1. Hosted viewer (no install, nothing to launch):**
+- Open **https://trace.playwright.dev**
+- Drag-and-drop the zip (e.g. `traces/Suite3.zip`) onto the page.
+- The trace is processed locally in your browser — nothing is uploaded.
+
+**2. Command line (opens the viewer locally):**
+```bash
+npx playwright show-trace traces/Suite3.zip
+```
+> On Windows, run this from your own terminal (VS Code / PowerShell) so it opens in your
+> default browser. The hosted viewer (option 1) is the simplest fallback.
+
+In the viewer you get the action timeline, the screenshot filmstrip, before/after DOM
+snapshots you can hover and inspect, and the network + console for each step.
+
+---
+
 ## Command-line parameters
 
 ### Mandatory
