@@ -45,7 +45,6 @@ const SHOTS_ENABLED =
     _reportFlag === "mochawesome" ||
     process.env.MOCHAWESOME === "1" ||
     (!_wantSpec && !_wantAllure);
-const SHOTS_DIR = nodePath.join(process.cwd(), "mochawesome-report", "screenshots");
 
 // Headed by default (decision D4 / POC). Force headless via either the CLI flag
 // (--headless=true) or the env var (PWHEADLESS=1) — shell-agnostic.

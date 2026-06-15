@@ -89,7 +89,9 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
     if (wantMochawesome) {
         reporter = "mochawesome";
         reporterOptions = {
-            reportDir: "mochawesome-report",
+            // Write under the same output report dir as the visual timeline report
+            // (output/reports/TestReports/mochawesome) so the repo root stays clean.
+            reportDir: path.join(global.reportOutputDir, "mochawesome"),
             reportFilename: "report",
             html: true,
             json: true,

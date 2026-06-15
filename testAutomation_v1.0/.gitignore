@@ -14,8 +14,8 @@ logs/
 local.log
 
 # Playwright migration (Prompt 4) run artefacts — never commit
+# (mochawesome now writes under output/ — see core/runner/run.js — which is ignored above)
 traces/
-mochawesome-report/
 test/tempRunner/
 
 # Visual regression artefacts — NOT committed. Each environment / CI runner
