@@ -310,18 +310,33 @@ module.exports = {
 
 click_playlistTitle: async function (playlistTitleName) {
     await logger.logInto(await stackTrace.get());
-    let i, list, res;
-    list = await action.findElements(this.dropDownListTitle);
-
-    for (i = 1; i <= list.length; i++) {
-        const selector = `${this.dropDownListTitle}${i}"]`;
-        const text = await action.getText(selector);
+    // [2026-06-15] Playwright port fix: the selector registry holds dropDownListTitle as the
+    // INCOMPLETE fragment `[qid^="ebook-list-item-`. The old code passed that fragment straight
+    // to findElements() (an invalid CSS selector → Playwright throws → list is an Error, not an
+    // array, so list.length is undefined and the loop never runs). Complete the bracket here and
+    // return the matching Locator so the caller can read its background-colour.
+    const base = `${this.dropDownListTitle}"]`; // -> [qid^="ebook-list-item-"]
+    const list = await action.findElements(base);
+    if (!Array.isArray(list)) {
+        await logger.logInto(
+            await stackTrace.get(),
+            "dropDownListTitle did not resolve to a list: " + base,
+            "error"
+        );
+        return undefined;
+    }
+    for (let i = 0; i < list.length; i++) {
+        const text = (await list[i].innerText()).trim();
         if (text === playlistTitleName) {
-            res = selector;          
-            break;
+            return list[i];
         }
     }
-    return res; 
+    await logger.logInto(
+        await stackTrace.get(),
+        `playlist title "${playlistTitleName}" not found among ${list.length} dropdown items`,
+        "error"
+    );
+    return undefined;
 },
 
 
@@ -340,9 +355,9 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
     await action.click(this.cqaEbookEvolveDropdown);
     let cardElement = await this.click_playlistTitle(testdata);
     if (cardElement) {
-      let cssRes = await action.getCSSProperty(cardElement, "background-color");
-      // Return the rgba string so assertEqual(sts, expectedColor) compares like-for-like.
-      res = cssRes && cssRes.parsed ? cssRes.parsed.rgba : (cssRes && cssRes.value);
+      // The test (eBook.test.js TST_EBOO_TC_6) reads sts.value, so return the
+      // getCSSProperty object ({ property, value, parsed }) — NOT a bare string.
+      res = await action.getCSSProperty(cardElement, "background-color");
     } else {
       await logger.logInto(
         await stackTrace.get(),

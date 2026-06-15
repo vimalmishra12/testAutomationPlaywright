@@ -358,9 +358,16 @@ module.exports = {
                 propertyname
             );
             value = (value || "").trim();
-            message = "element:" + selector + " propertyname:" + propertyname + " value:" + value;
+            const parsed = parseCssValue(value);
+            // WDIO's getCSSProperty normalised colours to `rgba(r,g,b,a)` (no spaces) in `.value`.
+            // Chromium's computed style returns opaque colours as `rgb(r, g, b)` (with spaces),
+            // so normalise colour values to match the WDIO shape page objects assert against
+            // (e.g. eBook TST_EBOO_TC_6 compares sts.value to "rgba(251,246,228,1)"). Non-colour
+            // values (width/height/etc.) are left raw.
+            const normalisedValue = parsed.type === "color" ? parsed.rgba : value;
+            message = "element:" + selector + " propertyname:" + propertyname + " value:" + normalisedValue;
             await logger.logInto(await stackTrace.get(), message);
-            return { property: propertyname, value: value, parsed: parseCssValue(value) };
+            return { property: propertyname, value: normalisedValue, parsed: parsed };
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
             return err;
