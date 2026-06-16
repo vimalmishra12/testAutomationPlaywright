@@ -1,0 +1,25 @@
+{
+  "appname": "comproDLS Builder",
+  "appdetails": "",
+  "selectorFile": "./testResources/selectors/Builder/BuilderSelectors.json",
+  "modules": [
+    {
+      "modulename": "Builder Login",
+      "moduleId": "",
+      "testFile": "./test/Builder/login.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BLOGI_TC_1",
+          "description": "Validate the Builder pre-login page is launched",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BLOGI_TC_2",
+          "description": "Validate Builder SSO login lands on the app",
+          "tags": "P1"
+        }
+      ]
+    }
+  ]
+}

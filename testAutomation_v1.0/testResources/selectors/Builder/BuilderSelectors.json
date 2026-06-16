@@ -1,0 +1,22 @@
+{
+  "css": {
+    "Builder": {
+      "preLogin": {
+        "orgSelect": "#selectedOrg",
+        "loginBtn": "button[type='submit']"
+      },
+      "loginConfirm": {
+        "heading": "h1",
+        "loginBtn": "button[type='submit']"
+      },
+      "idpLogin": {
+        "userInput": "#login-user",
+        "passInput": "#login-pass",
+        "submitBtn": "#login-mfa-btn"
+      },
+      "landing": {
+        "appHeader": "header.sticky"
+      }
+    }
+  }
+}
