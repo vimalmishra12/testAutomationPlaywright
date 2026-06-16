@@ -224,6 +224,17 @@ come from env vars or `env.json -> lambdaTestCredentials`. Run with
 `--browserCapability=lambdatest-chrome-1920`. *Deprecated wording: the `/wd/hub`, `hostname`,
 `portNumber` fields in the lambdatest capability profile are Selenium-era and unused by Playwright.*
 
+**Per-suite sessions + status (restored 2026-06-15):** to mirror WDIO's `reloadSession()`
+(one LambdaTest session per suite, each named + pass/fail), the cloud path does NOT use the
+local context-per-suite model. Each suite opens its OWN `chromium.connect()` with a per-suite
+`name` (`global.__ltSessionName`, e.g. `landingTest - Suite1 - <Name>`): `beforeAll` connects
+suite 0, and `global.lambdaTestRotateSession()` (called from `testrunner.js` per later suite)
+reports the previous suite's status, closes it, and connects the next. Status is reported to the
+dashboard via the documented `page.evaluate(() => {}, 'lambdatest_action: {"action":"setTestStatus",
+"arguments":{"status":"passed|failed",...}}')` command — pass/fail is tracked per suite in the
+`afterEach` hook (`global.__ltSuiteFailed`) and reported on rotate + in `afterAll` (last suite).
+Local (chromedriver) runs keep context-per-suite (one browser).
+
 **ADR-008/D7 (Phase 3 — visual testing ported 2026-06-15):** the WDIO novus
 `browser.checkDocument()` (wdio-novus-visual-regression-service) is replaced by a
 Playwright-native pixelmatch engine in `core/utils/visualCompare.js`: `page.screenshot({fullPage})`

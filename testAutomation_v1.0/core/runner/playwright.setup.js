@@ -103,11 +103,14 @@ function lambdaTestWsEndpoint() {
         );
     }
     // Selenium profiles use `platformName`; the Playwright grid expects `platform`.
+    // `name` is the LambdaTest dashboard session name. To mirror WDIO's per-suite sessions
+    // we set a per-suite name (global.__ltSessionName), set by the runner before each suite's
+    // session is opened; falls back to the exec-file name.
     const ltOptions = Object.assign({}, ltProfile, {
         user,
         accessKey,
         platform: ltProfile.platform || ltProfile.platformName || "Windows 10",
-        name: ltProfile.name || ((global.argv && global.argv.testExecFile) || "C1 Playwright test"),
+        name: global.__ltSessionName || ltProfile.name || ((global.argv && global.argv.testExecFile) || "C1 Playwright test"),
     });
     delete ltOptions.platformName;
     if (playwrightClientVersion) ltOptions.playwrightClientVersion = playwrightClientVersion;
@@ -200,6 +203,43 @@ global.createFreshContext = async function createFreshContext() {
 };
 
 /**
+ * LambdaTest: report the CURRENT session's pass/fail to the dashboard. LambdaTest only
+ * learns a Playwright test's status via the documented "lambdatest_action" magic command
+ * run through page.evaluate. Status comes from global.__ltSuiteFailed (set by afterEach).
+ * Best-effort — never throws into the run.
+ */
+global.lambdaTestReportStatus = async function lambdaTestReportStatus() {
+    if (!global.__isCloud || !global.page) return;
+    const status = global.__ltSuiteFailed ? "failed" : "passed";
+    try {
+        await global.page.evaluate(
+            () => {},
+            "lambdatest_action: " + JSON.stringify({
+                action: "setTestStatus",
+                arguments: { status: status, remark: global.__ltSessionName || "" }
+            })
+        );
+    } catch (_) { /* best-effort */ }
+};
+
+/**
+ * LambdaTest: rotate to a NEW per-suite session — mirrors WDIO's reloadSession(), so each
+ * suite is its own dashboard session with its own name + pass/fail. Reports the previous
+ * session's status, closes it (ending the LT session), then connects a fresh named session.
+ */
+global.lambdaTestRotateSession = async function lambdaTestRotateSession(sessionName) {
+    await global.lambdaTestReportStatus();
+    if (global.__pwContext) await global.__pwContext.close().catch(() => {});
+    if (global.browser) await global.browser.close().catch(() => {}); // ends the LT session
+    global.__ltSessionName = sessionName;
+    global.__ltSuiteFailed = false;
+    global.browser = await chromium.connect(lambdaTestWsEndpoint());
+    attachBrowserCompat();
+    await global.createFreshContext();
+    console.log(`[pw-setup] LambdaTest session rotated → "${sessionName}".`);
+};
+
+/**
  * Stops the current trace and writes ./traces/<name>.zip. Safe no-op if tracing
  * is not active. Called by testrunner.js in each suite's `after` hook.
  */
@@ -268,12 +308,16 @@ exports.mochaHooks = {
             // Phase 3 / D7 — connect to the LambdaTest Playwright grid instead of
             // launching a local browser. channel/headless/args do not apply remotely.
             this.timeout(180000); // cloud connect + session spin-up is slower
-            const wsEndpoint = lambdaTestWsEndpoint();
-            global.browser = await chromium.connect(wsEndpoint);
             global.__isCloud = true;
+            // Name suite 0's session (the runner publishes per-suite names in __suiteNames);
+            // later suites rotate to their own session via global.lambdaTestRotateSession().
+            global.__ltSessionName = (global.__suiteNames && global.__suiteNames[0]) ||
+                ((global.argv && global.argv.testExecFile) || "C1 Playwright test");
+            global.__ltSuiteFailed = false;
+            global.browser = await chromium.connect(lambdaTestWsEndpoint());
             attachBrowserCompat();
             await global.createFreshContext();
-            console.log(`[pw-setup] Connected to LambdaTest (capability=${global.argv && global.argv.browserCapability}); globals browser/context/page/$/$$ set.`);
+            console.log(`[pw-setup] Connected to LambdaTest session "${global.__ltSessionName}" (capability=${global.argv && global.argv.browserCapability}).`);
             return;
         }
         const channel = resolveChannel();
@@ -302,6 +346,11 @@ exports.mochaHooks = {
      * mochawesome-report/report.html, no commands. Best-effort: never fails a test.
      */
     afterEach: async function () {
+        // LambdaTest: remember if any test in the current suite failed, so the suite's
+        // session is reported as "failed" when it closes (set via lambdaTestReportStatus).
+        if (global.__isCloud && this.currentTest && this.currentTest.state === "failed") {
+            global.__ltSuiteFailed = true;
+        }
         if (!SHOTS_ENABLED || !mochaAddContext || !global.page) return;
         try {
             // Capture as a base64 data URI and embed it INLINE in the report. This
@@ -325,6 +374,8 @@ exports.mochaHooks = {
             await global.__pwContext.tracing.stop().catch(() => {});
             global.__tracingActive = false;
         }
+        // LambdaTest: report the LAST suite's pass/fail before closing its session.
+        if (global.__isCloud) await global.lambdaTestReportStatus();
         if (global.__pwContext) await global.__pwContext.close().catch(() => {});
         if (global.browser) await global.browser.close().catch(() => {});
         console.log("[pw-setup] Browser torn down.");

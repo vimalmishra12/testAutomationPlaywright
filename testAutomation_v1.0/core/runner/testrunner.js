@@ -33,6 +33,12 @@ class specRunner {
           tests: [],
           hooks: [],
         };
+        // Per-suite LambdaTest session name (mirrors WDIO's per-suite sessions). Consumed by
+        // playwright.setup.js beforeAll (suite 0) and global.lambdaTestRotateSession (later suites).
+        global.__suiteNames = global.__suiteNames || {};
+        global.__suiteNames[count] =
+          String(that.testExecFile).replace(/\.[^.]+$/, "") +
+          " - " + suiteIndex + " - " + execJsonData[suiteIndex].Name;
         // console.log(Arr[count])
         // initiating Applitools
         if (argv.visual == "applitools")
@@ -50,7 +56,13 @@ class specRunner {
             // is handled by the context viewport, so the WDIO maximizeWindow() /
             // setWindowSize() calls are removed.
             if (count != 0) {
-              await global.createFreshContext();
+              if (global.__isCloud) {
+                // LambdaTest: open a NEW per-suite session (named + status) — mirrors WDIO
+                // reloadSession(). Reports the previous suite's pass/fail, then reconnects.
+                await global.lambdaTestRotateSession(global.__suiteNames[count]);
+              } else {
+                await global.createFreshContext();
+              }
             }
 
             console.log(
