@@ -14,6 +14,11 @@ You are replicating a test suite across environments in the Cambridge One (C1) t
 (**Playwright used as a library + standalone Mocha** — migrated from WebDriverIO, ADR-012).
 Follow all steps below exactly.
 
+> **`AGENTS.md` (repo root) and `.architecture/{system,decisions}.md` are the source of truth.**
+> Read them first; this skill is the practical workflow on top of them. Where they disagree with this
+> file, they win — in particular the **protected-files list**, **selector/naming conventions**, and the
+> **appType model** are authoritative in AGENTS.md / the ADRs (don't rely on a possibly-stale copy here).
+
 > The framework is **multi-application**: paths are keyed by `--appType` (`<App>/`). C1 lives under
 > `ExperienceApp/` (selector namespace `css.ComproC1`); a second app, `Builder`, lives under `Builder/`
 > (`css.Builder`). The steps below show `ExperienceApp/` — substitute the active appType if replicating
@@ -182,7 +187,11 @@ At the end, produce a walkthrough entry:
 
 ## Safety Rules
 
-- **NEVER** modify protected files: `core/runner/playwright.setup.js`, `core/runner/run.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`, `testrunner.js`, `specGenerator.js`, `launchUrl.js` (`wdio.conf.js` is retired/deleted — replaced by `playwright.setup.js` + `run.js`)
+- **NEVER** modify protected files without explicit confirmation. The **authoritative list lives in
+  AGENTS.md** (§"Protected Files"); at time of writing it is `core/runner/playwright.setup.js`,
+  `core/runner/run.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`,
+  `testrunner.js`, `specGenerator.js`, `launchUrl.js` (`wdio.conf.js` is retired/deleted). If AGENTS.md
+  differs, AGENTS.md wins.
 - **NEVER** modify test case files (`.test.js`) or page object files (`.page.js`) to fix environment issues — fix selectors and data instead
 - **ALWAYS** show a preview before creating or modifying files
 - **ALWAYS** ask for approval before applying fixes
