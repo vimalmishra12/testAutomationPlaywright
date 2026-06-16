@@ -257,3 +257,34 @@ font/anti-aliasing/GPU rendering differences make a single committed baseline un
 shared reference; owning baselines per runner avoids false diffs. *Trade-off:* a fresh checkout has
 no baselines, so the first visual run is a bootstrap (everything "passes" as new) — re-run to get a
 real comparison.
+
+---
+
+## ADR-013: Multiple Applications via `appType`
+
+**Status:** Accepted (2026-06-15)
+**Context:** The framework was built to test more than one comproDLS application. A second app
+(**Builder**, comproDLS Builder) needed to be added alongside **ExperienceApp** (Cambridge One / C1).
+**Decision:** Applications are selected by the `--appType` CLI argument, and **every layer is keyed by
+appType** — there is NO core-framework change to add an app. Adding an app means creating its parallel
+tree: `pages/<App>/`, `test/<App>/`, `testResources/selectors/<App>/<App>Selectors.json` (with a
+dedicated **`css.<App>`** namespace — ADR-002), `testResources/testcaseData/<App>/<env>/`,
+`testResources/testExecutionFiles/<App>/<env>/`, `testResources/testcaseRepository/<App>/<App>TCRepository.json`
+(whose `selectorFile` points at the app's selector file), and an `env.json` block
+`"<App>": { "testExecDir", "environments": { <env>: { "url" } } }`. The runner resolves `appUrl`,
+`testExecDir`, screenshot dirs (`screenshots/<kind>/<appType>/…`) and `selectorDir` (via the TC
+repository) entirely from `argv.appType` + `env.json`.
+**Rationale:** appType-keyed paths keep each application's selectors, data, and tests fully isolated,
+so a new app can never collide with C1 and core files stay app-agnostic. Proven by Builder Phase 1
+(login smoke) with zero edits to `run.js` / `testrunner.js` / `env.conf.js` / `playwright.setup.js`.
+**Consequences:**
+- Each app owns its selector file + `css.<App>` namespace; never mix two apps in one file.
+- New-app credentials follow the existing plaintext-in-data-file convention for now (e.g.
+  `builderLoginData.json`) — to be hardened to env vars later, same as LambdaTest.
+- App login flows can differ wildly: Builder uses a **3-step cross-domain SSO** (pre-login org
+  select → confirm → comproDLS Identity username/password → `/2024/dashboard`). Two reusable
+  lessons from it: type credentials with `addValue`/`pressSequentially` (React/Angular IdP forms
+  ignore `fill()`'s value), and wait for each page transition when a selector (`button[type=submit]`)
+  repeats across steps.
+- Unused appType stubs were removed from `env.json` (backoffice / assessmentEditor /
+  itemPlayerTestbench) — keep `env.json` to apps that actually have a test tree.

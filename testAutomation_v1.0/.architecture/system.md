@@ -10,6 +10,13 @@ This is a **Playwright-as-a-library + Mocha end-to-end test automation framework
 
 **Core Purpose**: Execute parameterized test suites against web applications by composing reusable test case functions with externalized selectors, test data, and execution orchestration — all without modifying core framework code.
 
+**Multiple applications (`appType`)** _(2026-06-15)_: the framework is multi-application — `--appType`
+selects the target app and the **entire directory tree + selector namespace is keyed by it**
+(`pages/<App>/`, `test/<App>/`, `selectors/<App>/`, `css.<App>`, an `env.json` block, etc.). Two
+apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and **`Builder`**
+(comproDLS Builder, `css.Builder`). Adding an app is **additive scaffolding only — no core changes**
+(see AGENTS.md §7 and ADR-013). Paths below show `ExperienceApp/`; substitute the active appType.
+
 **Tech Stack** _(updated 2026-06-15 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha; Phase 3 LambdaTest + visual testing complete)_:
 - Runtime: Node.js
 - Test Framework: **standalone Mocha** (entry: `core/runner/run.js`; config: `.mocharc.js`)

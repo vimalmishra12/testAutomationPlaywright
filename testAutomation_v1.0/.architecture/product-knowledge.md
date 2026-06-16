@@ -229,3 +229,42 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
 
 - Child accounts likely have restricted platform features (no self-registration,
   parental consent flow). `[ASSUMED]` — confirm scope with product.
+
+---
+
+## APP: Builder  (asgard-thor-builder.comprodls.com)
+
+**appType:** `Builder`  ·  **TC ID prefix:** `TST_B…`  ·  **Selector namespace:** `css.Builder`
+**Purpose:** comproDLS **Builder 2.0** — authoring tool for learning content (eBooks, activities,
+metadata). A separate product from Cambridge One, added as a second `appType` (ADR-013).
+
+*First seeded: [2026-06-15]*
+
+### Environment URLs
+
+| Environment | URL |
+|---|---|
+| Thor (dev) | https://asgard-thor-builder.comprodls.com/2024/pre-login |
+
+### Login — 3-step cross-domain SSO (confirmed on Thor [2026-06-15])
+
+1. **Pre-login** (`/2024/pre-login`): choose **organisation** from `select#selectedOrg`
+   (options include *Cambridge One*, *Vista Higher Learning*) → click `button[type=submit]` (Login).
+2. **Confirmation** (`/2024/login`): a "To continue, log in to DLS Builder" page →
+   click `button[type=submit]` (Login) → redirects to the identity provider.
+3. **IdP** (`asgard-thor-assets.comprodls.com/builder-identity`, *comproDLS™ Identity*):
+   `input#login-user` + `input#login-pass` + `button#login-mfa-btn` (LOGIN) → on success
+   redirects via `/2024/redirect` ("Logging you in…") to the app landing.
+
+**Landing:** `/2024/dashboard` (title *Builder 2.0*) — sticky app header (`header.sticky`),
+left nav, "Dashboard" + "Recent Activity".
+
+**Login gotchas (important):**
+- The IdP form is React/Angular — it **ignores `fill()`'s value** (submits "empty" → bounces back to
+  Sign In). Credentials must be **typed** (`addValue` / `pressSequentially`).
+- `button[type=submit]` exists on BOTH the pre-login and confirm pages, so the automation must wait
+  for each page transition before acting (otherwise it re-clicks the previous page's button).
+- No MFA challenge is shown for the QA admin account (the `#login-mfa-btn` id notwithstanding).
+
+**Test account (Thor):** org *Cambridge One*, user `harishthoradmin` (password in
+`testResources/testcaseData/Builder/thor/builderLoginData.json`, plaintext for now).
