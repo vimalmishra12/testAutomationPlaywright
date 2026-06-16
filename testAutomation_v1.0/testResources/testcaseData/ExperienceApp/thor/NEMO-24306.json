@@ -3,92 +3,92 @@
     "NEMO24306": {
       "tc1": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_1_valid_adult.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_1_valid_adult.csv",
         "expectedError": ""
       },
       "tc2": {
         "childrenCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/children/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_2_valid_children.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_2_valid_children.csv",
         "expectedError": ""
       },
       "tc3": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_3_password_letter_and_number.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_3_password_letter_and_number.csv",
         "expectedError": ""
       },
       "tc4": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_4_password_letter_and_special.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_4_password_letter_and_special.csv",
         "expectedError": ""
       },
       "tc5": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_5_username_min_boundary.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_5_username_min_boundary.csv",
         "expectedError": ""
       },
       "tc6": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_6_username_max_boundary.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_6_username_max_boundary.csv",
         "expectedError": ""
       },
       "tc7": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_7_username_special_chars.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_7_username_special_chars.csv",
         "expectedError": ""
       },
       "tc8": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_8_password_8char_boundary.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_8_password_8char_boundary.csv",
         "expectedError": ""
       },
       "tc9": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_9_csv_200_records.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_9_csv_200_records.csv",
         "expectedError": ""
       },
       "tc10": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_10_username_uppercase.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_10_username_uppercase.csv",
         "expectedError": "This should be at least 3 characters, only letters and numbers"
       },
       "tc11": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_11_username_starts_number.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_11_username_starts_number.csv",
         "expectedError": "This must start with a letter"
       },
       "tc12": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_12_empty_username_adult.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_12_empty_username_adult.csv",
         "expectedError": "Enter Username"
       },
       "tc13": {
         "childrenCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/children/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_13_empty_username_children.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_13_empty_username_children.csv",
         "expectedError": "Enter Username"
       },
       "tc14": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_14_username_too_short.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_14_username_too_short.csv",
         "expectedError": "This should be at least 3 characters"
       },
       "tc15": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_15_password_too_short.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_15_password_too_short.csv",
         "expectedError": "See password guidance in the info section at the top"
       },
       "tc16": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_16_password_letters_only.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_16_password_letters_only.csv",
         "expectedError": "See password guidance in the info section at the top"
       },
       "tc17": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_17_password_numbers_only.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_17_password_numbers_only.csv",
         "expectedError": "See password guidance in the info section at the top"
       },
       "tc18": {
         "adultCsvPageRelPath": "admin/admin/org_mqa-sierra-thor/username-adult/new_csv",
-        "csvPath": "./test/Manual/NEMO-24306/TST_NEMO24306_TC_18_csv_201_records.csv",
+        "csvPath": "./test/Manual/C1 App/NEMO-24306/TST_NEMO24306_TC_18_csv_201_records.csv",
         "expectedError": "above the maximum of 200 students"
       }
     }
