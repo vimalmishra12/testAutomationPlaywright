@@ -10,8 +10,14 @@ description: >
 
 # C1 Environment Test Replicator Skill
 
-You are replicating a test suite across environments in the Cambridge One (C1) WebDriverIO test automation framework.
+You are replicating a test suite across environments in the Cambridge One (C1) test automation framework
+(**Playwright used as a library + standalone Mocha** — migrated from WebDriverIO, ADR-012).
 Follow all steps below exactly.
+
+> The framework is **multi-application**: paths are keyed by `--appType` (`<App>/`). C1 lives under
+> `ExperienceApp/` (selector namespace `css.ComproC1`); a second app, `Builder`, lives under `Builder/`
+> (`css.Builder`). The steps below show `ExperienceApp/` — substitute the active appType if replicating
+> a non-C1 app. See `AGENTS.md` §7 / ADR-013 for the appType model.
 
 ---
 
@@ -51,13 +57,15 @@ Then replace all environment-specific URLs:
 ### 2c. Add NPM Script to package.json
 Read the source NPM script from `package.json`:
 ```
-"<testName>_<sourceEnv>": "npx wdio --appType=... --testEnv=<sourceEnv> ..."
+"<testName>_<sourceEnv>": "node core/runner/run.js --appType=... --testEnv=<sourceEnv> --testExecFile=<testName>.json --browserCapability=desktop-chrome-1920"
 ```
 
 Add a new entry replacing source env with target env:
 ```
-"<testName>_<targetEnv>": "npx wdio --appType=... --testEnv=<targetEnv> --testExecFile=testExecutionFiles/ExperienceApp/<targetEnv>/<testName>.json ..."
+"<testName>_<targetEnv>": "node core/runner/run.js --appType=... --testEnv=<targetEnv> --testExecFile=<testName>.json --browserCapability=desktop-chrome-1920"
 ```
+> `--testExecFile` is just the file name; the runner resolves it under the appType's `testExecDir`
+> (from `env.json`). Note `--browserCapability` (was `--capability` in WDIO).
 
 Show a preview of all files to be created/modified and ask: **"Ready to create these files? (yes/no)"**
 
@@ -96,7 +104,7 @@ For each failing TC, classify the failure type:
 - Propose correct value based on what the page actually shows
 
 ### Failure Type 3: Timeout
-**Symptoms:** `TimeoutError: element not displayed after Nms`
+**Symptoms:** `TimeoutError: locator.waitFor: Timeout Nms exceeded` (Playwright)
 **Root cause:** Page loads slower in target env, or feature not available
 **Fix:** Investigate — may need wait time increase or TC skip for this environment
 
@@ -174,7 +182,7 @@ At the end, produce a walkthrough entry:
 
 ## Safety Rules
 
-- **NEVER** modify protected files: `wdio.conf.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`, `testrunner.js`, `specGenerator.js`, `launchUrl.js`
+- **NEVER** modify protected files: `core/runner/playwright.setup.js`, `core/runner/run.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`, `testrunner.js`, `specGenerator.js`, `launchUrl.js` (`wdio.conf.js` is retired/deleted — replaced by `playwright.setup.js` + `run.js`)
 - **NEVER** modify test case files (`.test.js`) or page object files (`.page.js`) to fix environment issues — fix selectors and data instead
 - **ALWAYS** show a preview before creating or modifying files
 - **ALWAYS** ask for approval before applying fixes
