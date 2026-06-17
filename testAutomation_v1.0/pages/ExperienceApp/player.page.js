@@ -217,8 +217,8 @@ module.exports = {
       // Perform actions on the new tab (if needed)
       console.log("Performing actions on the new tab");
 
-      await browser.pause(3000);
-      
+      await newPage.waitForLoadState('load');
+
       // Close the new tab
       await newPage.close();
 
@@ -252,7 +252,7 @@ module.exports = {
 
       await action.waitForDisplayed(this.hyperAudioClose);
       await action.click(this.hyperAudioClose);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -271,11 +271,11 @@ module.exports = {
     if (true == res) {
       await logger.logInto(await stackTrace.get(), " hyperLinkGame is clicked");
 
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
       await action.waitForDisplayed(this.hyperAnswerClose);
       await action.click(this.hyperAnswerClose);
 
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -367,19 +367,19 @@ module.exports = {
 
       await action.waitForDisplayed(this.hyperAnswerFullScreen);
       await action.click(this.hyperAnswerFullScreen);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
 
       await action.waitForDisplayed(this.hyperAnswerReveal);
       await action.click(this.hyperAnswerReveal);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
 
       await action.waitForDisplayed(this.hyperAnswerExitFullScreen);
       await action.click(this.hyperAnswerExitFullScreen);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
 
       await action.waitForDisplayed(this.hyperAnswerClose);
       await action.click(this.hyperAnswerClose);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -403,29 +403,19 @@ module.exports = {
       // for play the audio
       await action.waitForDisplayed(this.hyperAudioPlay_pause);
       await action.click(this.hyperAudioPlay_pause);
-      await browser.pause(1000);
+      await global.page.waitForTimeout(1000);
 
       await action.waitForDisplayed(this.HyperShowHideTranscript);
       await action.click(this.HyperShowHideTranscript);
-      await browser.pause(1000);
-
-      // await action.waitForDisplayed(this.hyperAudioPlay_pause);
-      // await action.click(this.hyperAudioPlay_pause);
-      // await browser.pause(1000);
+      await global.page.waitForTimeout(1000);
 
       await action.waitForDisplayed(this.HyperShowHideTranscript);
       await action.click(this.HyperShowHideTranscript);
-      await browser.pause(1000);
-
-      // // for pause the audio
-      //            await action.waitForDisplayed("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']");
-      //            await action.click("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']");
-      //            //await action.click("div[class='ctrls'] div[class='icon--not-pressed'] span[class='glyph']");
-      //            await browser.pause(5000)
+      await global.page.waitForTimeout(1000);
 
       await action.waitForDisplayed(this.hyperAudioClose);
       await action.click(this.hyperAudioClose);
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -446,30 +436,11 @@ module.exports = {
         " hyperLinkVideo 2 is clicked"
       );
 
-      // await action.waitForDisplayed(this.hyperVideoPlay);
-      // await action.click(this.hyperVideoPlay);
-      // await browser.pause(3000)
-
-      // await action.waitForDisplayed(this.hyperAnswerReveal);
-      // await action.click(this.hyperAnswerReveal);
-      // await browser.pause(3000)
-
-      // await action.waitForDisplayed(this.hyperAnswerExitFullScreen);
-      // await action.click(this.hyperAnswerExitFullScreen);
-      // await browser.pause(3000)
-      await browser.pause(3000);
+      await global.page.waitForTimeout(3000);
 
       await action.waitForDisplayed(this.hyperVideoClose);
       await action.click(this.hyperVideoClose);
-      await browser.pause(3000);
-
-      //     // After your assertion, you can close the new window and switch back to the original window if needed
-      //     await browser.closeWindow();  // Close the new window
-      //     await browser.switchToWindow(currentWindow);  // Switch back to the original window
-      // } else {
-      //   console.log("after pause   old  window ")
-      //     await logger.logInto(await stackTrace.get(), "No new window detected", 'error');
-      // }
+      await global.page.waitForTimeout(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
