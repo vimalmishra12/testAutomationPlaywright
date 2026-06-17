@@ -1235,7 +1235,7 @@ click_toggleLayoutBtn: async function () {
         " previous page button is clicked"
       );
 
-      const pageText = await $(this.pageNOShow).getText();
+      const pageText = await $(this.pageNOShow).innerText();
       res = pageText;
     } else {
       await logger.logInto(
@@ -1259,7 +1259,7 @@ click_toggleLayoutBtn: async function () {
       );
       await action.waitForDisplayed(this.pageNOShow);
       await browser.pause(9000);
-      const pageText = await $(this.pageNOShow).getText(); // or getProperty('innerText') if getText() doesn't work as expected
+      const pageText = await $(this.pageNOShow).innerText();
 
       res = pageText;
     } else {
