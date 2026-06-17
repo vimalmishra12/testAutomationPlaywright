@@ -369,7 +369,7 @@ exports.mochaHooks = {
      * browser so no Chromium process is orphaned.
      */
     afterAll: async function () {
-        this.timeout(30000);
+        this.timeout(90000);
         if (global.__tracingActive && global.__pwContext) {
             await global.__pwContext.tracing.stop().catch(() => {});
             global.__tracingActive = false;

@@ -120,7 +120,7 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var res;
     await browser.waitUntil(async () => {
-      return await $(this.hyperlinkActivity).isDisplayed();
+      return await action.isDisplayed(this.hyperlinkActivity);
     }, { timeout: 10000, timeoutMsg: 'Activity hyperlink not found within 10 seconds' });
 
     res = await action.click(this.hyperlinkActivity);
@@ -185,6 +185,11 @@ module.exports = {
   click_hyperlinkNewTab: async function () {
     await logger.logInto(await stackTrace.get());
     let res;
+    
+    // Store the initial number of pages to detect the new tab
+    const context = global.page.context();
+    const initialPagesCount = context.pages().length;
+    
     res = await action.click(this.hyperlinkNewTab);
     console.log("val of res is hyperlinkNewTab: ", res);
 
@@ -194,14 +199,10 @@ module.exports = {
         "hyperlinkNewTab is clicked"
       );
 
-      // Store the original tab handle
-      const originalWindow = await browser.getWindowHandle();
-
       // Wait for the new tab to open
       await browser.waitUntil(
         async () => {
-          const handles = await browser.getWindowHandles();
-          return handles.length > 1;
+          return context.pages().length > initialPagesCount;
         },
         {
           timeout: 5000,
@@ -209,26 +210,21 @@ module.exports = {
         }
       );
 
-      // Automatically switched to the new tab
-      const windowHandles = await browser.getWindowHandles();
-      const newTab = windowHandles.find((handle) => handle !== originalWindow);
-
-      // Ensure we're on the new tab
-      await browser.switchToWindow(newTab);
+      // Get the newly opened page
+      const pages = context.pages();
+      const newPage = pages[pages.length - 1];
 
       // Perform actions on the new tab (if needed)
       console.log("Performing actions on the new tab");
 
-      // Return to the original tab
-      await browser.switchToWindow(originalWindow);
-
-      // Close the new tab
-      await browser.switchToWindow(newTab);
       await browser.pause(3000);
-      await browser.closeWindow();
+      
+      // Close the new tab
+      await newPage.close();
 
-      // Switch back to the original tab after closing the new one
-      await browser.switchToWindow(originalWindow);
+      // Switch back to the original tab
+      await global.page.bringToFront();
+
       await logger.logInto(
         await stackTrace.get(),
         "Switched back to the original tab and closed the new tab"
@@ -254,8 +250,8 @@ module.exports = {
         " hyperlinkAudioNoTranscript is clicked"
       );
 
-      await $(this.hyperAudioClose).waitForDisplayed();
-      await $(this.hyperAudioClose).click();
+      await action.waitForDisplayed(this.hyperAudioClose);
+      await action.click(this.hyperAudioClose);
       await browser.pause(3000);
     } else {
       await logger.logInto(
@@ -276,8 +272,8 @@ module.exports = {
       await logger.logInto(await stackTrace.get(), " hyperLinkGame is clicked");
 
       await browser.pause(3000);
-      await $(this.hyperAnswerClose).waitForDisplayed();
-      await $(this.hyperAnswerClose).click();
+      await action.waitForDisplayed(this.hyperAnswerClose);
+      await action.click(this.hyperAnswerClose);
 
       await browser.pause(3000);
     } else {
@@ -369,20 +365,20 @@ module.exports = {
         " hyperLinkAnswer is clicked"
       );
 
-      await $(this.hyperAnswerFullScreen).waitForDisplayed();
-      await $(this.hyperAnswerFullScreen).click();
+      await action.waitForDisplayed(this.hyperAnswerFullScreen);
+      await action.click(this.hyperAnswerFullScreen);
       await browser.pause(3000);
 
-      await $(this.hyperAnswerReveal).waitForDisplayed();
-      await $(this.hyperAnswerReveal).click();
+      await action.waitForDisplayed(this.hyperAnswerReveal);
+      await action.click(this.hyperAnswerReveal);
       await browser.pause(3000);
 
-      await $(this.hyperAnswerExitFullScreen).waitForDisplayed();
-      await $(this.hyperAnswerExitFullScreen).click();
+      await action.waitForDisplayed(this.hyperAnswerExitFullScreen);
+      await action.click(this.hyperAnswerExitFullScreen);
       await browser.pause(3000);
 
-      await $(this.hyperAnswerClose).waitForDisplayed();
-      await $(this.hyperAnswerClose).click();
+      await action.waitForDisplayed(this.hyperAnswerClose);
+      await action.click(this.hyperAnswerClose);
       await browser.pause(3000);
     } else {
       await logger.logInto(
@@ -405,30 +401,30 @@ module.exports = {
       );
 
       // for play the audio
-      await $(this.hyperAudioPlay_pause).waitForDisplayed();
-      await $(this.hyperAudioPlay_pause).click();
+      await action.waitForDisplayed(this.hyperAudioPlay_pause);
+      await action.click(this.hyperAudioPlay_pause);
       await browser.pause(1000);
 
-      await $(this.HyperShowHideTranscript).waitForDisplayed();
-      await $(this.HyperShowHideTranscript).click();
+      await action.waitForDisplayed(this.HyperShowHideTranscript);
+      await action.click(this.HyperShowHideTranscript);
       await browser.pause(1000);
 
-      // await $(this.hyperAudioPlay_pause).waitForDisplayed();
-      // await $(this.hyperAudioPlay_pause).click();
+      // await action.waitForDisplayed(this.hyperAudioPlay_pause);
+      // await action.click(this.hyperAudioPlay_pause);
       // await browser.pause(1000);
 
-      await $(this.HyperShowHideTranscript).waitForDisplayed();
-      await $(this.HyperShowHideTranscript).click();
+      await action.waitForDisplayed(this.HyperShowHideTranscript);
+      await action.click(this.HyperShowHideTranscript);
       await browser.pause(1000);
 
       // // for pause the audio
-      //            await $("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']").waitForDisplayed();
-      //            await $("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']").click();
-      //            //await $("div[class='ctrls'] div[class='icon--not-pressed'] span[class='glyph']").click();
+      //            await action.waitForDisplayed("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']");
+      //            await action.click("button[class='plyr__control playpause plyr__control--pressed plyr__tab-focus'] div[class='icon--pressed'] span[class='glyph']");
+      //            //await action.click("div[class='ctrls'] div[class='icon--not-pressed'] span[class='glyph']");
       //            await browser.pause(5000)
 
-      await $(this.hyperAudioClose).waitForDisplayed();
-      await $(this.hyperAudioClose).click();
+      await action.waitForDisplayed(this.hyperAudioClose);
+      await action.click(this.hyperAudioClose);
       await browser.pause(3000);
     } else {
       await logger.logInto(
@@ -450,21 +446,21 @@ module.exports = {
         " hyperLinkVideo 2 is clicked"
       );
 
-      // await $(this.hyperVideoPlay).waitForDisplayed();
-      // await $(this.hyperVideoPlay).click();
+      // await action.waitForDisplayed(this.hyperVideoPlay);
+      // await action.click(this.hyperVideoPlay);
       // await browser.pause(3000)
 
-      // await $(this.hyperAnswerReveal).waitForDisplayed();
-      // await $(this.hyperAnswerReveal).click();
+      // await action.waitForDisplayed(this.hyperAnswerReveal);
+      // await action.click(this.hyperAnswerReveal);
       // await browser.pause(3000)
 
-      // await $(this.hyperAnswerExitFullScreen).waitForDisplayed();
-      // await $(this.hyperAnswerExitFullScreen).click();
+      // await action.waitForDisplayed(this.hyperAnswerExitFullScreen);
+      // await action.click(this.hyperAnswerExitFullScreen);
       // await browser.pause(3000)
       await browser.pause(3000);
 
-      await $(this.hyperVideoClose).waitForDisplayed();
-      await $(this.hyperVideoClose).click();
+      await action.waitForDisplayed(this.hyperVideoClose);
+      await action.click(this.hyperVideoClose);
       await browser.pause(3000);
 
       //     // After your assertion, you can close the new window and switch back to the original window if needed
