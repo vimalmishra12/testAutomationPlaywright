@@ -164,7 +164,25 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
 
     const runner = mocha.run((failures) => {
         try { specGen.removingTempSpecs(); } catch (_) { /* best-effort cleanup */ }
-        buildVisualReport().finally(() => process.exit(failures ? 1 : 0));
+        buildVisualReport()
+            .then(async () => {
+                if (global.__isCloud) {
+                    try {
+                        const { getLatestBuildId } = require(path.join(process.cwd(), "core/utils/lambdatest/getBuildId.js"));
+                        const { generateShareableLink } = require(path.join(process.cwd(), "core/utils/lambdatest/shareableLink.js"));
+                        const buildId = await getLatestBuildId();
+                        if (buildId) {
+                            const shareUrl = await generateShareableLink({ entityId: buildId });
+                            if (shareUrl) {
+                                console.log(`\n[lambdatest] Shareable Link: ${shareUrl}\n`);
+                            }
+                        }
+                    } catch (err) {
+                        // Suppress errors during local link generation to avoid failing the run
+                    }
+                }
+            })
+            .finally(() => process.exit(failures ? 1 : 0));
     });
 
     // Compact end-of-run summary (handy when the allure reporter is active).
