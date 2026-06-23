@@ -105,3 +105,51 @@ None — documentation only (`AGENTS.md`).
 - Feature team to remove the duplicated `TST_BLOGI_TC_1`/`TC_2` from `cloneComponent.test.js`
   and `cloneEbook.test.js` and repoint the login steps in `cloneComponentTest.json` /
   `cloneEbookTest.json` at `./test/Builder/login.test.js` (as `builderLoginTest.json` already does).
+
+---
+
+# Session Walkthrough — 2026-06-23 (append 2)
+
+## Summary
+Audited all `.architecture/*.md` + `AGENTS.md` for duplication and ambiguity. The headline finding
+was a contradictory TC-ID convention across four files (4-char module vs. `TST_<MODULE><TICKET>`).
+Per team decision, made **module-name-from-page-object** the single canonical convention and aligned
+every doc to it. Documentation only.
+
+## Changes Made
+
+### 1. AGENTS.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Rule 6 TC-ID row → `TST_<MODULE>_TC_<N>` with `<MODULE>` derived from the page
+  object (not the Jira ticket); added the canonical note (ticket lives in Linked Requirement /
+  compound `AC.UC.S.TC` ID). Also generalized the stale `css.ComproC1.<camelCase>` selector-section
+  row to `css.<App>.<camelCase>` with both-app examples.
+- **Why:** Resolve the cross-file naming contradiction; AGENTS.md is the single source.
+
+### 2. .architecture/system.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Layer 3 "Naming" row now reads `TST_<MODULE>_TC_<N>` and defers to AGENTS.md Rule 6.
+
+### 3. .architecture/manual-test-standard.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Removed the conflicting `TST_<MODULE><TICKET_NUMBER>` form in three places
+  (convention section, traceability Test Case ID, summary table + CSV-name example) → module-based,
+  deferring to AGENTS.md Rule 6.
+
+### 4. .architecture/product-knowledge.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Builder header `TST_B…` → "per-module code (AGENTS.md Rule 6), e.g. `TST_BLOGI`".
+
+## Architecture Decisions Triggered
+No new ADR. Establishes one canonical TC-ID rule referenced by the other docs.
+
+## Protected Files Touched
+None — documentation only.
+
+## Pending / Follow-up
+- The convention change makes existing ticket-form IDs non-conforming: automated suites
+  (`TST_NEMO24401_*`, `TST_NEMO24402_*`) and NEMO manual docs (`TST_NEMO24306_*`). Renaming to
+  module-based IDs is a code/test change for the feature team (out of scope for this doc session).
+- Other audit findings not yet actioned: stale `reloadSession` line in system.md; PROMPTS.md is a
+  superseded migration log (stale protected-list / reporter claims) and could be archived to a
+  pointer at ADR-012; AGENTS.md Rule 2 still hardcodes `C1Selectors.json`.

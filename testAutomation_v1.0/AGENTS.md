@@ -82,12 +82,19 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 |---|---|---|
 | Page Object | `<pageName>.page.js` | `manageReports.page.js` |
 | Test File | `<pageName>.test.js` | `manageReports.test.js` |
-| TC ID prefix | `TST_<4-char-module>_TC_<N>` | `TST_MRPT_TC_1` |
-| Selector section | `css.ComproC1.<camelCase>` | `css.ComproC1.manageReports` |
+| TC ID prefix | `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the **page object**, not the Jira ticket | `TST_MRPT_TC_1`, `TST_BLOGI_TC_1` |
+| Selector section | `css.<App>.<camelCase>` | `css.ComproC1.manageReports`, `css.Builder.components` |
 | Execution file | `<descriptiveName>.json` | `manageReportsTest.json` |
 | NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
 | Functional NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
 | Visual NPM script | `visualAcceptance_<feature>_<env>` | `visualAcceptance_manageReports_thor` |
+
+> **`<MODULE>` is derived from the page object / feature, not the Jira ticket — this is the single
+> canonical TC-ID rule** (`system.md` and `manual-test-standard.md` defer to it). Agree the code
+> once per module (e.g. `login.page.js` → `BLOGI`, `manageReports.page.js` → `MRPT`) and reuse it
+> for every TC in that module. Do **NOT** embed the ticket number in the Test Case ID
+> (`TST_NEMO24401_TC_1` is wrong); the ticket is traced via the **Linked Requirement** column /
+> compound `AC<n>.UC<n>.S<n>.TC<n>` ID — see `.architecture/manual-test-standard.md`.
 
 ---
 

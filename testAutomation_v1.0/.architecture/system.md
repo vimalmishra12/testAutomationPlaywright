@@ -83,7 +83,7 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 | Function signature | `TST_XXXX_TC_N: async function (testdata) { ... }` |
 | Orchestration | Calls page object methods, passes test data |
 | Assertions | Uses global `assertion.assertEqual()`, `assertion.assert()` |
-| Naming | IDs follow `TST_<4CHAR>_TC_<N>` pattern |
+| Naming | IDs follow `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the page object (AGENTS.md Rule 6 is canonical) |
 
 **Must NOT**: Directly use `$()`, `browser.*`, raw selectors, or `require` baseActionLibrary
 
