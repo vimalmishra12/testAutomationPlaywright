@@ -74,3 +74,34 @@ None — no protected files were modified. All edits are documentation (`system.
   mismatch in TC_19/TC_20, `waitForCloneSuccess` reporting success on error, hardcoded
   selectors, protected-file edits without the confirmation marker, missing per-session
   walkthrough). Those are on the feature branch and are separate from this doc work.
+
+---
+
+# Session Walkthrough — 2026-06-23 (append)
+
+## Summary
+Added a Forbidden-Actions guardrail to AGENTS.md against redefining an existing TC function in
+another test file (the `TST_BLOGI_TC_1`/`TST_BLOGI_TC_2` login functions are copy-pasted into
+`cloneComponent.test.js` and `cloneEbook.test.js` instead of being composed from
+`login.test.js` via the execution file's per-step `testFile`). Documentation only — the actual
+code de-duplication will be handled by the feature team, not in this session.
+
+## Changes Made
+
+### 1. AGENTS.md
+- **Type:** Modified
+- **Layer:** Config / Docs (AI agent instructions)
+- **What changed:** Added a "Forbidden Actions" bullet — NEVER redefine an existing TC function
+  in another test file; reference the original via the execution file's per-step `testFile` and
+  compose it (ADR-011).
+- **Why:** ADR-011's reuse principle was only in the ADR, not surfaced in the read-first file,
+  so the login-TC duplication on `HK_BuilderCloneCases_1` was not hard-stopped.
+- **Lines affected:** "Forbidden Actions" list (after the unregistered-TC-ID bullet).
+
+## Protected Files Touched
+None — documentation only (`AGENTS.md`).
+
+## Pending / Follow-up
+- Feature team to remove the duplicated `TST_BLOGI_TC_1`/`TC_2` from `cloneComponent.test.js`
+  and `cloneEbook.test.js` and repoint the login steps in `cloneComponentTest.json` /
+  `cloneEbookTest.json` at `./test/Builder/login.test.js` (as `builderLoginTest.json` already does).

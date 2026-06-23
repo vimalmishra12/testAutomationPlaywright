@@ -277,6 +277,7 @@ Anything that was discussed but not completed, or that requires a future decisio
 - ❌ **NEVER** put CSS selectors as string literals in Page Objects — use `selectorFile` references
 - ❌ **NEVER** use `assert`, `expect`, or `chai` directly in test files — use the global `assertion` object
 - ❌ **NEVER** create an execution file that references a TC ID not registered in `C1TCRepository.json`
+- ❌ **NEVER** redefine an existing TC function in another test file (e.g. copying `TST_BLOGI_TC_1` into a feature's `*.test.js`) — reference the original file via the execution file's per-step `testFile` and compose it. Reuse existing TCs; only define genuinely new ones (ADR-011)
 - ❌ **NEVER** modify `baseActionLibrary.js` or `baseAssertionLibrary.js` for feature-specific logic
 - ❌ **NEVER** add environment-specific URLs to Page Objects — URLs come from `env.json` via `appUrl` global
 - ❌ **NEVER** skip the `isInitialized()` pattern when navigating to a new page after a click
