@@ -288,3 +288,43 @@ so a new app can never collide with C1 and core files stay app-agnostic. Proven 
   repeats across steps.
 - Unused appType stubs were removed from `env.json` (backoffice / assessmentEditor /
   itemPlayerTestbench) — keep `env.json` to apps that actually have a test tree.
+
+---
+
+## ADR-014: Cloudflare Access Headers Are First-Party-Scoped, Never Global
+
+**Status:** Accepted (2026-06-23)
+
+**Context:** Cloudflare-Access-gated environments (qa, rel) require `CF-Access-Client-Id` /
+`CF-Access-Client-Secret` headers to reach the app origin. During the WebDriverIO→Playwright
+migration (ADR-012, commit `152dbce`) these were applied as Playwright **context-level
+`extraHTTPHeaders`**, which attaches them to **every** request the page issues — including
+cross-origin calls third-party widgets make. On QA this broke the Gigya login screen-set: its
+`cdns.eu1.gigya.com/sdk.config.get` call carried the custom `cf-access-*` headers, the third-party
+server rejected them in CORS preflight (*"Request header field cf-access-client-secret is not allowed
+by Access-Control-Allow-Headers"*), Gigya failed to initialise (`Cannot read properties of undefined
+(reading 'Domain')`), and the login box never painted — every login-dependent suite timed out in its
+`Before` hook. The pre-migration WDIO code had injected these headers via a CDP interception helper
+(`setupCDPHeaders`) that **scoped them to the first-party host**; the migration dropped that filter.
+
+**Decision:** CF Access headers MUST be injected **only for first-party requests** — those whose host
+equals the `appUrl` host or is a subdomain of it. Third-party requests (Gigya, OneTrust, New Relic,
+analytics, CDNs) MUST pass through with no custom headers. In `core/runner/playwright.setup.js` this is
+implemented with a `context.route('**/*', …)` handler that conditionally merges `global.headers` based
+on the request host, instead of context-level `extraHTTPHeaders`.
+
+**Rationale:** Cloudflare Access only guards the app's own origin, so that is the only origin that
+needs the credentials. Sending them cross-origin is both unnecessary and actively harmful — custom
+request headers force a CORS preflight that third-party servers reject, silently breaking
+widget-driven UI (login, consent, telemetry). Host-scoping restores the proven WDIO behaviour while
+keeping the idiomatic Playwright routing API.
+
+**Consequences:**
+- `extraHTTPHeaders` is forbidden for CF Access (or any auth header that must not leak cross-origin);
+  use the first-party route handler in `playwright.setup.js`.
+- Host match is `reqHost === appUrlHost || reqHost.endsWith('.' + appUrlHost)` so app subdomains
+  (e.g. `login.<app>`) are still covered while unrelated origins are not.
+- Applies to every CF-Access-gated env (qa, rel) and any app embedding third-party widgets behind
+  CORS — symptom to watch for is a "widget container present but empty" with a CORS preflight error
+  naming `cf-access-*` in the console.
+- `playwright.setup.js` is a protected file; this change was made with explicit user confirmation.
