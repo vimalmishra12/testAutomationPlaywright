@@ -5,7 +5,7 @@ var argv = require("yargs").argv;
 var folder = fs.readdirSync("../../output/reports/");
 var envData = JSON.parse(fs.readFileSync("../../env.json"));
 var errorMailingList =
-  "akhil.aggarwal@comprotechnologies.com,rupsi.mehta@comprotechnologies.com,vimal.mishra@comprotechnologies.com,megha.garg@comprotechnologies.com";
+  "vimal.mishra@comprotechnologies.com,ashish.kushwaha@comprotechnologies.com";
 // GitHub Actions CI run URL.
 // argv.projectName = "owner/repo", argv.jobID = GITHUB_RUN_ID (passed by e2e-tests.yml).
 var githubActionsRunUrl = "https://github.com/" + argv.projectName + "/actions/runs/" + argv.jobID;
@@ -78,13 +78,13 @@ async function main() {
         reportUrl = isLambdaTestRun
           ? process.env.LT_SHARE_URL
           : baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            folder[0] +
-            "/index.html";
+          "/" +
+          argv.appType +
+          "/" +
+          argv.testEnv +
+          "/" +
+          folder[0] +
+          "/index.html";
 
         console.log("🔗 [MAILER] Using Report URL:", reportUrl);
 
@@ -100,13 +100,13 @@ async function main() {
         reportUrl = isLambdaTestRun
           ? process.env.LT_SHARE_URL
           : baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            folder[0] +
-            "/visual/index.html";
+          "/" +
+          argv.appType +
+          "/" +
+          argv.testEnv +
+          "/" +
+          folder[0] +
+          "/visual/index.html";
 
         logData = updateLogDataObj(visReportDir);
         mailObj2 = await createMail(
