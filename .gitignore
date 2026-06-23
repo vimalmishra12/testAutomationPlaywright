@@ -5,3 +5,6 @@ logs/
 output/
 core/utils/PageStructorGenerator/node_modules/
 core/utils/PageStructorGenerator/outputFile
+logs_*.txt
+.mcp.json
+.playwright-mcp/

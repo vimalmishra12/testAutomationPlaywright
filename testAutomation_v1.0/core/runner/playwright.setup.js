@@ -270,7 +270,7 @@ global.stopAndSaveTrace = async function stopAndSaveTrace(name) {
 function attachBrowserCompat() {
     const b = global.browser;
     b.pause = async (ms) => global.page.waitForTimeout(ms);
-    b.url = async (u) => global.page.goto(u, { waitUntil: "load" });
+    b.url = async (u) => global.page.goto(u.startsWith("/") ? new URL(appUrl).origin + u : u, { waitUntil: "load" });
     b.getUrl = async () => global.page.url();
     b.getTitle = async () => global.page.title();
     b.refresh = async () => global.page.reload({ waitUntil: "load" });

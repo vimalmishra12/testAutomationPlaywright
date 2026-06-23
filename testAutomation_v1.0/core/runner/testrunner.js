@@ -287,6 +287,8 @@ class specRunner {
                 this.retries(parseInt(execJsonData[suiteIndex].Test[testIndex].retries, 10));
               else if (execJsonData[suiteIndex].retries != undefined)
                 this.retries(parseInt(execJsonData[suiteIndex].retries, 10));
+              if (execJsonData[suiteIndex].Test[testIndex].timeout != undefined)
+                this.timeout(parseInt(execJsonData[suiteIndex].Test[testIndex].timeout, 10));
               console.log(
                 " Testcase    : Start " +
                   execJsonData[suiteIndex].Test[testIndex].id
