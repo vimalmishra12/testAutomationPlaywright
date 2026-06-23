@@ -93,7 +93,7 @@ jobs:
         id: lt_link
         if: always()
         run: |
-          URL=$(node core/utils/lambdatest/shareableLink.js 2>/dev/null || echo "")
+          URL=$(node core/utils/lambdatest/shareableLink.js || echo "")
           echo "LT_SHARE_URL=$URL" >> $GITHUB_OUTPUT
           echo "LT_SHARE_URL=$URL" >> $GITHUB_ENV
           if [ -n "$URL" ]; then
