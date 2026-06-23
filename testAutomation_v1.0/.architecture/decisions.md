@@ -49,7 +49,14 @@ school-admin modules were moved back under `css.ComproC1`.)
 **Rationale:** This provides a single point to add logging, retry logic, or framework-version migration. The Page Object pattern isolates DOM structure knowledge from test logic.  
 **Consequences:**  
 - Test cases MUST NOT use `$()`, `$$()`, or `browser.*` commands directly  
-- Every new browser interaction type must be added to `baseActionLibrary.js`  
+- **Page objects MUST NOT inline raw `global.page.*` / Playwright locator calls or selector
+  string literals to dodge a missing capability.** If `baseActionLibrary` lacks a method
+  (e.g. `mouse.move`, an `evaluate`-based read, an `nth()` locator by DOM order), the fix is to
+  add a named, logged method to `baseActionLibrary.js` — not an ad-hoc page-object hack. That
+  file is **protected**, so this is a deliberate, confirmed change (protected-file protocol in
+  AGENTS.md). The protected status is the point: every low-level capability is reviewed in one
+  place. Likewise, a locator that cannot be a static CSS string is built *inside* that method,
+  not in the page object.  
 - Page Object methods follow patterns: `click_<element>()`, `set_<element>()`, `getData_<section>()`  
 - Navigation-triggering clicks MUST call the destination page's `isInitialized()` to confirm transition  
 
@@ -288,6 +295,13 @@ so a new app can never collide with C1 and core files stay app-agnostic. Proven 
   repeats across steps.
 - Unused appType stubs were removed from `env.json` (backoffice / assessmentEditor /
   itemPlayerTestbench) — keep `env.json` to apps that actually have a test tree.
+- **"Additive only / no core changes" is the goal, not a guarantee.** If extending an app
+  exposes a real gap in shared infrastructure (e.g. `browser.url` needing relative-path support,
+  the runner needing a per-test `timeout`), a protected-file change is legitimate — but it is
+  **not** additive work: it follows the protected-file confirmation protocol (AGENTS.md) and is
+  recorded as its own ADR. **ADR-014 is the worked example** of doing this correctly. Do not let
+  the "zero core edits" framing above mask that the protected-file rule applies the moment you
+  touch `core/` or any other protected file.
 
 ---
 

@@ -64,6 +64,11 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 - Page Objects MUST load selectors via `var selectorFile = jsonParserUtil.jsonParser(selectorDir)`
 - Click methods that navigate to a new page MUST call `require('./<nextPage>.page').isInitialized()` after successful click
 - Every method MUST log via `await logger.logInto(await stackTrace.get(), ...)`
+- **No raw `global.page.*` or selector literals in a page object.** If `baseActionLibrary` has no
+  method for an interaction (`mouse.move`, an `evaluate`-based read, `nth()` by DOM order), or a
+  locator can't be a static CSS string, add a named, logged method to `baseActionLibrary.js`
+  (a protected file — confirmation required; ADR-003) instead of inlining it. See
+  `.architecture/system.md` Layer 2 "Escape hatch".
 
 ### 5. Execution Files Are Pure Configuration
 
@@ -294,10 +299,14 @@ Anything that was discussed but not completed, or that requires a future decisio
    **After navigating a new area or learning new product behaviour**, append or
    update that file following its per-app template, organised by app URL.
    Mark unconfirmed items `[ASSUMED]`.
+8. **If `baseActionLibrary` lacks a method, or a locator can't be a static CSS string**: do NOT
+   inline raw `global.page.*` calls or selector string literals in the page object. Add a named,
+   logged method to `baseActionLibrary.js` — it is a protected file, so follow the confirmation
+   protocol (ADR-003). See `.architecture/system.md` Layer 2 "Escape hatch" for the rationale.
 
 ---
 
-### 7. Visual Testing Promotion & Scripting Rules
+### 8. Visual Testing Promotion & Scripting Rules
 
 #### Rule A: Static vs. Dynamic Data Visual Assessment & Confirmation
 
@@ -413,7 +422,7 @@ Visual test NPM scripts MUST follow this naming pattern:
 
 ---
 
-### 8. `tooling/` — Design-Time Scaffolding (Non-Framework)
+### 9. `tooling/` — Design-Time Scaffolding (Non-Framework)
 
 The `tooling/` directory at the repo root is **not part of the test framework**.
 It contains design-time tooling used by Claude Code during development (e.g.,
