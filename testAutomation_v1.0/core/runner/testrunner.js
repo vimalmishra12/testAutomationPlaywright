@@ -36,6 +36,8 @@ class specRunner {
         // Per-suite LambdaTest session name (mirrors WDIO's per-suite sessions). Consumed by
         // playwright.setup.js beforeAll (suite 0) and global.lambdaTestRotateSession (later suites).
         global.__suiteNames = global.__suiteNames || {};
+        // [2026-06-24] Prefix the LambdaTest session name with the env (e.g. "PRODUCTION | ")
+        // for dashboard clarity — protected file; change confirmed by user for PR #3.
         const envPrefix = argv.testEnv ? String(argv.testEnv).toUpperCase() + " | " : "";
         global.__suiteNames[count] =
           envPrefix +

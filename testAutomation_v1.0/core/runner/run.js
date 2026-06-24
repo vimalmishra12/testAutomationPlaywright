@@ -164,6 +164,8 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
 
     const runner = mocha.run((failures) => {
         try { specGen.removingTempSpecs(); } catch (_) { /* best-effort cleanup */ }
+        // [2026-06-24] On cloud (LambdaTest) runs, log the build's shareable link after the
+        // visual report finishes — protected file; change confirmed by user for PR #3.
         buildVisualReport()
             .then(async () => {
                 if (global.__isCloud) {
