@@ -5,3 +5,5 @@ logs/
 output/
 core/utils/PageStructorGenerator/node_modules/
 core/utils/PageStructorGenerator/outputFile
+# Playwright MCP run output — created wherever the MCP runs (repo root or subdir)
+.playwright-mcp/
