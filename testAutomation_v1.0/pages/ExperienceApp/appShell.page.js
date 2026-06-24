@@ -57,7 +57,13 @@ var res;
 res =await action.click(this.logout_btn);
 if (true == res) {
  await logger.logInto(await stackTrace.get(), " logout_btn is clicked");
-res =await require ('./landing.page').isInitialized();
+const landingPage = require('./landing.page');
+const loginPage   = require('./login.page');
+const [landingStatus, loginStatus] = await Promise.all([
+  action.waitForDisplayed(landingPage.brandLogo_img, 10000).catch(() => false),
+  action.waitForDisplayed(loginPage.userName_tbox,   10000).catch(() => false),
+]);
+res = { pageStatus: landingStatus === true || loginStatus === true };
 }
 else {
 await logger.logInto(await stackTrace.get(), res +"logout_btn is NOT clicked", 'error');
