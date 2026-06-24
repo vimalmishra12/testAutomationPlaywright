@@ -467,15 +467,35 @@ function updateLogDataObj(dir) {
       };
 
       if (mochaData.results && mochaData.results.length > 0) {
+        let specsSet = new Set();
+        
+        function extractSpecs(suites) {
+          if (!suites || suites.length === 0) return;
+          suites.forEach(suite => {
+            if (suite.file && typeof suite.file === 'string' && suite.file.trim() !== '') {
+              specsSet.add(suite.file.split(/[\\/]/).pop());
+            } else if (suite.fullFile && typeof suite.fullFile === 'string' && suite.fullFile.trim() !== '') {
+              specsSet.add(suite.fullFile.split(/[\\/]/).pop());
+            }
+            if (suite.suites && suite.suites.length > 0) {
+              extractSpecs(suite.suites);
+            }
+          });
+        }
+
         mochaData.results.forEach(result => {
-          if (result.file) {
-            logData.specs.push(result.file.split(/[\\/]/).pop());
-          } else if (result.fullFile) {
-            logData.specs.push(result.fullFile.split(/[\\/]/).pop());
+          if (result.file && typeof result.file === 'string' && result.file.trim() !== '') {
+            specsSet.add(result.file.split(/[\\/]/).pop());
+          } else if (result.fullFile && typeof result.fullFile === 'string' && result.fullFile.trim() !== '') {
+            specsSet.add(result.fullFile.split(/[\\/]/).pop());
+          }
+          if (result.suites && result.suites.length > 0) {
+            extractSpecs(result.suites);
           }
         });
+        
+        logData.specs = Array.from(specsSet);
       }
-      logData.specs = Array.from(new Set(logData.specs));
       if (logData.specs.length === 0) logData.specs.push("Functional Test Run");
     } else {
       console.log("No valid changelog.txt or mochawesome/report.json found in " + dir);
