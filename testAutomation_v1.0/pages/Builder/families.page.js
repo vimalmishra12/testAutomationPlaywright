@@ -4,6 +4,15 @@ var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 var sel = selectorFile.css.Builder;
 
+// Fallback only: derive a display title from a code when the caller does not pass the
+// actual title used at creation (e.g. "family_comp_01" → "Family Comp 01"). Callers that
+// know the real title (the tests do) should pass it so search matches what was saved.
+function deriveTitle(code) {
+  return code.split("_").map(function (w) {
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(" ");
+}
+
 module.exports = {
   searchInput:  sel.families.searchInput,
   codeInput:    sel.families.codeInput,
@@ -44,36 +53,49 @@ module.exports = {
     return { fillStatus: true === res };
   },
 
-  saveFamily: async function () {
+  // Saves the family. The required precondition for TC_19/TC_20 is that the family EXISTS
+  // afterwards — whether it was newly created or already existed from a prior run. So the
+  // "Save never enabled" and "no redirect" fallbacks confirm existence via isFamilyInListing
+  // before reporting success, instead of blindly returning true (which masked real failures).
+  // Pass the code+title actually used so the existence check searches for the right family.
+  saveFamily: async function (code, title) {
     await logger.logInto(await stackTrace.get());
     var res = await action.waitForEnabled(this.saveBtn, 15000);
     if (true !== res) {
       // Save button never enabled — code may already exist (inline validation error).
-      // The family existing is the required precondition for TC_19/TC_20.
-      await logger.logInto(await stackTrace.get(), "saveBtn not enabled — treating as family already exists");
-      await browser.url("/2024/families");
-      await action.waitForDocumentLoad();
-      return { saveStatus: true };
+      await logger.logInto(await stackTrace.get(), "saveBtn not enabled — verifying family already exists");
+      return await this._confirmSaved(code, title);
     }
     res = await action.click(this.saveBtn);
     if (true !== res) return { saveStatus: res };
     // Wait for URL to leave the create page. If it doesn't change (duplicate code),
-    // navigate away — the family exists regardless, which is the required precondition.
+    // fall through to the existence check — the family may already exist.
     try {
       await browser.waitUntil(
         async function () {
           return !(await browser.getUrl()).includes("/families/create");
         },
-        { timeout: 8000, timeoutMsg: "family-create-no-redirect" }
+        { timeout: 15000, timeoutMsg: "family-create-no-redirect" }
       );
     } catch (e) {
-      // Duplicate code or validation error — family likely already exists.
+      await logger.logInto(await stackTrace.get(), "no redirect after save — verifying family exists");
+      return await this._confirmSaved(code, title);
+    }
+    await action.waitForDocumentLoad();
+    return { saveStatus: true };
+  },
+
+  // Confirms a family exists in the listing; used by saveFamily's fallback branches so a
+  // genuine creation failure is reported as saveStatus:false instead of a false success.
+  // When no code is supplied (legacy call), preserve the old optimistic behaviour.
+  _confirmSaved: async function (code, title) {
+    if (!code) {
       await browser.url("/2024/families");
       await action.waitForDocumentLoad();
       return { saveStatus: true };
     }
-    await action.waitForDocumentLoad();
-    return { saveStatus: true };
+    var res = await this.isFamilyInListing(code, title);
+    return { saveStatus: res.found === true };
   },
 
   searchFor: async function (term) {
@@ -83,19 +105,19 @@ module.exports = {
     if (true !== res) return { searchStatus: res };
     res = await action.keyPress("Enter");
     if (true !== res) return { searchStatus: res };
-    await browser.pause(1500);
+    // Families search re-queries the backend; give the slow/collaborative app time to render results.
+    await browser.pause(2500);
     return { searchStatus: true };
   },
 
-  // Deletes the family with the given code.
-  // Families search is title-based — derives the title from the code by capitalizing
-  // each underscore-delimited word (e.g. "family_comp_01" → "Family Comp 01").
+  // Deletes the family. Families search is title-based, so the caller must pass the SAME
+  // title the family was created with (the tests set familyTitle = familyCode). If omitted,
+  // we fall back to deriving a title from the code — but that only matches families whose
+  // title happens to be the capitalized form of the code.
   // The delete dialog requires a comment before the Confirm button becomes enabled.
-  deleteFamily: async function (code) {
+  deleteFamily: async function (code, title) {
     await logger.logInto(await stackTrace.get(), "deleteFamily=" + code);
-    var title = code.split("_").map(function (w) {
-      return w.charAt(0).toUpperCase() + w.slice(1);
-    }).join(" ");
+    title = title || deriveTitle(code);
     var res = await this.searchFor(title);
     if (true !== res.searchStatus) return { deleteStatus: res.searchStatus };
     res = await action.waitForDisplayed(sel.families.deleteBtn, 10000);
@@ -113,17 +135,20 @@ module.exports = {
     if (confirmExists === true) {
       await action.waitForEnabled("[role='dialog'] button:has-text('Confirm')", 10000);
       await action.click("[role='dialog'] button:has-text('Confirm')");
-      await action.waitForExist("[role='dialog']", 10000, true);
+      // Wait before evaluating the close — the slow backend needs a moment to accept the delete.
+      await browser.pause(3000);
+      await action.waitForExist("[role='dialog']", 30000, true);
     }
-    await browser.pause(800);
+    // Deletion keeps syncing after the modal closes — wait, then refresh so the listing reflects it.
+    await browser.pause(8000);
+    await browser.url("/2024/families");
+    await action.waitForDocumentLoad();
     return { deleteStatus: true };
   },
 
-  isFamilyInListing: async function (code) {
+  isFamilyInListing: async function (code, title) {
     await logger.logInto(await stackTrace.get(), "isFamilyInListing=" + code);
-    var title = code.split("_").map(function (w) {
-      return w.charAt(0).toUpperCase() + w.slice(1);
-    }).join(" ");
+    title = title || deriveTitle(code);
     var res = await this.searchFor(title);
     if (true !== res.searchStatus) return { found: false };
     // Families listing uses void links (no semicolon) with link text = family title.

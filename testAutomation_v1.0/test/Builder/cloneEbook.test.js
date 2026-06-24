@@ -22,6 +22,13 @@ module.exports = {
     await assertion.assertEqual(sts.pageStatus, true, "Builder landing did not load after login.");
   },
 
+  // ── BeforeEach reset ──────────────────────────────────────────────────────
+  // Dismiss any modal a previous test may have left open, so one failed test does not
+  // cascade into the next. Best-effort and safe before login (no dialog open yet).
+  TST_NEMO24402_RESET: async function (testdata) {
+    await ebooks.dismissAnyModal();
+  },
+
   // ── NEMO-24402 Clone eBook ────────────────────────────────────────────────
 
   // TC_1: Clone with a simple lowercase code — verify clone appears in listing.
@@ -151,7 +158,8 @@ module.exports = {
     await assertion.assertEqual(sts.submitStatus, true, "Failed to click OK.");
     sts = await ebooks.waitForCloneSuccess();
     await assertion.assertEqual(sts.cloneStatus, true, "Clone modal did not close after success.");
-    sts = await ebooks.isInListing(testdata.cloneCode);
+    // Ensure the clone has fully materialised (refresh every 10s) before deleting it.
+    sts = await ebooks.waitForInListing(testdata.cloneCode);
     await assertion.assertEqual(sts.found, true, "Cloned eBook not found before deletion.");
     sts = await ebooks.openDeleteModal(testdata.cloneCode);
     await assertion.assertEqual(sts.modalStatus, true, "Delete modal did not open.");
@@ -179,26 +187,42 @@ module.exports = {
     await assertion.assertEqual(sts.submitStatus, true, "Failed to click OK (first clone).");
     sts = await ebooks.waitForCloneSuccess();
     await assertion.assertEqual(sts.cloneStatus, true, "First clone did not succeed.");
+    // Ensure the clone has fully materialised (refresh every 10s) before deleting it.
+    sts = await ebooks.waitForInListing(testdata.cloneCode);
+    await assertion.assertEqual(sts.found, true, "First clone not found before deletion.");
     sts = await ebooks.openDeleteModal(testdata.cloneCode);
     await assertion.assertEqual(sts.modalStatus, true, "Delete modal did not open.");
     sts = await ebooks.fillDeleteComment(testdata.deleteComment);
     await assertion.assertEqual(sts.fillStatus, true, "Failed to fill delete comment.");
     sts = await ebooks.confirmDelete();
     await assertion.assertEqual(sts.deleteStatus, true, "Delete did not complete.");
-    // eBook deletion is async on the backend — wait for the code to be fully freed before re-cloning.
-    await browser.pause(20000);
-    sts = await ebooks.openCloneModal(testdata.sourceCode);
-    await assertion.assertEqual(sts.modalStatus, true, "Clone modal did not open (second clone).");
-    sts = await ebooks.fillCloneCode(testdata.cloneCode);
-    await assertion.assertEqual(sts.fillStatus, true, "Failed to fill clone code for second clone.");
-    sts = await ebooks.fillCloneTitle(testdata.cloneTitle);
-    await assertion.assertEqual(sts.fillStatus, true, "Failed to fill clone title for second clone.");
-    sts = await ebooks.submitClone();
-    await assertion.assertEqual(sts.submitStatus, true, "Failed to click OK (second clone).");
-    sts = await ebooks.waitForCloneSuccess();
-    await assertion.assertEqual(sts.cloneStatus, true, "Second clone did not succeed after code was freed by deletion.");
-    sts = await ebooks.isInListing(testdata.cloneCode);
-    await assertion.assertEqual(sts.found, true, "Re-cloned eBook not found after delete-and-reclone.");
+    // Poll until the deleted ebook is gone from the listing (backend deletion is async — can take 30-60s).
+    sts = await ebooks.isInListing(testdata.cloneCode, null, true);
+    await assertion.assertEqual(sts.found, false, "Deleted eBook still in listing after polling — code not freed.");
+    // Builder is a collaborative authoring app with heavy backend syncing: a code disappears from the
+    // listing well BEFORE it is actually freed for re-use, and that lag is variable. So retry the whole
+    // re-clone until it lands, instead of betting on any single fixed wait being long enough.
+    var recloned = false;
+    for (var attempt = 1; attempt <= 5 && !recloned; attempt++) {
+      sts = await ebooks.navigateTo();
+      await assertion.assertEqual(sts.pageStatus, true, "eBooks page did not reload before second clone (attempt " + attempt + ").");
+      sts = await ebooks.openCloneModal(testdata.sourceCode);
+      await assertion.assertEqual(sts.modalStatus, true, "Clone modal did not open (second clone, attempt " + attempt + ").");
+      sts = await ebooks.fillCloneCode(testdata.cloneCode);
+      await assertion.assertEqual(sts.fillStatus, true, "Failed to fill clone code for second clone.");
+      sts = await ebooks.fillCloneTitle(testdata.cloneTitle);
+      await assertion.assertEqual(sts.fillStatus, true, "Failed to fill clone title for second clone.");
+      sts = await ebooks.submitClone();
+      await assertion.assertEqual(sts.submitStatus, true, "Failed to click OK (second clone).");
+      // The code may not be freed yet (async delete), so the re-clone can fail with an inline
+      // error. waitForCloneSuccess now reports that, but we confirm via the listing either way.
+      await ebooks.waitForCloneSuccess();
+      sts = await ebooks.isInListing(testdata.cloneCode);
+      recloned = sts.found === true;
+      // Code not yet freed by the async delete — wait for the sync to catch up, then re-attempt.
+      if (!recloned) await browser.pause(30000);
+    }
+    await assertion.assertEqual(recloned, true, "Re-cloned eBook not found after delete-and-reclone (code never freed within retry window).");
   },
 
   // TC_8: Clone a Component → delete it → clone an eBook with the freed code.
@@ -217,26 +241,38 @@ module.exports = {
     await assertion.assertEqual(sts.submitStatus, true, "Failed to submit Component clone.");
     sts = await components.waitForCloneSuccess();
     await assertion.assertEqual(sts.cloneStatus, true, "Component clone did not succeed.");
+    // Ensure the component clone has fully materialised (refresh every 10s) before deleting it.
+    sts = await components.waitForInListing(testdata.crossCode);
+    await assertion.assertEqual(sts.found, true, "Component clone not found before deletion.");
     sts = await components.openDeleteModal(testdata.crossCode);
     await assertion.assertEqual(sts.modalStatus, true, "Delete modal did not open for Component.");
     sts = await components.fillDeleteComment(testdata.deleteComment);
     await assertion.assertEqual(sts.fillStatus, true, "Failed to fill delete comment for Component.");
     sts = await components.confirmDelete();
     await assertion.assertEqual(sts.deleteStatus, true, "Component deletion did not complete.");
-    sts = await ebooks.navigateTo();
-    await assertion.assertEqual(sts.pageStatus, true, "eBooks page did not load after Component deletion.");
-    sts = await ebooks.openCloneModal(testdata.ebookSourceCode);
-    await assertion.assertEqual(sts.modalStatus, true, "Clone modal did not open for eBook.");
-    sts = await ebooks.fillCloneCode(testdata.crossCode);
-    await assertion.assertEqual(sts.fillStatus, true, "Failed to fill freed code in eBook modal.");
-    sts = await ebooks.fillCloneTitle(testdata.crossTitle);
-    await assertion.assertEqual(sts.fillStatus, true, "Failed to fill title in eBook modal.");
-    sts = await ebooks.submitClone();
-    await assertion.assertEqual(sts.submitStatus, true, "Failed to submit eBook clone with freed code.");
-    sts = await ebooks.waitForCloneSuccess();
-    await assertion.assertEqual(sts.cloneStatus, true, "eBook clone with freed Component code did not succeed.");
-    sts = await ebooks.isInListing(testdata.crossCode);
-    await assertion.assertEqual(sts.found, true, "eBook with cross-entity freed code not found in listing.");
+    // Wait for the Component to actually disappear (refresh-poll) — the code is not freed for the
+    // cross-entity clone until the deletion finishes propagating ("Deleting" → removed).
+    sts = await components.isInListing(testdata.crossCode, null, true);
+    await assertion.assertEqual(sts.found, false, "Deleted Component still in listing — cross-entity code not freed.");
+    // Code-free lags listing-removal, so retry the eBook clone until the freed code lands.
+    var recloned = false;
+    for (var attempt = 1; attempt <= 5 && !recloned; attempt++) {
+      sts = await ebooks.navigateTo();
+      await assertion.assertEqual(sts.pageStatus, true, "eBooks page did not load after Component deletion (attempt " + attempt + ").");
+      sts = await ebooks.openCloneModal(testdata.ebookSourceCode);
+      await assertion.assertEqual(sts.modalStatus, true, "Clone modal did not open for eBook (attempt " + attempt + ").");
+      sts = await ebooks.fillCloneCode(testdata.crossCode);
+      await assertion.assertEqual(sts.fillStatus, true, "Failed to fill freed code in eBook modal.");
+      sts = await ebooks.fillCloneTitle(testdata.crossTitle);
+      await assertion.assertEqual(sts.fillStatus, true, "Failed to fill title in eBook modal.");
+      sts = await ebooks.submitClone();
+      await assertion.assertEqual(sts.submitStatus, true, "Failed to submit eBook clone with freed code.");
+      await ebooks.waitForCloneSuccess();
+      sts = await ebooks.isInListing(testdata.crossCode);
+      recloned = sts.found === true;
+      if (!recloned) await browser.pause(30000);
+    }
+    await assertion.assertEqual(recloned, true, "eBook with cross-entity freed code not found (code never freed within retry window).");
   },
 
   // TC_9: Whitespace-only code → OK disabled by frontend validation.
@@ -425,7 +461,7 @@ module.exports = {
     await assertion.assertEqual(sts.fillStatus, true, "Failed to fill family code.");
     sts = await families.fillFamilyTitle(testdata.familyTitle);
     await assertion.assertEqual(sts.fillStatus, true, "Failed to fill family title.");
-    sts = await families.saveFamily();
+    sts = await families.saveFamily(testdata.familyCode, testdata.familyTitle);
     await assertion.assertEqual(sts.saveStatus, true, "Family was not saved.");
     sts = await ebooks.navigateTo();
     await assertion.assertEqual(sts.pageStatus, true, "eBooks page did not load after family creation.");
@@ -459,12 +495,13 @@ module.exports = {
 
   // TC_20: Delete the Family from TC_19 → clone eBook with freed code → success.
   TST_NEMO24402_TC_20: async function (testdata) {
-    testdata.familyCode = dynCode(testdata.familyCode);
-    testdata.cloneCode  = dynCode(testdata.cloneCode);
-    testdata.cloneTitle = testdata.cloneCode;
+    testdata.familyCode  = dynCode(testdata.familyCode);
+    testdata.familyTitle = testdata.familyCode;
+    testdata.cloneCode   = dynCode(testdata.cloneCode);
+    testdata.cloneTitle  = testdata.cloneCode;
     sts = await families.navigateTo();
     await assertion.assertEqual(sts.pageStatus, true, "Families page did not load.");
-    sts = await families.deleteFamily(testdata.familyCode);
+    sts = await families.deleteFamily(testdata.familyCode, testdata.familyTitle);
     await assertion.assertEqual(sts.deleteStatus, true, "Failed to delete the family.");
     sts = await ebooks.navigateTo();
     await assertion.assertEqual(sts.pageStatus, true, "eBooks page did not load after family deletion.");

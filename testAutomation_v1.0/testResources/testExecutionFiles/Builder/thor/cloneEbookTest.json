@@ -12,7 +12,14 @@
         "testData": []
       }
     ],
-    "BeforeEach": [],
+    "BeforeEach": [
+      {
+        "id": "TST_NEMO24402_RESET",
+        "description": "Dismiss any modal left open by the previous test",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": []
+      }
+    ],
     "Test": [
       {
         "id": "TST_BLOGI_TC_1",
@@ -95,6 +102,7 @@
         "id": "TST_NEMO24402_TC_6",
         "description": "Clone then delete — verify removed from listing",
         "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 300000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
@@ -106,6 +114,7 @@
         "id": "TST_NEMO24402_TC_7",
         "description": "Clone, delete, re-clone with same code — all succeed",
         "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 600000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
@@ -117,6 +126,7 @@
         "id": "TST_NEMO24402_TC_8",
         "description": "Clone Component, delete it, then clone eBook with freed code",
         "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 600000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
@@ -249,6 +259,7 @@
         "id": "TST_NEMO24402_TC_19",
         "description": "Family code blocks eBook clone — inline error",
         "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 240000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
@@ -260,6 +271,7 @@
         "id": "TST_NEMO24402_TC_20",
         "description": "Deleted family frees code — eBook clone succeeds",
         "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 240000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",

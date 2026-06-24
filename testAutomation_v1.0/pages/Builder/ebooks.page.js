@@ -20,6 +20,23 @@ module.exports = {
   delCommentInput:  sel.deleteModal.commentInput,
   delConfirmBtn:    sel.deleteModal.confirmBtn,
 
+  // Best-effort cleanup run between tests (BeforeEach): if a previous test left a clone/delete
+  // modal open (e.g. it failed mid-flow), dismiss it so it doesn't block the next test's
+  // interactions. Safe to call when nothing is open (no-op) and before login (no dialog yet).
+  dismissAnyModal: async function () {
+    await logger.logInto(await stackTrace.get());
+    try {
+      var hasDialog = await action.isExisting("[role='dialog']");
+      if (hasDialog === true) {
+        await action.keyPress("Escape");
+        await browser.pause(300);
+        await action.keyPress("Escape");
+        await browser.pause(300);
+      }
+    } catch (e) { /* best-effort — never fail a test on cleanup */ }
+    return { resetStatus: true };
+  },
+
   navigateTo: async function () {
     await logger.logInto(await stackTrace.get());
     await browser.url("/2024/ebooks");
@@ -62,9 +79,12 @@ module.exports = {
     await browser.pause(600);
     var res2 = await action.waitForDisplayed(this.kebabBtn, 5000);
     if (true !== res2) return { menuStatus: false };
-    // Builder temporarily disables the kebab on newly cloned items while processing.
-    // Remove the attribute so Playwright can click; the backend action is ready even while the UI is locked.
-    await global.page.locator(this.kebabBtn).first().evaluate(function(el) { el.disabled = false; });
+    // Builder disables the kebab on a newly cloned/updated item while it finishes processing.
+    // Wait for the app to re-enable it naturally (collaborative sync can take a while) rather than
+    // forcing el.disabled=false — forcing defeats the intentional lock and risks clicking before
+    // the item is actually ready, which is flaky and not a faithful user interaction.
+    var enabled = await action.waitForEnabled(this.kebabBtn, 60000);
+    if (true !== enabled) return { menuStatus: false };
     await action.click(this.kebabBtn);
     var res3 = await action.waitForDisplayed(this.cloneMenuItem, 5000);
     return { menuStatus: true === res3 };
@@ -112,7 +132,9 @@ module.exports = {
     var enabled = await action.waitForEnabled(this.okBtn, 3000);
     if (enabled !== true) return { submitStatus: false };
     var res = await action.click(this.okBtn);
-    await browser.pause(800);
+    // Slow/collaborative backend: give the submit time to register before the caller evaluates
+    // whether the modal closed (success) or an inline error appeared — don't rush the close.
+    await browser.pause(3000);
     return { submitStatus: true === res };
   },
 
@@ -120,16 +142,20 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var res = await action.waitForExist(this.dialog, 60000, true);
     if (true === res) {
-      await browser.pause(5000);
+      // After a successful clone the backend keeps syncing — wait, then refresh so the new
+      // item is actually materialised in the listing before any follow-up check.
+      await browser.pause(8000);
       await page.reload();
       await action.waitForDocumentLoad();
       return { cloneStatus: true };
     }
     // Dialog still open — wait for inline error (server may take several seconds to respond).
+    // An inline error means the clone did NOT succeed: report failure (errorShown) so callers
+    // are not given a false success. Negative-path TCs check errors via isErrorVisible directly.
     var errorVisible = await action.waitForDisplayed(this.errorMsg, 8000);
     if (errorVisible === true) {
       await this.cancelClone();
-      return { cloneStatus: true };
+      return { cloneStatus: false, errorShown: true };
     }
     return { cloneStatus: false };
   },
@@ -169,35 +195,45 @@ module.exports = {
     var searchTerm = searchHint || code;
 
     var self = this;
+    // Returns { loaded, found }. `loaded` is false if the search box never rendered — a transient
+    // page/search load failure must NOT be reported as "not found", otherwise an absence check
+    // would falsely confirm a deletion that never happened.
     async function checkOnce() {
       await browser.url("/2024/ebooks");
       await action.waitForDocumentLoad();
-      await action.waitForDisplayed(self.searchInput, 20000);
+      var loaded = await action.waitForDisplayed(self.searchInput, 20000);
+      if (true !== loaded) return { loaded: false, found: false };
       await action.click(self.searchInput);
       await action.setValue(self.searchInput, searchTerm);
       await action.keyPress("Enter");
       await browser.pause(2000);
-      return await global.page.evaluate(function(t) {
+      var found = await global.page.evaluate(function(t) {
         var links = Array.from(document.querySelectorAll("a[href='javascript:void(0);']"));
         return links.some(function(a) { return a.textContent.trim() === t; });
       }, searchTerm);
+      return { loaded: true, found: found };
     }
 
-    var found = await checkOnce();
-    await logger.logInto(await stackTrace.get(), "isInListing found=" + found + " searchTerm=" + searchTerm);
+    var probe = await checkOnce();
+    await logger.logInto(await stackTrace.get(), "isInListing found=" + probe.found + " loaded=" + probe.loaded + " searchTerm=" + searchTerm);
 
-    if (checkAbsence && found) {
+    if (checkAbsence) {
+      // Keep polling while the item is still present OR the listing was inconclusive (didn't load).
+      // Builder's delete is async with heavy collaborative syncing — an item can linger in the
+      // listing for a while after deletion, so poll generously (6 × 10s ≈ up to 90s with reloads).
       var attempts = 0;
-      while (found && attempts < 5) {
-        await logger.logInto(await stackTrace.get(), "isInListing still found, retrying in 5s (attempt " + (attempts + 1) + ")");
-        await browser.pause(5000);
-        found = await checkOnce();
+      while ((probe.found || !probe.loaded) && attempts < 6) {
+        await logger.logInto(await stackTrace.get(), "isInListing inconclusive/still-found, retrying in 10s (attempt " + (attempts + 1) + ")");
+        await browser.pause(10000);
+        probe = await checkOnce();
         attempts++;
       }
-      await logger.logInto(await stackTrace.get(), "isInListing found=" + found + " after absence polling for code=" + code);
+      await logger.logInto(await stackTrace.get(), "isInListing found=" + probe.found + " loaded=" + probe.loaded + " after absence polling for code=" + code);
+      // Never confirm absence off a listing that failed to load — fail safe by reporting present.
+      if (!probe.loaded) return { found: true };
     }
 
-    return { found: found };
+    return { found: probe.found };
   },
 
   // Returns the meta text (author + time) for the card matching the given code.
@@ -216,6 +252,55 @@ module.exports = {
       return container ? (container.innerText || container.textContent).trim() : "";
     }, code);
     return { metaText: metaText };
+  },
+
+  // Probes the listing for an item by title and reports whether it is present AND whether the card
+  // still shows a "Cloning" (in-progress) state. A freshly cloned item appears in the list while
+  // still cloning, and its kebab → Delete is not usable until cloning COMPLETES.
+  _probeListing: async function (searchTerm) {
+    await browser.url("/2024/ebooks");
+    await action.waitForDocumentLoad();
+    var loaded = await action.waitForDisplayed(this.searchInput, 20000);
+    if (true !== loaded) return { present: false, cloning: false, loaded: false };
+    await action.click(this.searchInput);
+    await action.setValue(this.searchInput, searchTerm);
+    await action.keyPress("Enter");
+    await browser.pause(2000);
+    return await global.page.evaluate(function (t) {
+      var links = Array.from(document.querySelectorAll("a[href='javascript:void(0);']"));
+      var link = links.find(function (a) { return a.textContent.trim() === t; });
+      if (!link) return { present: false, cloning: false, loaded: true };
+      var card = link.closest("[class*='p-6']") || link.parentElement;
+      var txt = card ? (card.innerText || card.textContent || "") : "";
+      // The card status shows "Clone in Progress" while still cloning, then changes to
+      // "Work In progress" once cloning completes. Match ONLY the clone-in-progress state —
+      // "Work In progress" also contains "in progress", so a broad match would never go ready.
+      return { present: true, cloning: /clone\s*in\s*progress/i.test(txt), loaded: true };
+    }, searchTerm);
+  },
+
+  // Waits until a cloned item is present AND has finished cloning, BEFORE a delete is attempted.
+  // Mirrors the manual flow: refresh every 10s until the item appears, then keep refreshing every
+  // 10s (up to a few more times) until it leaves the "Cloning" state — otherwise the delete races
+  // an item whose kebab/Delete action is not ready yet ("Delete modal did not open"). A couple of
+  // settle refreshes are always done after it looks ready, since cloning completion lags the UI.
+  waitForInListing: async function (code, searchHint) {
+    await logger.logInto(await stackTrace.get(), "waitForInListing=" + code);
+    var searchTerm = searchHint || code;
+    var ready = false;
+    for (var attempt = 1; attempt <= 12 && !ready; attempt++) {
+      var p = await this._probeListing(searchTerm);
+      ready = p.present === true && p.cloning === false;
+      await logger.logInto(await stackTrace.get(), "waitForInListing present=" + p.present + " cloning=" + p.cloning + " (attempt " + attempt + ")");
+      if (!ready) await browser.pause(10000);
+    }
+    if (!ready) return { found: false };
+    // Settle: a couple more refreshes (10s apart) so cloning is genuinely complete before the delete.
+    for (var s = 0; s < 2; s++) {
+      await browser.pause(10000);
+      await this._probeListing(searchTerm);
+    }
+    return { found: true };
   },
 
   hasDeleteOption: async function (code) {
@@ -250,9 +335,12 @@ module.exports = {
     if (true !== res) return { deleteStatus: res };
     res = await action.click(this.delConfirmBtn);
     if (true !== res) return { deleteStatus: res };
-    res = await action.waitForExist(sel.deleteModal.dialog, 15000, true);
+    // Wait before evaluating the close — the slow backend needs a moment to accept the delete.
+    await browser.pause(3000);
+    res = await action.waitForExist(sel.deleteModal.dialog, 30000, true);
     if (true !== res) return { deleteStatus: false };
-    await browser.pause(5000);
+    // Deletion keeps syncing after the modal closes — wait, then refresh so the listing reflects it.
+    await browser.pause(8000);
     await page.reload();
     await action.waitForDocumentLoad();
     return { deleteStatus: true };

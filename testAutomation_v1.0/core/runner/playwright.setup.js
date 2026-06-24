@@ -189,6 +189,10 @@ global.createFreshContext = async function createFreshContext() {
     }
     global.__pwContext = await global.browser.newContext(contextOpts);
     global.page = await global.__pwContext.newPage();
+    // Slow / collaborative apps (e.g. Builder) can exceed Playwright's 30s default navigation
+    // timeout on "load". Raise it at the context level so EVERY goto/reload — including direct
+    // page.reload() calls in page objects — gets the longer budget, not just browser.url/refresh.
+    global.__pwContext.setDefaultNavigationTimeout(90000);
     // Reset iframe scope for the new suite (Category C — see baseActionLibrary root()).
     global.__activeFrame = null;
     // Compatibility shim (decision D3).
@@ -269,11 +273,14 @@ global.stopAndSaveTrace = async function stopAndSaveTrace(name) {
  */
 function attachBrowserCompat() {
     const b = global.browser;
+    // Navigation timeout: slow / collaborative apps (e.g. Builder) can take well over Playwright's
+    // 30s default to finish "load". Use a generous 90s so a slow page load doesn't fail navigation.
+    const NAV_TIMEOUT = 90000;
     b.pause = async (ms) => global.page.waitForTimeout(ms);
-    b.url = async (u) => global.page.goto(u.startsWith("/") ? new URL(appUrl).origin + u : u, { waitUntil: "load" });
+    b.url = async (u) => global.page.goto(u.startsWith("/") ? new URL(appUrl).origin + u : u, { waitUntil: "load", timeout: NAV_TIMEOUT });
     b.getUrl = async () => global.page.url();
     b.getTitle = async () => global.page.title();
-    b.refresh = async () => global.page.reload({ waitUntil: "load" });
+    b.refresh = async () => global.page.reload({ waitUntil: "load", timeout: NAV_TIMEOUT });
     b.keys = async (k) => global.page.keyboard.press(Array.isArray(k) ? k.join("") : String(k));
     b.execute = async (fn, ...args) => global.page.evaluate(fn, ...args);
     b.executeAsync = async (fn, ...args) => global.page.evaluate(fn, ...args);

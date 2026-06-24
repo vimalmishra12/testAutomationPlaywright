@@ -50,7 +50,8 @@
         { "id": "TST_NEMO24401_TC_21",   "description": "Code starting with digit is blocked by frontend validation",          "tags": "P1" },
         { "id": "TST_NEMO24401_TC_19",   "description": "Family code blocks component clone — inline error",                  "tags": "P2" },
         { "id": "TST_NEMO24401_TC_20",   "description": "Deleted family frees code — component clone succeeds",               "tags": "P2" },
-        { "id": "TST_NEMO24401_CLEANUP", "description": "Post-suite cleanup — delete all cloned components",                  "tags": "P1" }
+        { "id": "TST_NEMO24401_CLEANUP", "description": "Post-suite cleanup — delete all cloned components",                  "tags": "P1" },
+        { "id": "TST_NEMO24401_RESET",   "description": "BeforeEach reset — dismiss any modal left open by a prior test",      "tags": "P1" }
       ]
     },
     {
@@ -69,20 +70,21 @@
         { "id": "TST_NEMO24402_TC_6",  "description": "Clone then delete — verify removed from listing",                    "tags": "P1" },
         { "id": "TST_NEMO24402_TC_7",  "description": "Clone, delete, re-clone with same code — all succeed",               "tags": "P1" },
         { "id": "TST_NEMO24402_TC_8",  "description": "Clone Component, delete it, then clone eBook with freed code",       "tags": "P2" },
-        { "id": "TST_NEMO24402_TC_9",  "description": "Whitespace-only code is blocked by validation",                      "tags": "P2" },
-        { "id": "TST_NEMO24402_TC_10", "description": "Duplicate code error is inline (not a browser native alert)",        "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_11", "description": "Source eBook own code is duplicate — inline error",                  "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_12", "description": "Non-ingested Component code conflict — inline error",                "tags": "P2" },
-        { "id": "TST_NEMO24402_TC_13", "description": "Umbrella product code conflict — inline error",                      "tags": "P2" },
-        { "id": "TST_NEMO24402_TC_14", "description": "Empty code field keeps OK button disabled",                          "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_15", "description": "Uppercase chars in code — inline error",                             "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_16", "description": "Special characters in code — inline error",                          "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_17", "description": "Ingested eBook — Delete present in kebab menu",                      "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_18", "description": "Ingested eBook code as clone target — inline error",                 "tags": "P1" },
-        { "id": "TST_NEMO24402_TC_21",   "description": "Code starting with digit is blocked by frontend validation",      "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_9",  "description": "Whitespace-only code is blocked by validation",                      "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_10", "description": "Duplicate code error is inline (not a browser native alert)",        "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_11", "description": "Source eBook own code is duplicate — inline error",                  "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_12", "description": "Non-ingested Component code conflict — inline error",                "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_13", "description": "Umbrella product code conflict — inline error",                      "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_14", "description": "Empty code field keeps OK button disabled",                          "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_15", "description": "Uppercase chars in code — inline error",                             "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_16", "description": "Special characters in code — inline error",                          "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_17", "description": "Ingested eBook — Delete present in kebab menu",                      "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_18", "description": "Ingested eBook code as clone target — inline error",                 "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_21",   "description": "Code starting with digit is blocked by frontend validation",      "tags": "P1", "visualTest": true },
         { "id": "TST_NEMO24402_TC_19",   "description": "Family code blocks eBook clone — inline error",                  "tags": "P2" },
         { "id": "TST_NEMO24402_TC_20",   "description": "Deleted family frees code — eBook clone succeeds",               "tags": "P2" },
-        { "id": "TST_NEMO24402_CLEANUP", "description": "Post-suite cleanup — delete all cloned eBooks",                  "tags": "P1" }
+        { "id": "TST_NEMO24402_CLEANUP", "description": "Post-suite cleanup — delete all cloned eBooks",                  "tags": "P1" },
+        { "id": "TST_NEMO24402_RESET",   "description": "BeforeEach reset — dismiss any modal left open by a prior test",  "tags": "P1" }
       ]
     }
   ]
