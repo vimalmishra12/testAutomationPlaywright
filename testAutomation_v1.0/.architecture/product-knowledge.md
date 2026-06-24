@@ -268,3 +268,37 @@ left nav, "Dashboard" + "Recent Activity".
 
 **Test account (Thor):** org *Cambridge One*, user `harishthoradmin` (password in
 `testResources/testcaseData/Builder/thor/builderLoginData.json`, plaintext for now).
+
+### Performance & sync characteristics (confirmed [2026-06-23])
+
+Builder is a **slow application by design** — it is an authoring tool with limited
+user access and limited resources, and it supports **collaborative authoring**. Because
+of the collaboration model, **every update triggers heavy backend syncing**, so
+operations are slow and state propagation is **delayed and variable**.
+
+**Implications for automation:**
+- Prefer **long, retry/poll-based waits** over fixed `browser.pause()` values. Fixed
+  pauses either flake (too short) or waste time (too long) because sync latency varies.
+- **Delete is async with a long sync lag.** After deleting an eBook/Component, the item
+  disappears from the listing **well before its code is actually freed** in the backend.
+  Re-cloning to a just-deleted code (NEMO-24402 TC_7) can therefore still hit a
+  duplicate-code error even after the item is gone from the listing — the code-free
+  propagation lags behind the listing-removal. Wait/poll generously for the code to free.
+- **`waitForCloneSuccess()` gotcha** (`pages/Builder/ebooks.page.js`): on an inline error
+  it cancels the modal and still returns `{ cloneStatus: true }`. A re-clone that silently
+  fails on "code in use" looks like a pass until a later `isInListing` check fails.
+- **"Cloning State" — a clone appears in the listing BEFORE it is usable** (confirmed via manual
+  repro [2026-06-24]): immediately after the clone dialog closes, the new item shows in the
+  listing card with status text **"Clone in Progress"** under the name, and its kebab → **Delete
+  is not available until cloning COMPLETES**. When done, the card status changes to **"Work In
+  progress"**. Attempting the delete while still "Clone in Progress" fails with "Delete modal did
+  not open". The manual workaround (and the automation's `waitForInListing`): after the item
+  appears, **refresh every ~10s, 2–3 times, until the status leaves "Clone in Progress"**, THEN
+  delete. NOTE both labels contain "in progress", so the cloning check must match **"Clone in
+  Progress"** specifically, not a generic "in progress".
+- **Delete is async too** (confirmed [2026-06-24]): on delete the card status stays **"Work In
+  progress"** but a **"Deleting"** indicator appears on the right; the entry only leaves the
+  listing after **2–3 page refreshes**. The freed code is NOT available for a re-clone (same or
+  cross-entity) until the entry has actually disappeared — so cross-entity flows (TC_8) must
+  refresh-poll for absence after the delete AND retry the re-clone, because code-free lags the
+  listing removal.
