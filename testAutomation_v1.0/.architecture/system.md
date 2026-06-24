@@ -58,6 +58,22 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 
 **Must NOT**: Contain assertions, know about test data structure, reference other page's selectors directly
 
+> **Escape hatch — when `baseActionLibrary` or the selector JSON can't express an interaction.**
+> Some interactions have no library method (e.g. `page.mouse.move`, `page.evaluate` to read a
+> card's text, `nth()` by DOM order); some locators cannot be a static CSS string (a DOM-order
+> `nth()`, or a `:has-text()` assembled from a runtime value). Do **NOT** work around this by
+> inlining raw `global.page.*` calls or selector string literals inside a page object — that is
+> exactly what Rules 2 & 4 (AGENTS.md) forbid. Instead:
+> 1. **Add the interaction to `baseActionLibrary.js`** as a named, logged method. It is a
+>    protected file, so follow the protected-file confirmation protocol — see ADR-003
+>    ("new interaction types must be added to the action library").
+> 2. **Keep the locator in the selector JSON** when it can be a string. When it genuinely
+>    cannot, build it *inside* the action-library method, not in the page object.
+>
+> Net effect: page objects stay free of raw `page.*` and selector literals, and every new
+> low-level capability lands in one reviewed place. (`browser.pause` / `browser.url` and the
+> other documented WDIO-compat helpers on `browser` remain allowed in page objects.)
+
 ### Layer 3: Test Cases (`test/ExperienceApp/`)
 
 **Owns**: Test logic — calling Page Object methods and asserting results
@@ -67,7 +83,7 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 | Function signature | `TST_XXXX_TC_N: async function (testdata) { ... }` |
 | Orchestration | Calls page object methods, passes test data |
 | Assertions | Uses global `assertion.assertEqual()`, `assertion.assert()` |
-| Naming | IDs follow `TST_<4CHAR>_TC_<N>` pattern |
+| Naming | IDs follow `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the page object (AGENTS.md Rule 6 is canonical) |
 
 **Must NOT**: Directly use `$()`, `browser.*`, raw selectors, or `require` baseActionLibrary
 
@@ -137,7 +153,7 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ baseActionLibrary.js                                            │
-│   → $(selector).click(), $(selector).setValue(v), etc.          │
+│   → action.click(sel), action.setValue(sel, v), etc.            │
 │   → Logs via logger, returns true/Error                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -174,18 +190,51 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 3. **Before Hooks**: Executes `Before[]` steps sequentially (launchUrl, login, navigate)
 4. **Test Execution**: For each `Test[]` step → `describe/it` → calls TC function with resolved testdata
 5. **After Hooks**: Executes `After[]` steps (logout, cleanup)
-6. **Session Teardown**: Browser session closed; next suite gets `browser.reloadSession()`
+6. **Session Teardown**: the suite's browser context is closed and the next suite gets a fresh
+   context + page (per-suite isolation — replaced `browser.reloadSession()`; ADR-010/ADR-012).
+   On the LambdaTest cloud path each suite opens its own per-suite session instead.
 
 ---
 
 ## Module Boundaries
 
-### Selectors Module (`C1Selectors.json`)
+### Selectors Module (`testResources/selectors/<App>/<App>Selectors.json`)
 
 - **Exposes**: CSS/XPath selector strings organized by page name
 - **Hides**: Nothing — pure data
 - **Contract**: Every page object property MUST resolve to a key in this file
-- **Naming**: `css.ComproC1.<camelCasePageName>.<camelCaseElementName>`
+- **Naming**: `css.<App>.<camelCasePageName>.<camelCaseElementName>`
+- **One file per app, one `css.<App>` namespace** (ADR-002 / ADR-013) — never mix two apps in
+  one file, never place a module at the JSON root.
+
+**Directory layout (both apps):**
+
+```
+testResources/selectors/
+  ExperienceApp/C1Selectors.json     → namespace css.ComproC1   (+ csv/ = legacy CSV exports, not runtime source)
+  Builder/BuilderSelectors.json      → namespace css.Builder
+```
+
+`C1Selectors.json` (ExperienceApp / Cambridge One):
+```json
+{ "css": { "ComproC1": {
+  "footer":        { "footerTermsOfUse": "a[qid=\"cFooter-1\"]" },
+  "manageReports": { "submitBtn": "[qid=\"mr-submit\"]" }
+} } }
+```
+
+`BuilderSelectors.json` (comproDLS Builder):
+```json
+{ "css": { "Builder": {
+  "preLogin":   { "orgSelect": "#selectedOrg", "loginBtn": "button[type='submit']" },
+  "components": { "searchInput": "#search", "itemLink": "a[href='javascript:void(0);']" }
+} } }
+```
+
+A page object reads only its own app's namespace —
+`selectorFile.css.ComproC1.footer.footerTermsOfUse` or `selectorFile.css.Builder.components.searchInput`.
+The top-level `css` object is an **application-namespace** layer (`css → { ComproC1, Builder, … }`);
+a new app adds a sibling namespace and can never collide with another app's modules.
 
 ### Page Object Module (each `*.page.js`)
 
@@ -222,6 +271,10 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 The following JS and configuration files are the architectural backbone of the framework.
 They MUST NOT be modified without explicit user confirmation. Any AI agent or developer
 must follow the confirmation protocol defined in `AGENTS.md` before touching these files.
+
+> **`AGENTS.md` ("Protected Files") is the authoritative list and holds the exact confirmation
+> format.** The table below mirrors it for blueprint context — if the two ever diverge,
+> AGENTS.md wins, and the divergence should be fixed.
 
 > JSON files (selectors, test data, execution files, TC repository) are NOT protected —
 > they are data/configuration and may be edited freely as part of normal work.

@@ -7,4 +7,5 @@ core/utils/PageStructorGenerator/node_modules/
 core/utils/PageStructorGenerator/outputFile
 logs_*.txt
 .mcp.json
+# Playwright MCP run output — created wherever the MCP runs (repo root or subdir)
 .playwright-mcp/

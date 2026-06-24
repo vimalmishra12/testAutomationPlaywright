@@ -2,6 +2,10 @@
 tooling/playwright-mcp/.profile/
 tooling/playwright-mcp/screenshots/
 tooling/playwright-mcp/node_modules/
+# MCP run output / config — ephemeral sessions or machine-specific config, never commit
+# (the tooling/ tree itself stays tracked: README + dev scripts — see AGENTS.md §9)
+.playwright-mcp/
+.mcp.json
 
 # General node_modules
 node_modules/

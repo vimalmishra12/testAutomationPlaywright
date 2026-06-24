@@ -1,0 +1,148 @@
+name: C1 E2E Automation
+
+# ── Triggers ──────────────────────────────────────────────────────────────────
+on:
+  # Manual trigger — pick environment + npm script from a dropdown in the Actions UI
+  workflow_dispatch:
+    inputs:
+      # No separate environment input: the npm script IS the source of truth for env
+      # (and suite + browser). e.g. loginFeatureTest_LT = production. To run another
+      # env, pick/add the matching per-env script rather than a decorative dropdown.
+      npm_script:
+        description: 'npm script to run (e.g. loginFeatureTest_LT, eBookFeatureTest_LT)'
+        required: true
+        default: 'loginFeatureTest_LT'
+        type: string
+
+  # Nightly scheduled run — 9:30 PM IST (4:00 PM UTC)
+  schedule:
+    - cron: '0 16 * * *'
+
+# ── Top-level env (used by both manual and scheduled runs) ────────────────────
+env:
+  NODE_VERSION: '20'
+  WORKING_DIR: testAutomation_v1.0
+  # Default script for the nightly schedule (workflow_dispatch input overrides it)
+  DEFAULT_NPM_SCRIPT: loginFeatureTest_LT
+
+jobs:
+  e2e-test:
+    name: 'E2E — ${{ github.event.inputs.npm_script || ''loginFeatureTest_LT'' }}'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Node.js + npm cache ───────────────────────────────────────────────
+      #    cache: 'npm' uses package-lock.json as the cache key.
+      #    On cache hit the next step (npm ci) still runs but is near-instant.
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIR }}/package-lock.json
+
+      # ── 3. Install dependencies ──────────────────────────────────────────────
+      #    npm ci is preferred over npm install in CI — it is faster, reproducible,
+      #    and fails if package-lock.json is out of sync with package.json.
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ${{ env.WORKING_DIR }}
+
+      # ── 4. Run E2E tests ─────────────────────────────────────────────────────
+      #    continue-on-error: true — test failures must NOT stop the workflow here.
+      #    We still need to run the email step. The job is failed explicitly in
+      #    Step 8 after the email is sent.
+      - name: Run E2E tests
+        id: run_tests
+        continue-on-error: true
+        run: |
+          SCRIPT="${{ github.event.inputs.npm_script || env.DEFAULT_NPM_SCRIPT }}"
+          echo "▶ Running: npm run $SCRIPT"
+          if npm run "$SCRIPT"; then
+            echo "TEST_RESULT=passed" >> $GITHUB_OUTPUT
+          else
+            echo "TEST_RESULT=failed" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          LT_USERNAME: ${{ secrets.LT_USERNAME }}
+          LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
+          PWHEADLESS: '1'
+
+      # ── 5. Generate LambdaTest shareable link ────────────────────────────────
+      #    shareableLink.js returns the LambdaTest session URL for the last build.
+      #    The URL is written to both GITHUB_OUTPUT (for Step 6) and GITHUB_ENV
+      #    (so mailer.js can read it as process.env.LT_SHARE_URL).
+      - name: Generate LambdaTest shareable link
+        id: lt_link
+        if: always()
+        run: |
+          URL=$(node core/utils/lambdatest/shareableLink.js || echo "")
+          echo "LT_SHARE_URL=$URL" >> $GITHUB_OUTPUT
+          echo "LT_SHARE_URL=$URL" >> $GITHUB_ENV
+          if [ -n "$URL" ]; then
+            echo "✅ LambdaTest share URL: $URL"
+          else
+            echo "⚠️  LambdaTest share URL not generated (local run or API error)"
+          fi
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          LT_USERNAME: ${{ secrets.LT_USERNAME }}
+          LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
+
+      # ── 6. Send email via mailer.js ──────────────────────────────────────────
+      #    Passes GitHub Actions equivalents for the Semaphore variables that
+      #    mailer.js expects (projectName, branchName, buildNumber, jobID).
+      #    --triggerSource triggers the dynamic CI URL logic added in Phase 3.
+      #    --testEnv is fixed to "production": env is carried by the npm script name
+      #    (every *_LT script is production), so the email can't claim an env the run
+      #    didn't use. If non-production scripts are added, set this to match.
+      - name: Send email report
+        if: always()
+        run: |
+          node mailer.js \
+            --appType="ExperienceApp" \
+            --testEnv="production" \
+            --projectName="${{ github.repository }}" \
+            --branchName="${{ github.ref_name }}" \
+            --buildNumber="${{ github.run_number }}" \
+            --jobID="${{ github.run_id }}" \
+            --mailingList="ashish.kushwaha@comprotechnologies.com,vimal.mishra@comprotechnologies.com" \
+            --jobResult="${{ steps.run_tests.outputs.TEST_RESULT }}" \
+            --emailId="${{ secrets.EMAIL_ID }}" \
+            --emailPwd="${{ secrets.EMAIL_PWD }}" \
+            --triggerSource="GitHub Actions"
+        # mailer.js resolves output/reports + env.json via `../../` (cwd must be core/utils,
+        # as on Semaphore) — run it from there, NOT the repo working dir, or it ENOENTs at load.
+        working-directory: ${{ env.WORKING_DIR }}/core/utils
+        env:
+          LT_SHARE_URL: ${{ steps.lt_link.outputs.LT_SHARE_URL }}
+
+      # ── 7. Upload Mochawesome report as downloadable artifact ─────────────────
+      #    The entire output/reports/ tree is uploaded (includes mochawesome HTML +
+      #    JSON with inline base64 screenshots). Retained for 14 days.
+      #    if-no-files-found: warn — don't fail the step if the test crashed before
+      #    writing the report (the email already captured the failure).
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mochawesome-report-${{ github.run_number }}
+          path: ${{ env.WORKING_DIR }}/output/reports/
+          retention-days: 14
+          if-no-files-found: warn
+
+      # ── 8. Enforce final job status ──────────────────────────────────────────
+      #    Because Step 4 used continue-on-error, the job would show green even
+      #    on test failures. This step enforces the correct red ✗ on GitHub.
+      - name: Fail job if tests failed
+        if: steps.run_tests.outputs.TEST_RESULT == 'failed'
+        run: |
+          echo "❌ Tests failed — marking job as failed."
+          exit 1

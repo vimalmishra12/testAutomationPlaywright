@@ -234,7 +234,7 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
 
 ## APP: Builder  (asgard-thor-builder.comprodls.com)
 
-**appType:** `Builder`  ·  **TC ID prefix:** `TST_B…`  ·  **Selector namespace:** `css.Builder`
+**appType:** `Builder`  ·  **TC ID:** per-module code (AGENTS.md Rule 6), e.g. login → `TST_BLOGI`  ·  **Selector namespace:** `css.Builder`
 **Purpose:** comproDLS **Builder 2.0** — authoring tool for learning content (eBooks, activities,
 metadata). A separate product from Cambridge One, added as a second `appType` (ADR-013).
 
