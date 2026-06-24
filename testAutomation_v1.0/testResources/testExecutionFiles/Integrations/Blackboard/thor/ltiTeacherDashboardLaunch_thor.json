@@ -1,0 +1,83 @@
+{
+  "Suite1": {
+    "Name": "BB — LTI Teacher Dashboard Launch (IP1)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Blackboard URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_BBLG_TC_1",
+        "description": "Accept privacy, cookies and terms of use",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBLG_TC_2",
+        "description": "Enter LTI teacher username",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLogindata.json",
+            "jsonPath": "BB.login.ltiTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_BBLG_TC_3",
+        "description": "Enter LTI teacher password",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLogindata.json",
+            "jsonPath": "BB.login.ltiTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_BBLG_TC_4",
+        "description": "Click Sign In and verify successful login",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBCN_TC_1",
+        "description": "Navigate to course from course listing",
+        "testFile": "./test/Integrations/Blackboard/bbCourse.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbCoursedata.json",
+            "jsonPath": "BB.course.testautocourse"
+          }
+        ]
+      },
+      {
+        "id": "TST_BBIP1_TC_1",
+        "description": "Launch LTI teacher dashboard from course and verify it loaded",
+        "testFile": "./test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBIP1_TC_2",
+        "description": "Verify teacher dashboard — course title, school name, duration, product name, action buttons",
+        "testFile": "./test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLtiDashboarddata.json",
+            "jsonPath": "BB.ltiDashboard.teacherDashboard"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

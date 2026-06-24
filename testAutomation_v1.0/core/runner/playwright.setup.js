@@ -143,7 +143,14 @@ function resolveViewport() {
 const MAXIMIZE_HEADED = !HEADLESS && process.env.PWVIEWPORT === undefined;
 
 function launchArgs() {
-    return MAXIMIZE_HEADED ? ["--start-maximized"] : [];
+    const args = [
+        // LTI 1.3 OIDC flows set cross-site cookies during the redirect chain.
+        // Without this flag Chrome blocks those cookies (SameSite=Lax by default),
+        // causing lti-onboarding to loop indefinitely before landing on lti-error.
+        "--disable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure",
+    ];
+    if (MAXIMIZE_HEADED) args.push("--start-maximized");
+    return args;
 }
 
 // Context viewport: explicit PWVIEWPORT wins; else null (real window) when headed

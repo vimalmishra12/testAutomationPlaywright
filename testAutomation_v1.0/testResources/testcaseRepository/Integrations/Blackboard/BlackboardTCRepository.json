@@ -1,0 +1,89 @@
+{
+  "appname": "Blackboard",
+  "appdetails": "LMS integration — Blackboard Ultra",
+  "selectorFile": "./testResources/selectors/Integrations/Blackboard/BlackboardSelectors.json",
+  "modules": [
+    {
+      "modulename": "Blackboard Login",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBLG_TC_1",
+          "description": "Accept privacy, cookies and terms of use popup",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_2",
+          "description": "Enter teacher username",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_3",
+          "description": "Enter teacher password",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_4",
+          "description": "Click Sign In and verify successful login",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "BB Course Navigation",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbCourse.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBCN_TC_1",
+          "description": "Navigate to course from course listing",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "BB LTI Tool Launch",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBIP1_TC_1",
+          "description": "Launch LTI teacher dashboard via BB Content Market and verify it loaded",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP1_TC_2",
+          "description": "Verify teacher dashboard content — course title, school name, duration, product name, action buttons",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "LTI Teacher Dashboard IP2",
+      "moduleId": "",
+      "testFile": "./test/Integrations/LTI/ltiTeacherDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_LTI_IP2_TC_1",
+          "description": "Click PE component from LTI Test product and verify PE page state — back button, teacher mode URL, TOC heading text, TOC items, activity iframe",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_IP2_TC_2",
+          "description": "Click Ebook component from LTI Test product and verify component page",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_IP2_TC_3",
+          "description": "Reserved — not used (product has only PE and Ebook components)",
+          "tags": "P1"
+        }
+      ]
+    }
+  ]
+}

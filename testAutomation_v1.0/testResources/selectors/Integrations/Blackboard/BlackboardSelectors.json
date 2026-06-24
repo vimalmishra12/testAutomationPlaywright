@@ -1,0 +1,55 @@
+{
+   "css": {
+      "Blackboard": {
+         "bbLogin": {
+            "privacyCookiesOkBtn": "#agree_button",
+            "usernameTbox": "#user_id",
+            "passwordTbox": "#password",
+            "signInBtn": "#entry-login",
+            "postLoginIndicator": "bb-base-layout"
+         },
+         "bbCourse": {
+            "courseCard": "a[id^=\"course-link-\"]",
+            "courseGuard": ".base-courses-container"
+         },
+         "bbCoursePage": {
+            "coursePageGuard": "#course-content-outline-header-text",
+            "addContentBtn": "[id^=\"add-content-menu-button\"]",
+            "contentMarketMenuItem": "[data-analytics-id=\"components.directives.add-content-button.course-outline.openContentMarket.link\"]",
+            "devDashboardLink": "a.placement-tool-link[data-launch-handle=\"Cambridge One DEV Dashboard\"]"
+         }
+      },
+      "LTI": {
+         "ltiTeacherDashboard": {
+            "dashboardGuard":   ".lti-dashboard-container",
+            "courseTitle":      "h1.class-name",
+            "spaceTitle":       "div.space-title",
+            "bundleName":       "h3.bundle-name",
+            "markingBtn":       "a.marking-btn",
+            "createLinksBtn":   "a.add-link",
+            "umbrellaCard":     ".product",
+            "componentItem":    "a.prod-clickable"
+         },
+         "ltiComponentPage": {
+            "componentPageGuard": ".product-launch-container"
+         },
+         "ltiPEPage": {
+            "backBtn":        "a.back-btn",
+            "tocContainer":   ".toc-data-wrapper",
+            "tocHamburger":   "img.toc-hamburger-btn",
+            "tocHeading":     ".sidebar h2",
+            "tocItems":       ".toc-accordian > *",
+            "activityIframe": "iframe[id^=\"iframe_\"]"
+         },
+         "ltiDeeplinkPEPage": {
+            "pageGuard":      "h1",
+            "activityIframe": "iframe[id^=\"iframe_\"]",
+            "backBtn":        "a.back-btn"
+         },
+         "ltiDeeplinkEbookPage": {
+            "pageGuard": "student.book",
+            "toolbar":   ".toolbar-wrapper"
+         }
+      }
+   }
+}
