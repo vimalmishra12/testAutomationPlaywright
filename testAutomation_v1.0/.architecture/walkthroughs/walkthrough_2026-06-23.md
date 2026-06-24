@@ -153,3 +153,37 @@ None — documentation only.
 - Other audit findings not yet actioned: stale `reloadSession` line in system.md; PROMPTS.md is a
   superseded migration log (stale protected-list / reporter claims) and could be archived to a
   pointer at ADR-012; AGENTS.md Rule 2 still hardcodes `C1Selectors.json`.
+
+---
+
+# Session Walkthrough — 2026-06-23 (append 3)
+
+## Summary
+Cleared the remaining audit staleness items. Documentation only.
+
+## Changes Made
+
+### 1. .architecture/system.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Execution-lifecycle step 6 no longer claims `browser.reloadSession()`; now
+  describes context-per-suite isolation (and the cloud per-suite session), per ADR-010/ADR-012.
+
+### 2. AGENTS.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Rule 2 selector-home/access lines generalized from the hardcoded
+  `C1Selectors.json` / `css.ComproC1` to `<App>` form with both-app examples.
+
+### 3. .architecture/PROMPTS.md
+- **Type:** Modified · **Layer:** Config / Docs
+- **What changed:** Added a "STATUS — historical log (superseded)" banner pointing to ADR-012 as
+  the live source and naming the stale facts (protected-file list now in AGENTS.md; default
+  reporter is Mochawesome with the timeline retained; "testResources zero edits" was migration-only).
+  Preserved the historical record rather than deleting it.
+
+## Protected Files Touched
+None — documentation only.
+
+## Pending / Follow-up
+- Feature-team items unchanged (login-TC de-duplication; rename ticket-form TC IDs to module-based).
+- Rule 2's namespace essay below the generalized lines still reads C1-flavored; left as explanatory
+  prose deferring to ADR-002 — a full rewrite was out of scope for this cleanup.

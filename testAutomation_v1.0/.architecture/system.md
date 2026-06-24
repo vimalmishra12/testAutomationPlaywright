@@ -190,7 +190,9 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 3. **Before Hooks**: Executes `Before[]` steps sequentially (launchUrl, login, navigate)
 4. **Test Execution**: For each `Test[]` step → `describe/it` → calls TC function with resolved testdata
 5. **After Hooks**: Executes `After[]` steps (logout, cleanup)
-6. **Session Teardown**: Browser session closed; next suite gets `browser.reloadSession()`
+6. **Session Teardown**: the suite's browser context is closed and the next suite gets a fresh
+   context + page (per-suite isolation — replaced `browser.reloadSession()`; ADR-010/ADR-012).
+   On the LambdaTest cloud path each suite opens its own per-suite session instead.
 
 ---
 

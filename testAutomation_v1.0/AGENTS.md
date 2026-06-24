@@ -39,9 +39,10 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 ### 2. Selector Indirection Is Mandatory
 
 - **NEVER hardcode CSS/XPath selectors in Page Objects or Test Cases**
-- ALL selectors live in `testResources/selectors/ExperienceApp/C1Selectors.json`
-- Page Objects access selectors via `selectorFile.css.ComproC1.<pageName>.<elementName>`
-- Selector keys follow the pattern: `css.ComproC1.<pageName>.<elementName>`
+- ALL selectors live in the app's selector file `testResources/selectors/<App>/<App>Selectors.json`
+  (e.g. `ExperienceApp/C1Selectors.json`, `Builder/BuilderSelectors.json`)
+- Page Objects access selectors via `selectorFile.css.<App>.<pageName>.<elementName>`
+- Selector keys follow the pattern: `css.<App>.<pageName>.<elementName>` (e.g. `css.ComproC1.…`, `css.Builder.…`)
 - **Every module MUST live under `css.ComproC1` — never at the JSON root.** The top-level
   `css` object is an **application namespace** layer: `css → { ComproC1, <future app>, … }`.
   This is a deliberate design so a second application can be bifurcated later by adding a
