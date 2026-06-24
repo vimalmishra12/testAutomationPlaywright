@@ -73,7 +73,6 @@ jobs:
         env:
           LT_USERNAME: ${{ secrets.LT_USERNAME }}
           LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
-          BROWSER_CAPABILITY: lambdatest-chrome-1920
           PWHEADLESS: '1'
 
       # ── 5. Generate LambdaTest shareable link ────────────────────────────────
