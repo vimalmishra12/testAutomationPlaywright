@@ -5,16 +5,9 @@ on:
   # Manual trigger — pick environment + npm script from a dropdown in the Actions UI
   workflow_dispatch:
     inputs:
-      test_env:
-        description: 'Target environment'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - thor
-          - qa
-          - rel
-          - production
+      # No separate environment input: the npm script IS the source of truth for env
+      # (and suite + browser). e.g. loginFeatureTest_LT = production. To run another
+      # env, pick/add the matching per-env script rather than a decorative dropdown.
       npm_script:
         description: 'npm script to run (e.g. loginFeatureTest_LT, eBookFeatureTest_LT)'
         required: true
@@ -29,13 +22,12 @@ on:
 env:
   NODE_VERSION: '20'
   WORKING_DIR: testAutomation_v1.0
-  # Defaults for the nightly schedule (workflow_dispatch inputs override these)
-  DEFAULT_TEST_ENV: production
+  # Default script for the nightly schedule (workflow_dispatch input overrides it)
   DEFAULT_NPM_SCRIPT: loginFeatureTest_LT
 
 jobs:
   e2e-test:
-    name: 'E2E [${{ github.event.inputs.test_env || ''production'' }}] — ${{ github.event.inputs.npm_script || ''loginFeatureTest_LT'' }}'
+    name: 'E2E — ${{ github.event.inputs.npm_script || ''loginFeatureTest_LT'' }}'
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -71,8 +63,7 @@ jobs:
         continue-on-error: true
         run: |
           SCRIPT="${{ github.event.inputs.npm_script || env.DEFAULT_NPM_SCRIPT }}"
-          ENV="${{ github.event.inputs.test_env || env.DEFAULT_TEST_ENV }}"
-          echo "▶ Running: npm run $SCRIPT   (env=$ENV)"
+          echo "▶ Running: npm run $SCRIPT"
           if npm run "$SCRIPT"; then
             echo "TEST_RESULT=passed" >> $GITHUB_OUTPUT
           else
@@ -110,12 +101,15 @@ jobs:
       #    Passes GitHub Actions equivalents for the Semaphore variables that
       #    mailer.js expects (projectName, branchName, buildNumber, jobID).
       #    --triggerSource triggers the dynamic CI URL logic added in Phase 3.
+      #    --testEnv is fixed to "production": env is carried by the npm script name
+      #    (every *_LT script is production), so the email can't claim an env the run
+      #    didn't use. If non-production scripts are added, set this to match.
       - name: Send email report
         if: always()
         run: |
           node mailer.js \
             --appType="ExperienceApp" \
-            --testEnv="${{ github.event.inputs.test_env || env.DEFAULT_TEST_ENV }}" \
+            --testEnv="production" \
             --projectName="${{ github.repository }}" \
             --branchName="${{ github.ref_name }}" \
             --buildNumber="${{ github.run_number }}" \
