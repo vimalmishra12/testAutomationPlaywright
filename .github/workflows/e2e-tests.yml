@@ -113,7 +113,7 @@ jobs:
       - name: Send email report
         if: always()
         run: |
-          node core/utils/mailer.js \
+          node mailer.js \
             --appType="ExperienceApp" \
             --testEnv="${{ github.event.inputs.test_env || env.DEFAULT_TEST_ENV }}" \
             --projectName="${{ github.repository }}" \
@@ -125,7 +125,9 @@ jobs:
             --emailId="${{ secrets.EMAIL_ID }}" \
             --emailPwd="${{ secrets.EMAIL_PWD }}" \
             --triggerSource="GitHub Actions"
-        working-directory: ${{ env.WORKING_DIR }}
+        # mailer.js resolves output/reports + env.json via `../../` (cwd must be core/utils,
+        # as on Semaphore) — run it from there, NOT the repo working dir, or it ENOENTs at load.
+        working-directory: ${{ env.WORKING_DIR }}/core/utils
         env:
           LT_SHARE_URL: ${{ steps.lt_link.outputs.LT_SHARE_URL }}
 
