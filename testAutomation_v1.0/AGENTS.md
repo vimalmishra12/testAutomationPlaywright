@@ -39,9 +39,10 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 ### 2. Selector Indirection Is Mandatory
 
 - **NEVER hardcode CSS/XPath selectors in Page Objects or Test Cases**
-- ALL selectors live in `testResources/selectors/ExperienceApp/C1Selectors.json`
-- Page Objects access selectors via `selectorFile.css.ComproC1.<pageName>.<elementName>`
-- Selector keys follow the pattern: `css.ComproC1.<pageName>.<elementName>`
+- ALL selectors live in the app's selector file `testResources/selectors/<App>/<App>Selectors.json`
+  (e.g. `ExperienceApp/C1Selectors.json`, `Builder/BuilderSelectors.json`)
+- Page Objects access selectors via `selectorFile.css.<App>.<pageName>.<elementName>`
+- Selector keys follow the pattern: `css.<App>.<pageName>.<elementName>` (e.g. `css.ComproC1.…`, `css.Builder.…`)
 - **Every module MUST live under `css.ComproC1` — never at the JSON root.** The top-level
   `css` object is an **application namespace** layer: `css → { ComproC1, <future app>, … }`.
   This is a deliberate design so a second application can be bifurcated later by adding a
@@ -64,6 +65,11 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 - Page Objects MUST load selectors via `var selectorFile = jsonParserUtil.jsonParser(selectorDir)`
 - Click methods that navigate to a new page MUST call `require('./<nextPage>.page').isInitialized()` after successful click
 - Every method MUST log via `await logger.logInto(await stackTrace.get(), ...)`
+- **No raw `global.page.*` or selector literals in a page object.** If `baseActionLibrary` has no
+  method for an interaction (`mouse.move`, an `evaluate`-based read, `nth()` by DOM order), or a
+  locator can't be a static CSS string, add a named, logged method to `baseActionLibrary.js`
+  (a protected file — confirmation required; ADR-003) instead of inlining it. See
+  `.architecture/system.md` Layer 2 "Escape hatch".
 
 ### 5. Execution Files Are Pure Configuration
 
@@ -77,12 +83,19 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 |---|---|---|
 | Page Object | `<pageName>.page.js` | `manageReports.page.js` |
 | Test File | `<pageName>.test.js` | `manageReports.test.js` |
-| TC ID prefix | `TST_<4-char-module>_TC_<N>` | `TST_MRPT_TC_1` |
-| Selector section | `css.ComproC1.<camelCase>` | `css.ComproC1.manageReports` |
+| TC ID prefix | `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the **page object**, not the Jira ticket | `TST_MRPT_TC_1`, `TST_BLOGI_TC_1` |
+| Selector section | `css.<App>.<camelCase>` | `css.ComproC1.manageReports`, `css.Builder.components` |
 | Execution file | `<descriptiveName>.json` | `manageReportsTest.json` |
 | NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
 | Functional NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
 | Visual NPM script | `visualAcceptance_<feature>_<env>` | `visualAcceptance_manageReports_thor` |
+
+> **`<MODULE>` is derived from the page object / feature, not the Jira ticket — this is the single
+> canonical TC-ID rule** (`system.md` and `manual-test-standard.md` defer to it). Agree the code
+> once per module (e.g. `login.page.js` → `BLOGI`, `manageReports.page.js` → `MRPT`) and reuse it
+> for every TC in that module. Do **NOT** embed the ticket number in the Test Case ID
+> (`TST_NEMO24401_TC_1` is wrong); the ticket is traced via the **Linked Requirement** column /
+> compound `AC<n>.UC<n>.S<n>.TC<n>` ID — see `.architecture/manual-test-standard.md`.
 
 ---
 
@@ -272,6 +285,7 @@ Anything that was discussed but not completed, or that requires a future decisio
 - ❌ **NEVER** put CSS selectors as string literals in Page Objects — use `selectorFile` references
 - ❌ **NEVER** use `assert`, `expect`, or `chai` directly in test files — use the global `assertion` object
 - ❌ **NEVER** create an execution file that references a TC ID not registered in `C1TCRepository.json`
+- ❌ **NEVER** redefine an existing TC function in another test file (e.g. copying `TST_BLOGI_TC_1` into a feature's `*.test.js`) — reference the original file via the execution file's per-step `testFile` and compose it. Reuse existing TCs; only define genuinely new ones (ADR-011)
 - ❌ **NEVER** modify `baseActionLibrary.js` or `baseAssertionLibrary.js` for feature-specific logic
 - ❌ **NEVER** add environment-specific URLs to Page Objects — URLs come from `env.json` via `appUrl` global
 - ❌ **NEVER** skip the `isInitialized()` pattern when navigating to a new page after a click
@@ -294,10 +308,14 @@ Anything that was discussed but not completed, or that requires a future decisio
    **After navigating a new area or learning new product behaviour**, append or
    update that file following its per-app template, organised by app URL.
    Mark unconfirmed items `[ASSUMED]`.
+8. **If `baseActionLibrary` lacks a method, or a locator can't be a static CSS string**: do NOT
+   inline raw `global.page.*` calls or selector string literals in the page object. Add a named,
+   logged method to `baseActionLibrary.js` — it is a protected file, so follow the confirmation
+   protocol (ADR-003). See `.architecture/system.md` Layer 2 "Escape hatch" for the rationale.
 
 ---
 
-### 7. Visual Testing Promotion & Scripting Rules
+### 8. Visual Testing Promotion & Scripting Rules
 
 #### Rule A: Static vs. Dynamic Data Visual Assessment & Confirmation
 
@@ -413,7 +431,7 @@ Visual test NPM scripts MUST follow this naming pattern:
 
 ---
 
-### 8. `tooling/` — Design-Time Scaffolding (Non-Framework)
+### 9. `tooling/` — Design-Time Scaffolding (Non-Framework)
 
 The `tooling/` directory at the repo root is **not part of the test framework**.
 It contains design-time tooling used by Claude Code during development (e.g.,
