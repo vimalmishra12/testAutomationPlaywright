@@ -73,6 +73,10 @@ async function main() {
 
       logData = updateLogDataObj(funcReportDir);
 
+      if (!logData) {
+        throw new Error("Could not find or parse report log data from " + funcReportDir + " (no valid changelog.txt or mochawesome/report.json).");
+      }
+
       if (logData.skipAssertion != true) {
         // lambdatest run - use shareable link from env variable
         reportUrl = isLambdaTestRun
@@ -399,7 +403,9 @@ async function sendMail(mailingList, mailsubject, content, contentType) {
 function updateLogDataObj(dir) {
   var logData;
   var changelogFile = dir + "/changelog.txt";
-  console.log(changelogFile);
+  var mochawesomeFile = dir + "/mochawesome/report.json";
+
+  console.log("Checking for log files in: " + dir);
   try {
     if (fs.existsSync(changelogFile)) {
       var specs = [];
@@ -437,6 +443,42 @@ function updateLogDataObj(dir) {
             console.error(error);
           }
         });
+    } else if (fs.existsSync(mochawesomeFile)) {
+      console.log("Found mochawesome report: " + mochawesomeFile);
+      var rawData = fs.readFileSync(mochawesomeFile, "utf-8");
+      var mochaData = JSON.parse(rawData);
+
+      logData = {
+        state: {
+          tc_passed: mochaData.stats ? mochaData.stats.passes || 0 : 0,
+          tc_failed: mochaData.stats ? mochaData.stats.failures || 0 : 0,
+          tc_skipped: mochaData.stats ? mochaData.stats.pending || 0 : 0
+        },
+        specs: [],
+        capabilities: {
+          pixelRatio: undefined,
+          platformName: "N/A",
+          browserName: "N/A",
+          browserVersion: "",
+          screenResolution: { width: "N/A", height: "N/A" }
+        },
+        appVersion: "N/A",
+        skipAssertion: false
+      };
+
+      if (mochaData.results && mochaData.results.length > 0) {
+        mochaData.results.forEach(result => {
+          if (result.file) {
+            logData.specs.push(result.file.split(/[\\/]/).pop());
+          } else if (result.fullFile) {
+            logData.specs.push(result.fullFile.split(/[\\/]/).pop());
+          }
+        });
+      }
+      logData.specs = Array.from(new Set(logData.specs));
+      if (logData.specs.length === 0) logData.specs.push("Functional Test Run");
+    } else {
+      console.log("No valid changelog.txt or mochawesome/report.json found in " + dir);
     }
   } catch (err) {
     console.error(err);
