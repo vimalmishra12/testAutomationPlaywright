@@ -21,9 +21,9 @@ on:
         default: 'loginFeatureTest_LT'
         type: string
 
-  # Nightly scheduled run — 2:30 AM IST (9:00 PM UTC)
+  # Nightly scheduled run — 9:30 PM IST (4:00 PM UTC)
   schedule:
-    - cron: '0 21 * * *'
+    - cron: '0 16 * * *'
 
 # ── Top-level env (used by both manual and scheduled runs) ────────────────────
 env:
