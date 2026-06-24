@@ -473,9 +473,9 @@ function updateLogDataObj(dir) {
           if (!suites || suites.length === 0) return;
           suites.forEach(suite => {
             if (suite.file && typeof suite.file === 'string' && suite.file.trim() !== '') {
-              specsSet.add(suite.file.split(/[\\/]/).pop());
+              specsSet.add(suite.file.split(/[\\/]/).pop().replace(/\.js$/, '.json'));
             } else if (suite.fullFile && typeof suite.fullFile === 'string' && suite.fullFile.trim() !== '') {
-              specsSet.add(suite.fullFile.split(/[\\/]/).pop());
+              specsSet.add(suite.fullFile.split(/[\\/]/).pop().replace(/\.js$/, '.json'));
             }
             if (suite.suites && suite.suites.length > 0) {
               extractSpecs(suite.suites);
@@ -485,9 +485,9 @@ function updateLogDataObj(dir) {
 
         mochaData.results.forEach(result => {
           if (result.file && typeof result.file === 'string' && result.file.trim() !== '') {
-            specsSet.add(result.file.split(/[\\/]/).pop());
+            specsSet.add(result.file.split(/[\\/]/).pop().replace(/\.js$/, '.json'));
           } else if (result.fullFile && typeof result.fullFile === 'string' && result.fullFile.trim() !== '') {
-            specsSet.add(result.fullFile.split(/[\\/]/).pop());
+            specsSet.add(result.fullFile.split(/[\\/]/).pop().replace(/\.js$/, '.json'));
           }
           if (result.suites && result.suites.length > 0) {
             extractSpecs(result.suites);
