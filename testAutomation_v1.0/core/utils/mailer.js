@@ -5,15 +5,10 @@ var argv = require("yargs").argv;
 var folder = fs.readdirSync("../../output/reports/");
 var envData = JSON.parse(fs.readFileSync("../../env.json"));
 var errorMailingList =
-  "akhil.aggarwal@comprotechnologies.com,rupsi.mehta@comprotechnologies.com,vimal.mishra@comprotechnologies.com,megha.garg@comprotechnologies.com";
-//var semaphoreJob = 'https://semaphoreci.com/comprodlsengage/' + argv.projectName + '/branches/' + argv.branchName + '/builds/' + argv.buildNumber;
-var semaphoreJob =
-  "https://vimalmishra12.semaphoreci.com" + "/jobs/" + argv.jobID;
-//var semaphoreJob = 'https://vimalmishra12.semaphoreci.com/projects/QATestAutomation';
-
-// var semaphoreJob = process.argv.includes('--jobUrl') ? process.argv[process.argv.indexOf('--jobUrl') + 1] : 'https://vimalmishra12.semaphoreci.com/projects/QATestAutomation';
-
-// console.log('Semaphore Job URL:', semaphoreJob);
+  "vimal.mishra@comprotechnologies.com,ashish.kushwaha@comprotechnologies.com";
+// GitHub Actions CI run URL.
+// argv.projectName = "owner/repo", argv.jobID = GITHUB_RUN_ID (passed by e2e-tests.yml).
+var githubActionsRunUrl = "https://github.com/" + argv.projectName + "/actions/runs/" + argv.jobID;
 
 // lambdatest shareable link detection
 const isLambdaTestRun = Boolean(process.env.LT_SHARE_URL);
@@ -41,7 +36,7 @@ async function main() {
       console.log("buildNumber = " + argv.buildNumber);
       console.log("mailingList = " + argv.mailingList);
       console.log("jobResult = " + argv.jobResult);
-      console.log("Semaphore Job = " + semaphoreJob);
+      console.log("GitHub Actions Run = " + githubActionsRunUrl);
       mailOutput =
         "<p>!!!!! ERROR: One or more environment parameters are missing!!!!!</p><p>&nbsp;appType = " +
         argv.appType +
@@ -59,8 +54,8 @@ async function main() {
         argv.triggerSource +
         "' on the '" +
         argv.branchName +
-        '\' branch. For semaphore build details, click <a style="background-color: #ffffff;" href=' +
-        semaphoreJob +
+        '\' branch. For GitHub Actions run details, click <a style="background-color: #ffffff;" href=' +
+        githubActionsRunUrl +
         '><span style="font-weight: 400;">here</span></a></span></span></p>';
       mailSubject =
         "❌ " +
@@ -83,13 +78,13 @@ async function main() {
         reportUrl = isLambdaTestRun
           ? process.env.LT_SHARE_URL
           : baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            folder[0] +
-            "/index.html";
+          "/" +
+          argv.appType +
+          "/" +
+          argv.testEnv +
+          "/" +
+          folder[0] +
+          "/index.html";
 
         console.log("🔗 [MAILER] Using Report URL:", reportUrl);
 
@@ -105,13 +100,13 @@ async function main() {
         reportUrl = isLambdaTestRun
           ? process.env.LT_SHARE_URL
           : baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            folder[0] +
-            "/visual/index.html";
+          "/" +
+          argv.appType +
+          "/" +
+          argv.testEnv +
+          "/" +
+          folder[0] +
+          "/visual/index.html";
 
         logData = updateLogDataObj(visReportDir);
         mailObj2 = await createMail(
@@ -289,8 +284,8 @@ async function createMail(logData, reportUrl, mailTitle) {
       argv.triggerSource +
       "' on the '" +
       argv.branchName +
-      "' branch. For semaphore build details, click <a style=background-color: #ffffff;\" href=" +
-      semaphoreJob +
+      "' branch. For GitHub Actions run details, click <a style=background-color: #ffffff;\" href=" +
+      githubActionsRunUrl +
       "><span>here</span></a></span></p></body></html>";
     subject =
       "❌ " +
@@ -360,8 +355,8 @@ async function createMail(logData, reportUrl, mailTitle) {
       argv.triggerSource +
       "' on the '" +
       argv.branchName +
-      "' branch. For semaphore build details, click <a style=background-color: #ffffff;\" href=" +
-      semaphoreJob +
+      "' branch. For GitHub Actions run details, click <a style=background-color: #ffffff;\" href=" +
+      githubActionsRunUrl +
       "><span>here</span></a></span></p></body></html>";
     mailingList = argv.mailingList;
   }
