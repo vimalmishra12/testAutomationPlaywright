@@ -20,7 +20,7 @@ on:
 
 # ── Top-level env (used by both manual and scheduled runs) ────────────────────
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
   WORKING_DIR: testAutomation_v1.0
   # Default script for the nightly schedule (workflow_dispatch input overrides it)
   DEFAULT_NPM_SCRIPT: loginFeatureTest_LT
