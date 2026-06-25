@@ -70,3 +70,42 @@ None — documentation/skill markdown only.
 - The skill still uses `TST_<4CHAR>` for TC ids in its body (Workflow A / Golden Rule 3); the canonical
   rule is now `TST_<MODULE>_TC_<N>` (module from page object — AGENTS.md Rule 6). Left unchanged this
   session (Task 3 scoped to the read-first block only) — worth aligning in a future pass.
+
+---
+
+# Session Walkthrough — 2026-06-25 (append 4)
+
+## Summary
+Made `c1-environment-test-replicator` genuinely multi-app (C1 + Builder) instead of C1-centric, fixed
+two real correctness bugs in its replication steps, and removed a stray appType block from env.json.
+
+## Changes Made
+
+### 1. .agent/skills/c1-environment-test-replicator/SKILL.md
+- **Type:** Modified · **Layer:** Skill instruction
+- **What changed:**
+  - Added **STEP 0 — Resolve the application (appType)**: locate the test's execution file across
+    appType folders → `<App>`; read env.json for the app's valid envs (ExperienceApp = thor/qa/rel/
+    production; Builder = thor only) + namespace; STOP if no other env exists for that app.
+  - **Fixed STEP 2a bug:** copying the execution file unchanged left its env-specific `dataFile`
+    paths pointing at the source env → now repoints every `dataFile` from `<sourceEnv>` to `<targetEnv>`.
+  - **Fixed STEP 2b assumption:** data files are NOT `<testName>_data.json` (Builder uses
+    `<feature>Data.json`, C1 varies) → derive the file(s) from the exec file's `dataFile` references.
+  - Generalized all hardcoded `ExperienceApp` / `C1Selectors.json` paths to `<App>` / `<App>Selectors.json`
+    (STEP 1, 2c `--appType=<App>`, STEP 4 FT2, STEP 7 template, Quick Reference); STEP 5 ISSUE block
+    labelled "C1 example". Intro broadened to "C1 / Builder".
+- **Why:** The skill is meant for both apps but was C1-hardcoded; STEP 2a/2b were also outright wrong
+  for the real (env-specific `dataFile`, non-`_data.json`) layout.
+
+### 2. env.json
+- **Type:** Modified (config JSON — not protected) · **Layer:** Config
+- **What changed:** Removed the stray `EExperienceApp` appType block (double-E typo duplicate of
+  `ExperienceApp`; its `testExecDir` folder doesn't exist; unreferenced except the gitignored
+  `env copy.json`). Validated the file still parses; appTypes now `ExperienceApp`, `Builder`.
+- **Why:** Typo block that could confuse appType resolution / readers.
+
+## Protected Files Touched
+None — `env.json` is config JSON (explicitly non-protected); the rest is skill markdown.
+
+## Pending / Follow-up
+- `env copy.json` (gitignored backup) still has the `EExperienceApp` typo — harmless, not tracked.
