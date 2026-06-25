@@ -107,19 +107,6 @@ module.exports = {
         return { completionStatus };
       }
 
-      // DEBUG: dump outer page controls and iframe word buttons
-      var outerControls = await global.page.evaluate(function () {
-        var els = Array.from(document.querySelectorAll("a, button"));
-        return els.map(function (e) { return e.tagName + "|" + (e.textContent || "").trim().substring(0, 40) + "|cls=" + e.className; }).join("\n");
-      });
-      console.log("[DEBUG outer controls]\n" + outerControls);
-      await action.switchToFrame(IFRAME_SEL);
-      var iframeButtons = await global.__activeFrame.locator("button").evaluateAll(function (buttons) {
-        return buttons.map(function (b) { return (b.textContent || "").trim() + "|cls=" + b.className; });
-      }).catch(function (e) { return ["iframeEvalError: " + e.message]; });
-      await action.switchToParentFrame();
-      console.log("[DEBUG iframe buttons]\n" + iframeButtons.join("\n"));
-
       for (var i = 0; i < exercises.length; i++) {
         var ex = exercises[i];
         if (ex.type === "word-order") {

@@ -42,12 +42,16 @@ module.exports = {
     }
     await logger.logInto(await stackTrace.get(), "devDashboardLink clicked — waiting for new tab");
 
+    const prevPage = global.page;
     const newPage = await pagePromise;
     await newPage.waitForLoadState("load");
     global.page = newPage;
     await logger.logInto(await stackTrace.get(), "Switched to LTI teacher dashboard tab");
 
     res = await require("../LTI/ltiTeacherDashboard.page.js").isInitialized();
+    if (true !== res.pageStatus) {
+      global.page = prevPage;
+    }
     return res;
   },
 };

@@ -147,6 +147,8 @@ function launchArgs() {
         // LTI 1.3 OIDC flows set cross-site cookies during the redirect chain.
         // Without this flag Chrome blocks those cookies (SameSite=Lax by default),
         // causing lti-onboarding to loop indefinitely before landing on lti-error.
+        // Applied globally (not just BB) — impact is minimal for non-LTI suites
+        // running against internal test environments.
         "--disable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure",
     ];
     if (MAXIMIZE_HEADED) args.push("--start-maximized");

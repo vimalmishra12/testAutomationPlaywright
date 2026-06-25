@@ -37,29 +37,19 @@ module.exports = {
     return res;
   },
 
-  set_usernameTbox: async function (value) {
+  _setField: async function (selector, label, value) {
     await logger.logInto(await stackTrace.get());
-    var res;
-    res = await action.setValue(this.usernameTbox, value);
+    var res = await action.setValue(selector, value);
     if (true == res) {
-      await logger.logInto(await stackTrace.get(), "Value entered in usernameTbox");
+      await logger.logInto(await stackTrace.get(), "Value entered in " + label);
     } else {
-      await logger.logInto(await stackTrace.get(), res + " Value NOT entered in usernameTbox", "error");
+      await logger.logInto(await stackTrace.get(), res + " Value NOT entered in " + label, "error");
     }
     return res;
   },
 
-  set_passwordTbox: async function (value) {
-    await logger.logInto(await stackTrace.get());
-    var res;
-    res = await action.setValue(this.passwordTbox, value);
-    if (true == res) {
-      await logger.logInto(await stackTrace.get(), "Value entered in passwordTbox");
-    } else {
-      await logger.logInto(await stackTrace.get(), res + " Value NOT entered in passwordTbox", "error");
-    }
-    return res;
-  },
+  set_usernameTbox: async function (value) { return this._setField(this.usernameTbox, "usernameTbox", value); },
+  set_passwordTbox: async function (value) { return this._setField(this.passwordTbox, "passwordTbox", value); },
 
   click_signInBtn: async function () {
     await logger.logInto(await stackTrace.get());

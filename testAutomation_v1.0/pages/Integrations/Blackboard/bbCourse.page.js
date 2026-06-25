@@ -41,7 +41,7 @@ module.exports = {
       var courseName = testdata && testdata.courseName;
       var cardLocator = courseName
         ? global.page.locator(this.courseCard).filter({ hasText: courseName })
-        : global.page.locator(this.courseCard).first();
+        : global.page.locator(this.courseCard);
       courseId = await cardLocator.first().evaluate(el => el.id.replace("course-link-", ""));
       courseUrl = appUrl.replace(/\/ultra\/course$/, "/ultra/courses/" + courseId + "/outline");
       await logger.logInto(await stackTrace.get(), "navigating to course outline: " + courseUrl);
