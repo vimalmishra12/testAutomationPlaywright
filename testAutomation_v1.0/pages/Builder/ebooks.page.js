@@ -10,9 +10,12 @@ module.exports = {
   cloneMenuItem:    sel.ebooks.cloneMenuItem,
   deleteMenuItem:   sel.ebooks.deleteMenuItem,
   itemLink:         sel.ebooks.itemLink,
+  itemLinkByText:   sel.ebooks.itemLinkByText,
+  cardByText:       sel.ebooks.cardByText,
   dialog:           sel.cloneModal.dialog,
   codeInput:        sel.cloneModal.uniqueCodeInput,
   titleInput:       sel.cloneModal.titleInput,
+  visibleInputs:    sel.cloneModal.visibleInputs,
   okBtn:            sel.cloneModal.okBtn,
   cancelBtn:        sel.cloneModal.cancelBtn,
   closeBtn:         sel.cloneModal.closeBtn,
@@ -20,13 +23,20 @@ module.exports = {
   delCommentInput:  sel.deleteModal.commentInput,
   delConfirmBtn:    sel.deleteModal.confirmBtn,
 
+  // Builds a concrete selector from a JSON "{text}" template by injecting a dynamic value
+  // (item code/title). Keeps all selector syntax in the selector file (Rule 2) while still
+  // allowing per-item lookups. Pure string substitution — no DOM interaction.
+  _byText: function (template, text) {
+    return template.split("{text}").join(text);
+  },
+
   // Best-effort cleanup run between tests (BeforeEach): if a previous test left a clone/delete
   // modal open (e.g. it failed mid-flow), dismiss it so it doesn't block the next test's
   // interactions. Safe to call when nothing is open (no-op) and before login (no dialog yet).
   dismissAnyModal: async function () {
     await logger.logInto(await stackTrace.get());
     try {
-      var hasDialog = await action.isExisting("[role='dialog']");
+      var hasDialog = await action.isExisting(this.dialog);
       if (hasDialog === true) {
         await action.keyPress("Escape");
         await browser.pause(300);
@@ -74,8 +84,8 @@ module.exports = {
     var res = await action.waitForDisplayed(this.itemLink, 15000);
     if (true !== res) return { menuStatus: res };
 
-    var _box = await global.page.locator(this.itemLink).first().boundingBox();
-    if (_box) { await global.page.mouse.move(_box.x + _box.width / 2, _box.y + _box.height / 2); }
+    // Hover the item to reveal its kebab (the action library scrolls into view + hovers centre).
+    await action.hoverCenter(this.itemLink);
     await browser.pause(600);
     var res2 = await action.waitForDisplayed(this.kebabBtn, 5000);
     if (true !== res2) return { menuStatus: false };
@@ -113,10 +123,10 @@ module.exports = {
   fillCloneTitle: async function (title) {
     await logger.logInto(await stackTrace.get());
     await browser.pause(500);
-    // CSS :nth-of-type(2) fails when inputs are in separate wrapper divs.
-    // Use Playwright's nth(1) to target the 2nd <input> in the dialog by DOM order.
-    var titleLoc = global.page.locator("[role='dialog'] input:not([type='hidden'])").nth(1);
-    await titleLoc.clear();
+    // CSS :nth-of-type(2) fails when inputs are in separate wrapper divs, so target the 2nd
+    // visible <input> in the dialog by DOM order via the action library's kth-element helper.
+    var titleLoc = await action.getKthElement(this.visibleInputs, 1);
+    await action.clearValue(titleLoc);
     var res = await action.addValue(titleLoc, title);
     return { fillStatus: true === res };
   },
@@ -145,7 +155,7 @@ module.exports = {
       // After a successful clone the backend keeps syncing — wait, then refresh so the new
       // item is actually materialised in the listing before any follow-up check.
       await browser.pause(8000);
-      await page.reload();
+      await browser.refresh();
       await action.waitForDocumentLoad();
       return { cloneStatus: true };
     }
@@ -207,11 +217,8 @@ module.exports = {
       await action.setValue(self.searchInput, searchTerm);
       await action.keyPress("Enter");
       await browser.pause(2000);
-      var found = await global.page.evaluate(function(t) {
-        var links = Array.from(document.querySelectorAll("a[href='javascript:void(0);']"));
-        return links.some(function(a) { return a.textContent.trim() === t; });
-      }, searchTerm);
-      return { loaded: true, found: found };
+      var found = await action.isExisting(self._byText(self.itemLinkByText, searchTerm));
+      return { loaded: true, found: found === true };
     }
 
     var probe = await checkOnce();
@@ -243,14 +250,12 @@ module.exports = {
     var res = await this.searchFor(code);
     if (true !== res.searchStatus) return { metaText: "" };
     await action.waitForDisplayed(this.itemLink, 30000);
-    var metaText = await global.page.evaluate(function (c) {
-      var links = Array.from(document.querySelectorAll("a[href='javascript:void(0);']"));
-      var targetLink = links.find(function(a) { return a.textContent.trim() === c; });
-      if (!targetLink) targetLink = links[0];
-      if (!targetLink) return "";
-      var container = targetLink.closest("[class*='p-6']") || targetLink.parentElement;
-      return container ? (container.innerText || container.textContent).trim() : "";
-    }, code);
+    var cardSel = this._byText(this.cardByText, code);
+    var metaText = "";
+    if (await action.isExisting(cardSel) === true) {
+      var txt = await action.getText(cardSel);
+      metaText = typeof txt === "string" ? txt.trim() : "";
+    }
     return { metaText: metaText };
   },
 
@@ -266,17 +271,15 @@ module.exports = {
     await action.setValue(this.searchInput, searchTerm);
     await action.keyPress("Enter");
     await browser.pause(2000);
-    return await global.page.evaluate(function (t) {
-      var links = Array.from(document.querySelectorAll("a[href='javascript:void(0);']"));
-      var link = links.find(function (a) { return a.textContent.trim() === t; });
-      if (!link) return { present: false, cloning: false, loaded: true };
-      var card = link.closest("[class*='p-6']") || link.parentElement;
-      var txt = card ? (card.innerText || card.textContent || "") : "";
-      // The card status shows "Clone in Progress" while still cloning, then changes to
-      // "Work In progress" once cloning completes. Match ONLY the clone-in-progress state —
-      // "Work In progress" also contains "in progress", so a broad match would never go ready.
-      return { present: true, cloning: /clone\s*in\s*progress/i.test(txt), loaded: true };
-    }, searchTerm);
+    var cardSel = this._byText(this.cardByText, searchTerm);
+    var present = await action.isExisting(cardSel);
+    if (present !== true) return { present: false, cloning: false, loaded: true };
+    // The card status shows "Clone in Progress" while still cloning, then changes to
+    // "Work In progress" once cloning completes. Match ONLY the clone-in-progress state —
+    // "Work In progress" also contains "in progress", so a broad match would never go ready.
+    var txt = await action.getText(cardSel);
+    var cloning = typeof txt === "string" && /clone\s*in\s*progress/i.test(txt);
+    return { present: true, cloning: cloning, loaded: true };
   },
 
   // Waits until a cloned item is present AND has finished cloning, BEFORE a delete is attempted.
@@ -341,7 +344,7 @@ module.exports = {
     if (true !== res) return { deleteStatus: false };
     // Deletion keeps syncing after the modal closes — wait, then refresh so the listing reflects it.
     await browser.pause(8000);
-    await page.reload();
+    await browser.refresh();
     await action.waitForDocumentLoad();
     return { deleteStatus: true };
   }

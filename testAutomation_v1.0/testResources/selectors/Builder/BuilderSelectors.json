@@ -22,12 +22,15 @@
         "kebabBtn": "button:has([class*='ellipsis-vertical'])",
         "cloneMenuItem": "[role='menuitem']:has-text('Clone')",
         "deleteMenuItem": "[role='menuitem']:has-text('Delete')",
-        "itemLink": "a[href='javascript:void(0);']"
+        "itemLink": "a[href='javascript:void(0);']",
+        "itemLinkByText": "a[href='javascript:void(0);']:text-is('{text}')",
+        "cardByText": "[class*='p-6']:has(a[href='javascript:void(0);']:text-is('{text}'))"
       },
       "cloneModal": {
         "dialog": "[role='dialog']",
         "uniqueCodeInput": "[role='dialog'] input:nth-of-type(1)",
         "titleInput": "[role='dialog'] input:nth-of-type(2)",
+        "visibleInputs": "[role='dialog'] input:not([type='hidden'])",
         "okBtn": "[role='dialog'] button:has-text('OK')",
         "cancelBtn": "[role='dialog'] button:has-text('Cancel')",
         "closeBtn": "[role='dialog'] button:has-text('Close')",
@@ -39,6 +42,8 @@
         "cloneMenuItem": "[role='menuitem']:has-text('Clone')",
         "deleteMenuItem": "[role='menuitem']:has-text('Delete')",
         "itemLink": "a[href='javascript:void(0);']",
+        "itemLinkByText": "a[href='javascript:void(0);']:text-is('{text}')",
+        "cardByText": "[class*='p-6']:has(a[href='javascript:void(0);']:text-is('{text}'))",
         "copyHotlinksCheckbox": "[role='dialog'] input[type='checkbox']"
       },
       "deleteModal": {
@@ -56,7 +61,8 @@
         "saveBtn": "button:has-text('Save')",
         "cancelBtn": "button:has-text('Cancel')",
         "deleteBtn": "button:has-text('Delete')",
-        "itemLink": "[role='main'] a[href='javascript:void(0)']"
+        "itemLink": "[role='main'] a[href='javascript:void(0)']",
+        "itemLinkByText": "[role='main'] a[href='javascript:void(0)']:text-is('{text}')"
       }
     }
   }

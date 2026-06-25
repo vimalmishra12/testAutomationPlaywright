@@ -14,12 +14,23 @@ function deriveTitle(code) {
 }
 
 module.exports = {
-  searchInput:  sel.families.searchInput,
-  codeInput:    sel.families.codeInput,
-  titleInput:   sel.families.titleInput,
-  saveBtn:      sel.families.saveBtn,
-  deleteBtn:    sel.families.deleteBtn,
-  itemLink:     sel.families.itemLink,
+  searchInput:     sel.families.searchInput,
+  codeInput:       sel.families.codeInput,
+  titleInput:      sel.families.titleInput,
+  saveBtn:         sel.families.saveBtn,
+  deleteBtn:       sel.families.deleteBtn,
+  itemLink:        sel.families.itemLink,
+  itemLinkByText:  sel.families.itemLinkByText,
+  dialog:          sel.deleteModal.dialog,
+  delCommentInput: sel.deleteModal.commentInput,
+  delConfirmBtn:   sel.deleteModal.confirmBtn,
+
+  // Builds a concrete selector from a JSON "{text}" template by injecting a dynamic value
+  // (family title). Keeps all selector syntax in the selector file (Rule 2). Pure string
+  // substitution — no DOM interaction.
+  _byText: function (template, text) {
+    return template.split("{text}").join(text);
+  },
 
   navigateTo: async function () {
     await logger.logInto(await stackTrace.get());
@@ -126,18 +137,18 @@ module.exports = {
     if (true !== res) return { deleteStatus: res };
     await browser.pause(800);
     // Delete dialog requires a comment to enable the Confirm button.
-    var hasTextarea = await action.isExisting("[role='dialog'] textarea");
+    var hasTextarea = await action.isExisting(this.delCommentInput);
     if (hasTextarea === true) {
-      await action.addValue("[role='dialog'] textarea", "Deleting family to free code for component clone.");
+      await action.addValue(this.delCommentInput, "Deleting family to free code for component clone.");
       await browser.pause(300);
     }
-    var confirmExists = await action.isExisting("[role='dialog'] button:has-text('Confirm')");
+    var confirmExists = await action.isExisting(this.delConfirmBtn);
     if (confirmExists === true) {
-      await action.waitForEnabled("[role='dialog'] button:has-text('Confirm')", 10000);
-      await action.click("[role='dialog'] button:has-text('Confirm')");
+      await action.waitForEnabled(this.delConfirmBtn, 10000);
+      await action.click(this.delConfirmBtn);
       // Wait before evaluating the close — the slow backend needs a moment to accept the delete.
       await browser.pause(3000);
-      await action.waitForExist("[role='dialog']", 30000, true);
+      await action.waitForExist(this.dialog, 30000, true);
     }
     // Deletion keeps syncing after the modal closes — wait, then refresh so the listing reflects it.
     await browser.pause(8000);
@@ -152,7 +163,7 @@ module.exports = {
     var res = await this.searchFor(title);
     if (true !== res.searchStatus) return { found: false };
     // Families listing uses void links (no semicolon) with link text = family title.
-    var exists = await action.isExisting("a[href='javascript:void(0)']:has-text('" + title + "')");
+    var exists = await action.isExisting(this._byText(this.itemLinkByText, title));
     return { found: exists === true };
   }
 };

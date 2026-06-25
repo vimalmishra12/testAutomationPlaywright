@@ -1,5 +1,4 @@
 "use strict";
-var login      = require("../../pages/Builder/login.page.js");
 var ebooks     = require("../../pages/Builder/ebooks.page.js");
 var components = require("../../pages/Builder/components.page.js");
 var families   = require("../../pages/Builder/families.page.js");
@@ -11,16 +10,8 @@ function dynCode(base) { return base + "_" + RUN_ID; }
 
 module.exports = {
 
-  // ── Login ────────────────────────────────────────────────────────────────
-  TST_BLOGI_TC_1: async function (testdata) {
-    sts = await login.isInitialized();
-    await assertion.assertEqual(sts.pageStatus, true, "Builder pre-login page is not launched.");
-  },
-
-  TST_BLOGI_TC_2: async function (testdata) {
-    sts = await login.login(testdata);
-    await assertion.assertEqual(sts.pageStatus, true, "Builder landing did not load after login.");
-  },
+  // Login TCs (TST_BLOGI_TC_1 / TST_BLOGI_TC_2) live in ./login.test.js — the execution
+  // file's login steps reference that file directly (ADR-011: reuse, don't redefine).
 
   // ── BeforeEach reset ──────────────────────────────────────────────────────
   // Dismiss any modal a previous test may have left open, so one failed test does not
