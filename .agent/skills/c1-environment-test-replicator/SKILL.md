@@ -4,8 +4,12 @@ description: >
   Replicates a test suite from one environment to another (or multiple environments) in the C1 test automation framework.
   Use this skill whenever the user wants to copy or replicate a test to another environment, port a test from thor to qa,
   stage, or production, run tests after replication, fix environment-specific failures, update selectors or test data
-  for a new environment. Trigger on any mention of: replicate test, port test, copy test to environment,
-  test not working in qa, test not working in stage, run test in new environment, fix test for environment.
+  for a new environment. This is the REPLICATION skill — use it when the test ALREADY EXISTS and must be
+  brought up in another environment (to "automate"/"run" an existing test in qa, stage, or prod). If instead
+  a brand-new test must be written from scratch, use c1-test-authoring. Trigger on any mention of:
+  replicate test, port test, copy test to environment, automate existing test in another env,
+  automate in qa/stage/prod (existing test), run an existing test in qa, test not working in qa,
+  test not working in stage, run test in new environment, fix test for environment.
 ---
 
 # C1 / Builder Environment Test Replicator Skill

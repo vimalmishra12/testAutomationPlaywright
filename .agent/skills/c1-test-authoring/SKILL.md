@@ -4,9 +4,13 @@ description: >
   Authoring and maintaining tests in this C1 / Builder Playwright-as-library + Mocha automation
   framework. Use whenever the user is writing or editing a test case, creating or changing a page
   object, adding/updating selectors, building an execution file, adding a new application (appType),
-  or running/verifying a test. Trigger on any mention of: add a test, write a test, fix a test,
-  page object, selector, selectorFile, isInitialized, execution file, TC repository, appType, css.ComproC1,
-  css.Builder, protected files, walkthrough, run the test, novus/visual, lambdatest.
+  or running/verifying a test. This is the AUTHORING skill — use it when the test does not yet exist
+  and needs to be built (to "automate" a NEW flow/feature/scenario). If instead an existing test must
+  be copied/ported to another environment, use c1-environment-test-replicator. Trigger on any mention
+  of: add a test, write a test, fix a test, automate a flow, automate a new test, automate this
+  scenario, automate in qa/thor (new test), page object, selector, selectorFile, isInitialized,
+  execution file, TC repository, appType, css.ComproC1, css.Builder, protected files, walkthrough,
+  run the test, novus/visual, lambdatest.
 ---
 
 # C1 / Builder Test Authoring Skill
