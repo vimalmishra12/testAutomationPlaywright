@@ -44,6 +44,10 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-003: Page Object Pattern with Action Library Indirection
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** The action library wraps Playwright `page.locator()`, not
+> WebDriverIO `$()`; method names, parameters and the `true`/`Error` contract are unchanged. Data
+> getters return a rich object — read `.parsed.hex`/`.parsed.rgba` (ADR-009). Amended 2026-06-11
+> (ADR-012), getter note 2026-06-13. The body below is the original rationale, kept for history.
 **Context:** Direct WebDriverIO API calls scattered across test files would create tight coupling to the automation framework version and make error handling/logging inconsistent.  
 **Decision:** All browser interactions go through `baseActionLibrary.js` which wraps WebDriverIO commands with consistent error handling, logging, and scroll-into-view behavior. Page Objects are the only consumers of the action library.  
 **Rationale:** This provides a single point to add logging, retry logic, or framework-version migration. The Page Object pattern isolates DOM structure knowledge from test logic.  
@@ -78,6 +82,10 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-005: Global Variables for Cross-Cutting Concerns
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Globals `page`/`$`/`$$`/`browser` are set by `playwright.setup.js`
+> (`$`/`$$` are Playwright-locator factories; `browser` carries WDIO-compat helpers like `browser.pause`);
+> the per-suite context lives on `global.__pwContext`. The globals-for-cross-cutting rationale is
+> unchanged. Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Logger, assertion library, stack trace utility, environment config, and JSON parser are needed across all layers. Passing them as parameters would pollute every function signature.  
 **Decision:** Cross-cutting utilities are set as Node.js `global` variables in `wdio.conf.js` and `env.conf.js`: `logger`, `stackTrace`, `assertion`, `jsonParserUtil`, `argv`, `appUrl`, `selectorDir`, `path`, `moduleOff`.  
 **Rationale:** WebDriverIO's architecture already uses globals (`browser`, `$`, `describe`, `it`). Extending this pattern for framework utilities keeps function signatures clean and consistent.  
@@ -117,6 +125,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-008: Assertion Skip Mode for Visual Testing
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Assertions use standalone `expect` from `@playwright/test` (wrapped
+> in `baseAssertionLibrary`), not Chai; the `skipAssertion` noop-at-load behaviour is unchanged.
+> Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Visual regression tests capture screenshots at each test step. Functional assertions would cause premature test failures that prevent screenshot capture.  
 **Decision:** The `baseAssertionLibrary.js` evaluates `argv.skipAssertion` at module load time. When `true`, all assertion functions become noops. This is activated via CLI: `--skipAssertion=true`.  
 **Rationale:** Allows the same test execution flow to serve both functional testing (assertions active) and visual baseline capture (assertions skipped).  
@@ -130,6 +141,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-009: Action Library Returns true/Error Pattern
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** The `true`/`Error` contract still holds — check `if (true == res)`.
+> Exception: data-returning getters give a rich object; read `.parsed.*` (e.g. `getCSSProperty(...).parsed.hex`
+> / `.parsed.rgba`), not the raw value. Clarified 2026-06-13. The body below is the original rationale, kept for history.
 **Context:** Browser interactions can fail (element not found, not clickable, timeout). The framework needs a consistent way to communicate success/failure without throwing exceptions that break the test flow prematurely.  
 **Decision:** `baseActionLibrary` methods return `true` on success and the caught `Error` object on failure. Page Objects check `if (true == res)` to determine success.  
 **Rationale:** This allows Page Objects to log failures and still return meaningful results to Test Cases, which can then assert on the result. It prevents unhandled exceptions from crashing the entire suite.  
@@ -143,6 +157,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-010: Browser Session Reload Between Suites
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Suite isolation is now context-per-suite (each later suite closes its
+> context and opens a fresh one); the cloud path uses a fresh per-suite LambdaTest session. `browser.reloadSession()`
+> is retired; the isolation intent is unchanged. Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Suites within an execution file may test different user flows (e.g., login as student vs teacher). Browser state from a previous suite (cookies, localStorage) can contaminate the next suite.  
 **Decision:** `testrunner.js` calls `browser.reloadSession()` before each suite (except the first). This gives each suite a clean browser state.  
 **Rationale:** Ensures test isolation between suites without the overhead of restarting the entire WebDriverIO process.  

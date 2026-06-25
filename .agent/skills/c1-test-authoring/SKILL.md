@@ -16,9 +16,10 @@ framework (migrated from WebDriverIO — ADR-012) with a **JSON-driven execution
 **multi-application**: everything is keyed by `--appType` (`ExperienceApp` = Cambridge One/C1 under
 `css.ComproC1`; `Builder` = comproDLS Builder under `css.Builder`).
 
-**`AGENTS.md` (repo root) and `.architecture/{system,decisions}.md` are the source of truth.**
-Read them first; this skill is the practical workflow on top of them. Where they disagree with this
-file, they win.
+**Always load:** `testAutomation_v1.0/AGENTS.md` + `.architecture/ARCHITECTURE-INVARIANTS.md` (the
+invariants cheat-sheet / index). **Consult on demand:** a specific ADR in `.architecture/decisions.md`
+or a `system.md` section only when the task touches it — follow the cheat-sheet's *Depth →* pointers.
+These are the source of truth; where they disagree with this file, they win.
 
 ---
 

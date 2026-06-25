@@ -14,10 +14,12 @@ You are replicating a test suite across environments in the Cambridge One (C1) t
 (**Playwright used as a library + standalone Mocha** — migrated from WebDriverIO, ADR-012).
 Follow all steps below exactly.
 
-> **`AGENTS.md` (repo root) and `.architecture/{system,decisions}.md` are the source of truth.**
-> Read them first; this skill is the practical workflow on top of them. Where they disagree with this
-> file, they win — in particular the **protected-files list**, **selector/naming conventions**, and the
-> **appType model** are authoritative in AGENTS.md / the ADRs (don't rely on a possibly-stale copy here).
+> **Always load:** `testAutomation_v1.0/AGENTS.md` + `.architecture/ARCHITECTURE-INVARIANTS.md` (the
+> invariants cheat-sheet / index). **Consult on demand:** a specific ADR in `.architecture/decisions.md`
+> or a `system.md` section only when the task touches it — follow the cheat-sheet's *Depth →* pointers.
+> These are the source of truth; where they disagree with this file, they win — in particular the
+> **protected-files list**, **selector/naming conventions**, and the **appType model** are
+> authoritative in AGENTS.md / the ADRs (don't rely on a possibly-stale copy here).
 
 > The framework is **multi-application**: paths are keyed by `--appType` (`<App>/`). C1 lives under
 > `ExperienceApp/` (selector namespace `css.ComproC1`); a second app, `Builder`, lives under `Builder/`
@@ -96,7 +98,9 @@ For each failing TC, classify the failure type:
 ### Failure Type 1: Selector Not Found
 **Symptoms:** `Element not found`, `No such element`, selector error
 **Root cause:** DOM structure is different in target environment
-**Fix:** Update the selector value in `testResources/selectors/ExperienceApp/C1Selectors.json`
+**Fix:** Update the selector value in the app's selector file
+`testResources/selectors/<App>/<App>Selectors.json` (C1 → `ExperienceApp/C1Selectors.json`,
+Builder → `Builder/BuilderSelectors.json`)
 - Find the current selector path (e.g. `css.ComproC1.manageReports.reportTable`)
 - Inspect the target environment DOM for the correct selector
 - Propose new value with confidence score (50–100%)
@@ -111,7 +115,10 @@ For each failing TC, classify the failure type:
 ### Failure Type 3: Timeout
 **Symptoms:** `TimeoutError: locator.waitFor: Timeout Nms exceeded` (Playwright)
 **Root cause:** Page loads slower in target env, or feature not available
-**Fix:** Investigate — may need wait time increase or TC skip for this environment
+**Fix:** Investigate first. If the env is genuinely slower, raise the *condition* wait's timeout
+(`waitForDisplayed` / `waitForDocumentLoad` on the real element) — do NOT add a fixed
+`browser.pause` (see ARCHITECTURE-INVARIANTS §1, deterministic waits). If the feature is absent in
+this env, skip the TC for that environment instead.
 
 ### Failure Type 4: Navigation Error
 **Symptoms:** `404 Not Found`, `Could not navigate to URL`
@@ -207,5 +214,5 @@ At the end, produce a walkthrough entry:
 | Execution flow | `testExecutionFiles/ExperienceApp/<env>/<testName>.json` |
 | Test data | `testcaseData/ExperienceApp/<env>/<testName>_data.json` |
 | NPM script | Add entry to `package.json` |
-| Selector fix | `testResources/selectors/ExperienceApp/C1Selectors.json` |
+| Selector fix | `testResources/selectors/<App>/<App>Selectors.json` (C1 → `ExperienceApp/C1Selectors.json`) |
 | URL mapping | Read from `env.json` |
