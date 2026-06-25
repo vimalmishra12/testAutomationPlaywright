@@ -455,7 +455,7 @@ function updateLogDataObj(dir) {
           tc_skipped: mochaData.stats ? mochaData.stats.pending || 0 : 0
         },
         specs: [],
-        capabilities: {
+        capabilities: mochaData.capabilities || {
           pixelRatio: undefined,
           platformName: "N/A",
           browserName: "N/A",
