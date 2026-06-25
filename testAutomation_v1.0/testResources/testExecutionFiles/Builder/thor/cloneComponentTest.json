@@ -1,0 +1,298 @@
+{
+  "Suite1": {
+    "Name": "Validation of Builder Clone Component (NEMO-24401)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Builder/BuilderTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_NEMO24401_RESET",
+        "description": "Dismiss any modal left open by the previous test",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": []
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_BLOGI_TC_1",
+        "description": "Validate the Builder pre-login page is launched",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BLOGI_TC_2",
+        "description": "Validate Builder SSO login lands on the app",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_1",
+        "description": "Clone component with simple lowercase code — verify in listing",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_2",
+        "description": "Clone component with code containing numbers",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC2"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_3",
+        "description": "Clone component with mixed alphanumeric + underscore code",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC3"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_4",
+        "description": "Duplicate code shows inline error; fixing code succeeds",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC4"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_5",
+        "description": "Ingested component code shows inline error; fixing code succeeds",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC5"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_6",
+        "description": "Clone then delete — verify removed from listing",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC6"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_7",
+        "description": "Clone, delete, re-clone with same code — all succeed",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC7"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_8",
+        "description": "Clone eBook, delete it, then clone Component with freed code",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC8"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_9",
+        "description": "Whitespace-only code is blocked by validation",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC9"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_10",
+        "description": "Duplicate code error is inline (not a browser native alert)",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC10"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_11",
+        "description": "Source component's own code is duplicate — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC11"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_12",
+        "description": "Umbrella product code conflict — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC12"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_13",
+        "description": "eBook code conflict — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC13"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_14",
+        "description": "Empty code field keeps OK button disabled",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC14"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_15",
+        "description": "Uppercase chars in code — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC15"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_16",
+        "description": "Special characters in code — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC16"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_21",
+        "description": "Code starting with digit is blocked by frontend validation",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC21"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_17",
+        "description": "Ingested component — Delete absent from kebab menu",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC17"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_18",
+        "description": "Ingested component's code as clone target — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC18"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_19",
+        "description": "Family code blocks component clone — inline error",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC19"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_TC_20",
+        "description": "Deleted family frees code — component clone succeeds",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.TC20"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24401_CLEANUP",
+        "description": "Post-suite cleanup — delete all cloned components",
+        "testFile": "./test/Builder/cloneComponent.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneComponentData.json",
+            "jsonPath": "Builder.cloneComponent.CLEANUP"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

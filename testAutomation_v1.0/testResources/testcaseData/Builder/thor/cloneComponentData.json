@@ -1,0 +1,138 @@
+{
+  "Builder": {
+    "cloneComponent": {
+      "login": {
+        "org": "Cambridge One",
+        "username": "harishthoradmin",
+        "password": "C0>pr0!899"
+      },
+      "TC1": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "my_comp_01",
+        "cloneTitle": "My Comp 01"
+      },
+      "TC2": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "comp_2024",
+        "cloneTitle": "Comp 2024"
+      },
+      "TC3": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "comp_a_2_b",
+        "cloneTitle": "Comp A 2 B"
+      },
+      "TC4": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "errorCode": "cqaclone1_15junepe1",
+        "cloneCode": "unique_new_01",
+        "cloneTitle": "Unique New 01"
+      },
+      "TC5": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "errorCode": "cqathorjune10pe1",
+        "cloneCode": "reg_comp_new_01",
+        "cloneTitle": "Reg Comp New 01"
+      },
+      "TC6": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "reuse_comp_del_01",
+        "cloneTitle": "Reuse Comp Del 01",
+        "deleteComment": "Deleting for TC6 cleanup"
+      },
+      "TC7": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "reuse_after_del_comp",
+        "cloneTitle": "Reuse After Del Comp",
+        "deleteComment": "Deleting to free code for reuse"
+      },
+      "TC8": {
+        "ebookSourceCode": "cqacloneebook15june26",
+        "crossCode": "reuse_ebook_on_comp_01",
+        "crossTitle": "Reuse Ebook On Comp 01",
+        "deleteComment": "Deleting ebook to free code for component",
+        "componentSourceCode": "cqaclone1_15junepe1"
+      },
+      "TC9": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "   ",
+        "cloneTitle": "Whitespace Code Test"
+      },
+      "TC10": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "cqaclone1_15junepe1",
+        "cloneTitle": "TC10 Inline Error Check"
+      },
+      "TC11": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "cqaclone1_15junepe1",
+        "cloneTitle": "TC11 Duplicate Code"
+      },
+      "TC12": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "cqaumbrellaforautotest15june2026",
+        "cloneTitle": "TC12 Umbrella Code"
+      },
+      "TC13": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "cqacloneebook15june26",
+        "cloneTitle": "TC13 Ebook Code"
+      },
+      "TC14": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "",
+        "cloneTitle": "TC14 Empty Code"
+      },
+      "TC15": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "MyComp_Invalid",
+        "cloneTitle": "TC15 Uppercase Code"
+      },
+      "TC16": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "comp-one@test",
+        "cloneTitle": "TC16 Special Chars"
+      },
+      "TC17": {
+        "ingestedCode": "cqathorjune10pe1"
+      },
+      "TC21": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "1invalid_start",
+        "cloneTitle": "TC21 Digit Start Code"
+      },
+      "TC18": {
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "cqathorjune10pe1",
+        "cloneTitle": "TC18 Ingested Code"
+      },
+      "TC19": {
+        "familyCode": "family_comp_01",
+        "familyTitle": "Family Comp 01",
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "family_comp_01",
+        "cloneTitle": "Family Comp 01 Clone"
+      },
+      "TC20": {
+        "familyCode": "family_comp_01",
+        "sourceCode": "cqaclone1_15junepe1",
+        "cloneCode": "family_comp_01",
+        "cloneTitle": "Family Comp 01 Clone",
+        "deleteComment": "Removing family to free the code"
+      },
+      "CLEANUP": {
+        "deleteComment": "Post-suite cleanup",
+        "codes": [
+          "my_comp_01",
+          "comp_2024",
+          "comp_a_2_b",
+          "unique_new_01",
+          "reg_comp_new_01",
+          "reuse_comp_del_01",
+          "reuse_after_del_comp",
+          "reuse_ebook_on_comp_01",
+          "family_comp_01"
+        ]
+      }
+    }
+  }
+}

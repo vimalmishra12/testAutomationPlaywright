@@ -1,0 +1,298 @@
+{
+  "Suite1": {
+    "Name": "Validation of Builder Clone eBook (NEMO-24402)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Builder/BuilderTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_NEMO24402_RESET",
+        "description": "Dismiss any modal left open by the previous test",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": []
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_BLOGI_TC_1",
+        "description": "Validate the Builder pre-login page is launched",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BLOGI_TC_2",
+        "description": "Validate Builder SSO login lands on the app",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_1",
+        "description": "Clone eBook with simple lowercase code — verify in listing",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_2",
+        "description": "Clone eBook with code containing numbers",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC2"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_3",
+        "description": "Clone eBook with mixed alphanumeric + underscore code",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC3"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_4",
+        "description": "Duplicate code shows inline error; fixing code succeeds",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC4"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_5",
+        "description": "Clone eBook — verify Author Name and Creation Time in listing card",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC5"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_6",
+        "description": "Clone then delete — verify removed from listing",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC6"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_7",
+        "description": "Clone, delete, re-clone with same code — all succeed",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC7"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_8",
+        "description": "Clone Component, delete it, then clone eBook with freed code",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC8"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_9",
+        "description": "Whitespace-only code is blocked by validation",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC9"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_10",
+        "description": "Duplicate code error is inline (not a browser native alert)",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC10"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_11",
+        "description": "Source eBook's own code is duplicate — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC11"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_12",
+        "description": "Non-ingested Component code conflict — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC12"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_13",
+        "description": "Umbrella product code conflict — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC13"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_14",
+        "description": "Empty code field keeps OK button disabled",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC14"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_15",
+        "description": "Uppercase chars in code — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC15"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_16",
+        "description": "Special characters in code — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC16"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_21",
+        "description": "Code starting with digit is blocked by frontend validation",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC21"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_17",
+        "description": "Ingested eBook — Delete absent from kebab menu",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC17"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_18",
+        "description": "Ingested eBook's code as clone target — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC18"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_19",
+        "description": "Family code blocks eBook clone — inline error",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC19"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_TC_20",
+        "description": "Deleted family frees code — eBook clone succeeds",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.TC20"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24402_CLEANUP",
+        "description": "Post-suite cleanup — delete all cloned eBooks",
+        "testFile": "./test/Builder/cloneEbook.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/cloneEbookData.json",
+            "jsonPath": "Builder.cloneEbook.CLEANUP"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

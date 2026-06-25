@@ -20,6 +20,72 @@
           "tags": "P1"
         }
       ]
+    },
+    {
+      "modulename": "Builder Clone Component",
+      "moduleId": "NEMO-24401",
+      "testFile": "./test/Builder/cloneComponent.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        { "id": "TST_BLOGI_TC_1",      "description": "Validate the Builder pre-login page is launched",           "tags": "P1" },
+        { "id": "TST_BLOGI_TC_2",      "description": "Validate Builder SSO login lands on the app",               "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_1",  "description": "Clone component with simple lowercase code",                         "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_2",  "description": "Clone component with code containing numbers",                       "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_3",  "description": "Clone component with mixed alphanumeric + underscore code",          "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_4",  "description": "Duplicate code shows inline error; fixing code succeeds",            "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_5",  "description": "Ingested component code shows inline error; fix succeeds",           "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_6",  "description": "Clone then delete — verify removed from listing",                    "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_7",  "description": "Clone, delete, re-clone with same code — all succeed",               "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_8",  "description": "Clone eBook, delete it, then clone Component with freed code",       "tags": "P2" },
+        { "id": "TST_NEMO24401_TC_9",  "description": "Whitespace-only code is blocked by validation",                      "tags": "P2" },
+        { "id": "TST_NEMO24401_TC_10", "description": "Duplicate code error is inline (not a browser native alert)",        "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_11", "description": "Source component own code is duplicate — inline error",              "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_12", "description": "Umbrella product code conflict — inline error",                      "tags": "P2" },
+        { "id": "TST_NEMO24401_TC_13", "description": "eBook code conflict — inline error",                                 "tags": "P2" },
+        { "id": "TST_NEMO24401_TC_14", "description": "Empty code field keeps OK button disabled",                          "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_15", "description": "Uppercase chars in code — inline error",                             "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_16", "description": "Special characters in code — inline error",                          "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_17", "description": "Ingested component — Delete absent from kebab menu",                 "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_18", "description": "Ingested component code as clone target — inline error",             "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_21",   "description": "Code starting with digit is blocked by frontend validation",          "tags": "P1" },
+        { "id": "TST_NEMO24401_TC_19",   "description": "Family code blocks component clone — inline error",                  "tags": "P2" },
+        { "id": "TST_NEMO24401_TC_20",   "description": "Deleted family frees code — component clone succeeds",               "tags": "P2" },
+        { "id": "TST_NEMO24401_CLEANUP", "description": "Post-suite cleanup — delete all cloned components",                  "tags": "P1" },
+        { "id": "TST_NEMO24401_RESET",   "description": "BeforeEach reset — dismiss any modal left open by a prior test",      "tags": "P1" }
+      ]
+    },
+    {
+      "modulename": "Builder Clone eBook",
+      "moduleId": "NEMO-24402",
+      "testFile": "./test/Builder/cloneEbook.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        { "id": "TST_BLOGI_TC_1",      "description": "Validate the Builder pre-login page is launched",           "tags": "P1" },
+        { "id": "TST_BLOGI_TC_2",      "description": "Validate Builder SSO login lands on the app",               "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_1",  "description": "Clone eBook with simple lowercase code",                             "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_2",  "description": "Clone eBook with code containing numbers",                           "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_3",  "description": "Clone eBook with mixed alphanumeric + underscore code",              "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_4",  "description": "Duplicate code shows inline error; fixing code succeeds",            "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_5",  "description": "Clone eBook — verify Author Name and Creation Time in listing",      "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_6",  "description": "Clone then delete — verify removed from listing",                    "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_7",  "description": "Clone, delete, re-clone with same code — all succeed",               "tags": "P1" },
+        { "id": "TST_NEMO24402_TC_8",  "description": "Clone Component, delete it, then clone eBook with freed code",       "tags": "P2" },
+        { "id": "TST_NEMO24402_TC_9",  "description": "Whitespace-only code is blocked by validation",                      "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_10", "description": "Duplicate code error is inline (not a browser native alert)",        "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_11", "description": "Source eBook own code is duplicate — inline error",                  "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_12", "description": "Non-ingested Component code conflict — inline error",                "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_13", "description": "Umbrella product code conflict — inline error",                      "tags": "P2", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_14", "description": "Empty code field keeps OK button disabled",                          "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_15", "description": "Uppercase chars in code — inline error",                             "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_16", "description": "Special characters in code — inline error",                          "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_17", "description": "Ingested eBook — Delete present in kebab menu",                      "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_18", "description": "Ingested eBook code as clone target — inline error",                 "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_21",   "description": "Code starting with digit is blocked by frontend validation",      "tags": "P1", "visualTest": true },
+        { "id": "TST_NEMO24402_TC_19",   "description": "Family code blocks eBook clone — inline error",                  "tags": "P2" },
+        { "id": "TST_NEMO24402_TC_20",   "description": "Deleted family frees code — eBook clone succeeds",               "tags": "P2" },
+        { "id": "TST_NEMO24402_CLEANUP", "description": "Post-suite cleanup — delete all cloned eBooks",                  "tags": "P1" },
+        { "id": "TST_NEMO24402_RESET",   "description": "BeforeEach reset — dismiss any modal left open by a prior test",  "tags": "P1" }
+      ]
     }
   ]
 }
