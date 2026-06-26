@@ -436,6 +436,30 @@ module.exports = {
         }
     },
 
+    getPageCount: function () {
+        return global.page.context().pages().length;
+    },
+
+    closeNewTabAndRefocus: async function (initialCount, timeout) {
+        await logger.logInto(await stackTrace.get(), "initialCount:" + initialCount);
+        try {
+            const context = global.page.context();
+            await browser.waitUntil(
+                async () => context.pages().length > initialCount,
+                { timeout: timeout || 5000, timeoutMsg: "New tab did not open within timeout" }
+            );
+            const newPage = context.pages()[context.pages().length - 1];
+            await newPage.waitForLoadState("load");
+            await newPage.close();
+            await global.page.bringToFront();
+            await logger.logInto(await stackTrace.get(), "new tab closed, original tab refocused");
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
     getKthElement: async function (selector, k) {
         // [2026-06-11] Category C: return a LAZY nth() locator instead of an eager
         // .all()[k] snapshot. Playwright re-resolves nth() at action time, so a click

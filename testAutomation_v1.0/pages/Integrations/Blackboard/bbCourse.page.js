@@ -20,7 +20,7 @@ module.exports = {
 
     // Navigate to courses listing (after login BB lands on /ultra/stream)
     try {
-      await global.page.goto(appUrl, { waitUntil: "load" });
+      await browser.url(appUrl);
     } catch (err) {
       await logger.logInto(await stackTrace.get(), err + " failed to navigate to courses listing", "error");
       return { pageStatus: err };
@@ -40,12 +40,12 @@ module.exports = {
     try {
       var courseName = testdata && testdata.courseName;
       var cardLocator = courseName
-        ? global.page.locator(this.courseCard).filter({ hasText: courseName })
-        : global.page.locator(this.courseCard);
-      courseId = await cardLocator.first().evaluate(el => el.id.replace("course-link-", ""));
+        ? action.getFilteredLocator(this.courseCard, courseName)
+        : this.courseCard;
+      courseId = (await action.getAttribute(cardLocator, "id")).replace("course-link-", "");
       courseUrl = appUrl.replace(/\/ultra\/course$/, "/ultra/courses/" + courseId + "/outline");
       await logger.logInto(await stackTrace.get(), "navigating to course outline: " + courseUrl);
-      await global.page.goto(courseUrl, { waitUntil: "load" });
+      await browser.url(courseUrl);
       res = true;
     } catch (err) {
       res = err;

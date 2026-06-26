@@ -6,7 +6,7 @@ var sts;
 
 module.exports = {
   TST_LTI_IP2_TC_1: async function (testdata) {
-    var dashboardUrl = global.page.url();
+    var dashboardUrl = await ltiTeacherDashboard.getDashboardUrl();
     sts = await ltiTeacherDashboard.click_component(testdata);
     await assertion.assertEqual(sts.pageStatus, true,
       "Component page did not load — umbrella: " + testdata.umbrellaName + ", component: " + testdata.componentName);
@@ -22,7 +22,7 @@ module.exports = {
   },
 
   TST_LTI_IP2_TC_2: async function (testdata) {
-    var dashboardUrl = global.page.url();
+    var dashboardUrl = await ltiTeacherDashboard.getDashboardUrl();
     sts = await ltiTeacherDashboard.click_component(testdata);
     await assertion.assertEqual(sts.pageStatus, true,
       "Component page did not load — umbrella: " + testdata.umbrellaName + ", component: " + testdata.componentName);

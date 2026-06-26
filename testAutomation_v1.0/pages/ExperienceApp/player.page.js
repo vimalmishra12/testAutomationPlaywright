@@ -184,50 +184,18 @@ module.exports = {
 
   click_hyperlinkNewTab: async function () {
     await logger.logInto(await stackTrace.get());
-    let res;
-    
-    // Store the initial number of pages to detect the new tab
-    const context = global.page.context();
-    const initialPagesCount = context.pages().length;
-    
-    res = await action.click(this.hyperlinkNewTab);
+    const initialPagesCount = action.getPageCount();
+    var res = await action.click(this.hyperlinkNewTab);
     console.log("val of res is hyperlinkNewTab: ", res);
-
     if (res === true) {
+      await logger.logInto(await stackTrace.get(), "hyperlinkNewTab is clicked");
+      res = await action.closeNewTabAndRefocus(initialPagesCount, 5000);
       await logger.logInto(
         await stackTrace.get(),
-        "hyperlinkNewTab is clicked"
-      );
-
-      // Wait for the new tab to open
-      await browser.waitUntil(
-        async () => {
-          return context.pages().length > initialPagesCount;
-        },
-        {
-          timeout: 5000,
-          timeoutMsg: "New tab did not open within the timeout period",
-        }
-      );
-
-      // Get the newly opened page
-      const pages = context.pages();
-      const newPage = pages[pages.length - 1];
-
-      // Perform actions on the new tab (if needed)
-      console.log("Performing actions on the new tab");
-
-      await newPage.waitForLoadState('load');
-
-      // Close the new tab
-      await newPage.close();
-
-      // Switch back to the original tab
-      await global.page.bringToFront();
-
-      await logger.logInto(
-        await stackTrace.get(),
-        "Switched back to the original tab and closed the new tab"
+        res === true
+          ? "Switched back to the original tab and closed the new tab"
+          : res + " hyperlinkNewTab tab handling failed",
+        res === true ? undefined : "error"
       );
     } else {
       await logger.logInto(
@@ -252,7 +220,7 @@ module.exports = {
 
       await action.waitForDisplayed(this.hyperAudioClose);
       await action.click(this.hyperAudioClose);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -271,11 +239,11 @@ module.exports = {
     if (true == res) {
       await logger.logInto(await stackTrace.get(), " hyperLinkGame is clicked");
 
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
       await action.waitForDisplayed(this.hyperAnswerClose);
       await action.click(this.hyperAnswerClose);
 
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -367,19 +335,19 @@ module.exports = {
 
       await action.waitForDisplayed(this.hyperAnswerFullScreen);
       await action.click(this.hyperAnswerFullScreen);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
 
       await action.waitForDisplayed(this.hyperAnswerReveal);
       await action.click(this.hyperAnswerReveal);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
 
       await action.waitForDisplayed(this.hyperAnswerExitFullScreen);
       await action.click(this.hyperAnswerExitFullScreen);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
 
       await action.waitForDisplayed(this.hyperAnswerClose);
       await action.click(this.hyperAnswerClose);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -403,19 +371,19 @@ module.exports = {
       // for play the audio
       await action.waitForDisplayed(this.hyperAudioPlay_pause);
       await action.click(this.hyperAudioPlay_pause);
-      await global.page.waitForTimeout(1000);
+      await browser.pause(1000);
 
       await action.waitForDisplayed(this.HyperShowHideTranscript);
       await action.click(this.HyperShowHideTranscript);
-      await global.page.waitForTimeout(1000);
+      await browser.pause(1000);
 
       await action.waitForDisplayed(this.HyperShowHideTranscript);
       await action.click(this.HyperShowHideTranscript);
-      await global.page.waitForTimeout(1000);
+      await browser.pause(1000);
 
       await action.waitForDisplayed(this.hyperAudioClose);
       await action.click(this.hyperAudioClose);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -436,11 +404,11 @@ module.exports = {
         " hyperLinkVideo 2 is clicked"
       );
 
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
 
       await action.waitForDisplayed(this.hyperVideoClose);
       await action.click(this.hyperVideoClose);
-      await global.page.waitForTimeout(3000);
+      await browser.pause(3000);
     } else {
       await logger.logInto(
         await stackTrace.get(),

@@ -71,6 +71,11 @@ module.exports = {
     return res;
   },
 
+  getDashboardUrl: async function () {
+    await logger.logInto(await stackTrace.get());
+    return await browser.getUrl();
+  },
+
   returnToDashboard: async function (url) {
     await logger.logInto(await stackTrace.get());
     await browser.url(url);

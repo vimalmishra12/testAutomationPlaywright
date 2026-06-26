@@ -1,7 +1,7 @@
 {
   "appname": "LTI",
   "appdetails": "LTI integration — teacher dashboard and component launch",
-  "selectorFile": "./testResources/selectors/Integrations/Blackboard/BlackboardSelectors.json",
+  "selectorFile": "./testResources/selectors/Integrations/LTI/LTISelectors.json",
   "modules": [
     {
       "modulename": "BB LTI Tool Launch",
