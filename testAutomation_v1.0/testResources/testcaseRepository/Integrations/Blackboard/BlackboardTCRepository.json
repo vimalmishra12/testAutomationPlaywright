@@ -65,7 +65,7 @@
     {
       "modulename": "LTI Teacher Dashboard IP2",
       "moduleId": "",
-      "testFile": "./test/Integrations/LTI/ltiTeacherDashboard.test.js",
+      "testFile": "./test/Integrations/LTI/ltiTeacherComponent.test.js",
       "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
       "testcase": [
         {
