@@ -16,12 +16,19 @@
             "coursePageGuard": "#course-content-outline-header-text",
             "addContentBtn": "[id^=\"add-content-menu-button\"]",
             "contentMarketMenuItem": "[data-analytics-id=\"components.directives.add-content-button.course-outline.openContentMarket.link\"]",
-            "devDashboardLink": "a.placement-tool-link[data-launch-handle=\"Cambridge One DEV Dashboard\"]"
+            "devDashboardLink": "a.placement-tool-link[data-launch-handle=\"Cambridge One DEV Dashboard\"]",
+            "deepLinkItem": "h3 a[href='#']"
+         },
+         "bbLaunchPanel": {
+            "panelContainer": ".root-learning-module-panel",
+            "panelHeading":   ".root-learning-module-panel .js-header-text",
+            "launchBtn":      ".attempt-buttons-section button"
          }
       },
       "LTI": {
          "ltiTeacherDashboard": {
             "dashboardGuard":   ".lti-dashboard-container",
+            "loaderWrapper":    ".lti-dashboard-container .loader-wrapper",
             "courseTitle":      "h1.class-name",
             "spaceTitle":       "div.space-title",
             "bundleName":       "h3.bundle-name",
@@ -41,14 +48,10 @@
             "tocItems":       ".toc-accordian > *",
             "activityIframe": "iframe[id^=\"iframe_\"]"
          },
-         "ltiDeeplinkPEPage": {
-            "pageGuard":      "h1",
-            "activityIframe": "iframe[id^=\"iframe_\"]",
-            "backBtn":        "a.back-btn"
-         },
          "ltiDeeplinkEbookPage": {
             "pageGuard": "student.book",
-            "toolbar":   ".toolbar-wrapper"
+            "toolbar":   ".toolbar-wrapper",
+            "backBtn":   "a.back-btn"
          }
       }
    }

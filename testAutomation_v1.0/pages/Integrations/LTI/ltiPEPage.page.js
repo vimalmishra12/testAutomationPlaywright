@@ -14,13 +14,14 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     await action.waitForDocumentLoad();
     var backBtnStatus    = await action.waitForDisplayed(this.backBtn, 15000);
-    var teacherModeUrl   = global.page.url().includes('/teacher/');
+    var currentUrl       = await browser.getUrl();
+    var teacherModeUrl   = currentUrl.includes('/teacher/');
     await action.click(this.tocHamburger);
     var [tocStatus, tocHeadingStatus, tocHeadingText, tocItemCount, iframeStatus] = await Promise.all([
       action.waitForDisplayed(this.tocContainer, 15000),
       action.waitForDisplayed(this.tocHeading, 15000),
       action.getText(this.tocHeading),
-      global.page.locator(this.tocItems).count(),
+      action.getElementCount(this.tocItems),
       action.waitForDisplayed(this.activityIframe, 15000),
     ]);
     return { backBtnStatus, teacherModeUrl, tocStatus, tocHeadingStatus, tocHeadingText, tocItemCount, iframeStatus };

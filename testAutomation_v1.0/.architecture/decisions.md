@@ -359,3 +359,62 @@ keeping the idiomatic Playwright routing API.
   CORS — symptom to watch for is a "widget container present but empty" with a CORS preflight error
   naming `cf-access-*` in the console.
 - `playwright.setup.js` is a protected file; this change was made with explicit user confirmation.
+
+---
+
+## ADR-015: Blackboard Integration — appType, Selector Namespaces, and Raw Page Escapes
+
+**Status:** Accepted (2026-06-26)
+
+**Context:** The Blackboard LTI integration introduced a third `appType` (`Blackboard`) alongside
+ExperienceApp and Builder. It has characteristics that don't fit cleanly into existing ADR patterns:
+1. Blackboard UI pages and LTI app pages have different authoring concerns but share one selector
+   file (per ADR-013's "one selector file per app").
+2. The LTI teacher dashboard and component pages are launched by Blackboard but are Cambridge One
+   LTI pages — they should be reusable by any future LMS integration (e.g. Moodle), not tied to
+   the Blackboard namespace.
+3. Several interactions (new-tab capture, URL-state checks, `Promise.race` for `isInitialized`)
+   have no action-library equivalent. These are documented escapes, not bugs.
+
+**Decision:** Three sub-decisions:
+
+**A — Dual namespace in one selector file (`BlackboardSelectors.json`):**
+The file contains BOTH `css.Blackboard` (BB UI: login, course, course page) AND `css.LTI`
+(shared LTI pages: teacher dashboard, component page, PE page, deeplink pages). Page objects under
+`pages/Integrations/Blackboard/` access `selectorFile.css.Blackboard.*`; those under
+`pages/Integrations/LTI/` access `selectorFile.css.LTI.*`. The `selectorFile` root in
+`BlackboardTCRepository.json` points at `BlackboardSelectors.json` for both.
+**Rationale:** LTI pages are launched by Blackboard but belong to Cambridge One — they need a
+namespace that survives LMS replacement. `css.LTI` is the portable namespace for all LTI-hosted
+app pages, regardless of which LMS triggered the launch.
+
+**B — New-tab handling via `global.__pwContext.waitForEvent("page")`:**
+`bbCoursePage.click_ltiTool()` registers `const pagePromise = global.__pwContext.waitForEvent("page")`
+before clicking the LTI tool link (which opens a new tab). After the new tab loads,
+`global.page` is reassigned to it. The old tab stays open on `global.__pwContext` but is unused.
+**Rationale:** No action-library method exists for new-tab detection. This is a documented escape
+per ADR-003; it is not yet promoted to `baseActionLibrary` because only one call site exists. If a
+second integration needs this, promote it to a named, logged method.
+**Consequence:** `global.page` is mutable — after IP1 TC1, every subsequent page-object call
+operates on the new (LTI) tab, not the original Blackboard tab.
+
+**C — Raw `global.page.*` escapes in LTI page objects:**
+Three patterns in LTI page objects use raw `global.page.*` without an action-library wrapper:
+1. `Promise.race([locator.waitFor(), page.waitForURL()])` in `ltiComponentPage.isInitialized()` —
+   handles two distinct "page ready" signals: PE shows `.product-launch-container`; Ebook redirects
+   directly to `/foc/` URL with no stable element in between.
+2. `global.page.url().includes('/teacher/')` and `.includes('/foc/')` — URL-state checks to verify
+   the LTI context passed the correct mode (teacher vs student) and that the ebook redirected.
+3. `global.page.goto(url)` in `returnToDashboard()` — navigates back to the dashboard by captured
+   URL because LTI component pages have no back button to the embedding Blackboard context.
+All three are legitimate escapes per ADR-003; promote to named action-library methods if they
+spread to additional pages.
+
+**Consequences:**
+- `css.LTI` is the canonical home for all LTI app page selectors, regardless of which LMS uses them.
+- `bbCoursePage.click_ltiTool()` is the reference implementation for new-tab switching.
+- `global.page` may be reassigned inside page objects when a new tab is the only way to continue
+  the flow — document this explicitly when it occurs.
+- The Blackboard appType uses `testResources/testExecutionFiles/Integrations/Blackboard/` as
+  `testExecDir` and `testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json`
+  as the TC registry. The `Integrations/` sub-path is the convention for all LMS integrations.

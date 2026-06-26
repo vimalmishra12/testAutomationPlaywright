@@ -2,7 +2,8 @@
   "Suite1": {
     "Name": "BB — LTI Teacher Dashboard Launch (IP1)",
     "TestCaseRepo": [
-      "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json"
+      "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "./testResources/testcaseRepository/Integrations/LTI/LTITCRepository.json"
     ],
     "Before": [
       {

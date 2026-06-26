@@ -12,9 +12,11 @@ This is a **Playwright-as-a-library + Mocha end-to-end test automation framework
 
 **Multiple applications (`appType`)** _(2026-06-15)_: the framework is multi-application — `--appType`
 selects the target app and the **entire directory tree + selector namespace is keyed by it**
-(`pages/<App>/`, `test/<App>/`, `selectors/<App>/`, `css.<App>`, an `env.json` block, etc.). Two
-apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and **`Builder`**
-(comproDLS Builder, `css.Builder`). Adding an app is **additive scaffolding only — no core changes**
+(`pages/<App>/`, `test/<App>/`, `selectors/<App>/`, `css.<App>`, an `env.json` block, etc.). Three
+apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`), **`Builder`**
+(comproDLS Builder, `css.Builder`), and **`Blackboard`** (LTI integration, paths under
+`pages/Integrations/`, `test/Integrations/`, `css.Blackboard` + `css.LTI` — see ADR-015).
+Adding an app is **additive scaffolding only — no core changes**
 (see AGENTS.md §7 and ADR-013). Paths below show `ExperienceApp/`; substitute the active appType.
 
 **Tech Stack** _(updated 2026-06-15 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha; Phase 3 LambdaTest + visual testing complete)_:
@@ -57,6 +59,15 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 | Logging | Every method logs entry via `logger.logInto(stackTrace.get())` |
 
 **Must NOT**: Contain assertions, know about test data structure, reference other page's selectors directly
+
+> **LMS integration page objects (`pages/Integrations/`)** follow all standard page-object rules
+> with two documented exceptions permitted by ADR-015:
+> - `bbCoursePage.click_ltiTool()` uses `global.__pwContext.waitForEvent("page")` to capture a
+>   new tab opened by the LTI tool, then reassigns `global.page` to it (ADR-015B).
+> - `ltiTeacherDashboard.page.js` and `ltiComponentPage.page.js` use raw `global.page.*` for
+>   URL-state checks (`page.url().includes(…)`), a `Promise.race` `isInitialized` guard, and
+>   `page.goto(url)` for return navigation (ADR-015C). These are documented escapes, not patterns
+>   to replicate — promote to action-library methods if they spread beyond these two files.
 
 > **Escape hatch — when `baseActionLibrary` or the selector JSON can't express an interaction.**
 > Some interactions have no library method (e.g. `page.mouse.move`, `page.evaluate` to read a
@@ -207,13 +218,19 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`) and *
 - **One file per app, one `css.<App>` namespace** (ADR-002 / ADR-013) — never mix two apps in
   one file, never place a module at the JSON root.
 
-**Directory layout (both apps):**
+**Directory layout (all apps):**
 
 ```
 testResources/selectors/
-  ExperienceApp/C1Selectors.json     → namespace css.ComproC1   (+ csv/ = legacy CSV exports, not runtime source)
-  Builder/BuilderSelectors.json      → namespace css.Builder
+  ExperienceApp/C1Selectors.json                      → namespace css.ComproC1   (+ csv/ = legacy CSV exports, not runtime source)
+  Builder/BuilderSelectors.json                       → namespace css.Builder
+  Integrations/Blackboard/BlackboardSelectors.json    → namespaces css.Blackboard (BB UI) + css.LTI (shared LTI pages)
 ```
+
+> **`css.LTI` is a portable, cross-LMS namespace** — it holds selectors for Cambridge One LTI
+> pages (teacher dashboard, component page, PE page) that are launched by Blackboard but are not
+> Blackboard-specific. Any future LMS integration (e.g. Moodle) that embeds the same LTI pages
+> reuses this namespace rather than adding a new one. See ADR-015A.
 
 `C1Selectors.json` (ExperienceApp / Cambridge One):
 ```json

@@ -13,15 +13,14 @@ module.exports = {
     await action.waitForDocumentLoad();
     // Ebook components skip .product-launch-container and navigate directly to /foc/ URL.
     // Race both signals so this guard works for all component types.
-    try {
-      await Promise.race([
-        global.page.locator(this.componentPageGuard).first().waitFor({ state: 'visible', timeout: 30000 }),
-        global.page.waitForURL('**/foc/**', { timeout: 30000 }),
-      ]);
-      return { pageStatus: true };
-    } catch (e) {
-      return { pageStatus: false };
-    }
+    // NOTE: action.* helpers resolve (not reject) with an Error on failure, so the race
+    // never rejects — inspect the resolved value. Each branch only settles on success or
+    // at its 30s timeout, so the first `true` wins on success and an Error wins on failure.
+    var res = await Promise.race([
+      action.waitForDisplayed(this.componentPageGuard, 30000),
+      action.waitForUrl('**/foc/**', 30000),
+    ]);
+    return { pageStatus: res === true };
   },
 
   getData_ebookState: async function () {
@@ -31,19 +30,8 @@ module.exports = {
       action.waitForDisplayed(this.ebookGuard,   15000),
       action.waitForDisplayed(this.ebookToolbar, 15000),
     ]);
-    var focUrl = global.page.url().includes('/foc/');
+    var currentUrl = await browser.getUrl();
+    var focUrl = currentUrl.includes('/foc/');
     return { ebookGuardStatus, toolbarStatus, focUrl };
-  },
-
-  isInitialized_ebook: async function () {
-    await logger.logInto(await stackTrace.get());
-    // lti-onboarding redirects to the ebook URL (/foc/...); wait for it before checking elements.
-    await global.page.waitForURL("**/foc/**", { timeout: 45000 });
-    await action.waitForDocumentLoad();
-    var [pageGuardStatus, toolbarStatus] = await Promise.all([
-      action.waitForDisplayed(this.ebookGuard,   30000),
-      action.waitForDisplayed(this.ebookToolbar, 15000),
-    ]);
-    return { pageGuardStatus, toolbarStatus };
   },
 };

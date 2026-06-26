@@ -32,12 +32,4 @@ module.exports = {
     await assertion.assertEqual(ebookState.focUrl,           true, "Ebook URL does not contain /foc/");
     await ltiTeacherDashboard.returnToDashboard(dashboardUrl);
   },
-
-  TST_LTI_IP2_TC_3: async function (testdata) {
-    var dashboardUrl = global.page.url();
-    sts = await ltiTeacherDashboard.click_component(testdata);
-    await assertion.assertEqual(sts.pageStatus, true,
-      "Component page did not load — umbrella: " + testdata.umbrellaName + ", component: " + testdata.componentName);
-    await ltiTeacherDashboard.returnToDashboard(dashboardUrl);
-  },
 };

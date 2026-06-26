@@ -398,6 +398,44 @@ module.exports = {
         }
     },
 
+    // Returns a Playwright Locator filtered by text (string or RegExp), scoped to the
+    // current frame (or page). Pass the result to action.click / action.isDisplayed /
+    // action.getElementCount — each applies .first() / list semantics via el() / els().
+    getFilteredLocator: function (selector, filterText) {
+        return root().locator(selector).filter({ hasText: filterText });
+    },
+
+    // Returns a locator for an inner element nested inside a container matched by text.
+    // Covers patterns like "find umbrella card by name, then find its component link".
+    getNestedFilteredLocator: function (outerSel, outerText, innerSel, innerText) {
+        return root().locator(outerSel).filter({ hasText: outerText })
+                     .locator(innerSel).filter({ hasText: innerText });
+    },
+
+    // Waits for the page to reach a load state ('load', 'domcontentloaded', 'networkidle').
+    waitForLoadState: async function (state, timeout) {
+        await logger.logInto(await stackTrace.get(), "state:" + state);
+        try {
+            await global.page.waitForLoadState(state, { timeout: timeout || 30000 });
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    // Waits for the page URL to match a pattern (string glob or RegExp).
+    waitForUrl: async function (pattern, timeout) {
+        await logger.logInto(await stackTrace.get(), "pattern:" + pattern);
+        try {
+            await global.page.waitForURL(pattern, { timeout: timeout || 30000 });
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
     getKthElement: async function (selector, k) {
         // [2026-06-11] Category C: return a LAZY nth() locator instead of an eager
         // .all()[k] snapshot. Playwright re-resolves nth() at action time, so a click
