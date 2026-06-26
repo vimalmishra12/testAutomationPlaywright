@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Use a feature script, e.g. npm run loginFeatureTest_thor (Playwright+Mocha). See core/runner/run.js\"",
-    "BuilderLoginTest_thor": "node core/runner/run.js --appType=Builder --testEnv=thor --testExecFile=builderLoginTest.json --browserCapability=desktop-chrome-1920",
+    "BuilderLoginTest_thor": "node core/runner/run.js --appType=Builder --testEnv=thor --testExecFile=./testResources/testExecutionFiles/Builder/thor/builderLoginTest.json --browserCapability=desktop-chrome-1920",
+    "BuilderCloneComponentTest_thor": "node core/runner/run.js --appType=Builder --testEnv=thor --testExecFile=./testResources/testExecutionFiles/Builder/thor/cloneComponentTest.json --browserCapability=desktop-chrome-1920",
+    "BuilderCloneEbookTest_thor": "node core/runner/run.js --appType=Builder --testEnv=thor --testExecFile=./testResources/testExecutionFiles/Builder/thor/cloneEbookTest.json --browserCapability=desktop-chrome-1920",
     "bbLoginTest_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=bbLoginTest.json --browserCapability=desktop-chrome-1920",
     "ltiTeacherDashboardLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=ltiTeacherDashboardLaunch_thor.json --browserCapability=desktop-chrome-1920",
     "ltiComponentLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=ltiComponentLaunch_thor.json --browserCapability=desktop-chrome-1920",

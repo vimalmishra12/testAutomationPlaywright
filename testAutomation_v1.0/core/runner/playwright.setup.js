@@ -188,16 +188,40 @@ global.createFreshContext = async function createFreshContext() {
         await global.__pwContext.close().catch(() => {});
     }
     // Cloudflare Access headers for qa/rel come from env.json → normalised into
-    // global.headers by env.conf.js (empty {} for thor). Playwright's context-level
-    // extraHTTPHeaders is the idiomatic replacement for the old WDIO CDP
-    // requestInterception hack in setupCDPHeaders — every request from this context
-    // carries the CF-Access-Client-Id / CF-Access-Client-Secret headers.
+    // global.headers by env.conf.js (empty {} for thor).
+    // [2026-06-23] Confirmed by user. Previously these were applied as context-level
+    // extraHTTPHeaders, which attaches them to EVERY request — including cross-origin
+    // calls the Gigya login widget makes (cdns.eu1.gigya.com/sdk.config.get, OneTrust,
+    // New Relic). Those third parties reject the custom cf-access-* headers in CORS
+    // preflight, so the Gigya screen-set fails to initialise and the login box never
+    // paints (verified via live QA DOM probe). Fix: inject the CF Access headers ONLY
+    // for first-party requests (same host as appUrl) via a context route handler;
+    // third-party requests pass through untouched.
     const contextOpts = { viewport: contextViewport() };
-    if (global.headers && Object.keys(global.headers).length) {
-        contextOpts.extraHTTPHeaders = global.headers;
-    }
     global.__pwContext = await global.browser.newContext(contextOpts);
+    if (global.headers && Object.keys(global.headers).length) {
+        // Host of the application under test — CF Access only guards this origin.
+        let firstPartyHost = "";
+        try { firstPartyHost = new URL(global.appUrl).host; } catch (e) { firstPartyHost = ""; }
+        await global.__pwContext.route("**/*", (route) => {
+            let reqHost = "";
+            try { reqHost = new URL(route.request().url()).host; } catch (e) { reqHost = ""; }
+            // Match the exact app host (and its subdomains) so Cloudflare Access is
+            // satisfied on first-party calls without leaking the headers cross-origin.
+            const isFirstParty = firstPartyHost &&
+                (reqHost === firstPartyHost || reqHost.endsWith("." + firstPartyHost));
+            if (isFirstParty) {
+                route.continue({ headers: { ...route.request().headers(), ...global.headers } });
+            } else {
+                route.continue();
+            }
+        });
+    }
     global.page = await global.__pwContext.newPage();
+    // Slow / collaborative apps (e.g. Builder) can exceed Playwright's 30s default navigation
+    // timeout on "load". Raise it at the context level so EVERY goto/reload — including direct
+    // page.reload() calls in page objects — gets the longer budget, not just browser.url/refresh.
+    global.__pwContext.setDefaultNavigationTimeout(90000);
     // Reset iframe scope for the new suite (Category C — see baseActionLibrary root()).
     global.__activeFrame = null;
     // Compatibility shim (decision D3).
@@ -278,11 +302,14 @@ global.stopAndSaveTrace = async function stopAndSaveTrace(name) {
  */
 function attachBrowserCompat() {
     const b = global.browser;
+    // Navigation timeout: slow / collaborative apps (e.g. Builder) can take well over Playwright's
+    // 30s default to finish "load". Use a generous 90s so a slow page load doesn't fail navigation.
+    const NAV_TIMEOUT = 90000;
     b.pause = async (ms) => global.page.waitForTimeout(ms);
-    b.url = async (u) => global.page.goto(u, { waitUntil: "load" });
+    b.url = async (u) => global.page.goto(u.startsWith("/") ? new URL(appUrl).origin + u : u, { waitUntil: "load", timeout: NAV_TIMEOUT });
     b.getUrl = async () => global.page.url();
     b.getTitle = async () => global.page.title();
-    b.refresh = async () => global.page.reload({ waitUntil: "load" });
+    b.refresh = async () => global.page.reload({ waitUntil: "load", timeout: NAV_TIMEOUT });
     b.keys = async (k) => global.page.keyboard.press(Array.isArray(k) ? k.join("") : String(k));
     b.execute = async (fn, ...args) => global.page.evaluate(fn, ...args);
     b.executeAsync = async (fn, ...args) => global.page.evaluate(fn, ...args);
@@ -378,7 +405,7 @@ exports.mochaHooks = {
      * browser so no Chromium process is orphaned.
      */
     afterAll: async function () {
-        this.timeout(30000);
+        this.timeout(90000); // extended for tracing.stop() on slow CI
         if (global.__tracingActive && global.__pwContext) {
             await global.__pwContext.tracing.stop().catch(() => {});
             global.__tracingActive = false;

@@ -9,9 +9,11 @@
 - The test data each case references is supplied as CSV file(s) in the **real upload-template format** (exact headers).
 
 ## Test Case ID convention
-- Format: `TST_<MODULE>_TC_<N>`
-- `<MODULE>` = the feature name in **UPPERCASE, one continuous word**, agreed once per feature and reused everywhere (e.g. `SCHOOL`, `NEMO`).
-- `<N>` = sequential number within the feature.
+- Format: `TST_<MODULE>_TC_<N>` — canonical rule lives in **AGENTS.md Rule 6**; this section defers to it.
+- `<MODULE>` = a short **UPPERCASE** code derived from the **page object / feature module** the
+  case exercises (e.g. `login.page.js` → `BLOGI`, `manageReports.page.js` → `MRPT`), agreed once
+  per module and reused everywhere. Derive it from the page object/feature — **not** the Jira ticket number.
+- `<N>` = sequential number within the module.
 
 ## Ordering rule (mandatory)
 Within a feature's set, **list and number test cases in this order**:
@@ -74,10 +76,11 @@ ACs or when the ACs are too thin to warrant a matrix.
 
 Two distinct IDs are used:
 
-1. **Test Case ID** (column 2, "Test Case ID"): simple sequential pattern
-   `TST_<MODULE><TICKET_NUMBER>_TC_<N>` — e.g. `TST_NEMO24306_TC_1` through
-   `TST_NEMO24306_TC_18`. Numbered sequentially by S.No. in the Test Cases tab
-   (Positive → Edge → Negative ordering).
+1. **Test Case ID** (column 2, "Test Case ID"): module-based sequential pattern
+   `TST_<MODULE>_TC_<N>`, where `<MODULE>` is the page-object/feature code (AGENTS.md Rule 6) —
+   e.g. `TST_MRPT_TC_1` … `TST_MRPT_TC_18`. Do **NOT** embed the Jira ticket number in this ID;
+   the ticket is captured by the Linked Requirement / compound ID below. Numbered sequentially by
+   S.No. in the Test Cases tab (Positive → Edge → Negative ordering).
 
 2. **Linked Requirement** (column 4, "Linked Requirement"): compound traceability ID
    `AC<n>.UC<n>.S<n>.TC<n>` — e.g. `AC1.UC1.S4.TC1`. This is the row's anchor in
@@ -129,13 +132,13 @@ Header fill = Cambridge purple `#3D1A66`, white bold text. Freeze header row.
 `<TST_ID>_<short_description>.csv` — uses the simple TST ID (not the compound
 AC ID) so the CSV filename matches the Test Case ID column in the doc.
 
-e.g. `TST_NEMO24306_TC_12_empty_username_adult.csv`
+e.g. `TST_MRPT_TC_12_empty_username_adult.csv` (the TST ID is module-based, not ticket-based)
 
 ### Output structure summary
 
 | Artefact | What it contains |
 |---|---|
 | **Traceability Matrix tab** | Both IDs per row: `Mapped TC ID` (compound) + `TST ID` (simple) — the bridge |
-| **Test Cases tab — Test Case ID col** | Simple `TST_<MODULE><TICKET>_TC_<N>` |
+| **Test Cases tab — Test Case ID col** | Module-based `TST_<MODULE>_TC_<N>` (no ticket number) |
 | **Test Cases tab — Linked Requirement col** | Compound `AC<n>.UC<n>.S<n>.TC<n>` |
 | **CSV filenames** | Prefixed with the TST ID, not the compound ID |

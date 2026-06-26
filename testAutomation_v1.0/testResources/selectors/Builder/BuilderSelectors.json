@@ -16,6 +16,53 @@
       },
       "landing": {
         "appHeader": "header.sticky"
+      },
+      "components": {
+        "searchInput": "#search",
+        "kebabBtn": "button:has([class*='ellipsis-vertical'])",
+        "cloneMenuItem": "[role='menuitem']:has-text('Clone')",
+        "deleteMenuItem": "[role='menuitem']:has-text('Delete')",
+        "itemLink": "a[href='javascript:void(0);']",
+        "itemLinkByText": "a[href='javascript:void(0);']:text-is('{text}')",
+        "cardByText": "[class*='p-6']:has(a[href='javascript:void(0);']:text-is('{text}'))"
+      },
+      "cloneModal": {
+        "dialog": "[role='dialog']",
+        "uniqueCodeInput": "[role='dialog'] input:nth-of-type(1)",
+        "titleInput": "[role='dialog'] input:nth-of-type(2)",
+        "visibleInputs": "[role='dialog'] input:not([type='hidden'])",
+        "okBtn": "[role='dialog'] button:has-text('OK')",
+        "cancelBtn": "[role='dialog'] button:has-text('Cancel')",
+        "closeBtn": "[role='dialog'] button:has-text('Close')",
+        "errorMsg": "[role='dialog'] pre.vs-text"
+      },
+      "ebooks": {
+        "searchInput": "#search",
+        "kebabBtn": "button:has([class*='ellipsis-vertical'])",
+        "cloneMenuItem": "[role='menuitem']:has-text('Clone')",
+        "deleteMenuItem": "[role='menuitem']:has-text('Delete')",
+        "itemLink": "a[href='javascript:void(0);']",
+        "itemLinkByText": "a[href='javascript:void(0);']:text-is('{text}')",
+        "cardByText": "[class*='p-6']:has(a[href='javascript:void(0);']:text-is('{text}'))",
+        "copyHotlinksCheckbox": "[role='dialog'] input[type='checkbox']"
+      },
+      "deleteModal": {
+        "dialog": "[role='dialog']",
+        "commentInput": "[role='dialog'] textarea",
+        "confirmBtn": "[role='dialog'] button:has-text('Confirm')",
+        "cancelBtn": "[role='dialog'] button:has-text('Cancel')",
+        "closeBtn": "[role='dialog'] button:has-text('Close')"
+      },
+      "families": {
+        "searchInput": "#search",
+        "createBtn": "button:has-text('Create a Family')",
+        "codeInput": "#uniqueCode",
+        "titleInput": "#Title",
+        "saveBtn": "button:has-text('Save')",
+        "cancelBtn": "button:has-text('Cancel')",
+        "deleteBtn": "button:has-text('Delete')",
+        "itemLink": "[role='main'] a[href='javascript:void(0)']",
+        "itemLinkByText": "[role='main'] a[href='javascript:void(0)']:text-is('{text}')"
       }
     }
   }

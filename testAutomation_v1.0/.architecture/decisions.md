@@ -44,12 +44,23 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-003: Page Object Pattern with Action Library Indirection
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** The action library wraps Playwright `page.locator()`, not
+> WebDriverIO `$()`; method names, parameters and the `true`/`Error` contract are unchanged. Data
+> getters return a rich object — read `.parsed.hex`/`.parsed.rgba` (ADR-009). Amended 2026-06-11
+> (ADR-012), getter note 2026-06-13. The body below is the original rationale, kept for history.
 **Context:** Direct WebDriverIO API calls scattered across test files would create tight coupling to the automation framework version and make error handling/logging inconsistent.  
 **Decision:** All browser interactions go through `baseActionLibrary.js` which wraps WebDriverIO commands with consistent error handling, logging, and scroll-into-view behavior. Page Objects are the only consumers of the action library.  
 **Rationale:** This provides a single point to add logging, retry logic, or framework-version migration. The Page Object pattern isolates DOM structure knowledge from test logic.  
 **Consequences:**  
 - Test cases MUST NOT use `$()`, `$$()`, or `browser.*` commands directly  
-- Every new browser interaction type must be added to `baseActionLibrary.js`  
+- **Page objects MUST NOT inline raw `global.page.*` / Playwright locator calls or selector
+  string literals to dodge a missing capability.** If `baseActionLibrary` lacks a method
+  (e.g. `mouse.move`, an `evaluate`-based read, an `nth()` locator by DOM order), the fix is to
+  add a named, logged method to `baseActionLibrary.js` — not an ad-hoc page-object hack. That
+  file is **protected**, so this is a deliberate, confirmed change (protected-file protocol in
+  AGENTS.md). The protected status is the point: every low-level capability is reviewed in one
+  place. Likewise, a locator that cannot be a static CSS string is built *inside* that method,
+  not in the page object.  
 - Page Object methods follow patterns: `click_<element>()`, `set_<element>()`, `getData_<section>()`  
 - Navigation-triggering clicks MUST call the destination page's `isInitialized()` to confirm transition  
 
@@ -71,6 +82,10 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-005: Global Variables for Cross-Cutting Concerns
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Globals `page`/`$`/`$$`/`browser` are set by `playwright.setup.js`
+> (`$`/`$$` are Playwright-locator factories; `browser` carries WDIO-compat helpers like `browser.pause`);
+> the per-suite context lives on `global.__pwContext`. The globals-for-cross-cutting rationale is
+> unchanged. Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Logger, assertion library, stack trace utility, environment config, and JSON parser are needed across all layers. Passing them as parameters would pollute every function signature.  
 **Decision:** Cross-cutting utilities are set as Node.js `global` variables in `wdio.conf.js` and `env.conf.js`: `logger`, `stackTrace`, `assertion`, `jsonParserUtil`, `argv`, `appUrl`, `selectorDir`, `path`, `moduleOff`.  
 **Rationale:** WebDriverIO's architecture already uses globals (`browser`, `$`, `describe`, `it`). Extending this pattern for framework utilities keeps function signatures clean and consistent.  
@@ -110,6 +125,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-008: Assertion Skip Mode for Visual Testing
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Assertions use standalone `expect` from `@playwright/test` (wrapped
+> in `baseAssertionLibrary`), not Chai; the `skipAssertion` noop-at-load behaviour is unchanged.
+> Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Visual regression tests capture screenshots at each test step. Functional assertions would cause premature test failures that prevent screenshot capture.  
 **Decision:** The `baseAssertionLibrary.js` evaluates `argv.skipAssertion` at module load time. When `true`, all assertion functions become noops. This is activated via CLI: `--skipAssertion=true`.  
 **Rationale:** Allows the same test execution flow to serve both functional testing (assertions active) and visual baseline capture (assertions skipped).  
@@ -123,6 +141,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-009: Action Library Returns true/Error Pattern
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** The `true`/`Error` contract still holds — check `if (true == res)`.
+> Exception: data-returning getters give a rich object; read `.parsed.*` (e.g. `getCSSProperty(...).parsed.hex`
+> / `.parsed.rgba`), not the raw value. Clarified 2026-06-13. The body below is the original rationale, kept for history.
 **Context:** Browser interactions can fail (element not found, not clickable, timeout). The framework needs a consistent way to communicate success/failure without throwing exceptions that break the test flow prematurely.  
 **Decision:** `baseActionLibrary` methods return `true` on success and the caught `Error` object on failure. Page Objects check `if (true == res)` to determine success.  
 **Rationale:** This allows Page Objects to log failures and still return meaningful results to Test Cases, which can then assert on the result. It prevents unhandled exceptions from crashing the entire suite.  
@@ -136,6 +157,9 @@ school-admin modules were moved back under `css.ComproC1`.)
 ## ADR-010: Browser Session Reload Between Suites
 
 **Status:** Accepted  
+> ⚡ **CURRENT STATE (read first).** Suite isolation is now context-per-suite (each later suite closes its
+> context and opens a fresh one); the cloud path uses a fresh per-suite LambdaTest session. `browser.reloadSession()`
+> is retired; the isolation intent is unchanged. Amended 2026-06-11 by ADR-012. The body below is the original rationale, kept for history.
 **Context:** Suites within an execution file may test different user flows (e.g., login as student vs teacher). Browser state from a previous suite (cookies, localStorage) can contaminate the next suite.  
 **Decision:** `testrunner.js` calls `browser.reloadSession()` before each suite (except the first). This gives each suite a clean browser state.  
 **Rationale:** Ensures test isolation between suites without the overhead of restarting the entire WebDriverIO process.  
@@ -288,3 +312,50 @@ so a new app can never collide with C1 and core files stay app-agnostic. Proven 
   repeats across steps.
 - Unused appType stubs were removed from `env.json` (backoffice / assessmentEditor /
   itemPlayerTestbench) — keep `env.json` to apps that actually have a test tree.
+- **"Additive only / no core changes" is the goal, not a guarantee.** If extending an app
+  exposes a real gap in shared infrastructure (e.g. `browser.url` needing relative-path support,
+  the runner needing a per-test `timeout`), a protected-file change is legitimate — but it is
+  **not** additive work: it follows the protected-file confirmation protocol (AGENTS.md) and is
+  recorded as its own ADR. **ADR-014 is the worked example** of doing this correctly. Do not let
+  the "zero core edits" framing above mask that the protected-file rule applies the moment you
+  touch `core/` or any other protected file.
+
+---
+
+## ADR-014: Cloudflare Access Headers Are First-Party-Scoped, Never Global
+
+**Status:** Accepted (2026-06-23)
+
+**Context:** Cloudflare-Access-gated environments (qa, rel) require `CF-Access-Client-Id` /
+`CF-Access-Client-Secret` headers to reach the app origin. During the WebDriverIO→Playwright
+migration (ADR-012, commit `152dbce`) these were applied as Playwright **context-level
+`extraHTTPHeaders`**, which attaches them to **every** request the page issues — including
+cross-origin calls third-party widgets make. On QA this broke the Gigya login screen-set: its
+`cdns.eu1.gigya.com/sdk.config.get` call carried the custom `cf-access-*` headers, the third-party
+server rejected them in CORS preflight (*"Request header field cf-access-client-secret is not allowed
+by Access-Control-Allow-Headers"*), Gigya failed to initialise (`Cannot read properties of undefined
+(reading 'Domain')`), and the login box never painted — every login-dependent suite timed out in its
+`Before` hook. The pre-migration WDIO code had injected these headers via a CDP interception helper
+(`setupCDPHeaders`) that **scoped them to the first-party host**; the migration dropped that filter.
+
+**Decision:** CF Access headers MUST be injected **only for first-party requests** — those whose host
+equals the `appUrl` host or is a subdomain of it. Third-party requests (Gigya, OneTrust, New Relic,
+analytics, CDNs) MUST pass through with no custom headers. In `core/runner/playwright.setup.js` this is
+implemented with a `context.route('**/*', …)` handler that conditionally merges `global.headers` based
+on the request host, instead of context-level `extraHTTPHeaders`.
+
+**Rationale:** Cloudflare Access only guards the app's own origin, so that is the only origin that
+needs the credentials. Sending them cross-origin is both unnecessary and actively harmful — custom
+request headers force a CORS preflight that third-party servers reject, silently breaking
+widget-driven UI (login, consent, telemetry). Host-scoping restores the proven WDIO behaviour while
+keeping the idiomatic Playwright routing API.
+
+**Consequences:**
+- `extraHTTPHeaders` is forbidden for CF Access (or any auth header that must not leak cross-origin);
+  use the first-party route handler in `playwright.setup.js`.
+- Host match is `reqHost === appUrlHost || reqHost.endsWith('.' + appUrlHost)` so app subdomains
+  (e.g. `login.<app>`) are still covered while unrelated origins are not.
+- Applies to every CF-Access-gated env (qa, rel) and any app embedding third-party widgets behind
+  CORS — symptom to watch for is a "widget container present but empty" with a CORS preflight error
+  naming `cf-access-*` in the console.
+- `playwright.setup.js` is a protected file; this change was made with explicit user confirmation.

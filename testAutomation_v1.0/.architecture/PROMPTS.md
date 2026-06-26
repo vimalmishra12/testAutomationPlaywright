@@ -3,6 +3,17 @@
 > Canonical record of the multi-phase prompts that drive large structural changes.
 > Each prompt's agreed decisions are FINAL once recorded here — do not re-litigate.
 
+> **STATUS — historical log (superseded). Do NOT act on details below without checking the live
+> source.** The WebDriverIO→Playwright migration is complete; the authoritative record is now
+> **ADR-012** (and its amendments) in `decisions.md`. Where anything here conflicts with the
+> current framework, **ADR-012 wins.** Known-stale items below:
+> - **Protected-file list** (Prompt 4 §"Protected files") is outdated — the authoritative list is in
+>   **AGENTS.md**: `wdio.conf.js` is deleted, and `playwright.setup.js` / `.mocharc.js` are already protected.
+> - **Reporters (D6)** is outdated — the default reporter is **Mochawesome** and the visual
+>   **timeline report is retained** (ADR-012), not "Spec + Allure, Timeline retired".
+> - **"`testResources/` zero edits expected" (Prompt 4)** applied only to the migration; selectors,
+>   data, execution files, and the TC repository are edited as normal work.
+
 ---
 
 ## Prompt 4 — WebDriverIO → Playwright (library) + Mocha Migration

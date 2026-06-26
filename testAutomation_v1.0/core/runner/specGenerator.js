@@ -46,10 +46,14 @@ module.exports = {
             fs = [];
         var testRunner = process.cwd() + '/core/runner/testrunner.js';
         var tempRunnerDirectory = process.cwd() + '/test/tempRunner/'
-        if (!fss.existsSync(tempRunnerDirectory)) {
-            //console.log("Creating Temp Runner directory...")
-            await fss.mkdirSync(tempRunnerDirectory);
+        // Clear any stale specs left by a prior crashed/interrupted run before generating
+        // fresh ones. run.js globs and executes EVERY .js in this dir, so an orphaned spec
+        // (whose execution JSON was since deleted) would otherwise crash the next run with
+        // ENOENT. removingTempSpecs() only runs at end-of-run, so it cannot cover a crash.
+        if (fss.existsSync(tempRunnerDirectory)) {
+            rimraf.sync(tempRunnerDirectory);
         }
+        await fss.mkdirSync(tempRunnerDirectory);
 
         specs = await this.getLisOfTestFiles(argv.testExecFile);
         //if argv.excludeTestFile exists, then update specFilesArray by removing the specs to exclude
