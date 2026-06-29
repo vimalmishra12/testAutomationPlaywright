@@ -168,6 +168,44 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
         // visual report finishes — protected file; change confirmed by user for PR #3.
         buildVisualReport()
             .then(async () => {
+                if (wantMochawesome) {
+                    try {
+                        const reportJsonPath = path.join(process.cwd(), global.reportOutputDir, "mochawesome", "report.json");
+                        for (let i = 0; i < 20; i++) {
+                            if (fs.existsSync(reportJsonPath)) {
+                                try {
+                                    let reportData = JSON.parse(fs.readFileSync(reportJsonPath, "utf-8"));
+                                    const cap = (global.capabilities && global.capabilities[0]) || {};
+                                    const ltOptions = cap["LT:Options"] || {};
+                                    
+                                    let actualBrowserVersion = cap.browserVersion || "latest";
+                                    if (global.browser && typeof global.browser.version === "function") {
+                                        try { actualBrowserVersion = global.browser.version(); } catch (_) {}
+                                    }
+
+                                    reportData.capabilities = {
+                                        pixelRatio: undefined,
+                                        platformName: ltOptions.platform || ltOptions.platformName || "Windows 10",
+                                        browserName: cap.browserName || "Chrome",
+                                        browserVersion: actualBrowserVersion,
+                                        screenResolution: {
+                                            width: global.resolution ? global.resolution.width : "N/A",
+                                            height: global.resolution ? global.resolution.height : "N/A"
+                                        }
+                                    };
+                                    fs.writeFileSync(reportJsonPath, JSON.stringify(reportData, null, 2));
+                                    break;
+                                } catch (err) {
+                                    // file might be partially written, retry
+                                }
+                            }
+                            await new Promise((r) => setTimeout(r, 500));
+                        }
+                    } catch (e) {
+                        console.error("[run] Failed to inject capabilities into mochawesome report:", e.message);
+                    }
+                }
+
                 if (global.__isCloud) {
                     try {
                         const { getLatestBuildId } = require(path.join(process.cwd(), "core/utils/lambdatest/getBuildId.js"));
