@@ -1,0 +1,17 @@
+{
+  "Builder": {
+    "createEbook": {
+      "book1": {
+        "uniqueCode": "cqa_create_ebook_26jun_1",
+        "productBuildTitle": "Test eBook - 26jun_1",
+        "displayTitle": "Test eBook - 26jun_DT",
+        "learningMaterialsSummary": "Test eBook - 26jun_1_LMS",
+        "classMaterialsSummary": "Test eBook - 26jun_1_CMS",
+        "coverFile": "D:\\ebookCreate\\eBookCreationItems\\Covers\\CQATestLiveCOver+1_2.pdf",
+        "pagesFile": "D:\\ebookCreate\\eBookCreationItems\\PDF For Pages\\cqa34pages28april2026.pdf",
+        "tocFile": "D:\\ebookCreate\\eBookCreationItems\\TOC\\Toc_35withcoverandromanbeforeunit.xlsx",
+        "hotlinkFile": "D:\\ebookCreate\\eBookCreationItems\\Hotlinks\\Thor_AllType_WithoutLearningObject.xlsx"
+      }
+    }
+  }
+}
