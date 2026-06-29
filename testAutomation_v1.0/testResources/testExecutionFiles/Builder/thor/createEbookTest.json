@@ -1,0 +1,115 @@
+{
+  "Suite1": {
+    "Name": "Builder Create eBook — test-data creation (cover / pages / TOC / hotlinks)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Builder/BuilderTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_BLOGI_TC_1",
+        "description": "Validate the Builder pre-login page is launched",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BLOGI_TC_2",
+        "description": "Validate Builder SSO login lands on the app",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_1",
+        "description": "Create a new Student Book with the mandatory fields and save",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_2",
+        "description": "Find the created eBook by Product Build Title and open it",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_3",
+        "description": "Import the cover PDF via Assets & Download",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_4",
+        "description": "Import the pages PDF",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 600000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_5",
+        "description": "Upload the TOC",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BECR_TC_6",
+        "description": "Import the hotlinks spreadsheet",
+        "testFile": "./test/Builder/createEbook.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/createEbookData.json",
+            "jsonPath": "Builder.createEbook.book1"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

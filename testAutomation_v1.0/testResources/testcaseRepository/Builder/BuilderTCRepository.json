@@ -86,6 +86,22 @@
         { "id": "TST_NEMO24402_CLEANUP", "description": "Post-suite cleanup — delete all cloned eBooks",                  "tags": "P1" },
         { "id": "TST_NEMO24402_RESET",   "description": "BeforeEach reset — dismiss any modal left open by a prior test",  "tags": "P1" }
       ]
+    },
+    {
+      "modulename": "Builder Create eBook",
+      "moduleId": "CreateEbook",
+      "testFile": "./test/Builder/createEbook.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        { "id": "TST_BLOGI_TC_1", "description": "Validate the Builder pre-login page is launched",                "tags": "P1" },
+        { "id": "TST_BLOGI_TC_2", "description": "Validate Builder SSO login lands on the app",                    "tags": "P1" },
+        { "id": "TST_BECR_TC_1",  "description": "Create a new Student Book with the mandatory fields and save",   "tags": "P1" },
+        { "id": "TST_BECR_TC_2",  "description": "Find the created eBook by Product Build Title and open it",       "tags": "P1" },
+        { "id": "TST_BECR_TC_3",  "description": "Import the cover PDF via Assets & Download",                      "tags": "P1" },
+        { "id": "TST_BECR_TC_4",  "description": "Import the pages PDF",                                            "tags": "P1" },
+        { "id": "TST_BECR_TC_5",  "description": "Upload the TOC",                                                  "tags": "P1" },
+        { "id": "TST_BECR_TC_6",  "description": "Import the hotlinks spreadsheet",                                 "tags": "P1" }
+      ]
     }
   ]
 }
