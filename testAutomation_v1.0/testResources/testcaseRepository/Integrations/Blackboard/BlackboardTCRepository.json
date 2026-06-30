@@ -1,0 +1,48 @@
+{
+  "appname": "Blackboard",
+  "appdetails": "LMS integration — Blackboard Ultra",
+  "selectorFile": "./testResources/selectors/Integrations/Blackboard/BlackboardSelectors.json",
+  "modules": [
+    {
+      "modulename": "Blackboard Login",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBLG_TC_1",
+          "description": "Accept privacy, cookies and terms of use popup",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_2",
+          "description": "Enter teacher username",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_3",
+          "description": "Enter teacher password",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBLG_TC_4",
+          "description": "Click Sign In and verify successful login",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "BB Course Navigation",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbCourse.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBCN_TC_1",
+          "description": "Navigate to course from course listing",
+          "tags": "P1"
+        }
+      ]
+    }
+  ]
+}

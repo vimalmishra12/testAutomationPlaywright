@@ -302,3 +302,101 @@ operations are slow and state propagation is **delayed and variable**.
   cross-entity) until the entry has actually disappeared — so cross-entity flows (TC_8) must
   refresh-poll for absence after the delete AND retry the re-clone, because code-free lags the
   listing removal.
+
+---
+
+## APP: Blackboard / LTI  (cup-test.blackboard.com)
+
+**appType:** `Blackboard`  
+**Selector namespaces:** `css.Blackboard` (BB UI) + `css.LTI` (shared LTI pages)  
+**Purpose:** Blackboard Ultra LMS — automates the LTI 1.3 integration between Blackboard
+and the Cambridge One teacher dashboard.
+
+*First seeded: [2026-06-26]*
+
+### Environment URLs
+
+| Environment | URL |
+|---|---|
+| Thor (shared BB sandbox) | https://cup-test.blackboard.com/ultra/course |
+| QA / Rel / Production | TBD — not provisioned yet |
+
+### Credentials & test data (Thor)
+
+- Login user (LTI tests): `BB.login.ltiTeacher` → `thornodeepltiteacher / Compro11`
+  - **Always use `ltiTeacher` for IP1 and IP2.** Using a different account causes a timeout at
+    `TST_BBIP1_TC_1` because the account lacks LTI entitlements to see the Content Market / LTI tool.
+- Course: `testcourse_2` → data key `BB.course.testautocourse`
+- LTI product: `"LTI Test (DO NOT CHANGE)"` — a sentinel fixture; do not rename or delete it
+  in the Blackboard sandbox.
+
+### LTI launch flow — two integration points
+
+**IP1 — Teacher Dashboard launch:**
+1. Login as `thornodeepltiteacher`
+2. Navigate to `testcourse_2` → click course card
+3. BB course page → click `+` (Add Content) → Content Market
+4. Content Market → click `Cambridge One DEV Dashboard` link
+5. A **new browser tab** opens carrying the LTI teacher dashboard (`.lti-dashboard-container`)
+6. `global.page` is swapped to the new tab; the old tab remains open on `global.__pwContext`
+
+**IP2 — Component launch (runs after IP1):**
+- From the LTI teacher dashboard, each component lives under an umbrella product card (`.product`).
+  Click the component link (`.prod-clickable`).
+- **PE component** (`autoltipe`) → opens in-place at `/teacher/…` URL. Assert: back button, TOC,
+  TOC heading, lesson items, activity iframe. Return to dashboard via `browser.url(dashboardUrl)`.
+- **Ebook component** (`LTI Ebook`) → navigates directly to `/foc/…` URL (bypasses
+  `.product-launch-container`). Assert: ebook guard (`student.book`), toolbar (`.toolbar-wrapper`),
+  `/foc/` in URL. Return to dashboard via `browser.url(dashboardUrl)`.
+
+### Page objects (all under `pages/Integrations/`)
+
+| Page object | Responsibility |
+|---|---|
+| `Blackboard/bbLogin.page.js` | Cookies banner, username, password, sign-in |
+| `Blackboard/bbCourse.page.js` | Course listing, click course card |
+| `Blackboard/bbCoursePage.page.js` | BB course page → Content Market → LTI tool click; new-tab switch |
+| `LTI/ltiTeacherDashboard.page.js` | Dashboard guard, content verify, component click, return-to-dashboard |
+| `LTI/ltiComponentPage.page.js` | Component page guard (race: `.product-launch-container` OR `/foc/` URL), ebook state |
+| `LTI/ltiPEPage.page.js` | PE state: back button, teacher-mode URL, TOC, TOC items, activity iframe |
+
+### Test files
+
+| Test file | TC IDs | Notes |
+|---|---|---|
+| `test/Integrations/Blackboard/bbLogin.test.js` | TST_BBLG_TC_1..4 | Login steps |
+| `test/Integrations/Blackboard/bbCourse.test.js` | TST_BBCN_TC_1 | Course navigation |
+| `test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js` | TST_BBIP1_TC_1, TST_BBIP1_TC_2 | IP1 dashboard launch + content verify |
+| `test/Integrations/LTI/ltiTeacherComponent.test.js` | TST_LTI_IP2_TC_1, TST_LTI_IP2_TC_2 | IP2 component launches (PE + Ebook) |
+
+### Known quirks
+
+- **`TST_BBIP1_TC_1` uses `global.__pwContext.waitForEvent("page")`** inside `bbCoursePage.click_ltiTool()`
+  to capture the new tab. This is a deliberate raw `global.__pwContext.*` call — no action-library
+  method exists for new-tab detection. `global.page` is mutated on success.
+- **`ltiComponentPage.isInitialized()`** uses `Promise.race([action.waitForDisplayed(...), action.waitForUrl(...)])` —
+  two different signals because Ebook goes straight to `/foc/` while PE stops at `.product-launch-container`.
+  Both branches go through the action library (`waitForUrl`/`waitForLoadState` were added to
+  `baseActionLibrary.js`), so this is not a raw escape (ADR-015C).
+- **Teacher-mode URL check:** `browser.getUrl().includes('/teacher/')` — verifies the LTI context
+  passed teacher mode correctly (not student mode). Read via the `browser.getUrl()` WDIO-compat
+  wrapper, not raw `global.page.url()`.
+- **Return to dashboard:** `browser.url(dashboardUrl)` — the LTI component pages have no
+  conventional back button to the Blackboard-embedded dashboard; URL navigation is the only reliable
+  return path. Capture `var dashboardUrl = await browser.getUrl()` before clicking a component, because
+  the URL changes once inside a component.
+- **`TST_BBIP1_TC_2` — `courseDurationText` assertion removed:** the duration value shifts by a
+  day between the stored test data and the live dashboard, making it inherently flaky. The remaining
+  four checks (course title, school name, product name, action buttons) are unaffected.
+- **Teacher dashboard shell vs. content — slow integration load [confirmed 2026-06-26]:** the
+  LTI launch lands on `lti-tool-dev.comprodls.com/v1/lti/launch` (an OIDC handshake spinner) and
+  then swaps the dashboard SPA in place — **the URL never changes off `/lti/launch`**. The shell
+  (`.lti-dashboard-container`, Cambridge header + footer) renders almost immediately, but the
+  course content (course title, school, product, action buttons) is fetched over the LTI
+  integration and is **slow** — an in-shell spinner `.lti-dashboard-container .loader-wrapper`
+  covers a blank grey content area until it arrives. Using `.lti-dashboard-container` alone as the
+  ready-guard is a **false positive** (matches the shell while content is still loading), which
+  made `TST_BBIP1_TC_2`'s content selectors (`h1.class-name`, `div.space-title`, `h3.bundle-name`)
+  intermittently find nothing. Fix: `ltiTeacherDashboard.isInitialized()` waits for the guard to
+  appear AND then for `loaderWrapper` to go hidden (reverse `waitForDisplayed`, 120s) before the
+  dashboard is considered ready. The content selectors themselves were always correct.
