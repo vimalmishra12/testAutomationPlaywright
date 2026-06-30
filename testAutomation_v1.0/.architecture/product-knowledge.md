@@ -344,10 +344,10 @@ and the Cambridge One teacher dashboard.
 - From the LTI teacher dashboard, each component lives under an umbrella product card (`.product`).
   Click the component link (`.prod-clickable`).
 - **PE component** (`autoltipe`) → opens in-place at `/teacher/…` URL. Assert: back button, TOC,
-  TOC heading, lesson items, activity iframe. Return to dashboard via `page.goto(dashboardUrl)`.
+  TOC heading, lesson items, activity iframe. Return to dashboard via `browser.url(dashboardUrl)`.
 - **Ebook component** (`LTI Ebook`) → navigates directly to `/foc/…` URL (bypasses
   `.product-launch-container`). Assert: ebook guard (`student.book`), toolbar (`.toolbar-wrapper`),
-  `/foc/` in URL. Return to dashboard via `page.goto(dashboardUrl)`.
+  `/foc/` in URL. Return to dashboard via `browser.url(dashboardUrl)`.
 
 ### Page objects (all under `pages/Integrations/`)
 
@@ -375,13 +375,16 @@ and the Cambridge One teacher dashboard.
 - **`TST_BBIP1_TC_1` uses `global.__pwContext.waitForEvent("page")`** inside `bbCoursePage.click_ltiTool()`
   to capture the new tab. This is a deliberate raw `global.__pwContext.*` call — no action-library
   method exists for new-tab detection. `global.page` is mutated on success.
-- **`ltiComponentPage.isInitialized()`** uses `Promise.race([locator.waitFor(), page.waitForURL()])` —
+- **`ltiComponentPage.isInitialized()`** uses `Promise.race([action.waitForDisplayed(...), action.waitForUrl(...)])` —
   two different signals because Ebook goes straight to `/foc/` while PE stops at `.product-launch-container`.
-- **Teacher-mode URL check:** `global.page.url().includes('/teacher/')` — verifies the LTI context
-  passed teacher mode correctly (not student mode).
-- **Return to dashboard:** `global.page.goto(dashboardUrl)` — the LTI component pages have no
+  Both branches go through the action library (`waitForUrl`/`waitForLoadState` were added to
+  `baseActionLibrary.js`), so this is not a raw escape (ADR-015C).
+- **Teacher-mode URL check:** `browser.getUrl().includes('/teacher/')` — verifies the LTI context
+  passed teacher mode correctly (not student mode). Read via the `browser.getUrl()` WDIO-compat
+  wrapper, not raw `global.page.url()`.
+- **Return to dashboard:** `browser.url(dashboardUrl)` — the LTI component pages have no
   conventional back button to the Blackboard-embedded dashboard; URL navigation is the only reliable
-  return path. Capture `var dashboardUrl = global.page.url()` before clicking a component, because
+  return path. Capture `var dashboardUrl = await browser.getUrl()` before clicking a component, because
   the URL changes once inside a component.
 - **`TST_BBIP1_TC_2` — `courseDurationText` assertion removed:** the duration value shifts by a
   day between the stored test data and the live dashboard, making it inherently flaky. The remaining

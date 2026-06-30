@@ -120,17 +120,25 @@ and **`Blackboard`** (LTI integration, added 2026-06-26 — see ADR-015 for its 
 | `env.json` | a top-level `"<App>": { "testExecDir": …, "environments": { <env>: { "url": … } } }` block |
 | NPM script | `<Feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
 
-**Blackboard — path and namespace exception (ADR-015):**
-The `Blackboard` appType uses an `Integrations/` sub-path (`pages/Integrations/Blackboard/`,
-`pages/Integrations/LTI/`, `testResources/selectors/Integrations/Blackboard/`) and its single
-selector file contains **two namespaces**: `css.Blackboard` (Blackboard UI pages) and `css.LTI`
-(Cambridge One LTI pages, portable across LMS integrations). This is the deliberate exception to
-the one-namespace-per-file rule — do not flatten them or add a `css.Blackboard.lti` sub-key.
+**Blackboard — path and namespace convention (ADR-015):**
+The `Blackboard` appType uses an `Integrations/` sub-path and **two** selector files / TC
+repositories, one per namespace (this honors the one-namespace-per-file rule, it is not an
+exception to it):
+- `pages/Integrations/Blackboard/` + `testResources/selectors/Integrations/Blackboard/BlackboardSelectors.json`
+  → `css.Blackboard` (Blackboard UI pages), registered by `Integrations/Blackboard/BlackboardTCRepository.json`.
+- `pages/Integrations/LTI/` + `testResources/selectors/Integrations/LTI/LTISelectors.json`
+  → `css.LTI` (Cambridge One LTI pages, portable across LMS integrations), registered by
+  `Integrations/LTI/LTITCRepository.json`.
+
+Execution files that span both list **both** TC repos in their `TestCaseRepo` array. Keep
+`css.LTI` in its own `LTISelectors.json` so it stays reusable by a future LMS (e.g. Moodle) —
+do not fold it into `BlackboardSelectors.json` or add a `css.Blackboard.lti` sub-key.
 
 Rules:
 - Each app gets its **own selector file** with its **own `css.<App>` namespace** (e.g. `css.Builder`)
-  — never mix two apps in one file (extends rule 2 / ADR-002). The `css.LTI` dual-namespace in
-  `BlackboardSelectors.json` is the only approved exception (ADR-015A).
+  — never mix two apps in one file (extends rule 2 / ADR-002). `css.Blackboard` and `css.LTI` each
+  live in their **own** file (`BlackboardSelectors.json` / `LTISelectors.json`), consistent with
+  this rule (ADR-015A).
 - The runner resolves everything from `argv.appType` + `env.json` + the TC repository's
   `selectorFile`; do **not** add appType branches to core files.
 - See `pages/Builder/` for a worked example of a standard new appType (multi-step SSO login).
