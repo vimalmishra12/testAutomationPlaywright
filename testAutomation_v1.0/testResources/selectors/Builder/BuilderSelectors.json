@@ -46,6 +46,35 @@
         "cardByText": "[class*='p-6']:has(a[href='javascript:void(0);']:text-is('{text}'))",
         "copyHotlinksCheckbox": "[role='dialog'] input[type='checkbox']"
       },
+      "ebookCreate": {
+        "createNewHeader": "h3:has-text('Create New')",
+        "carouselNext": "button:has-text('Next Slide')",
+        "studentBookCard": "div.cursor-pointer:has(h3:text-is('Student Book'))",
+        "formDialog": "form[name='addEbookForm']",
+        "uniqueCodeInput": "#builder-form-field-id",
+        "productBuildTitleInput": "#builder-form-field-title",
+        "displayTitleInput": "#builder-form-field-display-title",
+        "learningMaterialsSummaryInput": "#builder-form-field-short-description",
+        "classMaterialsSummaryInput": "#builder-form-field-very-short-description",
+        "saveReturnBtn": "button:has-text('Save and Return')"
+      },
+      "ebookAssets": {
+        "detailReady": "h4:has-text('ASSETS & UPLOADS')",
+        "processAllBtn": "a:has-text('Process all changes'):visible",
+        "processConfirmOk": ".modal:has-text('CONFIRM: Process all changes') button:has-text('Ok')",
+        "coverRow": "li:has(span:has-text('PDF, Cover'))",
+        "coverImportLink": "li:has(span:has-text('PDF, Cover')) a:has-text('Import')",
+        "coverFileInput": "input[type='file'][data-ngf-select=\"ebookVm.onCoverSelect($files)\"]",
+        "pagesRow": "li:has(span:has-text('PDF, Pages'))",
+        "pagesImportLink": "li:has(span:has-text('PDF, Pages')) a:has-text('Import')",
+        "pagesFileInput": "input[type='file'][data-ngf-select=\"ebookVm.onPDFSelect($files)\"]",
+        "tocRow": "li:has(span:has-text('XLSX, TOC'))",
+        "tocImportLink": "li:has(span:has-text('XLSX, TOC')) a:has-text('Import')",
+        "tocFileInput": "input[type='file'][data-ngf-select=\"ebookVm.onTOCSelect($files)\"]",
+        "hotlinkRow": "li:has(span:has-text('XLSX, Hotlinks'))",
+        "hotlinkImportLink": "li:has(span:has-text('XLSX, Hotlinks')) a:has-text('Import')",
+        "hotlinkFileInput": "input[type='file'][data-ngf-select=\"ebookVm.onHotlinkSelect($files)\"]"
+      },
       "deleteModal": {
         "dialog": "[role='dialog']",
         "commentInput": "[role='dialog'] textarea",
