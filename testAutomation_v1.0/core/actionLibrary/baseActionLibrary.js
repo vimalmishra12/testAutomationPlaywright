@@ -412,18 +412,6 @@ module.exports = {
                      .locator(innerSel).filter({ hasText: innerText });
     },
 
-    // Waits for the page to reach a load state ('load', 'domcontentloaded', 'networkidle').
-    waitForLoadState: async function (state, timeout) {
-        await logger.logInto(await stackTrace.get(), "state:" + state);
-        try {
-            await global.page.waitForLoadState(state, { timeout: timeout || 30000 });
-            return true;
-        } catch (err) {
-            await logger.logInto(await stackTrace.get(), err.message, "error");
-            return err;
-        }
-    },
-
     // Waits for the page URL to match a pattern (string glob or RegExp).
     waitForUrl: async function (pattern, timeout) {
         await logger.logInto(await stackTrace.get(), "pattern:" + pattern);

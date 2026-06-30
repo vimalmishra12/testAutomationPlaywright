@@ -422,8 +422,8 @@ operates on the new (LTI) tab, not the original Blackboard tab.
 1. `ltiComponentPage.isInitialized()` two-signal guard — implemented as
    `Promise.race([action.waitForDisplayed(...), action.waitForUrl(...)])`. It handles two distinct
    "page ready" signals (PE shows `.product-launch-container`; Ebook redirects directly to a `/foc/`
-   URL). `waitForUrl` and `waitForLoadState` were added to `baseActionLibrary.js` as named, logged
-   methods — exactly the ADR-003-correct promotion. **Not a raw escape.**
+   URL). `waitForUrl` was added to `baseActionLibrary.js` as a named, logged method — exactly the
+   ADR-003-correct promotion. **Not a raw escape.**
 2. URL-state checks (`/teacher/`, `/foc/`) — read via `browser.getUrl()` (the WDIO-compat global
    wrapper) then `.includes(...)`, not raw `global.page.url()`. **Not a raw escape.**
 3. Return navigation in `returnToDashboard()` — uses `browser.url(url)` (compat wrapper), not raw
