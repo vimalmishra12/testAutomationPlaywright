@@ -4,7 +4,7 @@ var sts;
 
 module.exports = {
   TST_BBCN_TC_1: async function (testdata) {
-    sts = await bbCourse.click_courseCard(testdata);
-    await assertion.assertEqual(sts.pageStatus, true, "Course page did not load after clicking course card");
+    sts = await bbCourse.open_course(testdata);
+    await assertion.assertEqual(sts.pageStatus, true, "Course page did not load after opening the course");
   },
 };

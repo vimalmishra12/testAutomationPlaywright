@@ -10,6 +10,7 @@ module.exports = {
     sts = await ltiTeacherDashboard.click_component(testdata);
     await assertion.assertEqual(sts.pageStatus, true,
       "Component page did not load — umbrella: " + testdata.umbrellaName + ", component: " + testdata.componentName);
+    await ltiPEPage.click_tocHamburger();
     var peState = await ltiPEPage.getData_peState(testdata);
     await assertion.assertEqual(peState.backBtnStatus,    true,              "Back button not visible — LTI launch context not established");
     await assertion.assertEqual(peState.teacherModeUrl,   true,              "PE page did not open in teacher mode — URL missing /teacher/");

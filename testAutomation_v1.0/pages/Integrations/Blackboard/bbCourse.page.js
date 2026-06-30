@@ -14,7 +14,10 @@ module.exports = {
     return res;
   },
 
-  click_courseCard: async function (testdata) {
+  // Opens a course from the listing. Named open_* (not click_*) because BB's
+  // .base-courses-container intercepts pointer events, so we read the card's id and
+  // navigate to its outline URL directly rather than clicking the card.
+  open_course: async function (testdata) {
     await logger.logInto(await stackTrace.get());
     var res;
 
@@ -34,8 +37,8 @@ module.exports = {
     await logger.logInto(await stackTrace.get(), "courses listing loaded");
 
     // Find the specific course card by name from testdata, then derive its outline URL.
-    // .base-courses-container intercepts pointer events so synthetic clicks don't trigger
-    // AngularJS SPA routing — navigate directly instead.
+    // Build the URL from the app ORIGIN (scheme+host) so it does not depend on appUrl
+    // ending in a specific path like /ultra/course — survives env URL-format changes.
     var courseId, courseUrl;
     try {
       var courseName = testdata && testdata.courseName;
@@ -43,7 +46,7 @@ module.exports = {
         ? action.getFilteredLocator(this.courseCard, courseName)
         : this.courseCard;
       courseId = (await action.getAttribute(cardLocator, "id")).replace("course-link-", "");
-      courseUrl = appUrl.replace(/\/ultra\/course$/, "/ultra/courses/" + courseId + "/outline");
+      courseUrl = new URL(appUrl).origin + "/ultra/courses/" + courseId + "/outline";
       await logger.logInto(await stackTrace.get(), "navigating to course outline: " + courseUrl);
       await browser.url(courseUrl);
       res = true;
