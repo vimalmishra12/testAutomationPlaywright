@@ -64,10 +64,11 @@ Adding an app is **additive scaffolding only — no core changes**
 > with two documented exceptions permitted by ADR-015:
 > - `bbCoursePage.click_ltiTool()` uses `global.__pwContext.waitForEvent("page")` to capture a
 >   new tab opened by the LTI tool, then reassigns `global.page` to it (ADR-015B).
-> - `ltiTeacherDashboard.page.js` and `ltiComponentPage.page.js` use raw `global.page.*` for
->   URL-state checks (`page.url().includes(…)`), a `Promise.race` `isInitialized` guard, and
->   `page.goto(url)` for return navigation (ADR-015C). These are documented escapes, not patterns
->   to replicate — promote to action-library methods if they spread beyond these two files.
+> - The LTI page objects' two-signal `isInitialized` guard, URL-state checks, and return navigation
+>   are **not** raw escapes (ADR-015C, amended): they use `action.waitForDisplayed` +
+>   `action.waitForUrl` (a `Promise.race` of two library calls), `browser.getUrl().includes(…)`, and
+>   `browser.url(url)` respectively. The only genuine remaining escape is the 015B new-tab capture
+>   above — promote it too if a second LMS integration needs it.
 
 > **Escape hatch — when `baseActionLibrary` or the selector JSON can't express an interaction.**
 > Some interactions have no library method (e.g. `page.mouse.move`, `page.evaluate` to read a
@@ -224,13 +225,16 @@ Adding an app is **additive scaffolding only — no core changes**
 testResources/selectors/
   ExperienceApp/C1Selectors.json                      → namespace css.ComproC1   (+ csv/ = legacy CSV exports, not runtime source)
   Builder/BuilderSelectors.json                       → namespace css.Builder
-  Integrations/Blackboard/BlackboardSelectors.json    → namespaces css.Blackboard (BB UI) + css.LTI (shared LTI pages)
+  Integrations/Blackboard/BlackboardSelectors.json    → namespace css.Blackboard (BB UI)
+  Integrations/LTI/LTISelectors.json                  → namespace css.LTI (shared LTI pages, portable across LMSs)
 ```
 
-> **`css.LTI` is a portable, cross-LMS namespace** — it holds selectors for Cambridge One LTI
-> pages (teacher dashboard, component page, PE page) that are launched by Blackboard but are not
+> **`css.LTI` is a portable, cross-LMS namespace** living in its own `LTISelectors.json` (registered
+> by `Integrations/LTI/LTITCRepository.json`) — it holds selectors for Cambridge One LTI pages
+> (teacher dashboard, component page, PE page) that are launched by Blackboard but are not
 > Blackboard-specific. Any future LMS integration (e.g. Moodle) that embeds the same LTI pages
-> reuses this namespace rather than adding a new one. See ADR-015A.
+> reuses this namespace and file rather than adding a new one. Keeping it in a dedicated file
+> honors the one-namespace-per-file rule (ADR-002/013). See ADR-015A (amended 2026-06-30).
 
 `C1Selectors.json` (ExperienceApp / Cambridge One):
 ```json
