@@ -100,6 +100,35 @@ validated end-to-end against Thor.
 - Per user guidance (Builder is slow), added a `_click` helper that settles ~1.5s before EVERY
   button/control click in this page object; **re-confirmed 8/8** after adding it.
 
+---
+
+## CreateEbook replicated to qa — 2026-06-29
+
+- **Type:** Created + Modified · **Layer:** Test Resources + two Builder page objects (env-agnostic fixes)
+- **Files created:**
+  - `testResources/testExecutionFiles/Builder/qa/createEbookTest.json` (copy of thor, `dataFile` paths repointed to `qa`)
+  - `testResources/testcaseData/Builder/qa/builderLoginData.json` (org Cambridge One, user `harishqaadmin`)
+  - `testResources/testcaseData/Builder/qa/createEbookData.json` (identical to thor — asset paths are local/env-agnostic)
+- **Files modified:**
+  - `env.json` — added `Builder.environments.qa` (URL `https://qa-builder.cambridgeone.org/2024/pre-login` + Cloudflare-Access headers, reusing the C1‑qa service token per user)
+  - `package.json` — added `CreateEbook_qa` npm script
+  - `pages/Builder/login.page.js` — **env difference:** QA's `/2024/pre-login` auto-redirects to the
+    confirm page with the org pre-bound (no org-select step). Made `isInitialized()` and `login()`
+    detect whether the `#selectedOrg` dropdown is present and **skip the org step when it isn't** —
+    env-agnostic (driven by DOM presence, not env name); thor's 3-step flow is unchanged.
+  - `pages/Builder/landing.page.js` — **bug:** the post-login URL settle check hardcoded the thor
+    host (`asgard-thor-builder.comprodls.com`). Replaced with the host derived from the `appUrl`
+    global (`new URL(appUrl).host`), so it works on every environment.
+- **Test results:** **8/8 passing on qa** (`passes=8 failures=0`). QA is markedly slower than thor
+  (pages PDF import ~273s vs ~112s; full suite ~8 min) but well within the configured timeouts.
+- **Env-specific fixes applied:** 2 (login org-step skip; landing host derivation) — both in shared
+  Builder page objects, env-agnostic and backward-compatible with thor.
+- **Architecture compliance:** No protected JS/core files modified. `env.json`/`package.json`/data
+  are config. The two page-object edits were the only correct place for a login *flow* difference and
+  a hardcoded-host bug; they are env-neutral, not env-branched.
+- **Note:** thor was not re-run after the shared-login edits, but the changes are conditional and
+  backward-compatible (thor still shows `#selectedOrg`; `appUrl` host = thor host on thor).
+
 ## Pending / Follow-up
 - Asset file paths are absolute on the author's machine (`D:\ebookCreate\…`); relocate into the repo
   test-data tree if this should run on other machines/CI.

@@ -11,14 +11,18 @@ module.exports = {
   isInitialized: async function () {
     await logger.logInto(await stackTrace.get());
     var landed = false;
+    // Derive the app host from the env's appUrl (env.json) so the landing check is env-agnostic —
+    // thor: asgard-thor-builder.comprodls.com, qa: qa-builder.cambridgeone.org. Never hardcode a host.
+    var appHost = "";
+    try { appHost = new URL(appUrl).host; } catch (e) { appHost = ""; }
     try {
       // 1) The SSO bounces through /redirect ("Logging you in...") before the app; wait until
-      //    the URL settles on the Builder app (off every login/identity route).
+      //    the URL settles on the Builder app host (off every login/identity route).
       landed = await browser.waitUntil(
         async () => {
           const url = await browser.getUrl();
           return (
-            /asgard-thor-builder\.comprodls\.com/.test(url) &&
+            (appHost ? url.indexOf(appHost) !== -1 : true) &&
             !/pre-login|\/login|builder-identity|\/redirect/.test(url)
           );
         },
