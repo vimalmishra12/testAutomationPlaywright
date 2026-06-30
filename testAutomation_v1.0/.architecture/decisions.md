@@ -434,6 +434,21 @@ operates on the new (LTI) tab, not the original Blackboard tab.
 (`global.__pwContext.waitForEvent("page")` + `global.page` reassignment), for which no action-library
 method exists. Promote it too if a second LMS integration needs it.
 
+**D — Browser launch flag for LTI cross-site cookies is scoped to the `Blackboard` appType
+(protected-file change):**
+> **Added 2026-06-30.** The LTI 1.3 OIDC handshake sets cross-site cookies during its redirect
+> chain; with Chrome's default `SameSite=Lax` those cookies are dropped and `lti-onboarding` loops
+> until it lands on `lti-error`. The fix passes
+> `--disable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure` to the browser.
+
+`launchArgs()` in `core/runner/playwright.setup.js` adds this flag **only when
+`argv.appType === "Blackboard"`**, not for every run. `playwright.setup.js` is a protected file;
+this change follows the protected-file confirmation protocol (AGENTS.md).
+**Rationale:** relaxing SameSite is a Blackboard-LTI need, not a framework-wide one. Applying it
+globally would weaken cookie handling for the ExperienceApp / Builder suites and could mask real
+product cookie behaviour — the same "scope the cross-cutting browser/network concern, don't apply
+it globally" lesson as ADR-014. Gating on appType keeps non-LTI suites on Chrome's default policy.
+
 **Consequences:**
 - `css.LTI` is the canonical home for all LTI app page selectors, regardless of which LMS uses them.
 - `bbCoursePage.click_ltiTool()` is the reference implementation for new-tab switching.

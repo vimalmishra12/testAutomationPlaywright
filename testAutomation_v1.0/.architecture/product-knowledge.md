@@ -359,7 +359,6 @@ and the Cambridge One teacher dashboard.
 | `LTI/ltiTeacherDashboard.page.js` | Dashboard guard, content verify, component click, return-to-dashboard |
 | `LTI/ltiComponentPage.page.js` | Component page guard (race: `.product-launch-container` OR `/foc/` URL), ebook state |
 | `LTI/ltiPEPage.page.js` | PE state: back button, teacher-mode URL, TOC, TOC items, activity iframe |
-| `LTI/ltiPEActivityPage.page.js` | Iframe-based activity interactions (word-order, fill-blank) |
 
 ### Test files
 
