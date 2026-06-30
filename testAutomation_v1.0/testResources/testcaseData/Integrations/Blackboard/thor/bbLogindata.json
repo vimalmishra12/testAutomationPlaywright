@@ -1,0 +1,14 @@
+{
+  "BB": {
+    "login": {
+      "teacher": {
+        "username": "teacher7feb",
+        "password": "Compro11"
+      },
+      "ltiTeacher": {
+        "username": "thornodeepltiteacher",
+        "password": "Compro11"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+   "css": {
+      "Blackboard": {
+         "bbLogin": {
+            "privacyCookiesOkBtn": "#agree_button",
+            "usernameTbox": "#user_id",
+            "passwordTbox": "#password",
+            "signInBtn": "#entry-login",
+            "postLoginIndicator": "bb-base-layout"
+         },
+         "bbCourse": {
+            "courseCard": "a[id^=\"course-link-\"]",
+            "courseGuard": ".base-courses-container"
+         },
+         "bbCoursePage": {
+            "coursePageGuard": "#course-content-outline-header-text",
+            "addContentBtn": "[id^=\"add-content-menu-button\"]",
+            "contentMarketMenuItem": "[data-analytics-id=\"components.directives.add-content-button.course-outline.openContentMarket.link\"]",
+            "devDashboardLink": "a.placement-tool-link[data-launch-handle=\"Cambridge One DEV Dashboard\"]",
+            "deepLinkItem": "h3 a[href='#']"
+         },
+         "bbLaunchPanel": {
+            "panelContainer": ".root-learning-module-panel",
+            "panelHeading":   ".root-learning-module-panel .js-header-text",
+            "launchBtn":      ".attempt-buttons-section button"
+         }
+      }
+   }
+}

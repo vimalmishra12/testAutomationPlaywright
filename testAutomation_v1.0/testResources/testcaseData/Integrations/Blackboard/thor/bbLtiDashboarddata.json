@@ -1,0 +1,14 @@
+{
+  "BB": {
+    "ltiDashboard": {
+      "teacherDashboard": {
+        "courseName":     "testcourse_2",
+        "schoolName":     "LTI Integrations Test2",
+        "courseDuration": "Jun 24, 2026  Jun 25, 2028",
+        "productName":    "LTI Test (DO NOT CHANGE)"
+      },
+      "ltiTest_pe":    { "umbrellaName": "LTI Test (DO NOT CHANGE)", "componentName": "autoltipe", "unitName": "Unit 1" },
+      "ltiTest_ebook": { "umbrellaName": "LTI Test (DO NOT CHANGE)", "componentName": "LTI Ebook" }
+    }
+  }
+}

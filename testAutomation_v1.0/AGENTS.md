@@ -102,8 +102,9 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 ### 7. Multiple Applications Live Under `appType`
 
 The framework is **multi-application by design** — `--appType` selects which application a run
-targets, and the entire directory tree + selector namespace is keyed by it. Today there are two:
-**`ExperienceApp`** (Cambridge One / C1) and **`Builder`** (comproDLS Builder, added 2026-06-15).
+targets, and the entire directory tree + selector namespace is keyed by it. Today there are three:
+**`ExperienceApp`** (Cambridge One / C1), **`Builder`** (comproDLS Builder, added 2026-06-15),
+and **`Blackboard`** (LTI integration, added 2026-06-26 — see ADR-015 for its path conventions).
 
 **Adding a new application is purely additive — NO core-framework changes.** Mirror the
 `ExperienceApp` tree for the new appType (`<App>`):
@@ -119,12 +120,30 @@ targets, and the entire directory tree + selector namespace is keyed by it. Toda
 | `env.json` | a top-level `"<App>": { "testExecDir": …, "environments": { <env>: { "url": … } } }` block |
 | NPM script | `<Feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
 
+**Blackboard — path and namespace convention (ADR-015):**
+The `Blackboard` appType uses an `Integrations/` sub-path and **two** selector files / TC
+repositories, one per namespace (this honors the one-namespace-per-file rule, it is not an
+exception to it):
+- `pages/Integrations/Blackboard/` + `testResources/selectors/Integrations/Blackboard/BlackboardSelectors.json`
+  → `css.Blackboard` (Blackboard UI pages), registered by `Integrations/Blackboard/BlackboardTCRepository.json`.
+- `pages/Integrations/LTI/` + `testResources/selectors/Integrations/LTI/LTISelectors.json`
+  → `css.LTI` (Cambridge One LTI pages, portable across LMS integrations), registered by
+  `Integrations/LTI/LTITCRepository.json`.
+
+Execution files that span both list **both** TC repos in their `TestCaseRepo` array. Keep
+`css.LTI` in its own `LTISelectors.json` so it stays reusable by a future LMS (e.g. Moodle) —
+do not fold it into `BlackboardSelectors.json` or add a `css.Blackboard.lti` sub-key.
+
 Rules:
 - Each app gets its **own selector file** with its **own `css.<App>` namespace** (e.g. `css.Builder`)
-  — never mix two apps in one file (extends rule 2 / ADR-002).
+  — never mix two apps in one file (extends rule 2 / ADR-002). `css.Blackboard` and `css.LTI` each
+  live in their **own** file (`BlackboardSelectors.json` / `LTISelectors.json`), consistent with
+  this rule (ADR-015A).
 - The runner resolves everything from `argv.appType` + `env.json` + the TC repository's
   `selectorFile`; do **not** add appType branches to core files.
-- See `pages/Builder/` for a worked example, including a multi-step cross-domain SSO login.
+- See `pages/Builder/` for a worked example of a standard new appType (multi-step SSO login).
+- See `pages/Integrations/Blackboard/bbCoursePage.page.js` for the reference new-tab switch
+  pattern (`__pwContext.waitForEvent("page")` + `global.page` reassignment, ADR-015B).
 
 ---
 
