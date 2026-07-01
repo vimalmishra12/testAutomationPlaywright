@@ -50,15 +50,30 @@ module.exports = {
 
   fillFamilyCode: async function (code) {
     await logger.logInto(await stackTrace.get(), "fillFamilyCode=" + code);
-    await action.click(this.codeInput);
-    var res = await action.setValue(this.codeInput, code);
-    return { fillStatus: true === res };
+    // Target the VISIBLE code field (qa can render a hidden duplicate #uniqueCode that a plain
+    // first()-match would type into, leaving the real field empty + Save disabled). Type char-by-char
+    // (Angular ignores fill()) and VERIFY the value actually stuck, retrying — on qa the form is
+    // sometimes not bound on first interaction so the first attempt silently fails.
+    var loc = this.codeInput + ":visible";
+    for (var attempt = 0; attempt < 3; attempt++) {
+      await action.click(loc);
+      await action.clearValue(loc);
+      await action.addValue(loc, code);
+      // Blur (Tab) so the form model COMMITS the code — manual entry tabs between fields; without it
+      // the value shows in the DOM but the validation/Save-enable still treats the code as empty.
+      await action.keyPress("Tab");
+      await browser.pause(300);
+      if ((await action.getValue(loc)) === code) return { fillStatus: true };
+      await browser.pause(1000);
+    }
+    return { fillStatus: false };
   },
 
   fillFamilyTitle: async function (title) {
     await logger.logInto(await stackTrace.get());
     await action.click(this.titleInput);
-    var res = await action.setValue(this.titleInput, title);
+    await action.clearValue(this.titleInput);
+    var res = await action.addValue(this.titleInput, title);
     // Tab away from the title field to fire the blur/change events that enable the Save button.
     await action.keyPress("Tab");
     return { fillStatus: true === res };
@@ -71,7 +86,8 @@ module.exports = {
   // Pass the code+title actually used so the existence check searches for the right family.
   saveFamily: async function (code, title) {
     await logger.logInto(await stackTrace.get());
-    var res = await action.waitForEnabled(this.saveBtn, 15000);
+    // 30s (was 15s): qa is markedly slower to validate the form + enable Save after the fields fill.
+    var res = await action.waitForEnabled(this.saveBtn, 30000);
     if (true !== res) {
       // Save button never enabled — code may already exist (inline validation error).
       await logger.logInto(await stackTrace.get(), "saveBtn not enabled — verifying family already exists");
@@ -100,11 +116,11 @@ module.exports = {
   // genuine creation failure is reported as saveStatus:false instead of a false success.
   // When no code is supplied (legacy call), preserve the old optimistic behaviour.
   _confirmSaved: async function (code, title) {
-    if (!code) {
-      await browser.url("/2024/families");
-      await action.waitForDocumentLoad();
-      return { saveStatus: true };
-    }
+    // Always land on the families listing before searching — this fallback can be reached while
+    // still on the create page (where #search does not exist), which would time out the search.
+    await browser.url("/2024/families");
+    await action.waitForDocumentLoad();
+    if (!code) return { saveStatus: true };
     var res = await this.isFamilyInListing(code, title);
     return { saveStatus: res.found === true };
   },

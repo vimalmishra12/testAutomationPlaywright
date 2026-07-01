@@ -1,0 +1,137 @@
+{
+  "Builder": {
+    "cloneEbook": {
+      "login": {
+        "org": "Cambridge One",
+        "username": "harishqaadmin",
+        "password": "C0>pr0!899"
+      },
+      "TC1": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "my_ebook_01",
+        "cloneTitle": "My Ebook 01"
+      },
+      "TC2": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "ebook_2024",
+        "cloneTitle": "Ebook 2024"
+      },
+      "TC3": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "ebook_a_2_b",
+        "cloneTitle": "Ebook A 2 B"
+      },
+      "TC4": {
+        "sourceCode": "ebook17may206_2",
+        "errorCode": "ebook17may206_2",
+        "cloneCode": "unique_ebook_01",
+        "cloneTitle": "Unique Ebook 01"
+      },
+      "TC5": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "regression_ebook_145",
+        "cloneTitle": "Regression Ebook 145"
+      },
+      "TC6": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "reuse_ebook_del_01",
+        "cloneTitle": "Reuse Ebook Del 01",
+        "deleteComment": "Deleting for TC6 cleanup"
+      },
+      "TC7": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "reuse_after_del_ebook",
+        "cloneTitle": "Reuse After Del Ebook",
+        "deleteComment": "Deleting to free code for reuse"
+      },
+      "TC8": {
+        "componentSourceCode": "cqacloneforautotest",
+        "crossCode": "reuse_comp_on_ebook_01",
+        "crossTitle": "Reuse Comp On Ebook 01",
+        "deleteComment": "Deleting component to free code for ebook",
+        "ebookSourceCode": "ebook17may206_2"
+      },
+      "TC9": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "   ",
+        "cloneTitle": "Whitespace Code Test"
+      },
+      "TC10": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "ebook17may206_2",
+        "cloneTitle": "TC10 Inline Error Check"
+      },
+      "TC11": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "ebook17may206_2",
+        "cloneTitle": "TC11 Duplicate Code"
+      },
+      "TC12": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "cqacloneforautotest",
+        "cloneTitle": "TC12 Component Code"
+      },
+      "TC13": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "cqa_test_umb_pri16june",
+        "cloneTitle": "TC13 Umbrella Code"
+      },
+      "TC14": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "",
+        "cloneTitle": "TC14 Empty Code"
+      },
+      "TC15": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "MyEbook_Invalid",
+        "cloneTitle": "TC15 Uppercase Code"
+      },
+      "TC16": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "ebook-one@test",
+        "cloneTitle": "TC16 Special Chars"
+      },
+      "TC17": {
+        "ingestedCode": "cqaebookgamesimagecheck"
+      },
+      "TC21": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "1invalid_start",
+        "cloneTitle": "TC21 Digit Start Code"
+      },
+      "TC18": {
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "cqaebookgamesimagecheck",
+        "cloneTitle": "TC18 Ingested Code"
+      },
+      "TC19": {
+        "familyCode": "family_ebook_01",
+        "familyTitle": "Family Ebook 01",
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "family_ebook_01",
+        "cloneTitle": "Family Ebook 01 Clone"
+      },
+      "TC20": {
+        "familyCode": "family_ebook_01",
+        "sourceCode": "ebook17may206_2",
+        "cloneCode": "family_ebook_01",
+        "cloneTitle": "Family Ebook 01 Clone",
+        "deleteComment": "Removing family to free the code"
+      },
+      "CLEANUP": {
+        "deleteComment": "Post-suite cleanup",
+        "codes": [
+          "my_ebook_01",
+          "ebook_2024",
+          "ebook_a_2_b",
+          "unique_ebook_01",
+          "regression_ebook_145",
+          "reuse_ebook_del_01",
+          "reuse_after_del_ebook",
+          "reuse_comp_on_ebook_01",
+          "family_ebook_01"
+        ]
+      }
+    }
+  }
+}
