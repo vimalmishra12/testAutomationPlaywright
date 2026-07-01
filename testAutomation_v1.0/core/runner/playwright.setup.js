@@ -372,14 +372,15 @@ exports.mochaHooks = {
         }
         const pwEngine = getPlaywrightEngine();
         const launchOpts = { headless: HEADLESS, args: launchArgs() };
+        let channelName;
         if (pwEngine === chromium) {
-            const channel = resolveChannel();
-            if (channel) launchOpts.channel = channel; // system Chrome for headed; bundled for headless
+            channelName = resolveChannel();
+            if (channelName) launchOpts.channel = channelName; // system Chrome for headed; bundled for headless
         }
         global.browser = await pwEngine.launch(launchOpts);
         attachBrowserCompat(); // WDIO-style browser.* shim (browser.pause etc.) — D3
         await global.createFreshContext();
-        console.log(`[pw-setup] Browser launched (headless=${HEADLESS}, channel=${channel || "bundled-chromium"}); globals browser/context/page/$/$$ set.`);
+        console.log(`[pw-setup] Browser launched (headless=${HEADLESS}, channel=${channelName || "bundled-chromium"}); globals browser/context/page/$/$$ set.`);
     },
 
     /**
