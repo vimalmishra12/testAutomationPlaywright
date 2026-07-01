@@ -2,6 +2,10 @@ name: C1 E2E Automation
 
 # ── Triggers ──────────────────────────────────────────────────────────────────
 on:
+  # Trigger this workflow automatically whenever code is pushed to the main branch.
+  push:
+    branches:
+      - main
   # Manual trigger — pick environment + npm script from a dropdown in the Actions UI
   workflow_dispatch:
     inputs:
