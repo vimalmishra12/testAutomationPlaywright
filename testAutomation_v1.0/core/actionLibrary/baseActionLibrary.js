@@ -448,6 +448,61 @@ module.exports = {
         }
     },
 
+    // [2026-06-30] Waits for a newly opened tab (pages count grows past initialCount),
+    // switches the global page + locator factories to it, and waits for it to finish
+    // loading. Capture initialCount via getPageCount() BEFORE the click that opens the tab.
+    switchToNewTab: async function (initialCount, timeout) {
+        await logger.logInto(await stackTrace.get(), "initialCount:" + initialCount);
+        try {
+            const context = global.page.context();
+            await browser.waitUntil(
+                async () => context.pages().length > initialCount,
+                { timeout: timeout || 15000, timeoutMsg: "New tab did not open within timeout" }
+            );
+            // Assumes a simple tab topology: the target is the NEWEST page. Valid for the
+            // controlled deeplink flow (exactly one tab opens); a stray/background tab would misroute.
+            const newPage = context.pages()[context.pages().length - 1];
+            // [2026-07-01] domcontentloaded (not "load"): the caller's element wait is the
+            // real readiness gate; "load" stalls on telemetry-heavy LTI SPA assets — confirmed by user.
+            await newPage.waitForLoadState("domcontentloaded");
+            global.page = newPage;
+            global.$  = (sel) => global.page.locator(sel);
+            global.$$ = (sel) => global.page.locator(sel);
+            await logger.logInto(await stackTrace.get(), "switched to new tab — URL:" + newPage.url());
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    // [2026-06-30] Closes the active tab and refocuses the first remaining tab, restoring
+    // the global page + locator factories to it. Mirror of switchToNewTab for teardown.
+    // [2026-07-01] Guarded (confirmed by user): refuses to close the active tab when it's
+    // the only tab open, so a caller mistake (e.g. a prior switchToNewTab that never ran)
+    // can't leave global.page unset for the rest of the suite.
+    closeCurrentTabAndRefocus: async function () {
+        await logger.logInto(await stackTrace.get());
+        try {
+            const context = global.page.context();
+            if (context.pages().length < 2) {
+                throw new Error("closeCurrentTabAndRefocus: only one tab open — nothing to close down to");
+            }
+            await global.page.close();
+            // Assumes a simple tab topology: the tab to return to is the FIRST page (the
+            // original course tab). Valid for the controlled deeplink flow.
+            global.page = context.pages()[0];
+            global.$  = (sel) => global.page.locator(sel);
+            global.$$ = (sel) => global.page.locator(sel);
+            await global.page.bringToFront();
+            await logger.logInto(await stackTrace.get(), "closed active tab — refocused first tab");
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
     getKthElement: async function (selector, k) {
         // [2026-06-11] Category C: return a LAZY nth() locator instead of an eager
         // .all()[k] snapshot. Playwright re-resolves nth() at action time, so a click

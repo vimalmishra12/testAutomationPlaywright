@@ -4,9 +4,10 @@ var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 module.exports = {
   componentPageGuard: selectorFile.css.LTI.ltiComponentPage.componentPageGuard,
-  // Shared selectors — also used by deeplink ebook tests on integrationCases branch
+  // Ebook viewer selectors — shared by the component-launch and deeplink ebook flows.
   ebookGuard:   selectorFile.css.LTI.ltiDeeplinkEbookPage.pageGuard,
   ebookToolbar: selectorFile.css.LTI.ltiDeeplinkEbookPage.toolbar,
+  ebookBackBtn: selectorFile.css.LTI.ltiDeeplinkEbookPage.backBtn,
 
   isInitialized: async function () {
     await logger.logInto(await stackTrace.get());
@@ -30,8 +31,11 @@ module.exports = {
       action.waitForDisplayed(this.ebookGuard,   15000),
       action.waitForDisplayed(this.ebookToolbar, 15000),
     ]);
-    var currentUrl = await browser.getUrl();
-    var focUrl = currentUrl.includes('/foc/');
-    return { ebookGuardStatus, toolbarStatus, focUrl };
+    // Short timeout: the ebook viewer is already loaded (guard + toolbar above) so the
+    // back button's absence is decided fast.
+    // Normalize to boolean: waitForDisplayed returns TimeoutError string when not found.
+    var backBtnStatus = (await action.waitForDisplayed(this.ebookBackBtn, 1500)) === true;
+    var focUrl = (await browser.getUrl()).includes('/foc/');
+    return { ebookGuardStatus, toolbarStatus, backBtnStatus, focUrl };
   },
 };

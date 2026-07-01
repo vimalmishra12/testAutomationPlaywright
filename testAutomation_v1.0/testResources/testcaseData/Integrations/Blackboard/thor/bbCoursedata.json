@@ -3,6 +3,9 @@
     "course": {
       "testautocourse": {
         "courseName": "testcourse_2"
+      },
+      "deeplinkCourse": {
+        "courseName": "testcourse_1"
       }
     }
   }

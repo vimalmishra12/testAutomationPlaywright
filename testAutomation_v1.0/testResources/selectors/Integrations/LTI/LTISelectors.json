@@ -16,12 +16,13 @@
             "componentPageGuard": ".product-launch-container"
          },
          "ltiPEPage": {
-            "backBtn":        "a.back-btn",
-            "tocContainer":   ".toc-data-wrapper",
-            "tocHamburger":   "img.toc-hamburger-btn",
-            "tocHeading":     ".sidebar h2",
-            "tocItems":       ".toc-accordian > *",
-            "activityIframe": "iframe[id^=\"iframe_\"]"
+            "backBtn":          "a.back-btn",
+            "tocContainer":     ".toc-data-wrapper",
+            "tocHamburger":     "img.toc-hamburger-btn",
+            "tocHeading":       ".sidebar h2",
+            "tocItems":         ".toc-accordian > *",
+            "tocActivityScore": ".activity-score",
+            "activityIframe":   "iframe[id^=\"iframe_\"]"
          },
          "ltiDeeplinkEbookPage": {
             "pageGuard": "student.book",

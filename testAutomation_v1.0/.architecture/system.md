@@ -61,14 +61,21 @@ Adding an app is **additive scaffolding only — no core changes**
 **Must NOT**: Contain assertions, know about test data structure, reference other page's selectors directly
 
 > **LMS integration page objects (`pages/Integrations/`)** follow all standard page-object rules
-> with two documented exceptions permitted by ADR-015:
+> with the documented exceptions permitted by ADR-015:
 > - `bbCoursePage.click_ltiTool()` uses `global.__pwContext.waitForEvent("page")` to capture a
->   new tab opened by the LTI tool, then reassigns `global.page` to it (ADR-015B).
+>   new tab opened by the LTI tool, then reassigns `global.page` to it (ADR-015B). This is now the
+>   **only** remaining raw new-tab escape — see below.
+> - **New-tab handling was promoted to the action library (ADR-016):** the deeplink flow uses
+>   `action.switchToNewTab(initialCount, timeout)` and `action.closeCurrentTabAndRefocus()` instead
+>   of raw `global.page`/`newPage` manipulation. `click_ltiTool` is not yet migrated (its `prevPage`
+>   rollback isn't modelled by `switchToNewTab`) — migrate it or add a rollback variant as follow-up.
 > - The LTI page objects' two-signal `isInitialized` guard, URL-state checks, and return navigation
 >   are **not** raw escapes (ADR-015C, amended): they use `action.waitForDisplayed` +
 >   `action.waitForUrl` (a `Promise.race` of two library calls), `browser.getUrl().includes(…)`, and
->   `browser.url(url)` respectively. The only genuine remaining escape is the 015B new-tab capture
->   above — promote it too if a second LMS integration needs it.
+>   `browser.url(url)` respectively.
+> - **Deeplink page objects** (`bbCoursePage` deeplink methods, `ltiDeeplinkPage`) defer the
+>   destination `isInitialized()` to the following verification TC rather than calling it inline
+>   (ADR-017B).
 
 > **Escape hatch — when `baseActionLibrary` or the selector JSON can't express an interaction.**
 > Some interactions have no library method (e.g. `page.mouse.move`, `page.evaluate` to read a

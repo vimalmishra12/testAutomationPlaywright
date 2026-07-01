@@ -28,8 +28,9 @@ Every selector lives in the app's selector JSON as `css.<App>.<page>.<element>`
 ### 3. Missing capability → add to the action library, never hack the page object
 If `baseActionLibrary` lacks a method (`mouse.move`, an `evaluate` read, `nth()` by DOM order),
 add a named, logged method there (protected-file protocol). Build non-static locators *inside*
-that method, not in the page object.
-*Depth:* ADR-003 (amended); system.md Layer 2 "Escape hatch".
+that method, not in the page object. Examples of promoted capabilities: `switchToNewTab` /
+`closeCurrentTabAndRefocus` (multi-tab handling, ADR-016).
+*Depth:* ADR-003 (amended); ADR-016; system.md Layer 2 "Escape hatch".
 
 ### 4. Return contract: `true` / `Error`, checked with loose `==`
 Action methods return `true` on success, the caught `Error` on failure. Page objects check
@@ -39,8 +40,10 @@ Action methods return `true` on success, the caught `Error` on failure. Page obj
 
 ### 5. `isInitialized()` after every navigation
 A navigation-triggering click calls the destination page's `isInitialized()` (waits for a
-stable anchor element) before any further interaction.
-*Depth:* system.md Layer 2; ADR-003 consequences.
+stable anchor element) before any further interaction. **Documented nuance:** the deeplink nav
+methods defer `isInitialized()` to the following verification TC (still before any interaction) —
+ADR-017B.
+*Depth:* system.md Layer 2; ADR-003 consequences; ADR-017B.
 
 ### 6. Playwright-as-a-library — NOT `@playwright/test`
 `require('playwright')` under standalone Mocha. Never add `@playwright/test` as a runner

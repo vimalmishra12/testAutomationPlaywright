@@ -43,6 +43,85 @@
           "tags": "P1"
         }
       ]
+    },
+    {
+      "modulename": "BB LTI Tool Launch",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBIP1_TC_1",
+          "description": "Launch LTI teacher dashboard via BB Content Market and verify it loaded",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP1_TC_2",
+          "description": "Verify teacher dashboard content — course title, school name, duration, product name, action buttons",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "LTI Teacher Dashboard IP2",
+      "moduleId": "",
+      "testFile": "./test/Integrations/LTI/ltiTeacherDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_LTI_IP2_TC_1",
+          "description": "Click PE component from LTI Test product and verify PE page state — back button, teacher mode URL, TOC heading text, TOC items, activity iframe",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_IP2_TC_2",
+          "description": "Click Ebook component from LTI Test product and verify component page",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_IP2_TC_3",
+          "description": "Reserved — not used (product has only PE and Ebook components)",
+          "tags": "P1"
+        }
+      ]
+    },
+    {
+      "modulename": "BB Deeplink Launch",
+      "moduleId": "",
+      "testFile": "./test/Integrations/Blackboard/bbDeeplink.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_BBIP3_TC_1",
+          "description": "Click PE deeplink from Course Content as teacher and verify new tab opens",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP3_TC_2",
+          "description": "Close PE deeplink tab and verify return to Course Content page",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP3_TC_3",
+          "description": "Click Ebook deeplink from Course Content and verify new tab opens (direct launch — used by both teacher and student flows)",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP4_TC_1",
+          "description": "Click PE deeplink as student and verify detail panel (container, heading, launch button)",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP4_TC_2",
+          "description": "Launch PE from student detail panel and verify new tab opens",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_BBIP4_TC_3",
+          "description": "Close PE deeplink tab and verify return to Course Content page",
+          "tags": "P1"
+        }
+      ]
     }
   ]
 }

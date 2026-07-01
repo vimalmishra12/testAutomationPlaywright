@@ -38,6 +38,29 @@
           "tags": "P1"
         }
       ]
+    },
+    {
+      "modulename": "LTI Deeplink Verification",
+      "moduleId": "",
+      "testFile": "./test/Integrations/LTI/ltiDeeplink.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Integrations/LTI/LTITCRepository.json",
+      "testcase": [
+        {
+          "id": "TST_LTI_PEDL_TC_1",
+          "description": "Verify teacher PE deeplink page — activity iframe loaded, no back button, TOC shows no activity scores",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_PEDL_TC_2",
+          "description": "Verify student PE deeplink page — activity iframe loaded, no back button, TOC shows retained activity scores",
+          "tags": "P1"
+        },
+        {
+          "id": "TST_LTI_EBKDL_TC_1",
+          "description": "Verify ebook deeplink page — ebook viewer guard visible, toolbar visible",
+          "tags": "P1"
+        }
+      ]
     }
   ]
 }

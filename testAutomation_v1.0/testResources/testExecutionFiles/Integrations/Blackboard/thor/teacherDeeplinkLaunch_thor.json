@@ -1,0 +1,107 @@
+{
+  "Suite1": {
+    "Name": "BB — Deeplink Launch Teacher (IP3)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Integrations/Blackboard/BlackboardTCRepository.json",
+      "./testResources/testcaseRepository/Integrations/LTI/LTITCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Blackboard URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBLG_TC_1",
+        "description": "Accept privacy/cookies",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBLG_TC_2",
+        "description": "Enter LTI deeplink teacher username",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLogindata.json",
+            "jsonPath": "BB.login.ltiDeeplinkTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_BBLG_TC_3",
+        "description": "Enter LTI deeplink teacher password",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLogindata.json",
+            "jsonPath": "BB.login.ltiDeeplinkTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_BBLG_TC_4",
+        "description": "Click Sign In and verify login",
+        "testFile": "./test/Integrations/Blackboard/bbLogin.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBCN_TC_1",
+        "description": "Navigate to course",
+        "testFile": "./test/Integrations/Blackboard/bbCourse.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbCoursedata.json",
+            "jsonPath": "BB.course.deeplinkCourse"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_BBIP3_TC_1",
+        "description": "Click PE deeplink from Course Content and open new tab",
+        "testFile": "./test/Integrations/Blackboard/bbDeeplink.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLtiDashboarddata.json",
+            "jsonPath": "BB.deeplink.pe"
+          }
+        ]
+      },
+      {
+        "id": "TST_LTI_PEDL_TC_1",
+        "description": "Verify teacher PE deeplink page — h1, iframe, no back button",
+        "testFile": "./test/Integrations/LTI/ltiDeeplink.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBIP3_TC_2",
+        "description": "Close PE deeplink tab and return to Course Content",
+        "testFile": "./test/Integrations/Blackboard/bbDeeplink.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_BBIP3_TC_3",
+        "description": "Click Ebook deeplink from Course Content and open new tab",
+        "testFile": "./test/Integrations/Blackboard/bbDeeplink.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Integrations/Blackboard/thor/bbLtiDashboarddata.json",
+            "jsonPath": "BB.deeplink.ebook"
+          }
+        ]
+      },
+      {
+        "id": "TST_LTI_EBKDL_TC_1",
+        "description": "Verify ebook deeplink page — ebook viewer, toolbar",
+        "testFile": "./test/Integrations/LTI/ltiDeeplink.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

@@ -365,7 +365,10 @@ keeping the idiomatic Playwright routing API.
 ## ADR-015: Blackboard Integration — appType, Selector Namespaces, and Raw Page Escapes
 
 **Status:** Accepted (2026-06-26); **amended 2026-06-30 — A & C corrected to match the shipped
-implementation** (see the amendment notes in sub-decisions A and C).
+implementation** (see the amendment notes in sub-decisions A and C); **amended 2026-07-01 — the
+initial deeplink (IP3/IP4) draft deviated from sub-decision A (mirrored `css.LTI` into
+`BlackboardSelectors.json` and listed only the BB TC repo); corrected to the two-file layout — see
+the sub-decision A guardrail note.**
 
 **Context:** The Blackboard LTI integration introduced a third `appType` (`Blackboard`) alongside
 ExperienceApp and Builder. It has characteristics that don't fit cleanly into existing ADR patterns:
@@ -403,6 +406,18 @@ Execution files that span both namespaces list **both** TC repos in their `TestC
 portable namespace for all LTI-hosted app pages, reusable by any future LMS (e.g. Moodle). A
 dedicated `LTISelectors.json` keeps that portability **while** honoring the one-namespace-per-file
 rule (ADR-002/013).
+
+> **Guardrail (added 2026-07-01, deeplink IP3/IP4).** The per-module `selectorDir` caching only
+> holds because **each page object is required by test files of a single namespace**. A page object
+> caches `selectorFile` at first `require()`, using whatever `selectorDir` is set at that moment.
+> If one page object were required by **both** a `Blackboard/*.test.js` and an `LTI/*.test.js`, it
+> would cache whichever ran first and resolve the *wrong* selector file for the other. **Invariant:
+> never share a page object across a BB and an LTI test file.** (Verified for deeplink: `bbCoursePage`
+> is BB-only; `ltiDeeplinkPage`/`ltiComponentPage` are LTI-only.) The deeplink suites follow this
+> pattern — `teacher/studentDeeplinkLaunch_thor.json` list **both** TC repos, and the LTI deeplink
+> TCs (`TST_LTI_PEDL_TC_1/2`, `TST_LTI_EBKDL_TC_1`) live in `LTITCRepository.json`. An earlier
+> deeplink draft deviated (mirrored `css.LTI` into `BlackboardSelectors.json` + listed only the BB
+> repo); that duplication was removed to comply with this sub-decision.
 
 **B — New-tab handling via `global.__pwContext.waitForEvent("page")`:**
 `bbCoursePage.click_ltiTool()` registers `const pagePromise = global.__pwContext.waitForEvent("page")`
@@ -459,3 +474,68 @@ it globally" lesson as ADR-014. Gating on appType keeps non-LTI suites on Chrome
   (`css.Blackboard` modules, → `BlackboardSelectors.json`) and `Integrations/LTI/LTITCRepository.json`
   (`css.LTI` modules, → `LTISelectors.json`); execution files spanning both list both in their
   `TestCaseRepo` array. The `Integrations/` sub-path is the convention for all LMS integrations.
+
+---
+
+## ADR-016: Multi-tab handling promoted to `baseActionLibrary`
+
+**Status:** Accepted (2026-07-01)
+
+**Context:** ADR-015B documented new-tab capture (`global.__pwContext.waitForEvent("page")` +
+`global.page` reassignment) as a raw escape in `bbCoursePage.click_ltiTool()`, "not yet promoted to
+`baseActionLibrary` because only one call site exists" — with the explicit note: *"If a second
+integration needs this, promote it to a named, logged method."* The deeplink launch feature (IP3/IP4)
+is that second integration: teacher and student flows each open a new tab (deeplink → content) and
+later close it to return to Course Content. Inlining raw `global.page`/`newPage` handling in the
+deeplink page objects would violate Invariant 1 (layering) and Invariant 3 (escape-hatch protocol).
+
+**Decision:** Promote new-tab handling to two named, logged methods in `baseActionLibrary.js`
+(protected-file change; confirmed):
+- `switchToNewTab(initialCount, timeout)` — waits until `context.pages().length > initialCount`,
+  switches `global.page` + the `$`/`$$` locator factories to the new page, waits for it to be ready,
+  returns `true` / `Error`. Capture `initialCount` via `getPageCount()` **before** the click.
+- `closeCurrentTabAndRefocus()` — closes the active tab and refocuses the first remaining tab,
+  restoring `global.page` + factories; returns `true` / `Error`.
+
+**Consequences:**
+- Deeplink page objects (`bbCoursePage.click_deeplink` / `click_deeplink_student` /
+  `launch_from_detailPanel` / `returnToCourseContent`) go through the action library — no raw
+  `global.page` remains in the deeplink methods.
+- **Positional-tab assumption:** `switchToNewTab` takes the newest page (`pages()[len-1]`) and
+  `closeCurrentTabAndRefocus` refocuses the first (`pages()[0]`). Valid for the controlled 2-tab
+  deeplink flow (exactly one tab opens); a stray/background tab would misroute. Documented inline.
+- **`click_ltiTool` is not yet migrated** — it retains the ADR-015B raw escape because of its
+  `prevPage` rollback semantics (restore the previous tab if the destination fails to initialise),
+  which `switchToNewTab` does not model. Migrate it (or add a rollback-capable variant) as follow-up.
+
+---
+
+## ADR-017: LTI Deeplink Launch (IP3 teacher / IP4 student)
+
+**Status:** Accepted (2026-07-01)
+
+**Context:** Deeplinks are Cambridge One activities placed directly on the Blackboard **Course
+Content** page (bypassing the LTI teacher dashboard). Clicking one launches the activity in a new
+tab. Teacher and student see different flows, and the launched pages are telemetry-heavy LTI SPAs.
+
+**017A — New-tab readiness uses `domcontentloaded`, not `load`.**
+`switchToNewTab` waits `newPage.waitForLoadState("domcontentloaded")`, not `"load"`. `"load"` blocks
+until every asset on the LTI SPA finishes and stalls the run; the caller's subsequent element wait
+(`waitForDisplayed` on the activity iframe / detail panel) is the authoritative readiness gate. Same
+rationale as the dashboard's refusal to wait on `networkidle` (ADR-015C).
+
+**017B — Deeplink navigation methods defer `isInitialized()` to the following verification TC.**
+Unlike `click_ltiTool` / `click_component` (which call the destination page's `isInitialized()`
+internally), `click_deeplink` / `launch_from_detailPanel` return once the tab is open and settled;
+the **next** test case (`TST_LTI_PEDL_TC_1/2`, `TST_LTI_EBKDL_TC_1`) calls `isInitialized()` and does
+the verification.
+**Rationale:** the deeplink test design splits the *action* (open the tab) and the *verification*
+(assert the page) into separate reportable TCs for clearer reporting. `isInitialized()` still runs
+before any interaction with the destination, so Invariant 5 is honoured in spirit; this is a
+documented nuance, not a violation. Consequence: the action TC's `pageStatus:true` means only "tab
+opened + off `/lti-onboarding/`", so it must always be followed by a verification TC.
+
+**Product behaviour captured here** (details in product-knowledge.md): teacher deeplink launches
+directly; student PE deeplink shows an intermediate detail panel then Launch; student ebook deeplink
+launches directly (no panel). Student PE retains prior progress — the TOC renders `.activity-score`
+badges — while the teacher view shows none; the PE TOC is collapsed by default (expand via hamburger).
