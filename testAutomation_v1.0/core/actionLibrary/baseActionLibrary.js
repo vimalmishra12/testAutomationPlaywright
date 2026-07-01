@@ -478,10 +478,16 @@ module.exports = {
 
     // [2026-06-30] Closes the active tab and refocuses the first remaining tab, restoring
     // the global page + locator factories to it. Mirror of switchToNewTab for teardown.
+    // [2026-07-01] Guarded (confirmed by user): refuses to close the active tab when it's
+    // the only tab open, so a caller mistake (e.g. a prior switchToNewTab that never ran)
+    // can't leave global.page unset for the rest of the suite.
     closeCurrentTabAndRefocus: async function () {
         await logger.logInto(await stackTrace.get());
         try {
             const context = global.page.context();
+            if (context.pages().length < 2) {
+                throw new Error("closeCurrentTabAndRefocus: only one tab open — nothing to close down to");
+            }
             await global.page.close();
             // Assumes a simple tab topology: the tab to return to is the FIRST page (the
             // original course tab). Valid for the controlled deeplink flow.

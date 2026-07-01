@@ -96,7 +96,11 @@ module.exports = {
 
     // Wait for lti-onboarding to finish its in-tab redirect to the content URL
     // (best-effort: if it has already redirected, this resolves immediately).
-    await action.waitForUrl(url => !url.includes('/lti-onboarding/'), 30000);
+    res = await action.waitForUrl(url => !url.includes('/lti-onboarding/'), 30000);
+    if (true !== res) {
+      await logger.logInto(await stackTrace.get(), res + " lti-onboarding redirect did not complete: " + testdata.deepLinkName, "error");
+      return { pageStatus: res };
+    }
     await action.waitForDocumentLoad();
     await logger.logInto(await stackTrace.get(), "content tab ready — URL: " + (await browser.getUrl()));
     return { pageStatus: true };
@@ -111,7 +115,11 @@ module.exports = {
     }
     await logger.logInto(await stackTrace.get(), "deeplink clicked — waiting for detail panel: " + testdata.deepLinkName);
 
-    await action.waitForUrl("**/outline/lti/launch**", 15000);
+    res = await action.waitForUrl("**/outline/lti/launch**", 15000);
+    if (true !== res) {
+      await logger.logInto(await stackTrace.get(), res + " detail panel URL not reached: " + testdata.deepLinkName, "error");
+      return { pageStatus: res };
+    }
     var [panelContainerStatus, panelHeadingStatus, launchBtnStatus] = await Promise.all([
       action.waitForDisplayed(this.launchPanelContainer, 10000),
       action.waitForDisplayed(this.launchPanelHeading,   10000),
