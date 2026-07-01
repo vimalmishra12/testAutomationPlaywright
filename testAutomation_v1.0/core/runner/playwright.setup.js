@@ -26,7 +26,7 @@
  * Wording presented for confirmation in the session walkthrough.
  */
 
-const { chromium } = require("playwright");
+const { chromium, webkit, firefox } = require("playwright");
 const fs = require("fs");
 const nodePath = require("path");
 
@@ -83,6 +83,16 @@ try { playwrightClientVersion = require("playwright/package.json").version; } ca
 function activeCapability() {
     const name = global.argv && global.argv.browserCapability;
     return (name && global.capabilitiesFile && global.capabilitiesFile[name]) || null;
+}
+
+function getPlaywrightEngine() {
+    const cap = activeCapability();
+    const profileCap = (cap && cap.capabilities && cap.capabilities[0]) || {};
+    const browserName = (profileCap.browserName || "").toLowerCase();
+    
+    if (browserName === "safari" || browserName === "webkit" || browserName === "pw-webkit") return webkit;
+    if (browserName === "firefox" || browserName === "pw-firefox") return firefox;
+    return chromium;
 }
 
 function isLambdaTest() {
@@ -268,7 +278,8 @@ global.lambdaTestRotateSession = async function lambdaTestRotateSession(sessionN
     if (global.browser) await global.browser.close().catch(() => {}); // ends the LT session
     global.__ltSessionName = sessionName;
     global.__ltSuiteFailed = false;
-    global.browser = await chromium.connect(lambdaTestWsEndpoint());
+    const pwEngine = getPlaywrightEngine();
+    global.browser = await pwEngine.connect(lambdaTestWsEndpoint());
     attachBrowserCompat();
     await global.createFreshContext();
     console.log(`[pw-setup] LambdaTest session rotated → "${sessionName}".`);
@@ -352,19 +363,24 @@ exports.mochaHooks = {
             global.__ltSessionName = (global.__suiteNames && global.__suiteNames[0]) ||
                 ((global.argv && global.argv.testExecFile) || "C1 Playwright test");
             global.__ltSuiteFailed = false;
-            global.browser = await chromium.connect(lambdaTestWsEndpoint());
+            const pwEngine = getPlaywrightEngine();
+            global.browser = await pwEngine.connect(lambdaTestWsEndpoint());
             attachBrowserCompat();
             await global.createFreshContext();
             console.log(`[pw-setup] Connected to LambdaTest session "${global.__ltSessionName}" (capability=${global.argv && global.argv.browserCapability}).`);
             return;
         }
-        const channel = resolveChannel();
+        const pwEngine = getPlaywrightEngine();
         const launchOpts = { headless: HEADLESS, args: launchArgs() };
-        if (channel) launchOpts.channel = channel; // system Chrome for headed; bundled for headless
-        global.browser = await chromium.launch(launchOpts);
+        let channelName;
+        if (pwEngine === chromium) {
+            channelName = resolveChannel();
+            if (channelName) launchOpts.channel = channelName; // system Chrome for headed; bundled for headless
+        }
+        global.browser = await pwEngine.launch(launchOpts);
         attachBrowserCompat(); // WDIO-style browser.* shim (browser.pause etc.) — D3
         await global.createFreshContext();
-        console.log(`[pw-setup] Browser launched (headless=${HEADLESS}, channel=${channel || "bundled-chromium"}); globals browser/context/page/$/$$ set.`);
+        console.log(`[pw-setup] Browser launched (headless=${HEADLESS}, channel=${channelName || "bundled-chromium"}); globals browser/context/page/$/$$ set.`);
     },
 
     /**
