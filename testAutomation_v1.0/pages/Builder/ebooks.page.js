@@ -16,6 +16,7 @@ module.exports = {
   codeInput:        sel.cloneModal.uniqueCodeInput,
   titleInput:       sel.cloneModal.titleInput,
   visibleInputs:    sel.cloneModal.visibleInputs,
+  textInputs:       sel.cloneModal.textInputs,
   okBtn:            sel.cloneModal.okBtn,
   cancelBtn:        sel.cloneModal.cancelBtn,
   closeBtn:         sel.cloneModal.closeBtn,
@@ -123,9 +124,12 @@ module.exports = {
   fillCloneTitle: async function (title) {
     await logger.logInto(await stackTrace.get());
     await browser.pause(500);
-    // CSS :nth-of-type(2) fails when inputs are in separate wrapper divs, so target the 2nd
-    // visible <input> in the dialog by DOM order via the action library's kth-element helper.
-    var titleLoc = await action.getKthElement(this.visibleInputs, 1);
+    // Target the 2nd plain text input (the rounded code+title fields). On qa the eBook clone modal
+    // also has a "Type" combobox AFTER the title — using a generic "2nd visible input" caught that
+    // combobox; scoping to the rounded text inputs (code, title) skips it. Falls back to the broad
+    // visibleInputs if the scoped selector matches nothing (older/other modal markup).
+    var loc = (await action.getElementCount(this.textInputs)) >= 2 ? this.textInputs : this.visibleInputs;
+    var titleLoc = await action.getKthElement(loc, 1);
     await action.clearValue(titleLoc);
     var res = await action.addValue(titleLoc, title);
     return { fillStatus: true === res };
@@ -150,7 +154,9 @@ module.exports = {
 
   waitForCloneSuccess: async function () {
     await logger.logInto(await stackTrace.get());
-    var res = await action.waitForExist(this.dialog, 60000, true);
+    // 150s (was 60s): the eBook clone dialog can take well over a minute to close on the slower qa
+    // environment. Raising the condition wait (not a fixed pause) — harmless on thor, which closes fast.
+    var res = await action.waitForExist(this.dialog, 150000, true);
     if (true === res) {
       // After a successful clone the backend keeps syncing — wait, then refresh so the new
       // item is actually materialised in the listing before any follow-up check.
