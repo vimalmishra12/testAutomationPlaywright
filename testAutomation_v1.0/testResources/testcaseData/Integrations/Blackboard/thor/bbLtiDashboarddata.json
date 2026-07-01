@@ -9,6 +9,10 @@
       },
       "ltiTest_pe":    { "umbrellaName": "LTI Test (DO NOT CHANGE)", "componentName": "autoltipe", "unitName": "Unit 1" },
       "ltiTest_ebook": { "umbrellaName": "LTI Test (DO NOT CHANGE)", "componentName": "LTI Ebook" }
+    },
+    "deeplink": {
+      "pe":    { "deepLinkName": "LTI Test (DO NOT CHANGE), autoltipe, Unit 1" },
+      "ebook": { "deepLinkName": "LTI Test (DO NOT CHANGE), LTI Ebook" }
     }
   }
 }

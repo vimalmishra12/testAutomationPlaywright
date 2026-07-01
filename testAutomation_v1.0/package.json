@@ -11,6 +11,8 @@
     "bbLoginTest_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=bbLoginTest.json --browserCapability=desktop-chrome-1920",
     "ltiTeacherDashboardLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=ltiTeacherDashboardLaunch_thor.json --browserCapability=desktop-chrome-1920",
     "ltiComponentLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=ltiComponentLaunch_thor.json --browserCapability=desktop-chrome-1920",
+    "ltiTeacherDeeplinkLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=teacherDeeplinkLaunch_thor.json --browserCapability=desktop-chrome-1920",
+    "ltiStudentDeeplinkLaunch_thor": "node core/runner/run.js --appType=Blackboard --testEnv=thor --testExecFile=studentDeeplinkLaunch_thor.json --browserCapability=desktop-chrome-1920",
     "CreateEbook_thor": "node core/runner/run.js --appType=Builder --testEnv=thor --testExecFile=./testResources/testExecutionFiles/Builder/thor/createEbookTest.json --browserCapability=desktop-chrome-1920",
     "CreateEbook_qa": "node core/runner/run.js --appType=Builder --testEnv=qa --testExecFile=./testResources/testExecutionFiles/Builder/qa/createEbookTest.json --browserCapability=desktop-chrome-1920",
     "landingFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=landingTest.json --browserCapability=desktop-chrome-1920",

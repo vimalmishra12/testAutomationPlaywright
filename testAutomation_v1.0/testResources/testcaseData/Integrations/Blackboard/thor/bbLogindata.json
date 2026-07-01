@@ -8,6 +8,14 @@
       "ltiTeacher": {
         "username": "thornodeepltiteacher",
         "password": "Compro11"
+      },
+      "ltiStudent": {
+        "username": "thortestltistudent",
+        "password": "Compro11"
+      },
+      "ltiDeeplinkTeacher": {
+        "username": "thortestltiteacher",
+        "password": "Compro11"
       }
     }
   }

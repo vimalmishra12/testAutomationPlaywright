@@ -326,11 +326,16 @@ and the Cambridge One teacher dashboard.
 - Login user (LTI tests): `BB.login.ltiTeacher` → `thornodeepltiteacher / Compro11`
   - **Always use `ltiTeacher` for IP1 and IP2.** Using a different account causes a timeout at
     `TST_BBIP1_TC_1` because the account lacks LTI entitlements to see the Content Market / LTI tool.
-- Course: `testcourse_2` → data key `BB.course.testautocourse`
+- Deeplink login users (IP3/IP4): `BB.login.ltiDeeplinkTeacher` → `thortestltiteacher / Compro11`
+  (teacher), `BB.login.ltiStudent` → `thortestltistudent / Compro11` (student).
+- Course: `testcourse_2` → data key `BB.course.testautocourse`; deeplink course key
+  `BB.course.deeplinkCourse`.
+- Deeplink activities: `BB.deeplink.pe` / `BB.deeplink.ebook` (deeplink item names, e.g.
+  `"LTI Test (DO NOT CHANGE), autoltipe, Unit 1"`).
 - LTI product: `"LTI Test (DO NOT CHANGE)"` — a sentinel fixture; do not rename or delete it
   in the Blackboard sandbox.
 
-### LTI launch flow — two integration points
+### LTI launch flow — three integration points
 
 **IP1 — Teacher Dashboard launch:**
 1. Login as `thornodeepltiteacher`
@@ -349,16 +354,39 @@ and the Cambridge One teacher dashboard.
   `.product-launch-container`). Assert: ebook guard (`student.book`), toolbar (`.toolbar-wrapper`),
   `/foc/` in URL. Return to dashboard via `browser.url(dashboardUrl)`.
 
+**IP3 (teacher) / IP4 (student) — Deeplink launch (from Course Content, bypasses the dashboard):**
+Deeplinks are Cambridge One activities placed directly on the Blackboard **Course Content** page
+(`deepLinkItem` = `h3 a[href='#']`), named `"Product, Component, Unit"`. Clicking one launches the
+activity in a **new tab**.
+- **Teacher (IP3):** click → `lti-onboarding` opens in a new tab → redirects **in-tab** to the
+  content (no second tab). PE lands on the learner/teacher activity page; ebook lands on `/foc/`.
+  No intermediate panel. `bbCoursePage.click_deeplink()` handles the tab capture + onboarding wait.
+- **Student PE (IP4):** click → an **intermediate detail panel** renders in the same tab
+  (`.root-learning-module-panel` + heading + a Launch button; URL `**/outline/lti/launch**`). Click
+  **Launch** → new tab with the PE activity. (`click_deeplink_student` → `launch_from_detailPanel`.)
+- **Student ebook (IP4):** **direct launch** into a new tab (no panel) — same end-state as the
+  teacher ebook flow, so it reuses the teacher direct-launch TC (`TST_BBIP3_TC_3`).
+- **Role signal:** on the PE deeplink page, the **student** TOC retains prior progress and renders
+  `.activity-score` badges (e.g. `"88%"`); the **teacher** view shows none. The URL also encodes
+  role: `/learner/` (student) vs `/teacher/`. The PE TOC is **collapsed by default** — expand via
+  the hamburger (`img.toc-hamburger-btn`) before reading scores.
+- **Return:** `bbCoursePage.returnToCourseContent()` closes the launched tab and refocuses the
+  Course Content tab.
+- **PE and ebook deeplinks are verified sequentially** (single active `global.page`): the PE tab is
+  closed before the ebook deeplink opens. Only independent element reads *within* one verification
+  TC run in parallel (`Promise.all`).
+
 ### Page objects (all under `pages/Integrations/`)
 
 | Page object | Responsibility |
 |---|---|
 | `Blackboard/bbLogin.page.js` | Cookies banner, username, password, sign-in |
 | `Blackboard/bbCourse.page.js` | Course listing, click course card |
-| `Blackboard/bbCoursePage.page.js` | BB course page → Content Market → LTI tool click; new-tab switch |
+| `Blackboard/bbCoursePage.page.js` | BB course page → Content Market → LTI tool click; new-tab switch. **Deeplink:** `_openDeeplinkItem`, `click_deeplink` (teacher direct), `click_deeplink_student` (detail panel), `launch_from_detailPanel`, `returnToCourseContent` |
 | `LTI/ltiTeacherDashboard.page.js` | Dashboard guard, content verify, component click, return-to-dashboard |
-| `LTI/ltiComponentPage.page.js` | Component page guard (race: `.product-launch-container` OR `/foc/` URL), ebook state |
+| `LTI/ltiComponentPage.page.js` | Component page guard (race: `.product-launch-container` OR `/foc/` URL), ebook state (guard, toolbar, back button, `/foc/`) |
 | `LTI/ltiPEPage.page.js` | PE state: back button, teacher-mode URL, TOC, TOC items, activity iframe |
+| `LTI/ltiDeeplinkPage.page.js` | **Deeplink** PE page: `isInitialized` (iframe guard), `getData_peDeeplinkState` (iframe/back-btn/url), `expand_peToc` (hamburger, toggle-guarded), `getData_peTocScores` (`.activity-score`). Reuses `css.LTI.ltiPEPage` selectors |
 
 ### Test files
 
@@ -368,6 +396,11 @@ and the Cambridge One teacher dashboard.
 | `test/Integrations/Blackboard/bbCourse.test.js` | TST_BBCN_TC_1 | Course navigation |
 | `test/Integrations/Blackboard/bbLtiTeacherDashboard.test.js` | TST_BBIP1_TC_1, TST_BBIP1_TC_2 | IP1 dashboard launch + content verify |
 | `test/Integrations/LTI/ltiTeacherComponent.test.js` | TST_LTI_IP2_TC_1, TST_LTI_IP2_TC_2 | IP2 component launches (PE + Ebook) |
+| `test/Integrations/Blackboard/bbDeeplink.test.js` | TST_BBIP3_TC_1..3 (teacher), TST_BBIP4_TC_1..3 (student PE) | Deeplink open/launch/return actions. Registered in `BlackboardTCRepository.json` |
+| `test/Integrations/LTI/ltiDeeplink.test.js` | TST_LTI_PEDL_TC_1 (teacher), TST_LTI_PEDL_TC_2 (student), TST_LTI_EBKDL_TC_1 | Deeplink page verification. Registered in `LTITCRepository.json` (→ `LTISelectors.json`) |
+
+Exec files: `teacher/studentDeeplinkLaunch_thor.json` — each lists **both** TC repos
+(`BlackboardTCRepository` + `LTITCRepository`), interleaving BB action TCs and LTI verification TCs.
 
 ### Known quirks
 
@@ -400,3 +433,23 @@ and the Cambridge One teacher dashboard.
   intermittently find nothing. Fix: `ltiTeacherDashboard.isInitialized()` waits for the guard to
   appear AND then for `loaderWrapper` to go hidden (reverse `waitForDisplayed`, 120s) before the
   dashboard is considered ready. The content selectors themselves were always correct.
+- **Deeplink new-tab + `lti-onboarding` redirect chain:** a deeplink click opens `lti-onboarding`
+  in a **new tab**, which then redirects **in-tab** to the content URL (no second tab spawns). The
+  page objects capture the tab via `action.switchToNewTab()` then `action.waitForUrl(url => !url
+  .includes('/lti-onboarding/'))` to await the in-tab redirect. New-tab readiness uses
+  `domcontentloaded`, not `load` (ADR-017A).
+- **Student ebook deeplink launches directly** (no detail panel), unlike the student **PE** deeplink
+  which shows `.root-learning-module-panel` + a Launch button first. An early draft wrongly modelled
+  ebook as panel-based (`TST_BBIP4_TC_4/5`); those were removed and the student ebook path now reuses
+  the teacher direct-launch TC (`TST_BBIP3_TC_3`).
+- **PE deeplink TOC is collapsed by default** — `.activity-score` badges aren't in the DOM until the
+  TOC is expanded via `img.toc-hamburger-btn`. `expand_peToc` is toggle-guarded (skips the click if
+  the accordion is already visible) so it never collapses an open TOC.
+- **Role signal on the PE deeplink page:** student shows `.activity-score` badges (retained
+  progress); teacher shows none. The teacher score-absence check uses a short timeout (no score will
+  ever appear) to avoid a full stall.
+- **Selector wiring (ADR-015A compliant):** `css.LTI` lives **only** in `LTISelectors.json`; the
+  deeplink LTI TCs are in `LTITCRepository.json`; the exec files list **both** TC repos. This works
+  because each page object is required by test files of a single namespace (BB vs LTI), so it caches
+  the correct `selectorDir`. Do **not** mirror `css.LTI` into `BlackboardSelectors.json` — an early
+  deeplink draft did, which silently resolved a selector to `undefined`; it was removed.
