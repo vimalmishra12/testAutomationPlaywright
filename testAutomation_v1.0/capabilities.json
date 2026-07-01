@@ -5,7 +5,9 @@
                 "maxInstances": 5,
                 "browserName": "chrome",
                 "goog:chromeOptions": {
-                    "args": ["--log-level=3"]
+                    "args": [
+                        "--log-level=3"
+                    ]
                 }
             }
         ],
@@ -192,7 +194,10 @@
                 "maxInstances": 5,
                 "browserName": "chrome",
                 "goog:chromeOptions": {
-                    "args": ["--disable-gpu", "--log-level=3"]
+                    "args": [
+                        "--disable-gpu",
+                        "--log-level=3"
+                    ]
                 }
             }
         ],
@@ -207,77 +212,82 @@
             "batch": "Acceptance",
             "matchLevel": "Layout",
             "apiKey": "WCylilnK2R9V9X2vyMC1SVNXTgv9kgelAUtdD9pKqh0110",
-            "setForceFullPageScreenshot":true,
-            "stitchMode" : "CSS"
-
+            "setForceFullPageScreenshot": true,
+            "stitchMode": "CSS"
         }
     },
-
-    
     "lambdatest-chrome-1920": {
-    "capabilities": [
-        {
-        "browserName": "Chrome",
-        "browserVersion": "latest",
-        "LT:Options": {
-            "platformName": "Windows 10",
-            "build": "C1Automation - CI Build",
-            "project": "C1Automation",
-            "tunnel": false,
-            "network": true,
-            "console": "info",
-            "visual": true,
-            "terminal": true
-        }
-        }
-    ],
-    "resolution": "1920x1080",
-    "maximizeWindow": true,
-    "hostname": "hub.lambdatest.com",
-    "portNumber": 443,
-    "webServicePath": "/wd/hub",
-    "protocol": "https",
-    "webDriverService": "lambdatest"
+        "capabilities": [
+            {
+                "browserName": "Chrome",
+                "browserVersion": "latest",
+                "LT:Options": {
+                    "platformName": "Windows 10",
+                    "build": "C1Automation - CI Build",
+                    "project": "C1Automation",
+                    "tunnel": false,
+                    "network": true,
+                    "console": "info",
+                    "visual": true,
+                    "terminal": true
+                }
+            }
+        ],
+        "resolution": "1920x1080",
+        "maximizeWindow": true,
+        "hostname": "hub.lambdatest.com",
+        "portNumber": 443,
+        "webServicePath": "/wd/hub",
+        "protocol": "https",
+        "webDriverService": "lambdatest"
     },
-
+    "lambdatest-safari-1920": {
+        "capabilities": [
+            {
+                "browserName": "pw-webkit",
+                "browserVersion": "latest",
+                "LT:Options": {
+                    "platformName": "MacOS Sonoma",
+                    "build": "C1Automation - CI Build",
+                    "project": "C1Automation",
+                    "tunnel": false,
+                    "network": true,
+                    "console": "info",
+                    "visual": true,
+                    "terminal": true
+                }
+            }
+        ],
+        "resolution": "1920x1080",
+        "maximizeWindow": true,
+        "hostname": "hub.lambdatest.com",
+        "portNumber": 443,
+        "webServicePath": "/wd/hub",
+        "protocol": "https",
+        "webDriverService": "lambdatest"
+    },
     "lambdatest-android-samsungS24": {
-  "capabilities": [
-    {
-      "browserName": "chrome",
-      "platformName": "Android",
-      "LT:Options": {
-        "deviceName": "Galaxy S24 Ultra",
-        "platformVersion": "14",
-        "build": "C1Automation - CI Build",
-        "project": "C1Automation",
-        "tunnel": true,
-        "network": true,
-        "console": true,
-        "visual": true,
-        "w3c": true
-      }
+        "capabilities": [
+            {
+                "browserName": "chrome",
+                "platformName": "Android",
+                "LT:Options": {
+                    "deviceName": "Galaxy S24 Ultra",
+                    "platformVersion": "14",
+                    "build": "C1Automation - CI Build",
+                    "project": "C1Automation",
+                    "tunnel": true,
+                    "network": true,
+                    "console": true,
+                    "visual": true,
+                    "w3c": true
+                }
+            }
+        ],
+        "hostname": "mobile-hub.lambdatest.com",
+        "portNumber": 443,
+        "protocol": "https",
+        "webServicePath": "/wd/hub",
+        "webDriverService": "lambdatest"
     }
-  ],
-  "hostname": "mobile-hub.lambdatest.com",
-  "portNumber": 443,
-  "protocol": "https",
-  "webServicePath": "/wd/hub",
-  "webDriverService": "lambdatest"
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
 }
