@@ -1,0 +1,24 @@
+{
+  "Builder": {
+    "familyImage": {
+      "image1": {
+        "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
+        "brokenImageUrl": "https://example.com/this-family-cover-does-not-exist-xyz.png",
+        "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
+        "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt",
+        "webpImage": "D:\\ebookCreate\\familyImages\\familyLogo.webp"
+      },
+      "save1": {
+        "codeBase": "hkfamimgsave",
+        "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938"
+      },
+      "edit1": {
+        "codeBase": "hkfameditm",
+        "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
+        "brokenImageUrl": "https://example.com/this-family-cover-does-not-exist-xyz.png",
+        "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
+        "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt"
+      }
+    }
+  }
+}

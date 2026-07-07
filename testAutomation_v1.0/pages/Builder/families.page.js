@@ -25,6 +25,16 @@ module.exports = {
   delCommentInput: sel.deleteModal.commentInput,
   delConfirmBtn:   sel.deleteModal.confirmBtn,
 
+  // Create-Family "Product Logo" image section (captured live on Thor 2026-07-02).
+  imageFileInput:  sel.families.imageFileInput,
+  imageUrlInput:   sel.families.imageUrlInput,
+  imagePreview:    sel.families.imagePreview,
+  imagePlaceholderIcon: sel.families.imagePlaceholderIcon,
+  imageRemoveBtn:  sel.families.imageRemoveBtn,
+  imageErrorText:  sel.families.imageErrorText,
+  detailSetupTab:  sel.families.detailSetupTab,
+  listImageByText: sel.families.listItemImageByText,
+
   // Builds a concrete selector from a JSON "{text}" template by injecting a dynamic value
   // (family title). Keeps all selector syntax in the selector file (Rule 2). Pure string
   // substitution — no DOM interaction.
@@ -181,5 +191,166 @@ module.exports = {
     // Families listing uses void links (no semicolon) with link text = family title.
     var exists = await action.isExisting(this._byText(this.itemLinkByText, title));
     return { found: exists === true };
+  },
+
+  // ── Create-Family "Product Logo" image selection ───────────────────────────────────────
+  // The image section offers two sources: a local file (hidden #fileInput) and an external URL
+  // (#imageUrl, confirmed with Enter). A valid source renders a preview <img class="object-cover">;
+  // a broken URL falls back to a placeholder image (alt='placeholder'); a non-image file shows a
+  // "Something went wrong" error. All captured live on Thor (2026-07-02).
+
+  // Selects a cover image from a LOCAL file. Sets the hidden file input directly (no OS chooser);
+  // Builder uploads it to S3 and renders the preview. Returns { previewStatus, src, alt }.
+  uploadImageFromFile: async function (localPath) {
+    await logger.logInto(await stackTrace.get(), "uploadImageFromFile=" + localPath);
+    var res = await action.setInputFiles(this.imageFileInput, localPath);
+    if (true !== res) return { previewStatus: res };
+    // Staging → S3 upload → preview render is async; wait for the preview <img> to appear.
+    res = await action.waitForDisplayed(this.imagePreview, 30000);
+    if (true !== res) return { previewStatus: false };
+    return {
+      previewStatus: true,
+      src: await action.getAttribute(this.imagePreview, "src"),
+      alt: await action.getAttribute(this.imagePreview, "alt")
+    };
+  },
+
+  // Selects a cover image from an EXTERNAL URL and CONFIRMS it with Enter. The product requires an
+  // explicit confirm — the preview does NOT auto-load while typing (see typeImageUrlWithoutConfirm).
+  // Returns { previewStatus, src, alt }. (For a URL that does NOT resolve to a valid image, use
+  // uploadBrokenImageUrl — since the 2026-07-07 fix a broken URL renders an icon, not an <img>.)
+  uploadImageFromUrl: async function (url) {
+    await logger.logInto(await stackTrace.get(), "uploadImageFromUrl=" + url);
+    await action.click(this.imageUrlInput);
+    await action.clearValue(this.imageUrlInput);
+    var res = await action.addValue(this.imageUrlInput, url);
+    if (true !== res) return { previewStatus: res };
+    res = await action.keyPress("Enter"); // Enter is the product's confirm action for the URL field.
+    if (true !== res) return { previewStatus: res };
+    res = await action.waitForDisplayed(this.imagePreview, 30000);
+    if (true !== res) return { previewStatus: false };
+    return {
+      previewStatus: true,
+      src: await action.getAttribute(this.imagePreview, "src"),
+      alt: await action.getAttribute(this.imagePreview, "alt")
+    };
+  },
+
+  // Types a broken/invalid external URL and confirms with Enter. Reports the resulting state so tests
+  // can check it against RTM CF-IMG-004 (a broken URL MUST show a clear inline error). Actual on Thor:
+  // no real <img>, a generic image-placeholder ICON (svg.lucide-image) with a Remove button, and NO
+  // error text. Returns { placeholderIcon, realImg, errorShown }.
+  uploadBrokenImageUrl: async function (url) {
+    await logger.logInto(await stackTrace.get(), "uploadBrokenImageUrl=" + url);
+    await action.click(this.imageUrlInput);
+    await action.clearValue(this.imageUrlInput);
+    var res = await action.addValue(this.imageUrlInput, url);
+    if (true !== res) return { placeholderIcon: res };
+    await action.keyPress("Enter");
+    var icon = await action.waitForDisplayed(this.imagePlaceholderIcon, 15000);
+    return {
+      placeholderIcon: true === icon,
+      realImg: (await action.isExisting(this.imagePreview)) === true,
+      errorShown: (await action.isExisting(this.imageErrorText)) === true
+    };
+  },
+
+  // Types the URL WITHOUT confirming (no Enter) to prove the preview does not auto-load while the
+  // user is still typing (CF-IMG-003 / CF-UX-001). Returns { previewShown }. Settles briefly first —
+  // if a preview were going to auto-load it would have by then.
+  typeImageUrlWithoutConfirm: async function (url) {
+    await logger.logInto(await stackTrace.get(), "typeImageUrlWithoutConfirm=" + url);
+    await action.click(this.imageUrlInput);
+    await action.clearValue(this.imageUrlInput);
+    await action.addValue(this.imageUrlInput, url);
+    await browser.pause(2500);
+    return { previewShown: (await action.isExisting(this.imagePreview)) === true };
+  },
+
+  // Confirms the URL previously typed by typeImageUrlWithoutConfirm (presses Enter in the field)
+  // and waits for the preview to render. Returns { previewStatus }.
+  confirmTypedImageUrl: async function () {
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.imageUrlInput);
+    var res = await action.keyPress("Enter");
+    if (true !== res) return { previewStatus: res };
+    res = await action.waitForDisplayed(this.imagePreview, 30000);
+    return { previewStatus: true === res };
+  },
+
+  // Uploads a file expected to be REJECTED (e.g. a non-image). Confirms the inline error renders
+  // and that NO preview appears. Returns { errorShown, message, previewShown }.
+  uploadFileExpectingError: async function (localPath) {
+    await logger.logInto(await stackTrace.get(), "uploadFileExpectingError=" + localPath);
+    var res = await action.setInputFiles(this.imageFileInput, localPath);
+    if (true !== res) return { errorShown: res };
+    res = await action.waitForDisplayed(this.imageErrorText, 20000);
+    if (true !== res) return { errorShown: false };
+    return {
+      errorShown: true,
+      message: await action.getText(this.imageErrorText),
+      previewShown: (await action.isExisting(this.imagePreview)) === true
+    };
+  },
+
+  // Removes the currently-previewed image (the "Remove" button shown once a preview renders).
+  // Confirms the preview detaches and the URL/upload control returns. Returns
+  // { removeStatus, uploadControlBack }.
+  removeImage: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.waitForDisplayed(this.imageRemoveBtn, 10000);
+    if (true !== res) return { removeStatus: res };
+    res = await action.click(this.imageRemoveBtn);
+    if (true !== res) return { removeStatus: res };
+    // Preview <img> should detach; reverse=true waits for it to be hidden/gone.
+    res = await action.waitForDisplayed(this.imagePreview, 10000, true);
+    if (true !== res) return { removeStatus: false };
+    return { removeStatus: true, uploadControlBack: (await action.isExisting(this.imageUrlInput)) === true };
+  },
+
+  // ── Persisted-image verification (after Save) ──────────────────────────────────────────
+  // Save redirects to the Families listing; these open the saved family and read the cover the
+  // product actually stored — proving the image persisted, not just previewed in the form.
+
+  // Opens the saved family's detail page, switches to the Setup tab (where the cover lives) and
+  // returns the persisted cover image src. Returns { pageStatus, src }.
+  openDetailSetup: async function (code) {
+    await logger.logInto(await stackTrace.get(), "openDetailSetup=" + code);
+    await browser.url("/2024/families/" + code);
+    await action.waitForDocumentLoad();
+    var tab = await action.waitForDisplayed(this.detailSetupTab, 20000);
+    if (true !== tab) return { pageStatus: false };
+    await action.click(this.detailSetupTab);
+    var res = await action.waitForDisplayed(this.imagePreview, 20000);
+    if (true !== res) return { pageStatus: false };
+    return { pageStatus: true, src: await action.getAttribute(this.imagePreview, "src") };
+  },
+
+  // Opens the family's detail → Setup tab in EDIT mode and waits for the image control to be in the
+  // upload state (the #imageUrl field present = no cover yet). Used to re-run the image-control cases
+  // on the edit page. Returns { pageStatus }.
+  openEditSetup: async function (code) {
+    await logger.logInto(await stackTrace.get(), "openEditSetup=" + code);
+    await browser.url("/2024/families/" + code);
+    await action.waitForDocumentLoad();
+    var tab = await action.waitForDisplayed(this.detailSetupTab, 20000);
+    if (true !== tab) return { pageStatus: false };
+    await action.click(this.detailSetupTab);
+    var res = await action.waitForDisplayed(this.imageUrlInput, 20000);
+    return { pageStatus: true === res };
+  },
+
+  // Reads the cover thumbnail the Families listing shows for a family (searches by title first).
+  // Returns { found, src }. (Families list DOES render a per-item cover thumbnail — unlike Umbrella.)
+  getListImage: async function (title) {
+    await logger.logInto(await stackTrace.get(), "getListImage=" + title);
+    // May be called from the family detail page (no #search there) — land on the listing first.
+    await this.navigateTo();
+    var res = await this.searchFor(title);
+    if (true !== res.searchStatus) return { found: false };
+    var selr = this._byText(this.listImageByText, title);
+    var shown = await action.waitForDisplayed(selr, 15000);
+    if (true !== shown) return { found: false };
+    return { found: true, src: await action.getAttribute(selr, "src") };
   }
 };

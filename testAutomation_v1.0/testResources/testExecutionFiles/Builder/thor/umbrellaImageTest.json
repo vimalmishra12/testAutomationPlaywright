@@ -1,0 +1,116 @@
+{
+  "Suite1": {
+    "Name": "Builder Create Umbrella — image save & edit-mode verification (Product Logo)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Builder/BuilderTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_BLOGI_TC_1",
+        "description": "Validate the Builder pre-login page is launched",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BLOGI_TC_2",
+        "description": "Validate Builder SSO login lands on the app",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BUMB_TC_1",
+        "description": "Create & save an Umbrella with a cover image; verify it persists in edit mode",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json",
+            "jsonPath": "Builder.umbrellaImage.save1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BUMB_TC_2",
+        "description": "Cleanup — delete the umbrella created in TC_1",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json",
+            "jsonPath": "Builder.umbrellaImage.save1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BUMB_TC_3",
+        "description": "[edit fixture] Create a cover-less umbrella for the edit-mode image cases",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_4",
+        "description": "[EDIT] Cover image uploadable via local file on the Setup page (TC-CF-016)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_5",
+        "description": "[EDIT] Cover image uploadable via external URL on the Setup page (TC-CF-017)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_6",
+        "description": "[EDIT] External URL preview requires confirmation on the Setup page (TC-CF-018)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_7",
+        "description": "[EDIT] Broken external image URL must show a clear inline error on the Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_8",
+        "description": "[EDIT] Non-image file is rejected on the Setup page (TC-CF-020)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_9",
+        "description": "[edit cleanup] Delete the edit-mode fixture umbrella",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

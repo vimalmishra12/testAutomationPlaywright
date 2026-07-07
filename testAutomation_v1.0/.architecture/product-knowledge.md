@@ -303,6 +303,74 @@ operations are slow and state propagation is **delayed and variable**.
   refresh-poll for absence after the delete AND retry the re-clone, because code-free lags the
   listing removal.
 
+### Create Family — "Product Logo" image section (confirmed on Thor [2026-07-02])
+
+The Create-Family form (`/2024/families/create`, a Vue form) has a **Product Logo** image control
+(shared with Umbrella create). It accepts **two sources**, both landing in the same dashed dropzone:
+- **Local file** — hidden `input#fileInput` (`accept="image/png, image/jpeg"`, name `Image-Upload`).
+  Set it directly (no OS chooser); Builder uploads to S3 and renders the preview (`src` = an
+  `…s3…amazonaws.com/ebook-uploads/…` URL).
+- **External URL** — `input#imageUrl` (type=url). **The preview does NOT auto-load while typing —
+  the user must confirm with Enter** (CF-IMG-003 / CF-UX-001). On confirm, a preview `<img
+  class="w-52 h-30 object-cover rounded-md">` renders (`src` = the given URL).
+
+Once a preview shows, the upload/URL controls are replaced by the preview `<img>` + a **Remove**
+button (`aria-label` literal `{{ $t('COVER_UPLOAD.REMOVE') }}`); Remove reverts to the upload state.
+
+**Error handling — as of the 2026-07-07 iteration:**
+- **Unsupported file format → FIXED (was CF-IMG-005).** The control accepts **only png / jpeg / jpg**.
+  Any other file that reaches it (`.webp`, `.txt`, … via `setInputFiles`, which bypasses the click
+  dialog's `accept="image/png, image/jpeg"` filter) is now rejected with a **format-specific** red
+  message in `div.border-dashed .text-red-500`: **"You are uploading a file with an unsupported format.
+  Please upload a file with a supported format (png, jpeg, jpg)."** + a **Reset** link, and NO preview.
+  (Earlier the app showed a generic "Something went wrong".) Covered by `familyImage.test.js`
+  TST_BFAM_TC_5 (non-image), **TST_BFAM_TC_7 (.webp — now PASSES**, was a defect guard), and the
+  edit-mode equivalents (TC_15, umbrella TC_8). NOTE: a real **OS drag-and-drop** of a disallowed file
+  is still not confirmable by automation (browsers block synthetic file drops) — needs a manual check.
+- **Broken/invalid external URL → OPEN DEFECT (RTM CF-IMG-004, reported, fix pending next iteration).**
+  A URL that doesn't resolve to a valid image must show a **clear inline error**. Actual on Thor
+  (2026-07-07): no real `<img>` loads, and instead of an error the control shows a **generic
+  image-placeholder ICON** (`div.border-dashed svg.lucide-image`) with a Remove button and **NO error
+  text**. (This replaced the older `cover-Placeholder.png` `img[alt='placeholder']` behaviour.)
+  `familyImage.test.js` **TST_BFAM_TC_4** (create), **TST_BFAM_TC_14** (edit) and
+  `umbrellaImage.test.js` **TST_BUMB_TC_7** (edit) are **KNOWN-FAILING defect guards**: they assert the
+  required inline error (`uploadBrokenImageUrl().errorShown`), so they FAIL until the app shows one,
+  then turn green. `page.uploadBrokenImageUrl()` returns `{ placeholderIcon, realImg, errorShown }`.
+
+The preview `<img>` for a *valid* image carries the untranslated i18n key
+`alt="{{ $t('COVER_UPLOAD.PREVIEW') }}"`, so valid-vs-broken is distinguished by `alt` (`≠
+'placeholder'` = valid). Image alone does **not** enable Save — Unique Code + Title are still required.
+
+**Persistence (verified 2026-07-02).** Save redirects to the **Families listing** (`/2024/families`).
+The saved cover then appears in TWO places: (1) the **Families-list thumbnail**
+(`div.flex.items-start:has(h2:text-is('{title}')) img`, alt `{{$t('FAMILIES.ITEM.IMAGE')}}`), and
+(2) the family's **detail → Setup tab** (edit mode), reusing the same
+`div.border-dashed img.object-cover` preview. `familyImage.test.js` TST_BFAM_TC_8 saves + verifies
+both; TC_9 deletes (cleanup). Delete is the listing-card `Delete` button + the shared `deleteModal`
+(comment textarea + Confirm).
+
+**Umbrella Products — a SEPARATE entity (verified 2026-07-02, ticket NEMO-24627).** Listing
+`/2024/umbrellas`, create `/2024/umbrellas/create`. Same image control as Family, but: create has an
+extra required **Umbrella Type** `<select name='umbrella-type'>` (options "Generic Umbrella Product"
+= `all`, "Teacher Training Umbrella Product" = `teacher`); code/title use dynamic radix ids so target
+by `name` (`input[name='unique-code']`, `input[name='title']`); the submit button reads **"Submit"**
+(not "Save"); save redirects to `/2024/umbrellas`. Edit mode = detail → **Setup** tab shows the saved
+cover (`div.border-dashed img.object-cover`). **KEY DIFFERENCE: the Umbrella listing does NOT render a
+cover thumbnail** (Family's does), so umbrella image persistence is verified in edit mode only.
+Automated by module **BUMB** (`umbrella.page.js` + `umbrellaImage.test.js`).
+
+**⚠ Latent selector bug (pre-existing, found 2026-07-02):** the Builder listing `<main>` has **no
+explicit `role="main"` attribute**, so a CSS `[role='main']` attribute selector matches **nothing**.
+The existing `css.Builder.families.itemLink` / `itemLinkByText` use `[role='main'] …`, so
+`families.isFamilyInListing` currently ALWAYS returns `found:false` (harmless-looking in the clone
+suite, but wrong). Use `main …` (element selector) instead — the family list-image and umbrella
+selectors added for this work do. Follow-up: fix `families.itemLink*` and re-verify the clone suites.
+
+Automated by module **BFAM** (`families.page.js` + `test/Builder/familyImage.test.js`), exec
+`familyImageTest.json`. Selectors captured with a throwaway design-time Playwright script because the
+Playwright MCP can't start under Node < 18.17 (`URL.canParse`); the app runs headed on system Chrome
+(the installed `chromium_headless_shell` build lags Playwright 1.61 — `npx playwright install` for headless).
+
 ---
 
 ## APP: Blackboard / LTI  (cup-test.blackboard.com)

@@ -1,0 +1,200 @@
+{
+  "Suite1": {
+    "Name": "Builder Create Family — image selection (Product Logo: file / URL / errors / remove)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/Builder/BuilderTCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_BLOGI_TC_1",
+        "description": "Validate the Builder pre-login page is launched",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BLOGI_TC_2",
+        "description": "Validate Builder SSO login lands on the app",
+        "testFile": "./test/Builder/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/builderLoginData.json",
+            "jsonPath": "Builder.login.validAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_1",
+        "description": "Cover image uploadable via local file selection (RTM TC-CF-016)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_2",
+        "description": "Cover image uploadable via valid external URL (RTM TC-CF-017)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_3",
+        "description": "External URL preview requires confirmation — no auto-load (RTM TC-CF-018)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_4",
+        "description": "Broken/invalid external image URL must show a clear inline error (RTM CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_5",
+        "description": "Non-image file is rejected with an error (RTM TC-CF-020)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_6",
+        "description": "Selected image is removable and replaceable (RTM TC-CF-021)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_7",
+        "description": "Disallowed format .webp is rejected with a format-specific 'unsupported format' message (RTM CF-IMG-005)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.image1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_8",
+        "description": "Save family with cover image; verify it persists in edit mode and in the Families list",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.save1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_9",
+        "description": "Cleanup — delete the family created in TC_8",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json",
+            "jsonPath": "Builder.familyImage.save1"
+          }
+        ]
+      },
+      {
+        "id": "TST_BFAM_TC_10",
+        "description": "[edit fixture] Create a cover-less family for the edit-mode image cases",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_11",
+        "description": "[EDIT] Cover image uploadable via local file on the Setup page (TC-CF-016)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_12",
+        "description": "[EDIT] Cover image uploadable via external URL on the Setup page (TC-CF-017)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_13",
+        "description": "[EDIT] External URL preview requires confirmation on the Setup page (TC-CF-018)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_14",
+        "description": "[EDIT] Broken external image URL must show a clear inline error on the Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_15",
+        "description": "[EDIT] Non-image file is rejected on the Setup page (TC-CF-020)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_16",
+        "description": "[edit cleanup] Delete the edit-mode fixture family",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

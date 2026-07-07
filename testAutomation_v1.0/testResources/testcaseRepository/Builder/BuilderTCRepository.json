@@ -102,6 +102,51 @@
         { "id": "TST_BECR_TC_5",  "description": "Upload the TOC",                                                  "tags": "P1" },
         { "id": "TST_BECR_TC_6",  "description": "Import the hotlinks spreadsheet",                                 "tags": "P1" }
       ]
+    },
+    {
+      "modulename": "Builder Family — Image Selection",
+      "moduleId": "CreateFamily-Image",
+      "testFile": "./test/Builder/familyImage.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        { "id": "TST_BLOGI_TC_1", "description": "Validate the Builder pre-login page is launched",                        "tags": "P1" },
+        { "id": "TST_BLOGI_TC_2", "description": "Validate Builder SSO login lands on the app",                            "tags": "P1" },
+        { "id": "TST_BFAM_TC_1",  "description": "Cover image uploadable via local file selection (RTM TC-CF-016)",        "tags": "P1" },
+        { "id": "TST_BFAM_TC_2",  "description": "Cover image uploadable via valid external URL (RTM TC-CF-017)",          "tags": "P1" },
+        { "id": "TST_BFAM_TC_3",  "description": "External URL preview requires confirmation — no auto-load (RTM TC-CF-018)", "tags": "P1" },
+        { "id": "TST_BFAM_TC_4",  "description": "Broken/invalid external image URL must show a clear inline error (RTM CF-IMG-004 — KNOWN-FAILING defect guard)", "tags": "P1" },
+        { "id": "TST_BFAM_TC_5",  "description": "Non-image file is rejected with an error (RTM TC-CF-020)",               "tags": "P1" },
+        { "id": "TST_BFAM_TC_6",  "description": "Selected image is removable and replaceable (RTM TC-CF-021)",           "tags": "P1" },
+        { "id": "TST_BFAM_TC_7",  "description": "Disallowed format .webp is rejected with a format-specific 'unsupported format' message (RTM CF-IMG-005)", "tags": "P1" },
+        { "id": "TST_BFAM_TC_8",  "description": "Save family with cover image — persists in edit mode + Families list", "tags": "P1" },
+        { "id": "TST_BFAM_TC_9",  "description": "Cleanup — delete the family created in TC_8",              "tags": "P1" },
+        { "id": "TST_BFAM_TC_10", "description": "[edit fixture] Create a cover-less family for edit-mode cases", "tags": "P1" },
+        { "id": "TST_BFAM_TC_11", "description": "[EDIT] Local file upload on Setup page (TC-CF-016)",         "tags": "P1" },
+        { "id": "TST_BFAM_TC_12", "description": "[EDIT] External URL upload on Setup page (TC-CF-017)",        "tags": "P1" },
+        { "id": "TST_BFAM_TC_13", "description": "[EDIT] URL preview requires confirmation on Setup (TC-CF-018)", "tags": "P1" },
+        { "id": "TST_BFAM_TC_14", "description": "[EDIT] Broken URL must show a clear inline error on Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",   "tags": "P1" },
+        { "id": "TST_BFAM_TC_15", "description": "[EDIT] Non-image file rejected on Setup page (TC-CF-020)",    "tags": "P1" },
+        { "id": "TST_BFAM_TC_16", "description": "[edit cleanup] Delete the edit-mode fixture family",          "tags": "P1" }
+      ]
+    },
+    {
+      "modulename": "Builder Umbrella — Image Selection",
+      "moduleId": "NEMO-24627",
+      "testFile": "./test/Builder/umbrellaImage.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/Builder/BuilderTCRepository.json",
+      "testcase": [
+        { "id": "TST_BLOGI_TC_1", "description": "Validate the Builder pre-login page is launched",                        "tags": "P1" },
+        { "id": "TST_BLOGI_TC_2", "description": "Validate Builder SSO login lands on the app",                            "tags": "P1" },
+        { "id": "TST_BUMB_TC_1",  "description": "Create & save Umbrella with cover image — persists in edit mode",       "tags": "P1" },
+        { "id": "TST_BUMB_TC_2",  "description": "Cleanup — delete the umbrella created in TC_1",                          "tags": "P1" },
+        { "id": "TST_BUMB_TC_3",  "description": "[edit fixture] Create a cover-less umbrella for edit-mode cases",        "tags": "P1" },
+        { "id": "TST_BUMB_TC_4",  "description": "[EDIT] Local file upload on Setup page (TC-CF-016)",                     "tags": "P1" },
+        { "id": "TST_BUMB_TC_5",  "description": "[EDIT] External URL upload on Setup page (TC-CF-017)",                    "tags": "P1" },
+        { "id": "TST_BUMB_TC_6",  "description": "[EDIT] URL preview requires confirmation on Setup (TC-CF-018)",          "tags": "P1" },
+        { "id": "TST_BUMB_TC_7",  "description": "[EDIT] Broken URL must show a clear inline error on Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",              "tags": "P1" },
+        { "id": "TST_BUMB_TC_8",  "description": "[EDIT] Non-image file rejected on Setup page (TC-CF-020)",               "tags": "P1" },
+        { "id": "TST_BUMB_TC_9",  "description": "[edit cleanup] Delete the edit-mode fixture umbrella",                   "tags": "P1" }
+      ]
     }
   ]
 }
