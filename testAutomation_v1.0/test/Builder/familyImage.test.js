@@ -224,5 +224,16 @@ module.exports = {
     await families.navigateTo();
     sts = await families.deleteFamily(code, code);
     await assertion.assertEqual(sts.deleteStatus, true, "Cleanup: fixture family could not be deleted.");
+  },
+
+  // ── TST_BFAM_TC_17 — image file whose FILENAME has special characters is accepted ──────
+  // A valid png whose name contains special characters (e.g. "sp3cial @#&()!+ name.png") must upload
+  // and preview normally — the filename must not block acceptance. Uses the local-file upload path.
+  TST_BFAM_TC_17: async function (testdata) {
+    sts = await families.navigateToCreate();
+    await assertion.assertEqual(sts.pageStatus, true, "Create Family form did not open.");
+    sts = await families.uploadImageFromFile(testdata.specialCharImage);
+    await assertion.assertEqual(sts.previewStatus, true, "Image with a special-character filename was not accepted / did not preview.");
+    await assertion.assertEqual(sts.alt !== "placeholder", true, "Special-character-filename image fell back to the placeholder preview.");
   }
 };

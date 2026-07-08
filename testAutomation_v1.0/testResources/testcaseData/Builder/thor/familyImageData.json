@@ -6,7 +6,8 @@
         "brokenImageUrl": "https://example.com/this-family-cover-does-not-exist-xyz.png",
         "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
         "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt",
-        "webpImage": "D:\\ebookCreate\\familyImages\\familyLogo.webp"
+        "webpImage": "D:\\ebookCreate\\familyImages\\familyLogo.webp",
+        "specialCharImage": "D:\\ebookCreate\\familyImages\\sp3cial @#&()!+ name.png"
       },
       "save1": {
         "codeBase": "hkfamimgsave",
