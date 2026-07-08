@@ -98,7 +98,7 @@ module.exports = {
 
   // ── TST_BUMB_TC_7 [EDIT] (TC-CF-019 / CF-IMG-004) — broken external URL ────────────────
   // REPORTED ISSUE (to be fixed next iteration): a broken URL must show a CLEAR inline error; the app
-  // instead shows a placeholder icon with no error. KNOWN-FAILING defect guard.
+  // instead shows a placeholder icon with no error. KNOWN-FAILING defect guard (matches family TC_14).
   TST_BUMB_TC_7: async function (testdata) {
     sts = await umbrella.openEditSetup(testdata.codeBase + RUN_ID);
     await assertion.assertEqual(sts.pageStatus, true, "Umbrella Setup (edit) image control not ready.");
