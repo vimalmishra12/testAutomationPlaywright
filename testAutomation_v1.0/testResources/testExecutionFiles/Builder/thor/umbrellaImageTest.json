@@ -108,6 +108,20 @@
         "testFile": "./test/Builder/umbrellaImage.test.js",
         "timeout": 180000,
         "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_10",
+        "description": "Image file with a special-character filename is accepted (uploads + previews)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.image1" } ]
+      },
+      {
+        "id": "TST_BUMB_TC_11",
+        "description": "External URL preview loads on blur (clicking outside the text box) (RTM TC-CF-017)",
+        "testFile": "./test/Builder/umbrellaImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.image1" } ]
       }
     ],
     "AfterEach": [],

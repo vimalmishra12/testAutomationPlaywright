@@ -121,5 +121,27 @@ module.exports = {
   TST_BUMB_TC_9: async function (testdata) {
     sts = await umbrella.deleteUmbrella(testdata.codeBase + RUN_ID);
     await assertion.assertEqual(sts.deleteStatus, true, "Cleanup: fixture umbrella could not be deleted.");
+  },
+
+  // ── TST_BUMB_TC_10 — image file with a special-character filename is accepted ──────────
+  // Parity with family TST_BFAM_TC_17: a valid png whose name has special characters
+  // ("sp3cial @#&()!+ name.png") must upload and preview on the umbrella create form.
+  TST_BUMB_TC_10: async function (testdata) {
+    sts = await umbrella.navigateToCreate();
+    await assertion.assertEqual(sts.pageStatus, true, "Create Umbrella form did not open.");
+    sts = await umbrella.uploadImageFromFile(testdata.specialCharImage);
+    await assertion.assertEqual(sts.previewStatus, true, "Image with a special-character filename was not accepted / did not preview.");
+    await assertion.assertEqual(sts.alt !== "placeholder", true, "Special-character-filename image fell back to the placeholder preview.");
+  },
+
+  // ── TST_BUMB_TC_11 (TC-CF-017) — external URL preview loads on BLUR (click outside) ────
+  // Parity with family TST_BFAM_TC_18: typing an external URL and clicking OUTSIDE the text box
+  // (blur) must render the preview — Enter is not the only confirm trigger.
+  TST_BUMB_TC_11: async function (testdata) {
+    sts = await umbrella.navigateToCreate();
+    await assertion.assertEqual(sts.pageStatus, true, "Create Umbrella form did not open.");
+    sts = await umbrella.uploadImageFromUrlByBlur(testdata.imageUrl);
+    await assertion.assertEqual(sts.previewStatus, true, "Preview did not render after clicking outside the URL box (blur).");
+    await assertion.assertEqual(sts.alt !== "placeholder", true, "External URL (blur) fell back to the placeholder preview.");
   }
 };

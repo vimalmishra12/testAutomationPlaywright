@@ -116,6 +116,25 @@ module.exports = {
     return { previewStatus: true, src: await action.getAttribute(this.imagePreview, "src"), alt: await action.getAttribute(this.imagePreview, "alt") };
   },
 
+  // Types an external URL and confirms it by BLURRING the field (clicking OUTSIDE, onto the Title
+  // field) instead of pressing Enter — the product loads the preview on blur too. Returns
+  // { previewStatus, src, alt }.
+  uploadImageFromUrlByBlur: async function (url) {
+    await logger.logInto(await stackTrace.get(), "uploadImageFromUrlByBlur=" + url);
+    await action.click(this.imageUrlInput);
+    await action.clearValue(this.imageUrlInput);
+    var res = await action.addValue(this.imageUrlInput, url);
+    if (true !== res) return { previewStatus: res };
+    await action.click(this.titleInput); // click outside the URL box → blur triggers the preview
+    res = await action.waitForDisplayed(this.imagePreview, 30000);
+    if (true !== res) return { previewStatus: false };
+    return {
+      previewStatus: true,
+      src: await action.getAttribute(this.imagePreview, "src"),
+      alt: await action.getAttribute(this.imagePreview, "alt")
+    };
+  },
+
   // Clicks Submit and confirms the create form left (redirects to the /umbrellas listing).
   save: async function () {
     await logger.logInto(await stackTrace.get());
