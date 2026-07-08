@@ -74,7 +74,7 @@
       },
       {
         "id": "TST_BFAM_TC_4",
-        "description": "Broken/invalid external image URL must show a clear inline error (RTM CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "description": "Broken/invalid external image URL → placeholder icon (accepted for now), not accepted as a cover (RTM TC-CF-019)",
         "testFile": "./test/Builder/familyImage.test.js",
         "timeout": 120000,
         "testData": [
@@ -174,7 +174,7 @@
       },
       {
         "id": "TST_BFAM_TC_14",
-        "description": "[EDIT] Broken external image URL must show a clear inline error on the Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "description": "[EDIT] Broken external image URL → placeholder icon on the Setup page (accepted for now) (TC-CF-019)",
         "testFile": "./test/Builder/familyImage.test.js",
         "timeout": 120000,
         "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.edit1" } ]

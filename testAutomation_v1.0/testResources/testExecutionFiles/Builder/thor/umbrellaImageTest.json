@@ -90,7 +90,7 @@
       },
       {
         "id": "TST_BUMB_TC_7",
-        "description": "[EDIT] Broken external image URL must show a clear inline error on the Setup page (CF-IMG-004 — KNOWN-FAILING defect guard)",
+        "description": "[EDIT] Broken external image URL → placeholder icon on the Setup page (accepted for now) (TC-CF-019)",
         "testFile": "./test/Builder/umbrellaImage.test.js",
         "timeout": 120000,
         "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/umbrellaImageData.json", "jsonPath": "Builder.umbrellaImage.edit1" } ]

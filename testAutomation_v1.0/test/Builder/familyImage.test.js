@@ -51,18 +51,18 @@ module.exports = {
     await assertion.assertEqual(sts.previewStatus, true, "Preview did not load after explicit confirmation (Enter).");
   },
 
-  // ── TST_BFAM_TC_4 (TC-CF-019 / CF-IMG-004) — broken/invalid external image URL ─────────
-  // REPORTED ISSUE (to be fixed next iteration): a broken/invalid external URL must show a CLEAR inline
-  // error. Actual on Thor (2026-07-07): no real image loads, but instead of an error the control shows
-  // a generic image-placeholder ICON (svg.lucide-image) with NO error message. KNOWN-FAILING defect
-  // guard: asserts the required inline error, so it FAILS until the app shows one, then turns green.
+  // ── TST_BFAM_TC_4 (TC-CF-019) — broken/invalid external image URL ──────────────────────
+  // A broken/invalid external URL does not load a real image; the control shows a generic
+  // image-placeholder ICON (svg.lucide-image) with no real preview. Per product decision (2026-07-08)
+  // this placeholder is the ACCEPTED behaviour for now (a clearer inline error may come in a future
+  // iteration). Asserts the broken URL is not accepted as a valid cover.
   TST_BFAM_TC_4: async function (testdata) {
     sts = await families.navigateToCreate();
     await assertion.assertEqual(sts.pageStatus, true, "Create Family form did not open.");
     sts = await families.uploadBrokenImageUrl(testdata.brokenImageUrl);
     await assertion.assertEqual(sts.realImg, false, "Broken URL should NOT render a real image preview.");
-    await assertion.assertEqual(sts.errorShown, true,
-      "REPORTED ISSUE (CF-IMG-004): broken URL shows a placeholder icon with NO clear inline error (fix pending next iteration).");
+    await assertion.assertEqual(sts.placeholderIcon, true,
+      "Broken URL did not show the expected image-placeholder icon.");
   },
 
   // ── TST_BFAM_TC_5 (TC-CF-020) — non-image file is rejected with an error ───────────────
@@ -196,16 +196,16 @@ module.exports = {
     await assertion.assertEqual(sts.previewStatus, true, "[edit] Preview did not load after explicit confirm (Enter).");
   },
 
-  // ── TST_BFAM_TC_14 [EDIT] (TC-CF-019 / CF-IMG-004) — broken external URL ───────────────
-  // Same REPORTED ISSUE as TC_4, on the Setup (edit) page — KNOWN-FAILING defect guard until a clear
-  // inline error is shown for a broken URL.
+  // ── TST_BFAM_TC_14 [EDIT] (TC-CF-019) — broken external URL → placeholder icon ─────────
+  // Same as TC_4 on the Setup (edit) page: a broken URL shows the image-placeholder icon (accepted
+  // behaviour for now) and no real preview.
   TST_BFAM_TC_14: async function (testdata) {
     sts = await families.openEditSetup(testdata.codeBase + RUN_ID);
     await assertion.assertEqual(sts.pageStatus, true, "Family Setup (edit) image control not ready.");
     sts = await families.uploadBrokenImageUrl(testdata.brokenImageUrl);
     await assertion.assertEqual(sts.realImg, false, "[edit] Broken URL should NOT render a real image preview.");
-    await assertion.assertEqual(sts.errorShown, true,
-      "[edit] REPORTED ISSUE (CF-IMG-004): broken URL shows a placeholder icon with NO clear inline error (fix pending).");
+    await assertion.assertEqual(sts.placeholderIcon, true,
+      "[edit] Broken URL did not show the expected image-placeholder icon.");
   },
 
   // ── TST_BFAM_TC_15 [EDIT] (TC-CF-020) — non-image file is rejected ─────────────────────
