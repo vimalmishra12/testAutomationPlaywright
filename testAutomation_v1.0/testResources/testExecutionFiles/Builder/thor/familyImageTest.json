@@ -199,6 +199,13 @@
         "testFile": "./test/Builder/familyImage.test.js",
         "timeout": 120000,
         "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.image1" } ]
+      },
+      {
+        "id": "TST_BFAM_TC_18",
+        "description": "External URL preview loads on blur (clicking outside the text box) (RTM TC-CF-017)",
+        "testFile": "./test/Builder/familyImage.test.js",
+        "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/Builder/thor/familyImageData.json", "jsonPath": "Builder.familyImage.image1" } ]
       }
     ],
     "AfterEach": [],

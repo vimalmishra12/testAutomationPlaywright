@@ -127,7 +127,8 @@
         { "id": "TST_BFAM_TC_14", "description": "[EDIT] Broken URL → placeholder icon on Setup page (accepted for now) (TC-CF-019)",   "tags": "P1" },
         { "id": "TST_BFAM_TC_15", "description": "[EDIT] Non-image file rejected on Setup page (TC-CF-020)",    "tags": "P1" },
         { "id": "TST_BFAM_TC_16", "description": "[edit cleanup] Delete the edit-mode fixture family",          "tags": "P1" },
-        { "id": "TST_BFAM_TC_17", "description": "Image file with a special-character filename is accepted (uploads + previews)", "tags": "P1" }
+        { "id": "TST_BFAM_TC_17", "description": "Image file with a special-character filename is accepted (uploads + previews)", "tags": "P1" },
+        { "id": "TST_BFAM_TC_18", "description": "External URL preview loads on blur (clicking outside the text box) (RTM TC-CF-017)", "tags": "P1" }
       ]
     },
     {

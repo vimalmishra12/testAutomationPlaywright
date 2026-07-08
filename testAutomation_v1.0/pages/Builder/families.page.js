@@ -278,6 +278,25 @@ module.exports = {
     return { previewStatus: true === res };
   },
 
+  // Types an external URL and confirms it by BLURRING the field (clicking OUTSIDE, onto the Title
+  // field) instead of pressing Enter — the product loads the preview on blur too. Returns
+  // { previewStatus, src, alt }.
+  uploadImageFromUrlByBlur: async function (url) {
+    await logger.logInto(await stackTrace.get(), "uploadImageFromUrlByBlur=" + url);
+    await action.click(this.imageUrlInput);
+    await action.clearValue(this.imageUrlInput);
+    var res = await action.addValue(this.imageUrlInput, url);
+    if (true !== res) return { previewStatus: res };
+    await action.click(this.titleInput); // click outside the URL box → blur triggers the preview
+    res = await action.waitForDisplayed(this.imagePreview, 30000);
+    if (true !== res) return { previewStatus: false };
+    return {
+      previewStatus: true,
+      src: await action.getAttribute(this.imagePreview, "src"),
+      alt: await action.getAttribute(this.imagePreview, "alt")
+    };
+  },
+
   // Uploads a file expected to be REJECTED (e.g. a non-image). Confirms the inline error renders
   // and that NO preview appears. Returns { errorShown, message, previewShown }.
   uploadFileExpectingError: async function (localPath) {

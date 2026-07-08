@@ -235,5 +235,16 @@ module.exports = {
     sts = await families.uploadImageFromFile(testdata.specialCharImage);
     await assertion.assertEqual(sts.previewStatus, true, "Image with a special-character filename was not accepted / did not preview.");
     await assertion.assertEqual(sts.alt !== "placeholder", true, "Special-character-filename image fell back to the placeholder preview.");
+  },
+
+  // ── TST_BFAM_TC_18 (TC-CF-017) — external URL preview loads on BLUR (click outside) ────
+  // Typing an external URL and clicking OUTSIDE the text box (blur) must render the preview — Enter is
+  // not the only confirm trigger.
+  TST_BFAM_TC_18: async function (testdata) {
+    sts = await families.navigateToCreate();
+    await assertion.assertEqual(sts.pageStatus, true, "Create Family form did not open.");
+    sts = await families.uploadImageFromUrlByBlur(testdata.imageUrl);
+    await assertion.assertEqual(sts.previewStatus, true, "Preview did not render after clicking outside the URL box (blur).");
+    await assertion.assertEqual(sts.alt !== "placeholder", true, "External URL (blur) fell back to the placeholder preview.");
   }
 };
