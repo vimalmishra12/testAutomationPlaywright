@@ -322,11 +322,14 @@ Anything that was discussed but not completed, or that requires a future decisio
 5. **If a pattern doesn't exist**: consult `.architecture/decisions.md` before inventing new patterns
 6. **If a protected file needs changing**: always ask first — never assume the change is small enough to skip confirmation
 7. **Before validating a Jira ticket**, read `.architecture/product-knowledge.md`
-   for known error messages, validation rules, and bug notes so you do not
-   re-document what is already confirmed.
+   (the index) and the per-app knowledge file under `.architecture/product-knowledge/`
+   for the application being tested (`ExperienceApp.md`, `Builder.md`, or
+   `Integrations.md` — ADR-018) for known error messages, validation rules, and
+   bug notes so you do not re-document what is already confirmed. If the
+   application is not yet clear, read all per-app files.
    **After navigating a new area or learning new product behaviour**, append or
-   update that file following its per-app template, organised by app URL.
-   Mark unconfirmed items `[ASSUMED]`.
+   update the relevant per-app file following the template in the index,
+   organised by app URL. Mark unconfirmed items `[ASSUMED]`.
 8. **If `baseActionLibrary` lacks a method, or a locator can't be a static CSS string**: do NOT
    inline raw `global.page.*` calls or selector string literals in the page object. Add a named,
    logged method to `baseActionLibrary.js` — it is a protected file, so follow the confirmation

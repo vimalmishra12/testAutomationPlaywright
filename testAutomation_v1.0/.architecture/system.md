@@ -18,6 +18,9 @@ apps exist today: **`ExperienceApp`** (Cambridge One / C1, `css.ComproC1`), **`B
 `pages/Integrations/`, `test/Integrations/`, `css.Blackboard` + `css.LTI` — see ADR-015).
 Adding an app is **additive scaffolding only — no core changes**
 (see AGENTS.md §7 and ADR-013). Paths below show `ExperienceApp/`; substitute the active appType.
+Product knowledge is likewise split per application: an index at
+`.architecture/product-knowledge.md` plus per-app files under
+`.architecture/product-knowledge/` (`ExperienceApp.md`, `Builder.md`, `Integrations.md`) — ADR-018.
 
 **Tech Stack** _(updated 2026-06-15 — Prompt 4 / ADR-012: WebDriverIO → Playwright-as-library + Mocha; Phase 3 LambdaTest + visual testing complete)_:
 - Runtime: Node.js

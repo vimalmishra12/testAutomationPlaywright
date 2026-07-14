@@ -535,7 +535,52 @@ before any interaction with the destination, so Invariant 5 is honoured in spiri
 documented nuance, not a violation. Consequence: the action TC's `pageStatus:true` means only "tab
 opened + off `/lti-onboarding/`", so it must always be followed by a verification TC.
 
-**Product behaviour captured here** (details in product-knowledge.md): teacher deeplink launches
+**Product behaviour captured here** (details in product-knowledge/Integrations.md — ADR-018): teacher deeplink launches
 directly; student PE deeplink shows an intermediate detail panel then Launch; student ebook deeplink
 launches directly (no panel). Student PE retains prior progress — the TOC renders `.activity-score`
 badges — while the teacher view shows none; the PE TOC is collapsed by default (expand via hamburger).
+
+---
+
+## ADR-018: Product Knowledge Split Per Application
+
+**Status:** Accepted (2026-07-14)
+
+**Context:** `.architecture/product-knowledge.md` had grown to ~456 lines holding all three
+application families (Cambridge One / NEMO, Builder, Blackboard/LTI) in a single file. Every
+session loaded every app's knowledge regardless of relevance, and the file is append-only by
+design, so the cost only grows. The content already had a natural boundary — the same `appType`
+boundary the framework uses everywhere else (ADR-013 / ADR-015).
+
+**Decision:** Product knowledge is split per application, mirroring the appType families:
+
+- `.architecture/product-knowledge.md` — a thin **INDEX**: usage rules, the reading rule,
+  cross-app lessons, and the per-app template. The original path survives so existing
+  references (CLAUDE.md, AGENTS.md, code comments, historical walkthroughs) never dangle.
+- `.architecture/product-knowledge/ExperienceApp.md` — Cambridge One / C1 apps (NEMO today;
+  future C1 apps append here).
+- `.architecture/product-knowledge/Builder.md` — comproDLS Builder.
+- `.architecture/product-knowledge/Integrations.md` — Blackboard + LTI in ONE file (the
+  deeplink flows interleave both namespaces); a future LMS (e.g. Moodle) appends here.
+
+**Reading rule (recorded in CLAUDE.md):** always read the index; read the per-app file matching
+the task's application; if the application is unclear or the task spans apps, read all per-app
+files — ambiguity defaults to reading more, never less.
+
+**Rationale:** Most sessions concern exactly one application, so loading all apps' product
+knowledge is wasted context that grows monotonically. Splitting on the appType boundary reuses
+an established, well-understood partition instead of inventing a new one, and scales flat: a
+new application adds a new file without taxing existing workflows. The index keeps cross-app
+lessons (React forms ignoring `fill()`, repeated-selector page transitions, poll-over-pause)
+visible in every session since it is always read.
+
+**Consequences:**
+- New product observations append to the relevant **per-app file, never the index**. Each
+  per-app file keeps the living-document rules (append-only, `[ASSUMED]`, dated updates).
+- Adding a new application = a new file under `product-knowledge/` + a row in the index's
+  app → file map (extends the ADR-013 "additive scaffolding" checklist to documentation).
+- CLAUDE.md's mandatory-read list and AGENTS.md §"How to Handle Uncertainty" item 7 point at
+  the index + per-app files; historical walkthroughs are deliberately NOT edited (they are
+  session records, and the surviving index path keeps their references meaningful).
+- Cross-app lessons live in the index (and, for automation rules, ARCHITECTURE-INVARIANTS.md);
+  app-specific detail stays in the app's own file.

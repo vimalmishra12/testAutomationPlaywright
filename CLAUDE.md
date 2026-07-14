@@ -7,7 +7,11 @@ At the start of **every** conversation or task, read all `.md` files under
 
 - `testAutomation_v1.0/.architecture/system.md`
 - `testAutomation_v1.0/.architecture/decisions.md`
-- `testAutomation_v1.0/.architecture/product-knowledge.md`
+- `testAutomation_v1.0/.architecture/product-knowledge.md` (the INDEX) — then read
+  the per-app knowledge file under `testAutomation_v1.0/.architecture/product-knowledge/`
+  matching the task's application (`ExperienceApp.md`, `Builder.md`, or
+  `Integrations.md`); if the application is not yet clear, or the task spans
+  apps, read all per-app files (ADR-018)
 - `testAutomation_v1.0/.architecture/PROMPTS.md`
 - `testAutomation_v1.0/.architecture/manual-test-standard.md`
 - Any files under `testAutomation_v1.0/.architecture/walkthroughs/` added since the last session
