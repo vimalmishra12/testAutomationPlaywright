@@ -112,6 +112,12 @@ Add a new entry replacing source env with target env (keep `--appType=<App>` and
 > `--testExecFile` is just the file name; the runner resolves it under the appType's `testExecDir`
 > (from `env.json`). Note `--browserCapability` (was `--capability` in WDIO).
 
+**Visual scripts (AGENTS.md §8 Rule B):** if the source env also has a
+`visualAcceptance_<testName>_<sourceEnv>` script (the exec file contains visual TCs), replicate
+that script for the target env too — visual TCs require BOTH scripts in every environment they
+run in. First target-env visual run bootstraps its own baseline (baselines are per-runner, not
+committed).
+
 Show a preview of all files to be created/modified and ask: **"Ready to create these files? (yes/no)"**
 
 ---

@@ -14,7 +14,12 @@ At the start of **every** conversation or task, read all `.md` files under
   apps, read all per-app files (ADR-018)
 - `testAutomation_v1.0/.architecture/PROMPTS.md`
 - `testAutomation_v1.0/.architecture/manual-test-standard.md`
-- Any files under `testAutomation_v1.0/.architecture/walkthroughs/` added since the last session
+Walkthroughs (`testAutomation_v1.0/.architecture/walkthroughs/`) are **historical
+session records — do NOT read them at session start.** Durable knowledge from them
+is promoted into decisions.md, product-knowledge, and ARCHITECTURE-INVARIANTS.md
+(already read above). Consult a specific walkthrough only on demand, when
+investigating how or why a past change was made. (Writing a walkthrough at session
+end remains mandatory — see AGENTS.md §Walkthrough.)
 
 These are the authoritative source of architecture decisions, product rules, and
 standards. All code and test design must conform to them.
