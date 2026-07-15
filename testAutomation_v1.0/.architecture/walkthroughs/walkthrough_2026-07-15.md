@@ -91,3 +91,47 @@ None — no protected files were modified. Skill markdown, architecture docs, CL
 - Consider an ADR for the phased-authoring pattern once validated in practice.
 - Still open (from 2026-07-14): two JS comments naming "product-knowledge.md" (resolve to the
   index; not dangling).
+
+---
+
+# Follow-up (same day) — Agent Metrics tooling (Level 2 observability)
+
+## Summary
+Built `tooling/agent-metrics/` — a zero-dependency Node script that parses Claude Code session
+transcripts (JSONL under `%USERPROFILE%\.claude\projects\`) into a per-session metrics CSV, to
+observe agent performance over time (tokens, tool errors, failed test runs, skill/phase
+attribution) and later verify whether the phased skill split reduces session cost.
+
+## Changes Made
+
+### 1. `tooling/agent-metrics/DESIGN.md`
+- **Type:** Created — the agreed design: data source, CSV columns, heuristics, honest limits
+  (user-corrections not auto-detectable; wall-clock includes idle), non-goals (no OTEL/hooks/cost).
+
+### 2. `tooling/agent-metrics/collect.js`
+- **Type:** Created — parser + `--summary` report (totals, per-skill/per-phase averages, top-5
+  expensive sessions, error hotspots, `--split-date` before/after comparison). Usage deduped per
+  requestId; subagent traffic counted separately; test runs detected via runner commands with
+  failures matched by `is_error` / mocha "N failing".
+
+### 3. Output
+- `tooling/agent-metrics/output/agent-metrics.csv` — generated, already covered by the existing
+  `output/` gitignore pattern (verified untracked).
+
+## Verification
+Ran against the real transcripts: 11 sessions (Jun 10 → Jul 15) parsed. Sanity confirmed —
+the 2026-06-10 NEMO-24306 session shows as the most expensive (1.18M in+out tokens) with 40
+tool errors and 19 failed test runs, matching the known history of that automation effort.
+
+## Known heuristic caveat
+Skill/phase attribution counts a session that READS OR EDITS a skill file as "using" that
+skill — sessions that maintain skills (like today's) inflate those buckets. Fine for trend
+analysis; noted in DESIGN.md limits.
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- Re-run `--summary --split-date 2026-07-15` after a few post-split authoring sessions to get
+  the real before/after comparison (currently 0 "after" sessions).
+- Level 3 (SessionEnd hook for auto-capture) only if Level 2 proves valuable.
