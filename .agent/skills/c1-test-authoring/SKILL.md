@@ -9,8 +9,9 @@ description: >
   be copied/ported to another environment, use c1-environment-test-replicator. Trigger on any mention
   of: add a test, write a test, fix a test, automate a flow, automate a new test, automate this
   scenario, automate in qa/thor (new test), page object, selector, selectorFile, isInitialized,
-  execution file, TC repository, appType, css.ComproC1, css.Builder, protected files, walkthrough,
-  run the test, novus/visual, lambdatest.
+  execution file, TC repository, appType, css.ComproC1, css.Builder, css.Blackboard, css.LTI,
+  blackboard, lti, deeplink, integrations, protected files, walkthrough, run the test,
+  novus/visual, lambdatest.
 ---
 
 # C1 / Builder Test Authoring Skill
@@ -18,11 +19,17 @@ description: >
 You are authoring or maintaining tests in a **Playwright-used-as-a-library + standalone Mocha**
 framework (migrated from WebDriverIO — ADR-012) with a **JSON-driven execution engine**. It is
 **multi-application**: everything is keyed by `--appType` (`ExperienceApp` = Cambridge One/C1 under
-`css.ComproC1`; `Builder` = comproDLS Builder under `css.Builder`).
+`css.ComproC1`; `Builder` = comproDLS Builder under `css.Builder`; `Blackboard` = the LMS/LTI
+integration under `Integrations/` paths with TWO namespaces, `css.Blackboard` + `css.LTI` — ADR-015).
 
 **Always load:** `testAutomation_v1.0/AGENTS.md` + `.architecture/ARCHITECTURE-INVARIANTS.md` (the
-invariants cheat-sheet / index). **Consult on demand:** a specific ADR in `.architecture/decisions.md`
-or a `system.md` section only when the task touches it — follow the cheat-sheet's *Depth →* pointers.
+invariants cheat-sheet / index). **Product knowledge (ADR-018):** read
+`.architecture/product-knowledge.md` (the index) + the per-app file under
+`.architecture/product-knowledge/` for the task's app (`ExperienceApp.md`, `Builder.md`, or
+`Integrations.md`; all of them if the app is unclear) — it holds confirmed validation rules, error
+messages, and known quirks, so you don't re-discover or contradict them. **Consult on demand:** a
+specific ADR in `.architecture/decisions.md` or a `system.md` section only when the task touches
+it — follow the cheat-sheet's *Depth →* pointers.
 These are the source of truth; where they disagree with this file, they win.
 
 ---
@@ -78,7 +85,11 @@ Purely additive — **no core-framework changes** (proven by Builder; ADR-013). 
 `testExecutionFiles/<App>/<env>/`, `testcaseRepository/<App>/<App>TCRepository.json`, an `env.json`
 block (`"<App>": { testExecDir, environments: { <env>: { url } } }`), and an NPM script. Start with a
 login → landing smoke to prove the plumbing. See `pages/Builder/login.page.js` for a multi-step
-cross-domain SSO example.
+cross-domain SSO example. **LMS integrations** (like Blackboard) use the `Integrations/` sub-path and
+may need TWO selector files / TC repos — one per namespace (e.g. `css.Blackboard` for the LMS UI +
+the portable `css.LTI` for the launched Cambridge One LTI pages); see ADR-015 before scaffolding.
+Also seed a per-app product-knowledge file under `.architecture/product-knowledge/` and add its row
+to the index's app → file map (ADR-018).
 
 ---
 
