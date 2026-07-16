@@ -787,5 +787,215 @@ module.exports = {
         }
         await global.page.mouse.move(box.x + endPoint_x2, box.y + endPoint_y2, { steps: 10 });
         await global.page.mouse.up();
+    },
+
+    // [2026-07-15] Added keyboard and focus accessibility wrappers — approved in plan.
+    pressTab: async function () {
+        message = "Pressing Tab key";
+        try {
+            await global.page.keyboard.press("Tab");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressShiftTab: async function () {
+        message = "Pressing Shift+Tab key";
+        try {
+            await global.page.keyboard.press("Shift+Tab");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressKey: async function (selector, key) {
+        message = `Pressing key '${key}' on element: ` + selector;
+        try {
+            await el(selector).press(key);
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressEnter: async function (selector) {
+        message = "Pressing Enter on element: " + selector;
+        try {
+            const element = el(selector);
+            await element.focus();
+            await browser.pause(500);
+            await page.keyboard.press("Enter");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertFocusOn: async function (selector, customMessage) {
+        message = "Asserting focus on element: " + selector;
+        try {
+            const element = el(selector);
+            // check focus state relative to the owner document (handles page + nested iframes automatically)
+            const isFocused = await element.evaluate(node => node === node.ownerDocument.activeElement);
+            if (!isFocused) {
+                const activeTagName = await element.evaluate(node => {
+                    const active = node.ownerDocument.activeElement;
+                    if (!active) return "none";
+                    return `${active.tagName.toLowerCase()}${active.id ? "#" + active.id : ""}${active.className ? "." + active.className.split(" ").join(".") : ""}`;
+                });
+                const details = `Expected element '${selector}' to be focused, but focus is on '${activeTagName}'`;
+                throw new Error(customMessage ? `${customMessage} (${details})` : details);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    focus: async function (selector) {
+        message = "Focusing element: " + selector;
+        try {
+            const element = el(selector);
+            await element.focus();
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    goToPage: async function (pageNumber) {
+        message = "goToPage called for page: " + pageNumber;
+        try {
+            await logger.logInto(await stackTrace.get(), message);
+            const selectorFile = jsonParserUtil.jsonParser(selectorDir);
+            
+            const pageNoBtn = selectorFile.css.ComproC1.eBook.pageNumber;
+            const pageNoClearBtn = selectorFile.css.ComproC1.pageNoDialogBox.pageNoClearBtn;
+            const pageNoGoToPageBtn = selectorFile.css.ComproC1.pageNoDialogBox.pageNoGoToPageBtn;
+            const pageNOShow = selectorFile.css.ComproC1.pageNoDialogBox.pageNOShow;
+
+            // Click page selection button
+            let res = await this.click(pageNoBtn);
+            if (true !== res) return res;
+
+            // Clear dialog field
+            res = await this.click(pageNoClearBtn);
+            if (true !== res) return res;
+
+            // Type page digits
+            const digits = String(pageNumber).split("");
+            for (const digit of digits) {
+                let digitSelector;
+                switch (digit) {
+                    case "1": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoOneBtn; break;
+                    case "2": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoTwoBtn; break;
+                    case "3": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoThreeBtn; break;
+                    case "4": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFourBtn; break;
+                    case "5": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFiveBtn; break;
+                    case "6": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSixBtn; break;
+                    case "7": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSevenBtn; break;
+                    case "8": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoEightBtn; break;
+                    case "9": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoNineBtn; break;
+                    case "0": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoZeroBtn; break;
+                    default:
+                        throw new Error("Invalid page number digit: " + digit);
+                }
+                res = await this.click(digitSelector);
+                if (true !== res) return res;
+            }
+
+            // Submit page navigation
+            res = await this.click(pageNoGoToPageBtn);
+            if (true !== res) return res;
+
+            // Wait for display text to be updated
+            await this.waitForDisplayed(pageNOShow);
+            await browser.pause(3000);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertPanelVisible: async function (selector, customMessage) {
+        message = "Asserting panel is visible: " + selector;
+        try {
+            const visible = await el(selector).isVisible();
+            if (!visible) {
+                throw new Error(customMessage || `Expected panel '${selector}' to be visible, but it is not.`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertPanelClosed: async function (selector, customMessage) {
+        message = "Asserting panel is closed: " + selector;
+        try {
+            const visible = await el(selector).isVisible();
+            if (visible) {
+                throw new Error(customMessage || `Expected panel '${selector}' to be closed, but it is still visible.`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertOnPage: async function (selector, expectedPage, customMessage) {
+        message = "Asserting current page matches expected: " + expectedPage;
+        try {
+            const text = await el(selector).innerText();
+            // Checks if expected page number string exists within the text (e.g. "28-29 / 160" contains "28")
+            const isMatch = text.includes(String(expectedPage));
+            if (!isMatch) {
+                throw new Error(customMessage || `Expected to be on page ${expectedPage}, but page text is '${text}'`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    getActiveElementSelector: async function () {
+        message = "Getting selector/description of active element";
+        try {
+            // Retrieves formatted tag#id.classes description for debug/assertion purposes
+            const descriptor = await (global.__activeFrame ? global.__activeFrame : global.page).evaluate(() => {
+                const active = document.activeElement;
+                if (!active) return "none";
+                const tag = active.tagName.toLowerCase();
+                const id = active.id ? "#" + active.id : "";
+                const classes = active.className ? "." + [...active.classList].join(".") : "";
+                return `${tag}${id}${classes}`;
+            });
+            await logger.logInto(await stackTrace.get(), message);
+            return descriptor;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
     }
 };

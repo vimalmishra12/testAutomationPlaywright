@@ -1,0 +1,366 @@
+{
+  "Suite1": {
+    "Name": "Keyboard Focus Accessibility Testing - Page 22 (Notes Only)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Student User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Student Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login Button",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Launch eBook Reader",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_KBOA_TC_1",
+        "description": "Go to Page 22 and wait for Notes",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_2",
+        "description": "Press Tab and check focus on Notes",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_3",
+        "description": "Press Tab and check focus on Home",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_4",
+        "description": "Press Tab and check focus loops back to Notes",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_5",
+        "description": "Keyboard click Notes and check panel opens",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_6",
+        "description": "Keyboard click Close and check panel closes",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite2": {
+    "Name": "Keyboard Focus Accessibility Testing - Page 24 (Hotlink Only)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Student User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Student Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login Button",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Launch eBook Reader",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_KBOA_TC_7",
+        "description": "Go to Page 24 and wait for Hotlink",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_8",
+        "description": "Press Tab and check focus on Hotlink",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_9",
+        "description": "Press Tab and check focus on Home",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_10",
+        "description": "Press Shift+Tab and check focus moves back to Hotlink",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_11",
+        "description": "Keyboard click Hotlink and check navigation jump to Page 28",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_12",
+        "description": "Navigate back to Page 24",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite3": {
+    "Name": "Keyboard Focus Accessibility Testing - Page 26 (Neither Notes Nor Hotlink)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Student User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Student Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login Button",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Launch eBook Reader",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_KBOA_TC_13",
+        "description": "Go to Page 26",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_14",
+        "description": "Press Tab and check focus on Home directly",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite4": {
+    "Name": "Keyboard Focus Accessibility Testing - Page 28 (Both Notes and Hotlink)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Student User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Student Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login Button",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Launch eBook Reader",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_KBOA_TC_15",
+        "description": "Go to Page 28 and wait for Note and Hotlink",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_16",
+        "description": "Press Tab and check focus on Note first",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_17",
+        "description": "Press Tab and check focus on Hotlink second",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_18",
+        "description": "Press Tab and check focus on Home third",
+        "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

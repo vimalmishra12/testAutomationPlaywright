@@ -4427,6 +4427,31 @@
         { "id": "TST_NEMO24306_TC_17", "description": "AC2.UC2.S4.TC1 | Password numbers-only (no letter) shows error",       "tags": "P1", "visualTest": false },
         { "id": "TST_NEMO24306_TC_18", "description": "AC3.UC1.S2.TC1 | CSV with 201 records (above max) shows error",        "tags": "P1", "visualTest": false }
       ]
+    },
+    {
+      "modulename": "ebookFocusAccessibility",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+      "testcase": [
+        { "id": "TST_KBOA_TC_1", "description": "Go to Page 22 and wait for Notes", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_2", "description": "Press Tab and check focus on Notes", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_3", "description": "Press Tab and check focus on Home", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_4", "description": "Press Tab and check focus loops back to Notes", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_5", "description": "Keyboard click Notes and check panel opens", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_6", "description": "Keyboard click Close and check panel closes", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_7", "description": "Go to Page 24 and wait for Hotlink", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_8", "description": "Press Tab and check focus on Hotlink", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_9", "description": "Press Tab and check focus on Home", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_10", "description": "Press Shift+Tab and check focus moves back to Hotlink", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_11", "description": "Keyboard click Hotlink and check navigation jump to Page 28", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_12", "description": "Navigate back to Page 24", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_13", "description": "Go to Page 26", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_14", "description": "Press Tab and check focus on Home directly", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_15", "description": "Go to Page 28 and wait for Note and Hotlink", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_16", "description": "Press Tab and check focus on Note first", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_17", "description": "Press Tab and check focus on Hotlink second", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_18", "description": "Press Tab and check focus on Home third", "tags": "P3", "visualTest": false }
+      ]
     }
   ]
 }
