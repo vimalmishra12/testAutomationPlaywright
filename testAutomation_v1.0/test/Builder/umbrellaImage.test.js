@@ -45,8 +45,9 @@ module.exports = {
     var title = testdata.codeBase + RUN_ID;
     sts = await umbrella.deleteUmbrella(title);
     await assertion.assertEqual(sts.deleteStatus, true, "Cleanup: umbrella could not be deleted.");
-    sts = await umbrella.isInListing(title);
-    await assertion.assertEqual(sts.found, false, "Cleanup: umbrella still present after delete.");
+    // Poll for absence — Builder's delete is async, so the item can linger through the first refresh.
+    sts = await umbrella.waitForNotInListing(title);
+    await assertion.assertEqual(sts.gone, true, "Cleanup: umbrella still present after delete (persisted through delete-sync polling).");
   },
 
   // ══ EDIT MODE — repeat the 5 image-selection cases on the umbrella's Setup (edit) page ═══

@@ -146,8 +146,9 @@ module.exports = {
     sts = await families.deleteFamily(code, title);
     await assertion.assertEqual(sts.deleteStatus, true, "Cleanup: family could not be deleted.");
     // Confirm removal via the cover-thumbnail lookup (a working selector): no card → no thumbnail.
-    sts = await families.getListImage(title);
-    await assertion.assertEqual(sts.found, false, "Cleanup: family still present in listing after delete.");
+    // Poll for absence — Builder's delete is async, so the card can linger through the first refresh.
+    sts = await families.waitForListImageGone(title);
+    await assertion.assertEqual(sts.gone, true, "Cleanup: family still present in listing after delete (thumbnail persisted through delete-sync polling).");
   },
 
   // ══ EDIT MODE — repeat the 5 image-selection cases on the family's Setup (edit) page ══════

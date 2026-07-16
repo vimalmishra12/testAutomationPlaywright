@@ -327,15 +327,19 @@ button (`aria-label` literal `{{ $t('COVER_UPLOAD.REMOVE') }}`); Remove reverts 
   TST_BFAM_TC_5 (non-image), **TST_BFAM_TC_7 (.webp — now PASSES**, was a defect guard), and the
   edit-mode equivalents (TC_15, umbrella TC_8). NOTE: a real **OS drag-and-drop** of a disallowed file
   is still not confirmable by automation (browsers block synthetic file drops) — needs a manual check.
-- **Broken/invalid external URL → OPEN DEFECT (RTM CF-IMG-004, reported, fix pending next iteration).**
-  A URL that doesn't resolve to a valid image must show a **clear inline error**. Actual on Thor
-  (2026-07-07): no real `<img>` loads, and instead of an error the control shows a **generic
-  image-placeholder ICON** (`div.border-dashed svg.lucide-image`) with a Remove button and **NO error
-  text**. (This replaced the older `cover-Placeholder.png` `img[alt='placeholder']` behaviour.)
+- **Broken/invalid external URL → placeholder icon is the ACCEPTED behaviour (product decision
+  [2026-07-08]; RTM CF-IMG-004).** A URL that doesn't resolve to a valid image loads no real `<img>`;
+  instead the control shows a **generic image-placeholder ICON** (`div.border-dashed svg.lucide-image`)
+  with a Remove button and **no inline error text**. (This replaced the older `cover-Placeholder.png`
+  `img[alt='placeholder']` behaviour.) On [2026-07-07] this was reported as an OPEN DEFECT expecting a
+  clear inline error, but the [2026-07-08] product decision accepted the placeholder as the intended
+  behaviour for now (a clearer inline error may still come in a future iteration).
   `familyImage.test.js` **TST_BFAM_TC_4** (create), **TST_BFAM_TC_14** (edit) and
-  `umbrellaImage.test.js` **TST_BUMB_TC_7** (edit) are **KNOWN-FAILING defect guards**: they assert the
-  required inline error (`uploadBrokenImageUrl().errorShown`), so they FAIL until the app shows one,
-  then turn green. `page.uploadBrokenImageUrl()` returns `{ placeholderIcon, realImg, errorShown }`.
+  `umbrellaImage.test.js` **TST_BUMB_TC_7** (edit) assert this accepted behaviour — `realImg === false`
+  AND `placeholderIcon === true` — so they **PASS**. They do **not** assert `errorShown`; a red TC_4
+  therefore signals a real regression, not the expected state. `page.uploadBrokenImageUrl()` returns
+  `{ placeholderIcon, realImg, errorShown }` (the `errorShown` field remains available for when/if the
+  app adds the inline error).
 
 The preview `<img>` for a *valid* image carries the untranslated i18n key
 `alt="{{ $t('COVER_UPLOAD.PREVIEW') }}"`, so valid-vs-broken is distinguished by `alt` (`≠

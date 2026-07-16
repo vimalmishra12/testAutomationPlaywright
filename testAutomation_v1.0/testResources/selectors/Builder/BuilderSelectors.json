@@ -97,7 +97,6 @@
         "imageUrlInput": "#imageUrl",
         "imageUploadBtn": "div.border-dashed button.cursor-pointer",
         "imagePreview": "div.border-dashed img.object-cover",
-        "imagePlaceholderPreview": "div.border-dashed img.object-cover[alt='placeholder']",
         "imagePlaceholderIcon": "div.border-dashed svg.lucide-image",
         "imageRemoveBtn": "button:has-text('Remove')",
         "imageErrorText": "div.border-dashed .text-red-500",

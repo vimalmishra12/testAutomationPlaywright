@@ -1,5 +1,6 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
+var imageControl = require("./imageControl.js"); // shared "Product Logo" image-control methods (see below)
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 var sel = selectorFile.css.Builder;
@@ -14,7 +15,7 @@ var sel = selectorFile.css.Builder;
  * (not "Save"). NOTE: the Umbrella LISTING does NOT render a cover thumbnail (Family's does), so image
  * persistence is verified only in edit mode (Setup tab), not in the listing.
  */
-module.exports = {
+module.exports = Object.assign({
   typeSelect:      sel.umbrella.typeSelect,
   codeInput:       sel.umbrella.codeInput,
   titleInput:      sel.umbrella.titleInput,
@@ -73,67 +74,14 @@ module.exports = {
     return { fillStatus: true === res };
   },
 
-  // Selects a cover image from an external URL and confirms it with Enter (same control as Family).
-  uploadImageFromUrl: async function (url) {
-    await logger.logInto(await stackTrace.get(), "uploadImageFromUrl=" + url);
-    await action.click(this.imageUrlInput);
-    await action.clearValue(this.imageUrlInput);
-    var res = await action.addValue(this.imageUrlInput, url);
-    if (true !== res) return { previewStatus: res };
-    res = await action.keyPress("Enter");
-    if (true !== res) return { previewStatus: res };
-    res = await action.waitForDisplayed(this.imagePreview, 30000);
-    if (true !== res) return { previewStatus: false };
-    return { previewStatus: true, src: await action.getAttribute(this.imagePreview, "src"), alt: await action.getAttribute(this.imagePreview, "alt") };
-  },
-
-  // Types a broken/invalid external URL and confirms with Enter. Reports the resulting state for RTM
-  // CF-IMG-004 (a broken URL MUST show a clear inline error). Actual on Thor: no real <img>, a generic
-  // image-placeholder ICON (svg.lucide-image), and NO error text. Returns { placeholderIcon, realImg,
-  // errorShown }.
-  uploadBrokenImageUrl: async function (url) {
-    await logger.logInto(await stackTrace.get(), "uploadBrokenImageUrl=" + url);
-    await action.click(this.imageUrlInput);
-    await action.clearValue(this.imageUrlInput);
-    var res = await action.addValue(this.imageUrlInput, url);
-    if (true !== res) return { placeholderIcon: res };
-    await action.keyPress("Enter");
-    var icon = await action.waitForDisplayed(this.imagePlaceholderIcon, 15000);
-    return {
-      placeholderIcon: true === icon,
-      realImg: (await action.isExisting(this.imagePreview)) === true,
-      errorShown: (await action.isExisting(this.imageErrorText)) === true
-    };
-  },
-
-  // Selects a cover image from a local file (hidden #fileInput → S3 → preview).
-  uploadImageFromFile: async function (localPath) {
-    await logger.logInto(await stackTrace.get(), "uploadImageFromFile=" + localPath);
-    var res = await action.setInputFiles(this.imageFileInput, localPath);
-    if (true !== res) return { previewStatus: res };
-    res = await action.waitForDisplayed(this.imagePreview, 30000);
-    if (true !== res) return { previewStatus: false };
-    return { previewStatus: true, src: await action.getAttribute(this.imagePreview, "src"), alt: await action.getAttribute(this.imagePreview, "alt") };
-  },
-
-  // Types an external URL and confirms it by BLURRING the field (clicking OUTSIDE, onto the Title
-  // field) instead of pressing Enter — the product loads the preview on blur too. Returns
-  // { previewStatus, src, alt }.
-  uploadImageFromUrlByBlur: async function (url) {
-    await logger.logInto(await stackTrace.get(), "uploadImageFromUrlByBlur=" + url);
-    await action.click(this.imageUrlInput);
-    await action.clearValue(this.imageUrlInput);
-    var res = await action.addValue(this.imageUrlInput, url);
-    if (true !== res) return { previewStatus: res };
-    await action.click(this.titleInput); // click outside the URL box → blur triggers the preview
-    res = await action.waitForDisplayed(this.imagePreview, 30000);
-    if (true !== res) return { previewStatus: false };
-    return {
-      previewStatus: true,
-      src: await action.getAttribute(this.imagePreview, "src"),
-      alt: await action.getAttribute(this.imagePreview, "alt")
-    };
-  },
+  // ── "Product Logo" image selection (SHARED with Family) ────────────────────────────────
+  // The 8 image-control methods — uploadImageFromFile / uploadImageFromUrl / uploadBrokenImageUrl /
+  // typeImageUrlWithoutConfirm / confirmTypedImageUrl / uploadImageFromUrlByBlur /
+  // uploadFileExpectingError / removeImage — are IDENTICAL for Umbrella and Family (same image
+  // component), so they live once in ./imageControl.js and are mixed into this module via the
+  // Object.assign at the bottom of the file. They operate on the imageFileInput / imageUrlInput /
+  // imagePreview / imagePlaceholderIcon / imageErrorText / imageRemoveBtn / titleInput selectors
+  // declared above (Umbrella's own namespace). Captured live on Thor (2026-07-02).
 
   // Clicks Submit and confirms the create form left (redirects to the /umbrellas listing).
   save: async function () {
@@ -154,52 +102,8 @@ module.exports = {
     return { saveStatus: true };
   },
 
-  // Types the URL WITHOUT confirming (no Enter) to prove the preview does not auto-load while typing.
-  typeImageUrlWithoutConfirm: async function (url) {
-    await logger.logInto(await stackTrace.get(), "typeImageUrlWithoutConfirm=" + url);
-    await action.click(this.imageUrlInput);
-    await action.clearValue(this.imageUrlInput);
-    await action.addValue(this.imageUrlInput, url);
-    await browser.pause(2500);
-    return { previewShown: (await action.isExisting(this.imagePreview)) === true };
-  },
-
-  // Confirms the URL previously typed (Enter) and waits for the preview.
-  confirmTypedImageUrl: async function () {
-    await logger.logInto(await stackTrace.get());
-    await action.click(this.imageUrlInput);
-    var res = await action.keyPress("Enter");
-    if (true !== res) return { previewStatus: res };
-    res = await action.waitForDisplayed(this.imagePreview, 30000);
-    return { previewStatus: true === res };
-  },
-
-  // Uploads a file expected to be REJECTED (non-image / disallowed) — confirms the inline error and
-  // that no preview appears. Returns { errorShown, message, previewShown }.
-  uploadFileExpectingError: async function (localPath) {
-    await logger.logInto(await stackTrace.get(), "uploadFileExpectingError=" + localPath);
-    var res = await action.setInputFiles(this.imageFileInput, localPath);
-    if (true !== res) return { errorShown: res };
-    res = await action.waitForDisplayed(this.imageErrorText, 20000);
-    if (true !== res) return { errorShown: false };
-    return {
-      errorShown: true,
-      message: await action.getText(this.imageErrorText),
-      previewShown: (await action.isExisting(this.imagePreview)) === true
-    };
-  },
-
-  // Removes the currently-previewed image; confirms the preview detaches and the URL control returns.
-  removeImage: async function () {
-    await logger.logInto(await stackTrace.get());
-    var res = await action.waitForDisplayed(this.imageRemoveBtn, 10000);
-    if (true !== res) return { removeStatus: res };
-    res = await action.click(this.imageRemoveBtn);
-    if (true !== res) return { removeStatus: res };
-    res = await action.waitForDisplayed(this.imagePreview, 10000, true);
-    if (true !== res) return { removeStatus: false };
-    return { removeStatus: true, uploadControlBack: (await action.isExisting(this.imageUrlInput)) === true };
-  },
+  // (typeImageUrlWithoutConfirm / confirmTypedImageUrl / uploadFileExpectingError / removeImage are
+  // part of the shared image-control set mixed in from ./imageControl.js — see the note above.)
 
   // Opens the umbrella's detail → Setup tab in EDIT mode and waits for the image control to be in the
   // upload state (#imageUrl present = no cover yet). Returns { pageStatus }.
@@ -255,6 +159,23 @@ module.exports = {
     return { found: exists === true };
   },
 
+  // Confirms an umbrella has actually left the listing after a delete. Builder's delete is async with
+  // heavy collaborative syncing — an item can linger in the listing for a while after the delete modal
+  // closes (product-knowledge.md: it "only leaves the listing after 2-3 page refreshes"), so a single
+  // check can race the sync and false-fail cleanup. Re-navigate + search up to `maxAttempts` times, 10s
+  // apart (mirrors the clone-suite absence poll), reporting gone:true only once it is no longer listed.
+  waitForNotInListing: async function (title, maxAttempts) {
+    await logger.logInto(await stackTrace.get(), "waitForNotInListing=" + title);
+    maxAttempts = maxAttempts || 6;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      if ((await this.isInListing(title)).found !== true) return { gone: true };
+      await logger.logInto(await stackTrace.get(),
+        "waitForNotInListing still present, retrying in 10s (attempt " + attempt + ")");
+      if (attempt < maxAttempts) await browser.pause(10000);
+    }
+    return { gone: false };
+  },
+
   // Deletes the umbrella from the listing card (search → Delete → comment → Confirm — same modal as
   // Family). Used for post-test cleanup.
   deleteUmbrella: async function (title) {
@@ -282,4 +203,4 @@ module.exports = {
     await action.waitForDocumentLoad();
     return { deleteStatus: true };
   }
-};
+}, imageControl);
