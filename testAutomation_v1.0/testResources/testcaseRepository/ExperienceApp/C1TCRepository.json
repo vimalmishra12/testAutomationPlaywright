@@ -4450,7 +4450,8 @@
         { "id": "TST_KBOA_TC_15", "description": "Go to Page 28 and wait for Note and Hotlink", "tags": "P3", "visualTest": false },
         { "id": "TST_KBOA_TC_16", "description": "Press Tab and check focus on Note first", "tags": "P3", "visualTest": false },
         { "id": "TST_KBOA_TC_17", "description": "Press Tab and check focus on Hotlink second", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_18", "description": "Press Tab and check focus on Home third", "tags": "P3", "visualTest": false }
+        { "id": "TST_KBOA_TC_18", "description": "Press Tab and check focus on Home third", "tags": "P3", "visualTest": false },
+        { "id": "TST_KBOA_TC_19", "description": "Navigate to page 20 before finishing Suite 4", "tags": "P3", "visualTest": false }
       ]
     }
   ]

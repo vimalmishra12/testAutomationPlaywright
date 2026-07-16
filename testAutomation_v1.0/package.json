@@ -80,6 +80,7 @@
     "deleteClassTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=activeClass.json --browserCapability=desktop-chrome-1920",
     "eBookHotLinkTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=player.json --browserCapability=desktop-chrome-1920",
     "ebooksE2ETest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebooksE2ETest.json --browserCapability=desktop-chrome-1920",
+    "ebookFocusA11yTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookFocusA11yTest.json --browserCapability=desktop-chrome-1920",
     "landingFeatureTest_rel": "node core/runner/run.js --appType=ExperienceApp --testEnv=rel --testExecFile=landingTest.json --browserCapability=desktop-chrome-1920",
     "FooterFeatureTest_rel": "node core/runner/run.js --appType=ExperienceApp --testEnv=rel --testExecFile=footerTest.json --browserCapability=desktop-chrome-1920",
     "loginFeatureTest_rel": "node core/runner/run.js --appType=ExperienceApp --testEnv=rel --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
@@ -123,8 +124,7 @@
     "NEMO24306_csvUploadTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=NEMO-24306_csvUpload.json --browserCapability=desktop-chrome-1920",
     "poc:smoke": "mocha",
     "poc:thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
-    "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920",
-    "ebookFocusA11yTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookFocusA11yTest.json --browserCapability=desktop-chrome-1920"
+    "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920"
   },
   "keywords": [],
   "author": "",

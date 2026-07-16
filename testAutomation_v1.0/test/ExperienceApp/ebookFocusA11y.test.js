@@ -165,5 +165,11 @@ module.exports = {
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
     sts = await focusPage.assertFocusOn("homeButton", "Focus did not land on the Home button third on page 28");
     await assertion.assertEqual(sts, true, "Home button focus assertion failed");
+  },
+
+  TST_KBOA_TC_19: async function (testdata) {
+    // 5. Navigate to page 20 before finishing Suite 4
+    sts = await action.goToPage(20);
+    await assertion.assertEqual(sts, true, "Failed to navigate to page 20 at the end of Suite 4");
   }
 };

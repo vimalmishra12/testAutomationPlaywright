@@ -894,6 +894,30 @@
     "BeforeEach": [],
     "Test": [
       {
+        "id": "TST_EBOO_TC_9",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_4",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
         "id": "TST_EBOO_TC_53",
         "description": "",
         "testFile": "./test/ExperienceApp/eBook.test.js",
@@ -1024,6 +1048,241 @@
         "id": "TST_SHOW_TC_1",
         "description": "",
         "testFile": "./test/ExperienceApp/showHideSelection.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite8": {
+    "Name": "Validation of eBook Page (Hotlink)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Instrcutor User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Instrcutor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_6",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.dropdownBook.ebookOneName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_7",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.dropdownBook.ebookTwoName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_9",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_4",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_8",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_10",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_9",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.user.player"
+          }
+        ]
+      },
+      {
+        "id": "TST_COMM_TC_1",
+        "description": "",
+        "testFile": "./test/ExperienceApp/commonActivity.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_COMM_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/commonActivity.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_COMM_TC_4",
+        "description": "",
+        "testFile": "./test/ExperienceApp/commonActivity.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_COMM_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/commonActivity.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_6",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_7",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_4",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PLAY_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/player.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_9",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_2",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PAGE_TC_4",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
         "testData": []
       }
     ],

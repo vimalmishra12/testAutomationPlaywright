@@ -358,6 +358,12 @@
         "description": "Press Tab and check focus on Home third",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
         "testData": []
+      },
+      {
+        "id": "TST_KBOA_TC_19",
+        "description": "Navigate to page 20 before finishing Suite 4",
+        "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
+        "testData": []
       }
     ],
     "AfterEach": [],
