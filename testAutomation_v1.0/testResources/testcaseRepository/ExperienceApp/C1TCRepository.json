@@ -4429,9 +4429,9 @@
       ]
     },
     {
-      "modulename": "ebookFocusAccessibility",
+      "modulename": "ebookFocusA11y",
       "moduleId": "",
-      "testFile": "./test/ExperienceApp/ebookFocusAccessibility.test.js",
+      "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
       "testcase": [
         { "id": "TST_KBOA_TC_1", "description": "Go to Page 22 and wait for Notes", "tags": "P3", "visualTest": false },
         { "id": "TST_KBOA_TC_2", "description": "Press Tab and check focus on Notes", "tags": "P3", "visualTest": false },

@@ -124,7 +124,7 @@
     "poc:smoke": "mocha",
     "poc:thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
     "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920",
-    "ebookA11yTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookFocusAccessibilityTest.json --browserCapability=desktop-chrome-1920"
+    "ebookFocusA11yTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookFocusA11yTest.json --browserCapability=desktop-chrome-1920"
   },
   "keywords": [],
   "author": "",
