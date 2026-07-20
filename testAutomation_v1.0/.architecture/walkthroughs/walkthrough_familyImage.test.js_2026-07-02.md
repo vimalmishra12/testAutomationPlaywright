@@ -125,3 +125,42 @@ inter-case reset is needed. Cleanup TCs must `navigateTo()` the listing first (S
 - Remaining Create-Family RTM categories (title/code validation, submit behaviour, refresh,
   accessibility, E2E) are un-automated — same BFAM module when picked up.
 - Image control is shared by **Umbrella** create (same DOM) — BFAM methods should port directly.
+
+---
+
+## Session 2026-07-20 — PR #12 review fixes + rebase onto main (ADR-018)
+
+PR #12 review (by Claude, requested by Vimal) found two blockers and three minor issues; all fixed
+on branch `builder-image-suites-pr12-rebased` (supersedes the original `HK_Builder_FamilyDetailPage1`
+PR branch, whose commits are preserved via merge).
+
+### Fixes
+1. **Merge conflict / ADR-018:** the PR appended the Family/Umbrella "Product Logo" knowledge to the
+   monolithic `product-knowledge.md`, which main had since split per app (commit 407ff90). Resolved by
+   merging `origin/main` and relocating the whole section into `product-knowledge/Builder.md`
+   (the index `product-knowledge.md` keeps main's version).
+2. **Machine-local test assets:** data files pointed at `D:\ebookCreate\familyImages\…` (absolute,
+   author's machine only — suites could not run on CI or any other machine). Assets are now
+   repo-tracked under `testResources/testAssets/Builder/` (`familyLogo.png` 208x120 generated with
+   pngjs, `sp3cial @#&()!+ name.png` copy, `familyLogo.webp` minimal valid 1x1, `notAnImage.txt`) and
+   both data JSONs use repo-relative `./testResources/testAssets/Builder/…` paths
+   (`action.setInputFiles` does `path.resolve()`, so relative-to-CWD works under `npm run`).
+   NOTE: the new png/webp differ from the originals — visual baselines are gitignored/per-machine, so
+   no stale-baseline risk, but the first visual run after this change re-bootstraps baselines.
+3. **`umbrella.fillTitle`** now verifies the typed value stuck (same getValue check as `fillCode` —
+   same Vue-form quirk).
+4. **`imageControl.uploadBrokenImageUrl`** early exit now returns the full
+   `{ placeholderIcon:false, realImg:false, errorShown:false }` shape so a failed addValue produces a
+   diagnosable assertion failure instead of comparing against `undefined`.
+5. **Umbrella manual docs** (md + xlsx): broken-URL test data said `this-family-cover-…` while
+   `umbrellaImageData.json` uses `this-umbrella-cover-…` — aligned to the umbrella URL. Both manual
+   md files now reference the repo asset paths. (The xlsx registers store bare filenames, so only the
+   umbrella URL cell needed patching — done in-place via .NET ZipArchive.)
+6. This walkthrough renamed `walkthrough_2026-07-02.md` → `walkthrough_familyImage.test.js_2026-07-02.md`
+   (testfile + date convention).
+
+### Verification (this session)
+- `node --check` on the three touched JS files; both data JSONs re-parsed clean.
+- Full suite re-runs on Thor (`familyImageTest_thor`, `umbrellaImageTest_NEMO-24627_thor`, both
+  `visualAcceptance_*` scripts) still pending — the new local-file assets (different png bytes, new
+  webp) exercise the same accept/reject paths but MUST be confirmed green on Thor before merge.

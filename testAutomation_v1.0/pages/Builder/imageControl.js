@@ -67,7 +67,9 @@ module.exports = {
     await action.click(this.imageUrlInput);
     await action.clearValue(this.imageUrlInput);
     var res = await action.addValue(this.imageUrlInput, url);
-    if (true !== res) return { placeholderIcon: res };
+    // Explicit all-false shape on the early exit so callers' assertions fail with the real
+    // reason (URL was never typed) instead of comparing against undefined fields.
+    if (true !== res) return { placeholderIcon: false, realImg: false, errorShown: false };
     await action.keyPress("Enter");
     var icon = await action.waitForDisplayed(this.imagePlaceholderIcon, 15000);
     return {

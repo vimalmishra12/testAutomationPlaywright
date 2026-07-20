@@ -65,13 +65,15 @@ module.exports = Object.assign({
     return { fillStatus: (await action.getValue(this.codeInput)) === code };
   },
 
+  // Same Vue-form quirk as fillCode: type + Tab to commit, then verify the value stuck.
   fillTitle: async function (title) {
     await logger.logInto(await stackTrace.get(), "fillTitle=" + title);
     await action.click(this.titleInput);
     await action.clearValue(this.titleInput);
-    var res = await action.addValue(this.titleInput, title);
+    await action.addValue(this.titleInput, title);
     await action.keyPress("Tab");
-    return { fillStatus: true === res };
+    await browser.pause(300);
+    return { fillStatus: (await action.getValue(this.titleInput)) === title };
   },
 
   // ── "Product Logo" image selection (SHARED with Family) ────────────────────────────────

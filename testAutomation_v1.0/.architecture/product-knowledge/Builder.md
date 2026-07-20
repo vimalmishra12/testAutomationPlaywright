@@ -153,3 +153,6 @@ Automated by module **BFAM** (`families.page.js` + `test/Builder/familyImage.tes
 `familyImageTest.json`. Selectors captured with a throwaway design-time Playwright script because the
 Playwright MCP can't start under Node < 18.17 (`URL.canParse`); the app runs headed on system Chrome
 (the installed `chromium_headless_shell` build lags Playwright 1.61 — `npx playwright install` for headless).
+Upload test assets (valid png, special-char-name png, webp, txt) are repo-tracked under
+`testResources/testAssets/Builder/` and referenced with repo-relative paths in the data files
+([2026-07-20] — originally machine-local `D:\ebookCreate\…` paths, moved in so the suites run on any machine/CI).

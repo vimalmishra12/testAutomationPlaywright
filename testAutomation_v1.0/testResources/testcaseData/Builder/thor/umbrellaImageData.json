@@ -8,15 +8,15 @@
       },
       "image1": {
         "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
-        "specialCharImage": "D:\\ebookCreate\\familyImages\\sp3cial @#&()!+ name.png"
+        "specialCharImage": "./testResources/testAssets/Builder/sp3cial @#&()!+ name.png"
       },
       "edit1": {
         "type": "Generic Umbrella Product",
         "codeBase": "hkumbeditm",
         "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
         "brokenImageUrl": "https://example.com/this-umbrella-cover-does-not-exist-xyz.png",
-        "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
-        "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt"
+        "localImage": "./testResources/testAssets/Builder/familyLogo.png",
+        "nonImageFile": "./testResources/testAssets/Builder/notAnImage.txt"
       }
     }
   }

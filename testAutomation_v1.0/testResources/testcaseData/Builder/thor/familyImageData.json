@@ -4,10 +4,10 @@
       "image1": {
         "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
         "brokenImageUrl": "https://example.com/this-family-cover-does-not-exist-xyz.png",
-        "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
-        "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt",
-        "webpImage": "D:\\ebookCreate\\familyImages\\familyLogo.webp",
-        "specialCharImage": "D:\\ebookCreate\\familyImages\\sp3cial @#&()!+ name.png"
+        "localImage": "./testResources/testAssets/Builder/familyLogo.png",
+        "nonImageFile": "./testResources/testAssets/Builder/notAnImage.txt",
+        "webpImage": "./testResources/testAssets/Builder/familyLogo.webp",
+        "specialCharImage": "./testResources/testAssets/Builder/sp3cial @#&()!+ name.png"
       },
       "save1": {
         "codeBase": "hkfamimgsave",
@@ -17,8 +17,8 @@
         "codeBase": "hkfameditm",
         "imageUrl": "https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938",
         "brokenImageUrl": "https://example.com/this-family-cover-does-not-exist-xyz.png",
-        "localImage": "D:\\ebookCreate\\familyImages\\familyLogo.png",
-        "nonImageFile": "D:\\ebookCreate\\familyImages\\notAnImage.txt"
+        "localImage": "./testResources/testAssets/Builder/familyLogo.png",
+        "nonImageFile": "./testResources/testAssets/Builder/notAnImage.txt"
       }
     }
   }

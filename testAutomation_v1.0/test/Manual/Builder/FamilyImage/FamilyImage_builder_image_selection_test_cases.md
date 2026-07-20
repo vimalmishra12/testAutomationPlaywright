@@ -51,10 +51,10 @@ inputs, special-character filenames, removal/replacement, and persistence to the
 | Unique Code = Title | e.g. `hkfamimgsave<runid>` | Search is title-based, so code and title use the **same** value. Lowercase letters/digits; unique per run. |
 | External image URL | `https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938` | Valid Cambridge One logo (png). |
 | Broken image URL | `https://example.com/this-family-cover-does-not-exist-xyz.png` | Does not resolve to a valid image. |
-| Local image (png) | `D:\ebookCreate\familyImages\familyLogo.png` | Valid cover. |
-| Unsupported image (webp) | `D:\ebookCreate\familyImages\familyLogo.webp` | Valid webp, but not an allowed format. |
-| Non-image file | `D:\ebookCreate\familyImages\notAnImage.txt` | Plain text. |
-| Special-character filename | `D:\ebookCreate\familyImages\sp3cial @#&()!+ name.png` | Valid png; name has spaces + `@#&()!+`. |
+| Local image (png) | `testResources/testAssets/Builder/familyLogo.png` | Valid cover. |
+| Unsupported image (webp) | `testResources/testAssets/Builder/familyLogo.webp` | Valid webp, but not an allowed format. |
+| Non-image file | `testResources/testAssets/Builder/notAnImage.txt` | Plain text. |
+| Special-character filename | `testResources/testAssets/Builder/sp3cial @#&()!+ name.png` | Valid png; name has spaces + `@#&()!+`. |
 
 > **Login (precondition for every case):** `https://asgard-thor-builder.comprodls.com/2024/pre-login` →
 > select org **Cambridge One** → confirm → enter `harishthoradmin` credentials at the comproDLS Identity

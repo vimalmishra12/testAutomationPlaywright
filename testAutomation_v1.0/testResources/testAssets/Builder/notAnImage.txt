@@ -1,0 +1,1 @@
+This is a plain text file, not an image. Used by TST_BFAM_TC_5/TC_15 and TST_BUMB_TC_8 to verify the Product Logo control rejects non-image files.

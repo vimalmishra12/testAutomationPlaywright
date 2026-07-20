@@ -53,10 +53,10 @@ inputs, special-character filenames, and persistence to the detail (Setup) page.
 | Umbrella Type | `Generic Umbrella Product` | Required select on the create form (other option: `Teacher Training Umbrella Product`). |
 | Unique Code = Title | e.g. `hkumbimgsave<runid>` | Search is title-based, so code and title use the **same** value. Unique per run. |
 | External image URL | `https://cambridgeonehelp.cambridge.org/hc/article_attachments/23954872673938` | Valid Cambridge One logo (png). |
-| Broken image URL | `https://example.com/this-family-cover-does-not-exist-xyz.png` | Does not resolve to a valid image. |
-| Local image (png) | `D:\ebookCreate\familyImages\familyLogo.png` | Valid cover. |
-| Non-image file | `D:\ebookCreate\familyImages\notAnImage.txt` | Plain text. |
-| Special-character filename | `D:\ebookCreate\familyImages\sp3cial @#&()!+ name.png` | Valid png; name has spaces + `@#&()!+`. |
+| Broken image URL | `https://example.com/this-umbrella-cover-does-not-exist-xyz.png` | Does not resolve to a valid image. |
+| Local image (png) | `testResources/testAssets/Builder/familyLogo.png` | Valid cover. |
+| Non-image file | `testResources/testAssets/Builder/notAnImage.txt` | Plain text. |
+| Special-character filename | `testResources/testAssets/Builder/sp3cial @#&()!+ name.png` | Valid png; name has spaces + `@#&()!+`. |
 
 > **Login (precondition for every case):** `https://asgard-thor-builder.comprodls.com/2024/pre-login` →
 > select org **Cambridge One** → confirm → enter `harishthoradmin` credentials at the comproDLS Identity
@@ -202,7 +202,7 @@ inputs, special-character filenames, and persistence to the detail (Setup) page.
 | **Priority** | Medium |
 | **Preconditions** | Logged in as Admin; a cover-less umbrella open on its **Setup** tab. |
 | **Test Steps** | 1. Type a broken image URL. 2. Confirm (Enter). 3. Observe the dropzone. |
-| **Test Data** | Broken URL: `https://example.com/this-family-cover-does-not-exist-xyz.png` |
+| **Test Data** | Broken URL: `https://example.com/this-umbrella-cover-does-not-exist-xyz.png` |
 | **Expected Result** | No real image loads; the control shows a generic **image-placeholder icon** (accepted behaviour for now). The broken URL is not accepted as a valid cover. |
 | **Remarks** | A clearer inline error for broken URLs may be added in a future iteration. |
 | **Actual Result** | |
