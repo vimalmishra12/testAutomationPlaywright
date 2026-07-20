@@ -22,10 +22,17 @@
 const fs = require("fs");
 const nodePath = require("path");
 const { PNG } = require("pngjs");
-// pixelmatch v7 is ESM-only — require() returns the module namespace, so the
-// callable lives on `.default`. Fall back to the module itself for older CJS builds.
-const _pixelmatchMod = require("pixelmatch");
-const pixelmatch = _pixelmatchMod.default || _pixelmatchMod;
+// [2026-07-08] pixelmatch v7 is ESM-only. On Node < 22, a synchronous require() of an ESM package
+// throws ERR_REQUIRE_ESM, so load it lazily via dynamic import() and cache the callable (the module
+// namespace's default export, with a fallback for older CJS builds). — confirmed by user.
+let _pixelmatch;
+async function getPixelmatch() {
+    if (!_pixelmatch) {
+        const mod = await import("pixelmatch");
+        _pixelmatch = mod.default || mod;
+    }
+    return _pixelmatch;
+}
 
 function pad2(n) {
     return String(n).length === 1 ? "0" + n : String(n);
@@ -87,6 +94,7 @@ async function checkDocument(opts) {
     if (sameDimensions) {
         const { width, height } = basePng;
         const diff = new PNG({ width, height });
+        const pixelmatch = await getPixelmatch();
         const diffPixels = pixelmatch(basePng.data, testPng.data, diff.data, width, height, { threshold: 0.1 });
         mismatchPct = (diffPixels / (width * height)) * 100;
         ensureParent(diffPath);

@@ -1,5 +1,6 @@
 "use strict";
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
+var imageControl = require("./imageControl.js"); // shared "Product Logo" image-control methods (see below)
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
 var sel = selectorFile.css.Builder;
@@ -13,7 +14,7 @@ function deriveTitle(code) {
   }).join(" ");
 }
 
-module.exports = {
+module.exports = Object.assign({
   searchInput:     sel.families.searchInput,
   codeInput:       sel.families.codeInput,
   titleInput:      sel.families.titleInput,
@@ -24,6 +25,16 @@ module.exports = {
   dialog:          sel.deleteModal.dialog,
   delCommentInput: sel.deleteModal.commentInput,
   delConfirmBtn:   sel.deleteModal.confirmBtn,
+
+  // Create-Family "Product Logo" image section (captured live on Thor 2026-07-02).
+  imageFileInput:  sel.families.imageFileInput,
+  imageUrlInput:   sel.families.imageUrlInput,
+  imagePreview:    sel.families.imagePreview,
+  imagePlaceholderIcon: sel.families.imagePlaceholderIcon,
+  imageRemoveBtn:  sel.families.imageRemoveBtn,
+  imageErrorText:  sel.families.imageErrorText,
+  detailSetupTab:  sel.families.detailSetupTab,
+  listImageByText: sel.families.listItemImageByText,
 
   // Builds a concrete selector from a JSON "{text}" template by injecting a dynamic value
   // (family title). Keeps all selector syntax in the selector file (Rule 2). Pure string
@@ -181,5 +192,79 @@ module.exports = {
     // Families listing uses void links (no semicolon) with link text = family title.
     var exists = await action.isExisting(this._byText(this.itemLinkByText, title));
     return { found: exists === true };
+  },
+
+  // ── "Product Logo" image selection (SHARED with Umbrella) ──────────────────────────────
+  // The 8 image-control methods — uploadImageFromFile / uploadImageFromUrl / uploadBrokenImageUrl /
+  // typeImageUrlWithoutConfirm / confirmTypedImageUrl / uploadImageFromUrlByBlur /
+  // uploadFileExpectingError / removeImage — are IDENTICAL for Family and Umbrella (same #fileInput /
+  // #imageUrl / preview / placeholder-icon / error / Remove component), so they live once in
+  // ./imageControl.js and are mixed into this module via the Object.assign at the bottom of the file.
+  // They operate on the imageFileInput / imageUrlInput / imagePreview / imagePlaceholderIcon /
+  // imageErrorText / imageRemoveBtn / titleInput selectors declared above (Family's own namespace).
+  // All captured live on Thor (2026-07-02).
+
+  // ── Persisted-image verification (after Save) ──────────────────────────────────────────
+  // Save redirects to the Families listing; these open the saved family and read the cover the
+  // product actually stored — proving the image persisted, not just previewed in the form.
+
+  // Opens the saved family's detail page, switches to the Setup tab (where the cover lives) and
+  // returns the persisted cover image src. Returns { pageStatus, src }.
+  openDetailSetup: async function (code) {
+    await logger.logInto(await stackTrace.get(), "openDetailSetup=" + code);
+    await browser.url("/2024/families/" + code);
+    await action.waitForDocumentLoad();
+    var tab = await action.waitForDisplayed(this.detailSetupTab, 20000);
+    if (true !== tab) return { pageStatus: false };
+    await action.click(this.detailSetupTab);
+    var res = await action.waitForDisplayed(this.imagePreview, 20000);
+    if (true !== res) return { pageStatus: false };
+    return { pageStatus: true, src: await action.getAttribute(this.imagePreview, "src") };
+  },
+
+  // Opens the family's detail → Setup tab in EDIT mode and waits for the image control to be in the
+  // upload state (the #imageUrl field present = no cover yet). Used to re-run the image-control cases
+  // on the edit page. Returns { pageStatus }.
+  openEditSetup: async function (code) {
+    await logger.logInto(await stackTrace.get(), "openEditSetup=" + code);
+    await browser.url("/2024/families/" + code);
+    await action.waitForDocumentLoad();
+    var tab = await action.waitForDisplayed(this.detailSetupTab, 20000);
+    if (true !== tab) return { pageStatus: false };
+    await action.click(this.detailSetupTab);
+    var res = await action.waitForDisplayed(this.imageUrlInput, 20000);
+    return { pageStatus: true === res };
+  },
+
+  // Reads the cover thumbnail the Families listing shows for a family (searches by title first).
+  // Returns { found, src }. (Families list DOES render a per-item cover thumbnail — unlike Umbrella.)
+  getListImage: async function (title) {
+    await logger.logInto(await stackTrace.get(), "getListImage=" + title);
+    // May be called from the family detail page (no #search there) — land on the listing first.
+    await this.navigateTo();
+    var res = await this.searchFor(title);
+    if (true !== res.searchStatus) return { found: false };
+    var selr = this._byText(this.listImageByText, title);
+    var shown = await action.waitForDisplayed(selr, 15000);
+    if (true !== shown) return { found: false };
+    return { found: true, src: await action.getAttribute(selr, "src") };
+  },
+
+  // Confirms a family's listing thumbnail has actually left the listing after a delete. Builder's
+  // delete is async with heavy collaborative syncing — an item can linger in the listing for a while
+  // after the delete modal closes (product-knowledge.md: it "only leaves the listing after 2-3 page
+  // refreshes"), so a single check can race the sync and false-fail cleanup. Re-navigate + search up
+  // to `maxAttempts` times, 10s apart (mirrors the clone-suite absence poll), reporting gone:true only
+  // once the thumbnail no longer renders.
+  waitForListImageGone: async function (title, maxAttempts) {
+    await logger.logInto(await stackTrace.get(), "waitForListImageGone=" + title);
+    maxAttempts = maxAttempts || 6;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      if ((await this.getListImage(title)).found !== true) return { gone: true };
+      await logger.logInto(await stackTrace.get(),
+        "waitForListImageGone still present, retrying in 10s (attempt " + attempt + ")");
+      if (attempt < maxAttempts) await browser.pause(10000);
+    }
+    return { gone: false };
   }
-};
+}, imageControl);
