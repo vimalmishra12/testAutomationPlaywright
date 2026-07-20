@@ -2,6 +2,15 @@ name: C1 E2E Automation
 
 # ── Triggers ──────────────────────────────────────────────────────────────────
 on:
+  # Trigger this workflow automatically whenever code is pushed to the main branch.
+  push:
+    branches:
+      - main
+  # Trigger this workflow when a pull request is opened, updated, or reopened
+  # with the target branch set to main. This helps validate changes before merging.
+  pull_request:
+    branches:
+      - main    
   # Manual trigger — pick environment + npm script from a dropdown in the Actions UI
   workflow_dispatch:
     inputs:

@@ -79,6 +79,14 @@ no core changes.
 End every session with a walkthrough under `.architecture/walkthroughs/`.
 *Depth:* SKILL.md Golden Rule 7; AGENTS.md §Walkthrough.
 
+### 12. New TC ⇒ visual assessment before any promotion
+Every new TC is registered `visualTest: false`. Promotion to `true` requires the AGENTS.md §8
+Rule A data assessment (static vs dynamic decision table) + explicit user confirmation — any
+❌-row data type means it STAYS false, no asking. An exec file containing a visual TC needs BOTH
+npm scripts: `<feature>Test_<env>` + `visualAcceptance_<feature>_<env>` (Rules B/C). A feature is
+not closed until every TC has an explicit visual decision (skill Phase 3).
+*Depth:* AGENTS.md §8; `.agent/skills/c1-test-authoring/phases/3-visual.md`.
+
 ---
 
 **How to use this sheet (the instruction the skill should adopt):**
