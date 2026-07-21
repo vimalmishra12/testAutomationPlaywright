@@ -161,6 +161,19 @@ PR branch, whose commits are preserved via merge).
 
 ### Verification (this session)
 - `node --check` on the three touched JS files; both data JSONs re-parsed clean.
-- Full suite re-runs on Thor (`familyImageTest_thor`, `umbrellaImageTest_NEMO-24627_thor`, both
-  `visualAcceptance_*` scripts) still pending — the new local-file assets (different png bytes, new
-  webp) exercise the same accept/reject paths but MUST be confirmed green on Thor before merge.
+- **Thor re-runs after the asset swap — ALL GREEN (2026-07-20, post-merge, on main `ad95a8c`):**
+  - `familyImageTest_thor` — **20/20 passing (2m)**. First attempt had ONE flake:
+    `TST_BFAM_TC_1` (the very first local-file upload right after login) timed out waiting for the
+    preview, while the SAME png passed in TC_6/TC_11/TC_17 of the same run; the immediate rerun was
+    clean with TC_1 at ~4s. Root-cause hypothesis: the first `setInputFiles` races the Vue form's
+    cold-start hydration, so the change event is missed. **To be discussed with the team before any
+    fix** — proposed hardening (NOT applied): bounded single retry in
+    `imageControl.uploadImageFromFile` (re-set the input once if the 30s preview wait expires).
+  - `umbrellaImageTest_NEMO-24627_thor` — **13/13 passing (2m)**.
+  - `visualAcceptance_familyImage_thor` — 20/20; 5 baselines re-bootstrapped
+    (`Suite1-…-TST_BFAM_TC_4/5/7/14/15.png`).
+  - `visualAcceptance_umbrellaImage_NEMO-24627_thor` — 13/13; 2 baselines re-bootstrapped
+    (`TST_BUMB_TC_7/8`). Baselines are per-machine and gitignored, as designed.
+- NOTE: the first run attempt of the day failed at startup with a `SyntaxError` in `env.conf.js` —
+  a machine-local uncommitted edit had stripped every `=>` token (editor corruption, no framework
+  bug). Restored from HEAD with user approval; nothing committed.
