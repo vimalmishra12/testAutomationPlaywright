@@ -1,0 +1,162 @@
+{
+  "Suite1": {
+    "Name": "Keyboard Focus Accessibility Testing - Page 26 (Continuous eBook Toolbar Focus Traversal)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Add Student User Name",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Add Student Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login Button",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Launch eBook Reader",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1_ebook2"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_EBTF_TC_1",
+        "description": "Go to Page 26 and reset focus to eBook reader",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_2",
+        "description": "Press Tab and check focus on Home button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_3",
+        "description": "Press Tab and check focus on Content button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_4",
+        "description": "Press Tab and check focus on Tools button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_5",
+        "description": "Press Tab and check focus on Zoom Out button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_6",
+        "description": "Press Tab and check focus on Zoom In button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_7",
+        "description": "Press Tab to focus on Fit To Height button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_8",
+        "description": "Press Tab to move focus forward to Jump to Page button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_9",
+        "description": "Press Tab to move focus forward to Previous button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_10",
+        "description": "Press Tab to move focus forward to TOC button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_11",
+        "description": "Press Tab to move focus forward to Next button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_12",
+        "description": "Press Tab to move focus forward to Single Page View button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_13",
+        "description": "Press Tab to move focus forward to Change Course Material button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_14",
+        "description": "Press Tab to move focus forward to Move Toolbar button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_15",
+        "description": "Press Tab to move focus forward to Toolbar Status Container button",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBTF_TC_16",
+        "description": "Navigate back to page 20 before completing suite",
+        "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

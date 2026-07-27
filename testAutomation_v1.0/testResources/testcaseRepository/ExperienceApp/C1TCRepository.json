@@ -4453,6 +4453,29 @@
         { "id": "TST_KBOA_TC_18", "description": "Press Tab and check focus on Home third", "tags": "P3", "visualTest": false },
         { "id": "TST_KBOA_TC_19", "description": "Navigate to page 20 before finishing Suite 4", "tags": "P3", "visualTest": false }
       ]
+    },
+    {
+      "modulename": "ebookToolbarFocus",
+      "moduleId": "EBTF",
+      "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
+      "testcase": [
+        { "id": "TST_EBTF_TC_1", "description": "Go to Page 26 and reset focus to eBook reader container", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_2", "description": "Press Tab and check focus on Home button on Page 26", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_3", "description": "Press Tab and check focus on Content button on Page 26", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_4", "description": "Press Tab and check focus on Tools button on Page 26", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_5", "description": "Press Tab and check focus on Zoom Out button on Page 26", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_6", "description": "Press Tab and check focus on Zoom In button on Page 26", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_7", "description": "Press Tab to focus on Fit To Height button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_8", "description": "Press Tab to move focus forward to Jump to Page button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_9", "description": "Press Tab to move focus forward to Previous button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_10", "description": "Press Tab to move focus forward to TOC button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_11", "description": "Press Tab to move focus forward to Next button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_12", "description": "Press Tab to move focus forward to Single Page View button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_13", "description": "Press Tab to move focus forward to Change Course Material button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_14", "description": "Press Tab to move focus forward to Move Toolbar button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_15", "description": "Press Tab to move focus forward to Toolbar Status Container button", "tags": "P1", "visualTest": true },
+        { "id": "TST_EBTF_TC_16", "description": "Navigate back to page 20 before completing suite", "tags": "P1", "visualTest": true }
+      ]
     }
   ]
 }
