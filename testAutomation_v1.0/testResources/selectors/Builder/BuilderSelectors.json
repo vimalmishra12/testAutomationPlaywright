@@ -92,7 +92,35 @@
         "cancelBtn": "button:has-text('Cancel')",
         "deleteBtn": "button:has-text('Delete')",
         "itemLink": "[role='main'] a[href='javascript:void(0)']",
-        "itemLinkByText": "[role='main'] a[href='javascript:void(0)']:text-is('{text}')"
+        "itemLinkByText": "[role='main'] a[href='javascript:void(0)']:text-is('{text}')",
+        "imageFileInput": "#fileInput",
+        "imageUrlInput": "#imageUrl",
+        "imageUploadBtn": "div.border-dashed button.cursor-pointer",
+        "imagePreview": "div.border-dashed img.object-cover",
+        "imagePlaceholderIcon": "div.border-dashed svg.lucide-image",
+        "imageRemoveBtn": "button:has-text('Remove')",
+        "imageErrorText": "div.border-dashed .text-red-500",
+        "imageErrorReset": "div.border-dashed a:has-text('Reset')",
+        "detailSetupTab": "button:has(h2:text-is('Setup'))",
+        "listItemImageByText": "div.flex.items-start:has(h2:text-is('{text}')) img"
+      },
+      "umbrella": {
+        "searchInput": "#search",
+        "createBtn": "button:has-text('Create an Umbrella')",
+        "typeSelect": "select[name='umbrella-type']",
+        "codeInput": "input[name='unique-code']",
+        "titleInput": "input[name='title']",
+        "submitBtn": "button[type='submit']:has-text('Submit')",
+        "cancelBtn": "button:has-text('Cancel')",
+        "deleteBtn": "main button:has-text('Delete')",
+        "detailSetupTab": "button:has(h2:text-is('Setup'))",
+        "itemLinkByText": "main h3:text-is('{text}')",
+        "imageFileInput": "#fileInput",
+        "imageUrlInput": "#imageUrl",
+        "imagePreview": "div.border-dashed img.object-cover",
+        "imagePlaceholderIcon": "div.border-dashed svg.lucide-image",
+        "imageRemoveBtn": "button:has-text('Remove')",
+        "imageErrorText": "div.border-dashed .text-red-500"
       }
     }
   }

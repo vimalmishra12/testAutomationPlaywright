@@ -80,3 +80,41 @@ None — no protected files were modified. Documentation (.md) changes only.
   avoid comment-only code churn.
 - Historical walkthroughs deliberately NOT edited (session records; index path keeps their
   references meaningful).
+
+---
+
+# Follow-up session — 2026-07-15 (same feature: ADR-018 product-knowledge split)
+
+## Summary
+Aligned both repo skills under `.agent/skills/` with the ADR-018 product-knowledge split, and
+fixed their staleness re: the third appType (`Blackboard`/Integrations, ADR-015), which neither
+skill mentioned.
+
+## Changes Made
+
+### 1. `.agent/skills/c1-test-authoring/SKILL.md`
+- **Type:** Modified
+- **What changed:** (a) frontmatter triggers now include css.Blackboard / css.LTI / blackboard /
+  lti / deeplink / integrations; (b) intro names the third appType (`Blackboard`, Integrations
+  paths, dual namespaces — ADR-015); (c) "Always load" section adds the ADR-018 product-knowledge
+  reading rule (index + per-app file for the task's app); (d) Workflow B notes the Integrations
+  two-file/two-repo convention and seeding a per-app product-knowledge file for a new app.
+- **Why:** Skill referenced neither product knowledge nor the Blackboard appType.
+
+### 2. `.agent/skills/c1-environment-test-replicator/SKILL.md`
+- **Type:** Modified
+- **What changed:** (a) "Always load" blockquote adds the ADR-018 reading rule (per-app file for
+  the app resolved in STEP 0); (b) multi-application note + STEP 0 now include `Blackboard`
+  (exec files under `testExecutionFiles/Integrations/Blackboard/`, thor-only, dual namespaces);
+  (c) Quick Reference selector-fix row notes Blackboard's TWO selector files.
+- **Why:** Same staleness as skill 1; STEP 0 said "appTypes today: ExperienceApp, Builder".
+
+## Architecture Decisions Triggered
+None new — applied ADR-018 and ADR-015 to the skill docs.
+
+## Protected Files Touched
+None — no protected files were modified. Skill markdown only.
+
+## Pending / Follow-up
+- Same optional item as above: two JS comments still name "product-knowledge.md" (resolve to the
+  index; not dangling).

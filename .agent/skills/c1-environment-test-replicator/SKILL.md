@@ -20,16 +20,23 @@ The framework is **multi-application**; this skill is **appType-aware** — STEP
 test belongs to and every `<App>` placeholder below is filled from it. Follow all steps below exactly.
 
 > **Always load:** `testAutomation_v1.0/AGENTS.md` + `.architecture/ARCHITECTURE-INVARIANTS.md` (the
-> invariants cheat-sheet / index). **Consult on demand:** a specific ADR in `.architecture/decisions.md`
+> invariants cheat-sheet / index). **Product knowledge (ADR-018):** read
+> `.architecture/product-knowledge.md` (the index) + the per-app file under
+> `.architecture/product-knowledge/` for the app resolved in STEP 0 (`ExperienceApp.md`,
+> `Builder.md`, or `Integrations.md`) — env-specific error messages, validation rules, and known
+> quirks documented there explain many "failures" that are actually product behaviour.
+> **Consult on demand:** a specific ADR in `.architecture/decisions.md`
 > or a `system.md` section only when the task touches it — follow the cheat-sheet's *Depth →* pointers.
 > These are the source of truth; where they disagree with this file, they win — in particular the
 > **protected-files list**, **selector/naming conventions**, and the **appType model** are
 > authoritative in AGENTS.md / the ADRs (don't rely on a possibly-stale copy here).
 
 > The framework is **multi-application**: paths are keyed by `--appType` (`<App>/`). C1 lives under
-> `ExperienceApp/` (selector namespace `css.ComproC1`); `Builder` lives under `Builder/` (`css.Builder`).
+> `ExperienceApp/` (selector namespace `css.ComproC1`); `Builder` lives under `Builder/` (`css.Builder`);
+> the Blackboard/LTI integration lives under `Integrations/` paths (namespaces `css.Blackboard` +
+> `css.LTI`, TWO selector files / TC repos — ADR-015).
 > Every `<App>` / `css.<App>` placeholder below is resolved in STEP 0 from the test being replicated.
-> See `AGENTS.md` §7 / ADR-013 for the appType model.
+> See `AGENTS.md` §7 / ADR-013 (+ ADR-015 for Blackboard) for the appType model.
 
 ---
 
@@ -39,10 +46,14 @@ The skill is appType-aware. Decide `<App>` before touching any path:
 
 1. **Find the test's execution file** by searching for `<testName>.json` under each appType:
    `testResources/testExecutionFiles/<App>/<sourceEnv>/<testName>.json` (appTypes today: `ExperienceApp`,
-   `Builder`). The folder that contains it is `<App>`. If it's ambiguous or not found, **ask the user**.
+   `Builder`, `Blackboard` — the latter's exec files live under `testExecutionFiles/Integrations/Blackboard/`).
+   The folder that contains it is `<App>`. If it's ambiguous or not found, **ask the user**.
 2. **Read `env.json` → the `<App>` block** for its valid environments + `testExecDir`:
    - `ExperienceApp` → `thor`, `qa`, `rel`, `production`  (namespace `css.ComproC1`)
    - `Builder` → `thor` only today                        (namespace `css.Builder`; 3-step cross-domain SSO login)
+   - `Blackboard` → `thor` only today (shared BB sandbox; QA/Rel/Prod TBD)  (namespaces `css.Blackboard` + `css.LTI`;
+     TWO selector files / TC repos under `Integrations/` — ADR-015; check per-app product knowledge in
+     `.architecture/product-knowledge/Integrations.md` before touching its data)
 3. **Validate the requested target env(s)** exist for `<App>` in `env.json`. If the app has no other
    environment to replicate to (e.g. Builder = `thor` only), **STOP** and tell the user — there is
    nothing to replicate until another env is added to that app's `env.json` block.
@@ -100,6 +111,12 @@ Add a new entry replacing source env with target env (keep `--appType=<App>` and
 ```
 > `--testExecFile` is just the file name; the runner resolves it under the appType's `testExecDir`
 > (from `env.json`). Note `--browserCapability` (was `--capability` in WDIO).
+
+**Visual scripts (AGENTS.md §8 Rule B):** if the source env also has a
+`visualAcceptance_<testName>_<sourceEnv>` script (the exec file contains visual TCs), replicate
+that script for the target env too — visual TCs require BOTH scripts in every environment they
+run in. First target-env visual run bootstraps its own baseline (baselines are per-runner, not
+committed).
 
 Show a preview of all files to be created/modified and ask: **"Ready to create these files? (yes/no)"**
 
@@ -242,5 +259,5 @@ At the end, produce a walkthrough entry:
 | Execution flow | `testExecutionFiles/<App>/<env>/<testName>.json` |
 | Test data | `testcaseData/<App>/<env>/` (files named by the exec file's `dataFile`) |
 | NPM script | Add entry to `package.json` |
-| Selector fix | `testResources/selectors/<App>/<App>Selectors.json` (C1 → `ExperienceApp/C1Selectors.json`) |
+| Selector fix | `testResources/selectors/<App>/<App>Selectors.json` (C1 → `ExperienceApp/C1Selectors.json`; Blackboard → TWO files: `Integrations/Blackboard/BlackboardSelectors.json` + `Integrations/LTI/LTISelectors.json`) |
 | URL mapping | Read from `env.json` |
