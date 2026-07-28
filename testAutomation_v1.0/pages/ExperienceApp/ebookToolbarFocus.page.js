@@ -3,6 +3,7 @@
 // [2026-07-27] Core action library used for eBook Toolbar Keyboard Focus accessibility.
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
+var eBookPage = require("./eBook.page.js");
 
 module.exports = {
   // Toolbar focus target selectors
@@ -36,6 +37,15 @@ module.exports = {
       pageStatus: await action.waitForDisplayed(this.homeButton, 60000),
     };
     return res;
+  },
+
+  /**
+   * [2026-07-28] Navigates to a specific page number by delegating to eBook.page.js.
+   * Enables test cases to trigger page navigation without importing baseActionLibrary.
+   */
+  goToPage: async function (pageNumber) {
+    await logger.logInto(await stackTrace.get(), "goToPage called for page: " + pageNumber);
+    return await eBookPage.goToPage(pageNumber);
   },
 
   resetFocusToReader: async function () {

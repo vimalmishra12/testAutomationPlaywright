@@ -877,60 +877,7 @@ module.exports = {
         }
     },
 
-    goToPage: async function (pageNumber) {
-        message = "goToPage called for page: " + pageNumber;
-        try {
-            await logger.logInto(await stackTrace.get(), message);
-            const selectorFile = jsonParserUtil.jsonParser(selectorDir);
-            
-            const pageNoBtn = selectorFile.css.ComproC1.eBook.pageNumber;
-            const pageNoClearBtn = selectorFile.css.ComproC1.pageNoDialogBox.pageNoClearBtn;
-            const pageNoGoToPageBtn = selectorFile.css.ComproC1.pageNoDialogBox.pageNoGoToPageBtn;
-            const pageNOShow = selectorFile.css.ComproC1.pageNoDialogBox.pageNOShow;
 
-            // Click page selection button
-            let res = await this.click(pageNoBtn);
-            if (true !== res) return res;
-
-            // Clear dialog field
-            res = await this.click(pageNoClearBtn);
-            if (true !== res) return res;
-
-            // Type page digits
-            const digits = String(pageNumber).split("");
-            for (const digit of digits) {
-                let digitSelector;
-                switch (digit) {
-                    case "1": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoOneBtn; break;
-                    case "2": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoTwoBtn; break;
-                    case "3": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoThreeBtn; break;
-                    case "4": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFourBtn; break;
-                    case "5": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFiveBtn; break;
-                    case "6": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSixBtn; break;
-                    case "7": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSevenBtn; break;
-                    case "8": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoEightBtn; break;
-                    case "9": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoNineBtn; break;
-                    case "0": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoZeroBtn; break;
-                    default:
-                        throw new Error("Invalid page number digit: " + digit);
-                }
-                res = await this.click(digitSelector);
-                if (true !== res) return res;
-            }
-
-            // Submit page navigation
-            res = await this.click(pageNoGoToPageBtn);
-            if (true !== res) return res;
-
-            // Wait for display text to be updated
-            await this.waitForDisplayed(pageNOShow);
-            await browser.pause(3000);
-            return true;
-        } catch (err) {
-            await logger.logInto(await stackTrace.get(), err.message, "error");
-            return err;
-        }
-    },
 
     assertPanelVisible: async function (selector, customMessage) {
         message = "Asserting panel is visible: " + selector;

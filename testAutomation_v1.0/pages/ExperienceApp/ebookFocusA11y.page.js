@@ -3,6 +3,8 @@
 // [2026-07-15] Core action library used for all DOM interactions.
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
+// Lazy require or standard require for eBook page object navigation helper
+var eBookPage = require("./eBook.page.js");
 
 module.exports = {
   // Focus targets on pages
@@ -23,6 +25,15 @@ module.exports = {
       pageStatus: await action.waitForDisplayed(this.homeButton, 60000),
     };
     return res;
+  },
+
+  /**
+   * [2026-07-28] Navigates to a specific page number by delegating to eBook.page.js.
+   * Enables test cases to trigger page navigation without importing baseActionLibrary.
+   */
+  goToPage: async function (pageNumber) {
+    await logger.logInto(await stackTrace.get(), "goToPage called for page: " + pageNumber);
+    return await eBookPage.goToPage(pageNumber);
   },
 
   resetFocusToReader: async function () {

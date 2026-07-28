@@ -1,8 +1,8 @@
 "use strict";
 
-// [2026-07-27] Dedicated test file for eBook toolbar keyboard focus accessibility testing on Page 26.
+// [2026-07-28] Dedicated test file for eBook toolbar keyboard focus accessibility testing on Page 26.
+// Removed direct baseActionLibrary import to comply with Layer 3 -> Layer 1 architecture rules.
 var toolbarFocusPage = require("../../pages/ExperienceApp/ebookToolbarFocus.page.js");
-var action = require("../../core/actionLibrary/baseActionLibrary.js");
 var sts;
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 
   TST_EBTF_TC_1: async function (testdata) {
     // 1. Go to page 26 and reset focus to eBook reader container
-    sts = await action.goToPage(26);
+    sts = await toolbarFocusPage.goToPage(26);
     await assertion.assertEqual(sts, true, "eBook failed to navigate to page 26");
     sts = await toolbarFocusPage.resetFocusToReader();
     await assertion.assertEqual(sts, true, "Failed to reset focus to reader on page 26");
@@ -134,14 +134,9 @@ module.exports = {
 
   TST_EBTF_TC_16: async function (testdata) {
     // 16. Navigate back to page 20 before completing suite
-    // await global.page.evaluate(() => {
-    //   if (document.activeElement) document.activeElement.blur();
-    //   const popovers = document.querySelectorAll(".dropdown-menu.show, .popover.show, .page-number-dropdown.show");
-    //   popovers.forEach(el => el.classList.remove("show"));
-    // });
     await toolbarFocusPage.resetFocusToReader();
     await global.page.waitForTimeout(500);
-    sts = await action.goToPage(20);
+    sts = await toolbarFocusPage.goToPage(20);
     await assertion.assertEqual(sts, true, "Failed to navigate back to page 20 at end of toolbar focus suite");
   }
 };

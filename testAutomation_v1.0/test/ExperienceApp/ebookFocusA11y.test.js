@@ -1,8 +1,8 @@
 "use strict";
 
-// [2026-07-15] Page object used for eBook keyboard focus accessibility assertions and navigation.
+// [2026-07-28] Page object used for eBook keyboard focus accessibility assertions and navigation.
+// Removed direct baseActionLibrary import to comply with Layer 3 -> Layer 1 architecture rules.
 var focusPage = require("../../pages/ExperienceApp/ebookFocusA11y.page.js");
-var action = require("../../core/actionLibrary/baseActionLibrary.js");
 var sts;
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 
   TST_KBOA_TC_1: async function (testdata) {
     // 1. Go to page 22 and wait for Notes icon to be rendered
-    sts = await action.goToPage(22);
+    sts = await focusPage.goToPage(22);
     await assertion.assertEqual(sts, true, "eBook failed to navigate to page 22");
     sts = await focusPage.waitForNoteOnPage();
     await assertion.assertEqual(sts, true, "Note icon on page 22 was not displayed");
@@ -64,7 +64,7 @@ module.exports = {
 
   TST_KBOA_TC_7: async function (testdata) {
     // 1. Go to page 24 and wait for Hotlink icon to be rendered
-    sts = await action.goToPage(24);
+    sts = await focusPage.goToPage(24);
     await assertion.assertEqual(sts, true, "eBook failed to navigate to page 24");
     sts = await focusPage.waitForHotlinkOnPage();
     await assertion.assertEqual(sts, true, "Hotlink icon on page 24 was not displayed");
@@ -107,7 +107,7 @@ module.exports = {
 
   TST_KBOA_TC_12: async function (testdata) {
     // 6. Navigate back to page 24 to leave suite in clean state
-    sts = await action.goToPage(24);
+    sts = await focusPage.goToPage(24);
     await assertion.assertEqual(sts, true, "Failed to navigate back to page 24");
   },
 
@@ -115,7 +115,7 @@ module.exports = {
 
   TST_KBOA_TC_13: async function (testdata) {
     // 1. Go to page 26
-    sts = await action.goToPage(26);
+    sts = await focusPage.goToPage(26);
     await assertion.assertEqual(sts, true, "eBook failed to navigate to page 26");
     sts = await focusPage.resetFocusToReader();
     await assertion.assertEqual(sts, true, "Failed to reset focus to reader");
@@ -133,7 +133,7 @@ module.exports = {
 
   TST_KBOA_TC_15: async function (testdata) {
     // 1. Go to page 28 and wait for Note and Hotlink icons
-    sts = await action.goToPage(28);
+    sts = await focusPage.goToPage(28);
     await assertion.assertEqual(sts, true, "eBook failed to navigate to page 28");
     sts = await focusPage.waitForNoteOnPage();
     await assertion.assertEqual(sts, true, "Note icon on page 28 was not displayed");
@@ -169,7 +169,7 @@ module.exports = {
 
   TST_KBOA_TC_19: async function (testdata) {
     // 5. Navigate to page 20 before finishing Suite 4
-    sts = await action.goToPage(20);
+    sts = await focusPage.goToPage(20);
     await assertion.assertEqual(sts, true, "Failed to navigate to page 20 at the end of Suite 4");
   }
 };
