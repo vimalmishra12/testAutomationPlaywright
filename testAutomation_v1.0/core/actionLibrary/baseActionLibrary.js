@@ -787,5 +787,162 @@ module.exports = {
         }
         await global.page.mouse.move(box.x + endPoint_x2, box.y + endPoint_y2, { steps: 10 });
         await global.page.mouse.up();
+    },
+
+    // [2026-07-15] Added keyboard and focus accessibility wrappers — approved in plan.
+    pressTab: async function () {
+        message = "Pressing Tab key";
+        try {
+            await global.page.keyboard.press("Tab");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressShiftTab: async function () {
+        message = "Pressing Shift+Tab key";
+        try {
+            await global.page.keyboard.press("Shift+Tab");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressKey: async function (selector, key) {
+        message = `Pressing key '${key}' on element: ` + selector;
+        try {
+            await el(selector).press(key);
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    pressEnter: async function (selector) {
+        message = "Pressing Enter on element: " + selector;
+        try {
+            const element = el(selector);
+            await element.focus();
+            await browser.pause(500);
+            await page.keyboard.press("Enter");
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertFocusOn: async function (selector, customMessage) {
+        message = "Asserting focus on element: " + selector;
+        try {
+            const element = el(selector);
+            // check focus state relative to the owner document (handles page + nested iframes automatically)
+            const isFocused = await element.evaluate(node => node === node.ownerDocument.activeElement);
+            if (!isFocused) {
+                const activeTagName = await element.evaluate(node => {
+                    const active = node.ownerDocument.activeElement;
+                    if (!active) return "none";
+                    return `${active.tagName.toLowerCase()}${active.id ? "#" + active.id : ""}${active.className ? "." + active.className.split(" ").join(".") : ""}`;
+                });
+                const details = `Expected element '${selector}' to be focused, but focus is on '${activeTagName}'`;
+                throw new Error(customMessage ? `${customMessage} (${details})` : details);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    focus: async function (selector) {
+        message = "Focusing element: " + selector;
+        try {
+            const element = el(selector);
+            await element.focus();
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+
+
+    assertPanelVisible: async function (selector, customMessage) {
+        message = "Asserting panel is visible: " + selector;
+        try {
+            const visible = await el(selector).isVisible();
+            if (!visible) {
+                throw new Error(customMessage || `Expected panel '${selector}' to be visible, but it is not.`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertPanelClosed: async function (selector, customMessage) {
+        message = "Asserting panel is closed: " + selector;
+        try {
+            const visible = await el(selector).isVisible();
+            if (visible) {
+                throw new Error(customMessage || `Expected panel '${selector}' to be closed, but it is still visible.`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    assertOnPage: async function (selector, expectedPage, customMessage) {
+        message = "Asserting current page matches expected: " + expectedPage;
+        try {
+            const text = await el(selector).innerText();
+            // Checks if expected page number string exists within the text (e.g. "28-29 / 160" contains "28")
+            const isMatch = text.includes(String(expectedPage));
+            if (!isMatch) {
+                throw new Error(customMessage || `Expected to be on page ${expectedPage}, but page text is '${text}'`);
+            }
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    getActiveElementSelector: async function () {
+        message = "Getting selector/description of active element";
+        try {
+            // Retrieves formatted tag#id.classes description for debug/assertion purposes
+            const descriptor = await (global.__activeFrame ? global.__activeFrame : global.page).evaluate(() => {
+                const active = document.activeElement;
+                if (!active) return "none";
+                const tag = active.tagName.toLowerCase();
+                const id = active.id ? "#" + active.id : "";
+                const classes = active.className ? "." + [...active.classList].join(".") : "";
+                return `${tag}${id}${classes}`;
+            });
+            await logger.logInto(await stackTrace.get(), message);
+            return descriptor;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
     }
 };

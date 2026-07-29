@@ -276,10 +276,21 @@
         "fitToScreenBtn": "button[qid=\"97\"]",
         "fitToWidthBtn": "button[qid=\"98\"]",
         "readerContainerWrapper": "#reader-container-wrapper",
+        "readerOuterContainer": "div.outer-container",
         "zoomInBtn": "button[qid=\"96\"]",
         "zoomOutBtn": "button[qid=\"95\"]",
-        "nextPage": "button[qid=\"76\"]",
-        "previousPage": "button[qid=\"75\"]"
+        "nextPage": "button#nextButton, button.next-button, button[qid=\"76\"]",
+        "previousPage": "button#previousButton, button.prev-button, button[qid=\"75\"]",
+        "toggleLayoutBtnFocus": "button#toggleLayoutBtn, button[qid=\"77\"], button.toggleLayout",
+        "changeCourseMaterialBtn": "button[qid=\"90\"], button.dropdown-toggle",
+        "moveToolbarBtn": "button[qid=\"83\"], button.invert-button",
+        "fitToWidthBtnFocus": "button.fitToScreenToolbarButton.focus-visible",
+        "fitToHeightBtnFocus": "button.fitToWidthToolbarButton.focus-visible",
+        "pageLabelBtn": "button.pageLabelButton",
+        "pageNavigateBtn": "button#pageNavigateButton",
+        "toolbarStatusBtn": "button.toolbar-status-container-parent",
+        "noteIconOnPage": "div[role=\"button\"][title=\"Note\"]",
+        "hotlinkIconOnPage": "div[role=\"button\"][title=\"Go to page\"]"
       },
       "showHideSelection": {
         "hideSelection": "button[qid=\"93\"]",
@@ -350,6 +361,14 @@
       "pageNoDialogBox": {
         "pageNoOneBtn": "a[qid=\"toc-7\"]",
         "pageNoTwoBtn": "a[qid=\"toc-8\"]",
+        "pageNoThreeBtn": "a[qid=\"toc-9\"]",
+        "pageNoFourBtn": "a[qid=\"toc-10\"]",
+        "pageNoFiveBtn": "a[qid=\"toc-11\"]",
+        "pageNoSixBtn": "a[qid=\"toc-12\"]",
+        "pageNoSevenBtn": "a[qid=\"toc-13\"]",
+        "pageNoEightBtn": "a[qid=\"toc-14\"]",
+        "pageNoNineBtn": "a[qid=\"toc-15\"]",
+        "pageNoZeroBtn": "a[qid=\"toc-17\"]",
         "pageNoClearBtn": "a[qid=\"toc-16\"]",
         "pageNoGoToPageBtn": "a[qid=\"toc-18\"]",
         "pageNOShow": "button[qid=\"toc-6\"]"
@@ -396,7 +415,8 @@
         "eBookDeleteNotesBtn": "button[class=\"cancel-note-button ng-star-inserted\"]",
         "eBookNotesViewMoreBtn": ".nemo-font.menu-btn",
         "eBookViewMoreDeleteNotestBtn": ".dropdown-menu a.dropdown-item:last-of-type",
-        "eBookNoteModalDeleteButton": "button.deleteSingleNoteModalDeleteButton"
+        "eBookNoteModalDeleteButton": "button.deleteSingleNoteModalDeleteButton",
+        "notesCloseBtn": "button#notes-close-btn"
       },
       "classDrawer": {
         "classDrawerHeader": "[data-tid=text-drawerHeaderTitle]",

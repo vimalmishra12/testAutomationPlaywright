@@ -610,6 +610,52 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
     return res;
   },
 
+  /**
+   * [2026-07-28] Navigates to a specific page number using the eBook page number dialog box.
+   * Encapsulates digit-by-digit keypad entry and submission within the Page Object layer per ADR-013.
+   */
+  goToPage: async function (pageNumber) {
+    await logger.logInto(await stackTrace.get(), "goToPage called for page: " + pageNumber);
+    try {
+      let res = await action.click(this.pageNumber);
+      if (true !== res) return res;
+
+      res = await action.click(this.pageNoClearBtn);
+      if (true !== res) return res;
+
+      const digits = String(pageNumber).split("");
+      for (const digit of digits) {
+        let digitSelector;
+        switch (digit) {
+          case "1": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoOneBtn; break;
+          case "2": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoTwoBtn; break;
+          case "3": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoThreeBtn; break;
+          case "4": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFourBtn; break;
+          case "5": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoFiveBtn; break;
+          case "6": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSixBtn; break;
+          case "7": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoSevenBtn; break;
+          case "8": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoEightBtn; break;
+          case "9": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoNineBtn; break;
+          case "0": digitSelector = selectorFile.css.ComproC1.pageNoDialogBox.pageNoZeroBtn; break;
+          default:
+            throw new Error("Invalid page number digit: " + digit);
+        }
+        res = await action.click(digitSelector);
+        if (true !== res) return res;
+      }
+
+      res = await action.click(this.pageNoGoToPageBtn);
+      if (true !== res) return res;
+
+      await action.waitForDisplayed(this.pageNOShow);
+      await browser.pause(3000);
+      return true;
+    } catch (err) {
+      await logger.logInto(await stackTrace.get(), err.message, "error");
+      return false;
+    }
+  },
+
   // isInitialized: async function ()
   // {
   // var res;
