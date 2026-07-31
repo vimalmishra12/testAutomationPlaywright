@@ -20,43 +20,43 @@ module.exports = {
 
   TST_KBOA_TC_2: async function (testdata) {
     // 2. Press Tab to focus on the Notes element
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("noteIconOnPage", "Focus did not land on the Note element on page 22");
+    sts = await focusPage.assertFocusOnNote("Focus did not land on the Note element on page 22");
     await assertion.assertEqual(sts, true, "Note element focus assertion failed");
   },
 
   TST_KBOA_TC_3: async function (testdata) {
     // 3. Press Tab to focus on the Home button
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("homeButton", "Focus did not land on the Home button after Note on page 22");
+    sts = await focusPage.assertFocusOnHome("Focus did not land on the Home button after Note on page 22");
     await assertion.assertEqual(sts, true, "Home button focus assertion failed");
   },
 
   TST_KBOA_TC_4: async function (testdata) {
     // 4. Press Shift+Tab to move focus back to Notes element
-    sts = await focusPage.pressShiftTab();
+    sts = await focusPage.pressShiftTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Shift+Tab key");
-    sts = await focusPage.assertFocusOn("noteIconOnPage", "Focus did not move back to the Note element on page 22");
+    sts = await focusPage.assertFocusOnNote("Focus did move back to the Note element on page 22");
     await assertion.assertEqual(sts, true, "Note element focus shift assertion failed");
   },
 
   TST_KBOA_TC_5: async function (testdata) {
     // 5. Keyboard click the Notes element to open notes panel
     await browser.pause(1500);
-    sts = await focusPage.pressEnter("noteIconOnPage");
+    sts = await focusPage.pressEnterOnNote(testdata);
     await assertion.assertEqual(sts, true, "Failed to keyboard click Note element");
-    sts = await focusPage.assertPanelVisible("eBookNotesHeadingTxt", "Notes panel was not visible after keyboard click");
+    sts = await focusPage.assertNotesPanelVisible("Notes panel was not visible after keyboard click");
     await assertion.assertEqual(sts, true, "Notes panel visibility assertion failed");
   },
 
   TST_KBOA_TC_6: async function (testdata) {
     // 6. Keyboard click the close button on the Notes panel to close it
     await browser.pause(1500);
-    sts = await focusPage.pressEnter("notesCloseBtn");
+    sts = await focusPage.pressEnterOnNotesClose(testdata);
     await assertion.assertEqual(sts, true, "Failed to keyboard click Notes close button");
-    sts = await focusPage.assertPanelClosed("eBookNotesHeadingTxt", "Notes panel was still visible after click close");
+    sts = await focusPage.assertNotesPanelClosed("Notes panel was still visible after click close");
     await assertion.assertEqual(sts, true, "Notes panel closure assertion failed");
   },
 
@@ -74,32 +74,32 @@ module.exports = {
 
   TST_KBOA_TC_8: async function (testdata) {
     // 2. Press Tab to focus on the Hotlink element
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("hotlinkIconOnPage", "Focus did not land on the Hotlink element on page 24");
+    sts = await focusPage.assertFocusOnHotlink("Focus did not land on the Hotlink element on page 24");
     await assertion.assertEqual(sts, true, "Hotlink element focus assertion failed");
   },
 
   TST_KBOA_TC_9: async function (testdata) {
     // 3. Press Tab to focus on the Home button
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("homeButton", "Focus did not land on the Home button after Hotlink on page 24");
+    sts = await focusPage.assertFocusOnHome("Focus did not land on the Home button after Hotlink on page 24");
     await assertion.assertEqual(sts, true, "Home button focus assertion failed");
   },
 
   TST_KBOA_TC_10: async function (testdata) {
     // 4. Press Shift+Tab to move focus back to Hotlink element
-    sts = await focusPage.pressShiftTab();
+    sts = await focusPage.pressShiftTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Shift+Tab key");
-    sts = await focusPage.assertFocusOn("hotlinkIconOnPage", "Focus did not move back to the Hotlink element on page 24");
+    sts = await focusPage.assertFocusOnHotlink("Focus did not move back to the Hotlink element on page 24");
     await assertion.assertEqual(sts, true, "Hotlink element focus shift assertion failed");
   },
 
   TST_KBOA_TC_11: async function (testdata) {
     // 5. Keyboard click the Hotlink element to trigger page navigation jump
     await browser.pause(1500);
-    sts = await focusPage.pressEnter("hotlinkIconOnPage");
+    sts = await focusPage.pressEnterOnHotlink(testdata);
     await assertion.assertEqual(sts, true, "Failed to keyboard click Hotlink element");
     sts = await focusPage.assertOnPage(28, "eBook did not navigate to page 28 after keyboard click");
     await assertion.assertEqual(sts, true, "Hotlink page jump assertion failed");
@@ -123,9 +123,9 @@ module.exports = {
 
   TST_KBOA_TC_14: async function (testdata) {
     // 2. Press Tab to focus directly on the Home button
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("homeButton", "Focus did not land directly on the Home button on page 26");
+    sts = await focusPage.assertFocusOnHome("Focus did not land directly on the Home button on page 26");
     await assertion.assertEqual(sts, true, "Home button focus assertion failed");
   },
 
@@ -145,25 +145,25 @@ module.exports = {
 
   TST_KBOA_TC_16: async function (testdata) {
     // 2. Press Tab to focus on the Note element
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("noteIconOnPage", "Focus did not land on the Note element first on page 28");
+    sts = await focusPage.assertFocusOnNote("Focus did not land on the Note element first on page 28");
     await assertion.assertEqual(sts, true, "Note element focus assertion failed");
   },
 
   TST_KBOA_TC_17: async function (testdata) {
     // 3. Press Tab to focus on the Hotlink element
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("hotlinkIconOnPage", "Focus did not land on the Hotlink element second on page 28");
+    sts = await focusPage.assertFocusOnHotlink("Focus did not land on the Hotlink element second on page 28");
     await assertion.assertEqual(sts, true, "Hotlink element focus assertion failed");
   },
 
   TST_KBOA_TC_18: async function (testdata) {
     // 4. Press Tab to focus on the Home button
-    sts = await focusPage.pressTab();
+    sts = await focusPage.pressTab(testdata);
     await assertion.assertEqual(sts, true, "Failed to press Tab key");
-    sts = await focusPage.assertFocusOn("homeButton", "Focus did not land on the Home button third on page 28");
+    sts = await focusPage.assertFocusOnHome("Focus did not land on the Home button third on page 28");
     await assertion.assertEqual(sts, true, "Home button focus assertion failed");
   },
 
