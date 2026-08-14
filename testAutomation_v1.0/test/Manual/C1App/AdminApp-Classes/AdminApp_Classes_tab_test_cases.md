@@ -4,8 +4,8 @@
 **Module:** CLST (Classes Tab) — *maps to the future `schoolClasses` page object when automated*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
-**Generated:** 2026-08-14 | **Total TCs:** 68 (48 Positive · 12 Edge · 8 Negative)
-**Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs)
+**Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
+**Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
 > TCs sit together; within each group they run **Positive → Edge → Negative**. (This intentionally
@@ -51,6 +51,9 @@
 | **#21 — Add label in class** | TST_CMGT_TC_1, TC_2 |
 | **#23 — Verify delete classes (soft / hard / bulk up to 50)** | TST_CMGT_TC_3, TC_4, TC_5, TC_6 (E), TC_7 (E), TC_8 (N) |
 | **#30 — Verify count of classes increase on adding a new class** | TST_CMGT_TC_9 |
+| **#22 — Launch class grade setting page from a class page** | TST_CGST_TC_1..5, TC_6 (E) |
+| **#31 — Verify class clone functionality (Copy an Existing Class)** | TST_CLON_TC_1, TC_2, TC_3 (E) |
+| **#32 — Verify Context class creation and view in teacher/admin/student login** | TST_CTXC_TC_1..4 |
 
 ---
 
@@ -172,6 +175,34 @@ opened school **"3 July Test School 1"** (school key **FCN-CHZ-PDA**), on the **
 
 **Precondition (Batch-5 CMGT TCs):** logged in as above; on the Classes tab (or a launched class page,
 for the label TCs).
+
+### Class grade settings / clone / context (Batch 6 — modules CGST / CLON / CTXC), captured live 2026-08-14
+
+- **Class grade settings (#22):** from a **class page** (Classes tab → launch class), open the
+  **Actions** menu → **Class grade settings** → `/class/…/<uuid>/grade-weighting`. The page shows:
+  **Grading Scale** (current scale + **Change**), **Score settings** ("Allow teachers to override and
+  add scores to auto-marked activities" toggle), **Score calculation** ("Which score will count…" —
+  **Best score / First score**), per-material **Weightage %**, **Other grading categories** ("Add a
+  grading category"), **Total grade: 100%**, and **Save changes / Cancel**.
+  > This is the page the grading-category and grading-scale **details pages link to** — i.e. it
+  > resolves the deferred launch `[ASSUMED]`s in `TST_GCAT_TC_7` and `TST_GSCL_TC_7`: a category/scale
+  > is applied to a class here (Add a grading category / Grading Scale → Change), and the class then
+  > appears under that category/scale's details.
+- **Clone (#31) = "Copy an Existing Class":** on the bulk-create form, select row(s) → **Copy an
+  Existing Class** → **Step 1**: search/select a source class ("Copied from a class") → Continue →
+  **Step 2**: "Choose what to copy from [source]" with checkboxes **Teachers**, **Course materials**,
+  **Assignments** (+ Change assignment dates), **Locked content rules** (+ Change content rules
+  dates), **Class grade settings** → Continue. Each component shows a **count** and is **disabled when
+  the source has 0** of it (grade settings showed "Not available" for a class with default settings).
+  This matches scenario 28's component list (teacher, materials, assignments, lock rules incl.
+  assignment-created lock rules, class grade settings).
+- **Context class (#32):** `[ASSUMED]` — **no context-class creation entry point was found** in the
+  admin bulk-create flow, and cross-role verification needs teacher and student test accounts (only
+  the school-admin `testt1@mailsac.com` was available). These TCs are written at a functional level
+  and **require product clarification** on what a "context class" is / how it is created.
+
+**Precondition (Batch-6 CGST TCs):** on a class's **Class grade settings** page.
+**Precondition (Batch-6 CLON TCs):** on the **Create new classes** form with ≥1 row selected.
 
 ---
 
@@ -1521,6 +1552,263 @@ for the label TCs).
 
 ---
 
+### Requirement #22 — Launch class grade setting page from a class page
+
+| Field | Value |
+|---|---|
+| **S.No.** | 69 |
+| **Test Case ID** | TST_CGST_TC_1 |
+| **Title** | Verify the Class grade settings page launches from a class page |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A class is open (Classes tab → launch a class). |
+| **Test Steps** | 1. On the class page, open the **Actions** menu. 2. Click **Class grade settings**. |
+| **Test Data** | — |
+| **Expected Result** | The Class grade settings page opens (`/class/…/grade-weighting`, title "Class grade settings") showing: Grading Scale (+ Change), Score settings (teacher-override toggle), Score calculation (Best/First score), per-material Weightage %, Other grading categories (+ Add a grading category), Total grade: 100%, and Save changes / Cancel. |
+| **Remarks** | This is the destination the grading-category/scale details pages link to (`TST_GCAT_TC_7`, `TST_GSCL_TC_7`). |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 70 |
+| **Test Case ID** | TST_CGST_TC_2 |
+| **Title** | Verify the grading scale can be changed for a class |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | On the Class grade settings page. |
+| **Test Steps** | 1. In the **Grading Scale** section, click **Change**. 2. Select a grading scale. 3. Click **Save changes**. |
+| **Test Data** | A grading scale (e.g. `AutoTest Scale` / `Cambridge One grading scale`) |
+| **Expected Result** | The class's grading scale updates to the selected scale; the class then appears under that scale's details page ("Classes"). `[ASSUMED]` — confirm the change-scale selector. |
+| **Remarks** | Associates a scale with a class — resolves `TST_GSCL_TC_7`. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 71 |
+| **Test Case ID** | TST_CGST_TC_3 |
+| **Title** | Verify a grading category can be added to a class |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | On the Class grade settings page. |
+| **Test Steps** | 1. Click **Add a grading category**. 2. Select a grading category. 3. Set its **Weightage %**. 4. Click **Save changes**. |
+| **Test Data** | A grading category (e.g. `some`) + weightage |
+| **Expected Result** | The grading category is added to the class with a weightage; the class then appears under that category's details page. `[ASSUMED]` — confirm the add-category selector. |
+| **Remarks** | Associates a category with a class — resolves `TST_GCAT_TC_7`. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 72 |
+| **Test Case ID** | TST_CGST_TC_4 |
+| **Title** | Verify the score calculation (Best / First score) can be changed |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the Class grade settings page. |
+| **Test Steps** | 1. Open the **Score calculation** dropdown. 2. Select **First score** (or **Best score**). 3. Click **Save changes**. |
+| **Test Data** | Score type: First score |
+| **Expected Result** | The selected score type is saved as the score that counts toward students' progress. |
+| **Remarks** | — |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 73 |
+| **Test Case ID** | TST_CGST_TC_5 |
+| **Title** | Verify the teacher score-override setting can be toggled |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | Low |
+| **Preconditions** | On the Class grade settings page. |
+| **Test Steps** | 1. Toggle "Allow teachers to override and add scores to auto-marked activities". 2. Click **Save changes**. |
+| **Test Data** | — |
+| **Expected Result** | The override setting is saved in the state it was toggled to. |
+| **Remarks** | — |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 74 |
+| **Test Case ID** | TST_CGST_TC_6 |
+| **Title** | Verify the total grade weightage must equal 100% |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | On the Class grade settings page with ≥ 1 material/category weightage. |
+| **Test Steps** | 1. Set weightages that do not add up to 100%. 2. Attempt to **Save changes**. |
+| **Test Data** | Weightages summing to ≠ 100% |
+| **Expected Result** | Saving is prevented / an error is shown until the **Total grade** equals 100%. `[ASSUMED]` — confirm the exact validation copy. |
+| **Remarks** | Page shows a running "Total grade: 100%". |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+### Requirement #31 — Verify class clone functionality (Copy an Existing Class)
+
+| Field | Value |
+|---|---|
+| **S.No.** | 75 |
+| **Test Case ID** | TST_CLON_TC_1 |
+| **Title** | Verify a class can be cloned from an existing class |
+| **Linked Requirement** | #31 — Verify class clone functionality (Copy an Existing Class) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | On the Create new classes form with ≥ 1 row selected; a source class exists. |
+| **Test Steps** | 1. Click **Copy an Existing Class**. 2. **Step 1:** search and select the source class → **Continue**. 3. **Step 2:** on "Choose what to copy from [source]", select the components to copy → **Continue**. |
+| **Test Data** | Source class: `SarthakTestClass1` |
+| **Expected Result** | Step 2 lists the copyable components as checkboxes — **Teachers**, **Course materials**, **Assignments**, **Locked content rules**, **Class grade settings** — each with a count; the selected components are copied from the source class into the selected new row(s). |
+| **Remarks** | Distinct from **Duplicate** (`TST_BCCF_TC_7`), which copies a row within the form. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 76 |
+| **Test Case ID** | TST_CLON_TC_2 |
+| **Title** | Verify all components copy from a fully-populated source class |
+| **Linked Requirement** | #31 — Verify class clone functionality (Copy an Existing Class) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A source class that HAS: a teacher, course materials, assignments, locked content rules (including a lock rule created via an assignment), and class grade settings. |
+| **Test Steps** | 1. Copy an Existing Class → select the populated source. 2. Select all available components. 3. Continue and create the class. |
+| **Test Data** | A fully-populated source class `[ASSUMED]` |
+| **Expected Result** | The cloned class contains the source's teacher, course materials, assignments, locked content rules (incl. the assignment-created lock rule), and class grade settings. `[ASSUMED]` — verify each component copies correctly (source classes tested had 0 of each). |
+| **Remarks** | Requires a seeded source class. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 77 |
+| **Test Case ID** | TST_CLON_TC_3 |
+| **Title** | Verify components with no items are not selectable when copying |
+| **Linked Requirement** | #31 — Verify class clone functionality (Copy an Existing Class) |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | A source class that has 0 of one or more components. |
+| **Test Steps** | 1. Copy an Existing Class → select a source with empty components → Continue. |
+| **Test Data** | Source: `SarthakTestClass1` (0 teachers/materials/assignments/rules) |
+| **Expected Result** | Components with a count of 0 are **disabled/unselectable** (e.g. "Teachers [0]" disabled; "Class grade settings — Not available"). |
+| **Remarks** | Observed live. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+### Requirement #32 — Verify Context class creation and view in teacher/admin/student login
+
+> `[ASSUMED]` for the whole group: the **context-class creation entry point was not found** in the
+> admin bulk-create flow, and cross-role verification needs **teacher and student test accounts**.
+> These TCs require product clarification (definition + creation path of a "context class").
+
+| Field | Value |
+|---|---|
+| **S.No.** | 78 |
+| **Test Case ID** | TST_CTXC_TC_1 |
+| **Title** | Verify a context class can be created |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | Logged in as school admin. `[ASSUMED]` — context-class creation path TBD. |
+| **Test Steps** | 1. Create a context class via the (to-be-confirmed) context-class creation flow. |
+| **Test Data** | Context class details `[ASSUMED]` |
+| **Expected Result** | The context class is created successfully. `[ASSUMED]` — confirm the creation entry point and any context-specific fields. |
+| **Remarks** | Entry point not found in the admin bulk-create form; needs product clarification. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 79 |
+| **Test Case ID** | TST_CTXC_TC_2 |
+| **Title** | Verify the context class appears in the admin login |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | A context class exists; logged in as school **admin**. |
+| **Test Steps** | 1. Open the school's Classes tab. 2. Locate the context class. |
+| **Test Data** | The created context class |
+| **Expected Result** | The context class is listed and behaves as expected in the admin view. `[ASSUMED]` — confirm any admin-specific context-class behaviour. |
+| **Remarks** | — |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 80 |
+| **Test Case ID** | TST_CTXC_TC_3 |
+| **Title** | Verify the context class appears/behaves correctly in the teacher login |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | A context class exists; a **teacher** account associated with it. |
+| **Test Steps** | 1. Log in as the teacher. 2. Locate/open the context class. |
+| **Test Data** | Teacher account `[ASSUMED]` |
+| **Expected Result** | The context class is visible and behaves correctly for the teacher role. `[ASSUMED]` — needs a teacher test account. |
+| **Remarks** | Cross-role verification. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 81 |
+| **Test Case ID** | TST_CTXC_TC_4 |
+| **Title** | Verify the context class appears/behaves correctly in the student login |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | A context class exists; a **student** account enrolled in it. |
+| **Test Steps** | 1. Log in as the student. 2. Locate/open the context class. |
+| **Test Data** | Student account `[ASSUMED]` |
+| **Expected Result** | The context class is visible and behaves correctly for the student role. `[ASSUMED]` — needs a student test account. |
+| **Remarks** | Cross-role verification. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** | |
+
+---
+
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
 1. **Search behaviour** (TST_CLST_TC_18): whether search is partial + case-insensitive or exact-match.
@@ -1541,3 +1829,6 @@ for the label TCs).
 16. **Hard/permanent delete** (TST_CMGT_TC_5, TC_8): the exact permanent-delete UI/location and the blocking behaviour when the 7 conditions aren't met.
 17. **Bulk delete 50-class max** (TST_CMGT_TC_6): confirm the 50-class selection maximum.
 18. **New label creation from the class page** (TST_CMGT_TC_2): confirm the create-label form/flow.
+19. **Class grade settings — change scale / add category / total 100%** (TST_CGST_TC_2, TC_3, TC_6): confirm the change-scale + add-category selectors and the 100% total validation copy.
+20. **Clone — populated source** (TST_CLON_TC_2): verify each component (teacher/materials/assignments/lock rules/grade settings) copies, using a fully-seeded source class.
+21. **Context class (#29, TST_CTXC_TC_1..4)** — biggest gap: the context-class **creation entry point is unknown** and cross-role checks need **teacher + student test accounts**. Needs product clarification.
