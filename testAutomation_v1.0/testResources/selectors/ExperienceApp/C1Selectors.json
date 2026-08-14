@@ -1037,7 +1037,8 @@
         "materialSearchInput": "input[qid='dBulkClass-add-learning-material-modal-1-0']",
         "materialItem": "a.dropdown-item",
         "addMaterialsConfirmBtn": "button[qid='dBulkClass-add-learning-material-modal-2']",
-        "selectedMaterialInput": "input[qid='dBulkClass-products0-6']"
+        "selectedMaterialInput": "input[qid='dBulkClass-products0-6']",
+        "backToDashboardLink": "a[qid='dBulkClass-47']"
       },
       "createAdultStudentAccounts": {
         "pageHeading": "h1",

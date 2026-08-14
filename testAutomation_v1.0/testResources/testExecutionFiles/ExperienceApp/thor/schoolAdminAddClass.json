@@ -34,6 +34,8 @@
       { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify it attached to the class row", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
       { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify success dialog", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and land on the school Classes dashboard", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] }
     ],
     "AfterEach": [],

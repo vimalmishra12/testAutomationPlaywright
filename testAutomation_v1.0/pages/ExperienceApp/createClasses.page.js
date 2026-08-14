@@ -18,6 +18,7 @@ module.exports = {
   materialItem: selectorFile.css.ComproC1.createClasses.materialItem,
   addMaterialsConfirmBtn: selectorFile.css.ComproC1.createClasses.addMaterialsConfirmBtn,
   selectedMaterialInput: selectorFile.css.ComproC1.createClasses.selectedMaterialInput,
+  backToDashboardLink: selectorFile.css.ComproC1.createClasses.backToDashboardLink,
 
   /**
    * Confirms the "Create new classes" bulk form loaded.
@@ -219,5 +220,28 @@ module.exports = {
     }
     console.log("addMaterial", obj);
     return obj;
+  },
+
+  /**
+   * From the success dialog, clicks "Back to dashboard" and confirms the school Classes
+   * page (…/org_<slug>/class) has reloaded. Verified live: this link returns to the school
+   * Classes page (the school dashboard), not the top-level "My school accounts" list.
+   * Uses lazy require to avoid a circular dependency with schoolClasses.page.js (ADR-004).
+   */
+  click_backToDashboard: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res;
+    res = await action.click(this.backToDashboardLink);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "backToDashboardLink is clicked");
+      res = await require("./schoolClasses.page.js").isInitialized();
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "backToDashboardLink is NOT clicked",
+        "error"
+      );
+    }
+    return res;
   }
 };
