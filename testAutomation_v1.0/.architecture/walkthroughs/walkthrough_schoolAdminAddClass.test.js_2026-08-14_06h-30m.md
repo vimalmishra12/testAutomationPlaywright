@@ -199,6 +199,28 @@ script is created.
 runs) ✅, Phase 3 (visual assessment, no candidates) ✅. The `schoolAdminAddClass` block was removed
 from `authoring-status.md`. Ready to merge.
 
+---
+
+## Extension — "Back to dashboard" after create (2026-08-14)
+
+**Request:** after creating the class, click "Back to dashboard" and land on the dashboard page.
+
+**Verified live:** the success dialog's "Back to dashboard" link (`a[qid="dBulkClass-47"]`) returns
+to the **school Classes page** (`/admin/admin/org_<slug>/class`, h1 "3 July Test School 1", Add-class
+button, "Active classes (N)") — i.e. the school dashboard, NOT the top-level "My school accounts"
+list. So the destination is the existing `schoolClasses` page object (reused its `isInitialized()`).
+
+**Changes:**
+- `C1Selectors.json` → `createClasses.backToDashboardLink` = `a[qid='dBulkClass-47']`.
+- `createClasses.page.js`: added `click_backToDashboard()` (clicks the link, confirms
+  `schoolClasses.isInitialized()` via lazy require).
+- `schoolAdminAddClass.test.js`: added `TST_CCLS_TC_8`.
+- TC repository + execution file: registered/added `TST_CCLS_TC_8` after `TST_CCLS_TC_4`.
+- Visual: `TST_CCLS_TC_8` is `visualTest:false` (lands on a page with a dynamic class count).
+
+**Result:** `npm run P1Adminclassworkflow_Thor` — **11/11 passing, 2 consecutive clean runs**
+(35s then 49s). No protected files touched.
+
 ## Follow-ups for future runs (not blocking merge)
 - Add **teacher** to the class (admin flow adds a teacher, not a student) — next run.
 - Optionally harden TST_CCLS_TC_6's material search (fill vs per-keystroke) if it flakes.

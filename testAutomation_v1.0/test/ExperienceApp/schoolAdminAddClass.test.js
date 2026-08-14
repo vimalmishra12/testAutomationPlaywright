@@ -118,5 +118,18 @@ module.exports = {
         testdata.successMessage +
         "' but got: " + msg.title
     );
+  },
+
+  /**
+   * TST_CCLS_TC_8 — From the success dialog, click "Back to dashboard" and confirm the
+   * school Classes page (the school dashboard) reloads.
+   */
+  TST_CCLS_TC_8: async function (testdata) {
+    sts = await createClasses.click_backToDashboard();
+    await assertion.assertEqual(
+      sts.pageStatus,
+      true,
+      "School Classes dashboard did not load after 'Back to dashboard'"
+    );
   }
 };
