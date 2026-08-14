@@ -1017,7 +1017,27 @@
       },
       "schoolAdminDashboard": {
         "firstSchoolLink": "[qid='aDashboard-1']",
-        "teacherAdminToggle": "[qid='teacher-admin-toggle']"
+        "teacherAdminToggle": "[qid='teacher-admin-toggle']",
+        "schoolLinkByKey": "a.inst-link[aria-label*=\"{{key}}\"]"
+      },
+      "schoolClasses": {
+        "addClassBtn": "a[qid='aClass-10']",
+        "activeClassesHeading": "h2:has-text(\"Active classes\")"
+      },
+      "createClasses": {
+        "classNameInput": "input[qid='dBulkClass-0-2']",
+        "startDateInput": "input[qid='dBulkClass-0-3']",
+        "startDateTodayCell": "td.owl-dt-calendar-cell-active",
+        "endDateInput": "input[qid='dBulkClass-0-4']",
+        "endDateNextMonthBtn": "button[aria-label='Next month']",
+        "endDateDay15Cell": "td.owl-dt-calendar-cell:has(span.owl-dt-calendar-cell-content:text-is(\"15\"))",
+        "createClassBtn": "button[qid='dBulkClass-13']",
+        "successDialogTitle": "#successCreateClassesModalLabel",
+        "addMaterialBtn": "button[qid='dBulkClass-0-6']",
+        "materialSearchInput": "input[qid='dBulkClass-add-learning-material-modal-1-0']",
+        "materialItem": "a.dropdown-item",
+        "addMaterialsConfirmBtn": "button[qid='dBulkClass-add-learning-material-modal-2']",
+        "selectedMaterialInput": "input[qid='dBulkClass-products0-6']"
       },
       "createAdultStudentAccounts": {
         "pageHeading": "h1",

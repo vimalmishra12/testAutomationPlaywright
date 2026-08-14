@@ -1,0 +1,42 @@
+{
+  "Suite1": {
+    "Name": "Admin App | School-admin Add Class — Run 1 (create class only) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_SCLS_TC_1", "description": "Capture current active-class count (baseline)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_SCLS_TC_2", "description": "Click 'Add class' and open the create form", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_1", "description": "Enter class name", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_2", "description": "Set start date (today)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_3", "description": "Set end date (day 15 of next month)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_5", "description": "Open the 'Add Materials' modal", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_6", "description": "Search and select the material (dev_test_ebook_bundle_104_bundle)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify it attached to the class row", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify success dialog", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

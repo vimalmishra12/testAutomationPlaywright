@@ -4429,6 +4429,23 @@
       ]
     },
     {
+      "modulename": "Admin App | School-admin Add Class (Run 1: create class only)",
+      "moduleId": "ADMINADDCLASS",
+      "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+      "testcase": [
+        { "id": "TST_SADB_TC_1", "description": "Open target school by school key (FCN-CHZ-PDA) from 'My school accounts'", "tags": "P1", "visualTest": false },
+        { "id": "TST_SCLS_TC_1", "description": "Capture current active-class count (baseline; creation is async)",        "tags": "P1", "visualTest": false },
+        { "id": "TST_SCLS_TC_2", "description": "Click 'Add class' and open the Create new classes form",                 "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_1", "description": "Enter class name",                                                        "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_2", "description": "Set start date (today) via the date picker",                             "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_3", "description": "Set end date (day 15 of next month) via the date picker",                "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_5", "description": "Open the row 'Add Materials' modal",                                     "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_6", "description": "Search and select the material by name",                                 "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify the material attached to the row",    "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify the success dialog appears",             "tags": "P1", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "ebookFocusA11y",
       "moduleId": "",
       "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",

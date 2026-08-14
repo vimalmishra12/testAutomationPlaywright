@@ -1,0 +1,10 @@
+{
+  "C1": {
+    "adminAddClass": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "className": "AutoClass_CreateOnly",
+      "material": "dev_test_ebook_bundle_104_bundle",
+      "successMessage": "Success! We are now creating"
+    }
+  }
+}
