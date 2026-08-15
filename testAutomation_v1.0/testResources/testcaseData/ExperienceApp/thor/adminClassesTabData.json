@@ -1,0 +1,13 @@
+{
+  "C1": {
+    "adminClassesTab": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "status": "Active",
+      "label": "VM1",
+      "clearAllStatus": "Active",
+      "clearAllLabel": "sarthak1",
+      "noMatchStatus": "Deleted",
+      "noMatchLabel": "A11y test"
+    }
+  }
+}

@@ -4447,6 +4447,20 @@
       ]
     },
     {
+      "modulename": "Admin App | Classes tab — load & filter (Req #1 / #2)",
+      "moduleId": "CLST",
+      "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+      "testcase": [
+        { "id": "TST_CLST_TC_1", "description": "Verify the Classes tab loads with all expected components",       "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options",       "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_19", "description": "Verify 'Clear all' resets the filter selections",                 "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_RESET", "description": "AfterEach — clear applied filters so each TC starts unfiltered", "tags": "P3", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "ebookFocusA11y",
       "moduleId": "",
       "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
