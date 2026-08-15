@@ -31,9 +31,39 @@ complete (check `.architecture/authoring-status.md`; verify the artifacts actual
 6. **Cloud (only if asked):** `--browserCapability=lambdatest-chrome-1920` (LambdaTest Playwright
    grid; creds via `LT_USERNAME`/`LT_ACCESS_KEY`).
 
+## Debugging protocol (learned the hard way — `adminClassesTab`, 2026-08-15)
+
+**Instrument before you hypothesise.** Three guesses cost four runs; one diagnostic dump
+answered it in a single run. When a TC fails for a non-obvious reason, temporarily log
+everything the failing step can see — input value, element counts, computed visibility, the
+exact selector — run once, read it, then remove it. Do not theorise from the error alone.
+
+**If it works by hand but fails in automation, diff the action sequences.** A successful
+manual repro is itself the clue: your hand is doing something the code is not. Here the hand
+was clicking the search field before typing, which opened the dropdown; the automation only
+typed. Three wrong theories came from reading "works manually" as "the app behaves
+differently under automation."
+
+**Suspect shared state before blaming the test.** If failures move around when you change
+something unrelated, the TCs are not independent. State persisted **server-side** survives
+the browser entirely — reset in `BeforeEach`, not just `AfterEach`, and verify it landed.
+A crashed run can otherwise poison the next run days later on a different machine.
+
+**Verify test data against the live app before using it.** Ask "does this value exist, in
+this combination?" `Active` + `VM1` was impossible — the label existed but no *active* class
+carried it — and no amount of code fixing could make that TC pass.
+
+**A green suite is not automatically a correct suite.** Before closing the phase, re-read
+each assertion and ask: *what input would make this fail?* If there isn't one, it is not a
+test. See Invariants 13 and 14.
+
 ## Exit checklist (mandatory — completes the phase)
 
 - [ ] All TCs passing; real output shown to the user; 2 consecutive clean runs.
+- [ ] Every assertion is falsifiable (Invariant 13) — no `>= 0`, no unasserted state changes.
+- [ ] Any product defect found was **reported to the user, not worked around** (Invariant 14);
+      any authorised workaround is marked `// WORKAROUND — <ref>`.
+- [ ] Any missing/invalid test data was raised with the user rather than silently substituted.
 - [ ] All applied fixes were proposed and confirmed first; inline comments added per AGENTS.md.
 - [ ] Update `.architecture/authoring-status.md` — mark the block:
 

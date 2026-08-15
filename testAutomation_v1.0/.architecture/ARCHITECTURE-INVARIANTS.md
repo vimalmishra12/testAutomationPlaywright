@@ -18,6 +18,17 @@ observable changes (debounce / animation / fixed third-party throttle).
   - ✅ `await action.waitForDisplayed(this.itemLink, 15000);`  // returns the moment it renders
   - ✅ `await action.waitForEnabled(this.okBtn, 5000);`        // gate on the button, not a guess
   - ❌ `await browser.pause(2000);`                            // blind wait — slow and flaky
+
+**Two traps that make a wait lie to you:**
+- **Element count ≠ visibility.** Modals/panels commonly stay in the DOM when closed
+  (`display:none`), so `getElementCount(x) > 0` is *always* true and silently passes.
+  Use `action.isDisplayed()` for anything that persists in the DOM.
+- **`opacity: 0` is still VISIBLE to Playwright** — only `display:none` counts as hidden,
+  so a "closed" wait must cover the whole fade-out, not the class change.
+
+**Never invent a timeout — measure the transition once, then set it.** A guessed `1000`,
+copy-pasted 13×, against a measured 3.6 s panel close caused 3 of the 4 original failures
+in `adminClassesTab` [2026-08-15].
 *Depth:* system.md "Layer Responsibilities" + "Dependency Rules"; ADR-003.
 
 ### 2. Selectors externalised + namespaced
@@ -50,6 +61,12 @@ ADR-017B.
 (it replaces Mocha and kills the JSON engine). Type credentials / validated fields with
 `addValue` / `pressSequentially`, NOT `setValue` / `fill` (React/Angular forms ignore `fill`'s
 value). Wait for each page transition when a selector (e.g. `button[type=submit]`) repeats across pages.
+
+**Click the field before typing into a combobox / type-ahead.** These open their dropdown
+off a focus/click event. A panel that persists in the DOM between TCs often leaves the field
+*already focused*, so no fresh focus fires and the dropdown never opens no matter what is
+typed — the first selection of a run succeeds and every later one fails. Setting `.value`
+programmatically fires nothing at all.
 *Depth:* ADR-012 (+ amendments); ADR-013 (React-form typing).
 
 ### 7. Register every TC (two-change rule)
@@ -86,6 +103,30 @@ Rule A data assessment (static vs dynamic decision table) + explicit user confir
 npm scripts: `<feature>Test_<env>` + `visualAcceptance_<feature>_<env>` (Rules B/C). A feature is
 not closed until every TC has an explicit visual decision (skill Phase 3).
 *Depth:* AGENTS.md §8; `.agent/skills/c1-test-authoring/phases/3-visual.md`.
+
+### 13. Assertions must be able to fail; cleanup must never hide
+An assertion that cannot fail is worse than no assertion — it reports green while testing
+nothing. **Every state-changing call gets its result asserted.**
+  - ❌ `await assertion.assert(rows.count >= 0, …)`   // true for every possible value
+  - ❌ `await page.click_close();`                     // fire-and-forget: hid a broken close for weeks
+  - ✅ assert the app's own signal (e.g. a "Clear" link that renders only while filtered)
+
+**Never swallow a failure in cleanup.** A bare `try/catch` around a reset turns a loud bug
+into silent state-bleed — log it at minimum, and verify the cleanup achieved its goal.
+Both anti-patterns were live in `adminClassesTab` and each cost a full debugging cycle.
+
+### 14. A test must never route around a product defect
+When automation hits behaviour that would affect a real user, **stop and report it** —
+capture the action, the observed result and the frequency, then ask whether it is accepted
+behaviour or a bug to raise. Do not quietly retry until green: that hides a customer-facing
+defect exactly as effectively as not asserting it.
+- **Resilience belongs in setup/teardown, never in the assertion path.** Retrying inside a
+  reset is housekeeping; retrying the thing under test destroys the test's purpose.
+- If a workaround is authorised, mark it `// WORKAROUND — <ref>` so it is removable.
+- **Missing test data is a question, not a decision.** Don't silently substitute (it changes
+  coverage) and never create data on a shared environment unasked — report and let the user
+  choose: create it, change the data, or change the test.
+*Depth:* `.agent/skills/c1-test-authoring/phases/2-run-fix.md`; Invariant 9.
 
 ---
 
