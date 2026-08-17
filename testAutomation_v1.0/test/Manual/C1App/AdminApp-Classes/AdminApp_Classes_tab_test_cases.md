@@ -5,6 +5,7 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
+**Execution status (2026-08-17):** **12 of 81 TCs automated and passing** — `TST_CLST_TC_1–8, 18, 19, 21, 22` (Requirements #1 tab load, #2 filter, #9 search, #27 sort) via `npm run P1AdminClassesTab_Thor` on **thor**. The remaining 69 TCs are **Not Run**.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -223,9 +224,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Classes tab loads showing: "Active classes (N)" heading, Search box, Add class button, Filter link, User guide toggle, select-all + disabled Delete class, the class table (Class name, Class key, Start date, End date, Student progress), and a separate "Ended classes (N)" section. Left nav shows Classes/Students/Staff/Library/Reports. |
 | **Remarks** | Classes(N) in nav = Active + Ended counts. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Classes tab loaded with every listed component: 'Active classes (15)' heading, search box, Add class, Filter, User guide toggle, select-all checkbox with a disabled Delete class button, all five column headers, a separate 'Ended classes (26)' section, and the five left-nav items. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -244,9 +245,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | A Filter modal opens with **Class status** options (Not started, Active, Ended, Expired, Deleted), a **Class labels** section with a "Find a label" input, and **Clear all** and **Apply** buttons. |
 | **Remarks** | Filter is a modal dialog, not an inline panel. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Filter modal opened showing all five Class status options (Not started / Active / Ended / Expired / Deleted), the 'Find a label' input, and the Clear all and Apply buttons. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. PRODUCT NOTE: the panel's X close button is unreliable - a click reports success but the panel can stay open. Automation carries an authorised retry marked // WORKAROUND. App-side fix reported landed 2026-08-17; retry retained pending removal. |
 
 ---
 
@@ -263,9 +264,9 @@ for the label TCs).
 | **Test Data** | Class status: Active |
 | **Expected Result** | The modal closes and the list shows only Active classes; the "Active classes (N)" count reflects the filtered result. Ended/Expired/Deleted classes are not shown in the active list. |
 | **Remarks** | Repeat conceptually for Ended / Expired / Deleted / Not started. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Applying Class status = Active closed the modal and filtered the list; the page-level 'Clear' link appeared (the app's own signal that a filter is applied) and the visible rows were consistent with the 'Active classes (N)' heading. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -282,9 +283,9 @@ for the label TCs).
 | **Test Data** | Label: `VM1` (a real existing label; others: `A11y test`, `aditya`) |
 | **Expected Result** | Only classes carrying the selected label are listed. |
 | **Remarks** | Label list confirmed live on the create-class label dropdown; confirm a class actually carries `VM1` before running. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The label filter was applied (confirmed via the 'Clear' link) and the list settled into exactly one valid state - populated with matching classes, or the empty state. NOTE: label VM1 matches no ACTIVE class on this school, so an Active + VM1 combination legitimately returns zero. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -301,9 +302,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | All filter selections are cleared back to the default (unfiltered) state within the modal. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clear all cleared the selections and closed the panel, and the page-level 'Clear' link disappeared, confirming the applied filter was reset. NOTE: during the panel's ~3.6s close it still holds its pre-clear markup, so the reset must be verified at page level, not from the panel's own chips. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -317,12 +318,12 @@ for the label TCs).
 | **Priority** | Low |
 | **Preconditions** | On the Classes tab. |
 | **Test Steps** | 1. Open **Filter**. 2. Select a Class status + a label combination that no class satisfies. 3. Click **Apply**. |
-| **Test Data** | Status + label combo with zero matches `[ASSUMED]` |
-| **Expected Result** | The list shows an empty/no-matching-classes state with no error. `[ASSUMED]` — capture exact empty-state text on live. |
+| **Test Data** | Status: `Deleted` + Label: `A11y test` (a combination confirmed to match zero classes) |
+| **Expected Result** | The list shows the empty/no-matching-classes state with no error, reading **No classes that are &lt;status&gt;, &lt;label&gt;** (e.g. "No classes that are Deleted, A11y test"). CONFIRMED live 2026-08-15. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Filtering Class status = Deleted together with label 'A11y test' matched no classes and showed the empty state, with no error. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -341,9 +342,9 @@ for the label TCs).
 | **Test Data** | Class name: `SarthakTestClass1` |
 | **Expected Result** | The list is filtered to the class(es) whose name matches "SarthakTestClass1". |
 | **Remarks** | Any existing active class name may be substituted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching 'SarthakTestClass1' returned that class, and every returned row matched the term. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -360,9 +361,9 @@ for the label TCs).
 | **Test Data** | Class key: `97Cc-y7bs` |
 | **Expected Result** | The list is filtered to the single class with class key `97Cc-y7bs`. |
 | **Remarks** | Confirms search accepts both class name and class key. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching class key '97Cc-y7bs' returned exactly one class - SarthakTestClass1 - confirming search accepts a class key as well as a name. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -377,11 +378,11 @@ for the label TCs).
 | **Preconditions** | A class named `SarthakTestClass1` exists. |
 | **Test Steps** | 1. Search `sarthak` (lower-case, partial). 2. Click **Search**. |
 | **Test Data** | Search term: `sarthak` |
-| **Expected Result** | `SarthakTestClass1` is returned, confirming search is case-insensitive and matches partial names. `[ASSUMED]` — confirm partial/case behaviour on live. |
+| **Expected Result** | `SarthakTestClass1` is returned, confirming search is case-insensitive and matches partial names. CONFIRMED live 2026-08-17. |
 | **Remarks** | If search is exact-match only, record actual behaviour and split into separate positive/negative TCs. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The lower-case partial term 'sarthak' returned 'SarthakTestClass1'. CONFIRMED: class search IS case-insensitive and DOES match partial names - the previously ASSUMED behaviour is correct, so no split into separate positive/negative TCs is needed. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -396,11 +397,11 @@ for the label TCs).
 | **Preconditions** | On the Classes tab. |
 | **Test Steps** | 1. Search `zzz-no-such-class-9999`. 2. Click **Search**. |
 | **Test Data** | Search term: `zzz-no-such-class-9999` |
-| **Expected Result** | No classes are listed and an empty/no-results state is shown (no error/crash). `[ASSUMED]` — capture the exact empty-state message/text on live. |
+| **Expected Result** | No classes are listed and the no-results state is shown (no error/crash), reading exactly: **No classes that match your search &lt;term&gt;** (the term echoed in bold). CONFIRMED live 2026-08-17. |
 | **Remarks** | Record the no-results copy so it can be asserted when automated. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching 'zzz-no-such-class-9999' returned 0 classes and displayed the no-results state with no error. CAPTURED COPY: 'No classes that match your search zzz-no-such-class-9999' - the searched term is echoed back in bold. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -419,9 +420,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | First click sorts classes A→Z by name; second click reverses to Z→A (sort indicator updates accordingly). |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The first click sorted by class name and the column reported 'sorted ascending'; the second click reported 'sorted descending' and the order was the exact reverse of the first. NOTE: the product sorts by CODE POINT, so uppercase names sort before lowercase ones (for example 'Test Class 14 Aug' before 'class_L_...'). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -438,9 +439,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Classes reorder chronologically by the selected date column, and each header toggles ascending/descending. |
 | **Remarks** | Sort headers are present in both Active and Ended tables. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Start date and End date each reordered the list chronologically and toggled direction on the second click. NOTE: dates repeat (six active classes share Aug 14, 2026), so the order is monotonic rather than strictly increasing, and descending is not an exact reversal of ascending. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 

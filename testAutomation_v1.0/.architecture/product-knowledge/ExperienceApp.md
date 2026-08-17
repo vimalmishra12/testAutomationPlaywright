@@ -255,7 +255,10 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
   *Reported to the team [2026-08-15]; fix pending.*
 
 - **The applied filter persists SERVER-SIDE, per user account** [2026-08-15]
-  `[UNCONFIRMED — product decision pending 2026-08-17]`.
+  **`[CONFIRMED 2026-08-17 — INTENDED BEHAVIOUR, per product decision]`. Not a defect; do
+  not raise it as one.** The same persistence applies to the **class search term** (see
+  "Class search" below). The testing impact below is unchanged: intended or not, the suite
+  still cannot assume a clean start, so the Before/AfterEach reset stays.
   Reproduced manually end-to-end: a filter applied on the Classes tab survives a **page
   reload**, a **full logout + login**, and a **different browser / incognito window** —
   which leaves the server, keyed to the account, as the only possible store. It was first
@@ -272,8 +275,79 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
     running the suite with the same account will interfere with each other. This is why
     `adminClassesTab.json` resets in **BeforeEach**, not only AfterEach.
 
+##### Class search (Req #9)
+
+*Captured live on Thor [2026-08-17] during Phase 1 of the search/sort batch, same school.*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Search input | `input[qid='aClass-1']` | Angular-backed; type with `addValue`, click the field first |
+| Search button | `button[qid='aClass-2']` | `type=submit` inside the `form.search-bar` |
+| No-results text | `.active-section empty-class-state p.no-search-result-container` | Same node as the filter empty state |
+
+- **Submit-driven, NOT live/debounced.** Typing alone changes nothing — the list only
+  updates when **Search** is clicked. (Contrast with the filter panel's *label* search,
+  which IS debounced.) Settles in **~1.0–1.2 s**.
+- **Case-insensitive and partial-matching** — `sarthak` returns `SarthakTestClass1`.
+  This resolves the `[ASSUMED]` in `TST_CLST_TC_18`.
+- **Searches BOTH sections.** The Active and Ended headings both re-count; a term can match
+  an ended class and not an active one.
+- **No-results copy echoes the term:** `No classes that match your search <term>` (the term
+  in a `<strong>`). Resolves the `[ASSUMED]` in `TST_CLST_TC_21`.
+- **The search term PERSISTS server-side, exactly like the applied filter** — it survived a
+  full page reload with the list still narrowed to one class. **Intended behaviour** (same
+  product decision as the filter, 2026-08-17). *Testing impact:* the housekeeping reset must
+  clear the **search as well as the filter**, or the search TCs hand the sort TCs a one-row
+  list and the term leaks into the next run.
+- **There is no clear/X control** on the search field — the reset is *empty the input, then
+  click Search*.
+
+##### Class list sorting (Req #27)
+
+*Captured live on Thor [2026-08-17].*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Sort by class name | `button[qid='aClass-3ACTIVE_SECTION']` | `aria-label="Sort by class name"` |
+| Sort by start date | `button[qid='aClass-4ACTIVE_SECTION']` | |
+| Sort by end date | `button[qid='aClass-5ACTIVE_SECTION']` | |
+| Sort status (name) | `#sortStatus-class-title-a-ACTIVE_SECTION` | `sr-only`; note `title`, not `name` |
+| Sort status (start) | `#sortStatus-class-startdate-a-ACTIVE_SECTION` | all-lowercase `startdate` |
+| Sort status (end) | `#sortStatus-class-enddate-a-ACTIVE_SECTION` | all-lowercase `enddate` |
+
+> The `qid`s are **suffixed with the section** (`…ACTIVE_SECTION`), so the Ended table's
+> headers are separate elements — an unsuffixed `qid` matches nothing.
+
+- **Class key is NOT sortable** — its header is a `span.list-info.disabled`, not a button.
+  Only class name, start date and end date sort.
+- **Each click toggles** ascending ⇄ descending. The status span is rendered **only inside
+  the currently active sort column's button** — the other columns' spans are removed from
+  the DOM entirely, so `null` reliably means "not the sort column".
+- **⚠ The sort status label is OPTIMISTIC UI.** Measured: the label flips to
+  "sorted ascending"/"sorted descending" in **~90–120 ms**, but the **rows only re-order at
+  ~1.2–3.2 s**. Waiting on the label and then reading the rows reads the *previous* order.
+  **Wait on the row content changing, never on the label.**
+- **Sorting does NOT persist** across a page load — unlike the filter and the search, it
+  resets. Within a session it does survive between TCs, so a test must not assume the first
+  click yields ascending.
+- **Collation is by code point**, not locale/case-insensitive: `(` < `A` < `S` < `T` < `c` < `t`,
+  so `(14 aug) class 1` < `AutoClass_CreateOnly` < `class_L_…`, and `test Class 14 aug 2` <
+  `testClass1` (space before `C`). A `localeCompare` assertion would NOT match the product.
+
+**Row cells (Active section) — stable indexed ids**
+
+`#class-cell-name-ACTIVE_SECTION-<n> a.class-details` · `#class-cell-key-ACTIVE_SECTION-<n>`
+· `#class-cell-startDate-ACTIVE_SECTION-<n>` · `#class-cell-endDate-ACTIVE_SECTION-<n>`
+(`<n>` = 0-based row index; note the camelCase `startDate`/`endDate` here versus the
+lowercase forms in the sort-status ids). Column headers use the matching
+`#class-col-<field>-ACTIVE_SECTION` ids. Dates render as `Aug 17, 2026`.
+
 **Data notes**
 
 - Label `VM1` matches **no active class** — filtering `Active` + `VM1` returns zero.
+- `SarthakTestClass1` (key `97Cc-y7bs`) is the search fixture — an active class whose name
+  no other class shares a prefix with.
+- Six active classes share the start date `Aug 14, 2026`, so date sorting must be asserted
+  as **monotonic, not strictly increasing**, and descending is not an exact reversal.
 - Class creation is asynchronous ("can take up to 12 hours"), so a newly created class does
   not appear in `Active classes (N)` immediately — see the Add Class feature notes.
