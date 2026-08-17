@@ -106,7 +106,25 @@ Module **CMGT**, **9 TCs** (TST_CMGT_TC_1..9), S.No. 60–68. Total suite now **
 - **#30 Count increase:** Active count rises after (async) creation completes.
 - New `[ASSUMED]`: permanent-delete UI + blocked behaviour; 50-class bulk max; create-new-label form.
 
+## Batch 6 — Class grade settings / clone / context class (final) — ALL 30 scenarios covered
+
+Modules **CGST / CLON / CTXC**, **13 TCs** (S.No. 69–81). Total suite now **81 TCs** — every
+AdminApp.xlsx scenario has ≥1 TC.
+- **#22 Class grade settings (CGST, 6 TCs):** class page → **Actions** → **Class grade settings**
+  (`/grade-weighting`): Grading Scale (+ Change), Score settings (teacher-override toggle), Score
+  calculation (Best/First score), material weightage, Add a grading category, Total grade 100%, Save.
+  This is the page the grading-category/scale details link to — resolves the deferred launch
+  `[ASSUMED]`s in GCAT_TC_7 / GSCL_TC_7.
+- **#31 Clone (CLON, 3 TCs):** "Copy an Existing Class" → step 1 pick source class → step 2 "Choose
+  what to copy" (Teachers / Course materials / Assignments / Locked content rules / Class grade
+  settings — each with a count, disabled when 0). Grounded live; empty-component disabling observed.
+- **#32 Context class (CTXC, 4 TCs):** `[ASSUMED]` — no context-class creation entry point found in
+  the admin flow; cross-role checks need teacher + student accounts. Needs product clarification.
+
+**Numbering note:** the unnumbered AdminApp.xlsx rows were keyed by row position — sort=#27,
+ended/active=#28, launch-from-ended=#29, count=#30, **clone=#31, context=#32**, user-guide=#33 (=#17).
+
 ## Pending / Follow-up
-- User review of Batches 1–5; confirm the `[ASSUMED]` items live and fill placeholders.
-- Remaining scenarios: #22 class grade settings, #28 clone, #29 context class creation (complex).
-- Later: automate CLST → `schoolClasses`, GCAT → `gradingCategories`, BCCF → `createClasses`, GSCL → `gradingScales`, CMGT → `schoolClasses`/class page.
+- User review; confirm the `[ASSUMED]` items live (esp. #32 context class + clone populated source).
+- Later: automate CLST → `schoolClasses`, GCAT → `gradingCategories`, BCCF → `createClasses`,
+  GSCL → `gradingScales`, CMGT/CGST/CLON → class page / grade-settings / create form.

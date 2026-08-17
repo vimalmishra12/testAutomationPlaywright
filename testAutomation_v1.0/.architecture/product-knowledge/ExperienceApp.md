@@ -176,3 +176,104 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
 
 - Child accounts likely have restricted platform features (no self-registration,
   parental consent flow). `[ASSUMED]` — confirm scope with product.
+
+---
+
+#### Feature: Classes tab — list, and the Filter panel
+
+*Captured live on Thor [2026-08-15] during Phase 2 of `adminClassesTab.test.js`
+(`npm run P1AdminClassesTab_Thor`), school "3 July Test School 1" / `FCN-CHZ-PDA`.*
+
+##### Page: School Classes tab
+- **URL (Thor):** `/admin/admin/org_<slug>/class` — `FCN-CHZ-PDA` → `org_perf_testschool_1`
+- **Entry path:** My school accounts → school card → Classes tab (default tab)
+
+> **Two schools share the display name "3 July Test School 1"** (`FCN-CHZ-PDA` and
+> `ZPB-TWP-AEQ`). Always select a school by **school key**, never by name or position.
+
+**Key elements**
+
+| Element | Selector | Notes |
+|---|---|---|
+| Active heading | `h2:has-text("Active classes")` | Renders as `Active classes (N)`; the `(N)` is **not always present** — it disappears under some filter combinations |
+| Filter button | `a#filterDropDownToggle` | `qid` is lower-case `aclass-16`, unlike its neighbours |
+| Applied-filter Clear link | `a[qid='aClass-19']` | **Rendered only while a filter is applied** — the app's own "is a filter active?" signal |
+| Select-all checkbox | `input#select-all-classes-checkbox` | Exists **only when class rows are present** |
+| Per-row checkbox | `input#multiple-class-select-checkbox-<n>` | `aria-label` = `Select <class name> class` |
+| Delete class button | `button[qid='dBulkClass-1']` | `disabled` until a row is ticked |
+| Load more | `a[qid='aClass-8']` | **The list lazy-loads** — visible rows can be fewer than the heading's `(N)` |
+
+> **Trap:** the *only* `input[type='checkbox']` on the page when the list is empty is
+> `#teacher-admin-toggle` — the Administrator/Teacher header switch. A bare
+> `input[type='checkbox']` selector silently matches that instead of select-all.
+
+> **Trap:** there are **two** `<empty-class-state>` nodes — one inside `.active-section`
+> (visible) and a twin inside the collapsed `.ended-section` (hidden). Any empty-state
+> selector must be scoped to `.active-section` **and** checked for visibility, not counted.
+
+##### Filter panel (`#classSortFilterModal`)
+
+- Slide-in Bootstrap modal. **Stays in the DOM when closed** (`display:none`) — so an
+  element-count check can never tell you whether it is open; use a visibility check.
+- **Class status** options are `Not started`, `Active`, `Ended`, `Expired`, `Deleted`.
+  The real `<input type="radio">` is `aria-hidden`/`tabindex=-1` and **not clickable** —
+  the interactive element is the wrapping `div[role='radio'][aria-label='<status>']`,
+  whose `aria-checked` carries the state.
+- **Close timing measured live:** after Apply, the `show` class drops at ~**3.37 s** and
+  `display:none` lands at ~**3.61 s**. Bootstrap keeps `display:block` at `opacity:0`
+  through the fade, and Playwright counts an opacity-0 element as **visible** — so a
+  "modal hidden" wait must budget for the full ~3.6 s, not the class change.
+- **"Clear all" (`a[qid='aClass-14']`) clears the applied filter AND closes the panel.**
+  During the close the panel still holds its **pre-clear** chips and `aria-checked` state,
+  so asserting on the panel's own markup right after the click reads stale DOM. Reopening
+  the panel shows it correctly rebuilt (all radios `false`, no chips). Verify a clear at
+  **page** level via the `aClass-19` Clear link disappearing.
+
+**Class labels search**
+
+- Input `input[qid='iClass-1']` ("Find a label"); results `#class-label-suggestion-list
+  a.search-item`; selected chip `.label-container > span.label`.
+- **Debounced async search (~1–3 s)**, and the suggestion container is **not rendered at
+  all** when there are no matches (there is no "no results" message to wait for).
+- **Scoped by the selected Class status** — it only offers labels present on a class of
+  that status. Consequence for test data: a status+label pair must **co-exist** or the
+  label can never be selected. `Active` + `VM1` is such an impossible pair on this school
+  (applying it yields "No classes that are Active, VM1").
+- Requires a **real click on the field then real keystrokes**. Setting `.value`
+  programmatically does not fire the search, and typing without clicking first does not
+  open the dropdown when the field is already focused from a previous interaction.
+- Labels present under status `Active` [2026-08-15]: `aditya_goel`, `A11y test`, `aditya`,
+  `sarthak1`, `denfolodedmrm slmeomsaaadme`, `sarthakkkkkakakakakakakkakakakakakakakak1sqwwduwhqdujhewu`.
+
+**Known quirks / bugs**
+
+- **The Filter panel's X close button is unreliable** [2026-08-15]. `button[qid='button-Admin-1']`
+  reports a successful click but the panel stays open; waiting longer does not help
+  (observed a clean 0.9 s close and a full 15 s timeout on consecutive runs, same code and
+  data). **Re-clicking** is what resolves it. `classFilterModal.click_close()` currently
+  carries a retry as a **workaround** — remove it once the app is fixed.
+  *Reported to the team [2026-08-15]; fix pending.*
+
+- **The applied filter persists SERVER-SIDE, per user account** [2026-08-15]
+  `[UNCONFIRMED — product decision pending 2026-08-17]`.
+  Reproduced manually end-to-end: a filter applied on the Classes tab survives a **page
+  reload**, a **full logout + login**, and a **different browser / incognito window** —
+  which leaves the server, keyed to the account, as the only possible store. It was first
+  noticed because a filter left behind by an automated run was still applied when a
+  completely separate browser logged in later.
+  - *Why it may be intended:* remembering a user's filter preference is a normal feature.
+  - *Why it may be a defect:* an admin who filtered by `Deleted` on Friday logs in Monday
+    to a Classes tab reading **"No classes"**, with no explanation, on any device. The
+    persistence and that failure mode are separate decisions.
+  - *Not covered by the requirements:* no mention of persistence/retention/re-login in any
+    of the 30 requirements or 81 TCs in `test/Manual/C1App/AdminApp-Classes/`.
+  - *Testing impact:* the suite cannot assume a clean start. A crashed run leaves a filter
+    on the account that poisons the next run, days later, on another machine. Two people
+    running the suite with the same account will interfere with each other. This is why
+    `adminClassesTab.json` resets in **BeforeEach**, not only AfterEach.
+
+**Data notes**
+
+- Label `VM1` matches **no active class** — filtering `Active` + `VM1` returns zero.
+- Class creation is asynchronous ("can take up to 12 hours"), so a newly created class does
+  not appear in `Active classes (N)` immediately — see the Add Class feature notes.
