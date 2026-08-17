@@ -342,6 +342,52 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
 lowercase forms in the sort-status ids). Column headers use the matching
 `#class-col-<field>-ACTIVE_SECTION` ids. Dates render as `Aug 17, 2026`.
 
+##### Ended classes section, row details & user guide (Req #18 / #17 / #28 / #20)
+
+*Captured live on Thor [2026-08-17].*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Ended section root | `.ended-section` | Holds the note "Ended and deleted classes automatically move into this section" |
+| Ended section toggle | `a#endedSectionCollapseBtn` | `qid` is lower-case `aclass-17`; `aria-expanded` carries the state |
+| Ended section panel | `#endedSectionCollapse` | |
+| Open/Close label | `.ended-section-heading span.toggle-text` | Reads `Open` when closed, `Close` when open |
+| Ended Class status header | `#class-col-class-status-ENDED_SECTION` | Note the doubled `class-class` |
+| Ended row cells | `#class-cell-<field>-ENDED_SECTION-<n>` | Adds `status` to the Active section's fields |
+| Load more | `a[qid='aClass-8']` | Lives in the **Ended** section |
+| Row details toggle | `a[data-toggle='collapse'][aria-controls='itemCollapseACTIVE_SECTION<n>']` | The `qid`s run 1,3,5… — use `aria-controls`, it is cleanly index-based |
+| Row details panel | `#itemCollapseACTIVE_SECTION<n>` | |
+| User guide toggle | `a[qid='aClass-11']` | `aria-label` flips `Open the user guide` ⇄ `Hide the user guide` |
+| User guide panel | `.collapseUserGuide` | |
+
+- **The Ended section is COLLAPSED on load and renders NOTHING until expanded** — a freshly
+  loaded tab has **zero** `ENDED_SECTION` rows and no "Load more" link. Rows arrive ~1.0 s
+  after expanding.
+- **⚠ The `Ended classes (N)` count is fetched WITH the rows, not on page load.** While
+  collapsed the heading reads a bare `Ended classes` and the count **never** appears (polled
+  10 s); it lands ~0.9 s after expanding. Any assertion on the ended count must expand first.
+  This failed `TST_CLST_TC_14` on its first run.
+- **"Load more" is REMOVED from the DOM** once the last batch loads (it does not merely
+  disable) — resolves the `[ASSUMED]` in `TST_CLST_TC_20`. Page size is **20**; the new rows
+  land ~3.5 s after the click.
+- **Loaded rows are NOT reset by collapsing and re-expanding** the section (verified: 26 rows
+  stayed 26, link stayed gone). **Only a page reload** restores the first-page state — which is
+  what keeps the two load-more TCs independent.
+- **Class status values seen:** `Ended`, `Expired`, `Deleted` (the manual doc recorded only
+  "Expired").
+- **⚠ Row-details expand is a Bootstrap collapse with a ~700 ms `collapsing` phase, and the
+  panel's CONTENT stays in the DOM while collapsed.** Two consequences: element counts can
+  never distinguish the states (use `isDisplayed`), and **waiting on the panel is not enough** —
+  Playwright calls the panel visible partway through the expand, while the panel is still
+  shorter than its content and inner elements are clipped to zero height. Wait on a **content**
+  element (e.g. `h3.class-label-heading`). This failed `TST_CLST_TC_9` on its first run.
+- The **user guide panel is REMOVED from the DOM** when collapsed — unlike the row-details
+  panel and the filter modal, which both persist.
+- **Launching a class** (active or ended) opens the same class page; `activeClass.page.js`
+  already models it (anchors on the Actions button), so no new page object is needed. A
+  deep-link to `/admin/admin/org_<slug>/class` returns `/dashboard/error` — the school context
+  must be set by clicking the school card first.
+
 **Data notes**
 
 - Label `VM1` matches **no active class** — filtering `Active` + `VM1` returns zero.
@@ -349,5 +395,15 @@ lowercase forms in the sort-status ids). Column headers use the matching
   no other class shares a prefix with.
 - Six active classes share the start date `Aug 14, 2026`, so date sorting must be asserted
   as **monotonic, not strictly increasing**, and descending is not an exact reversal.
+- **⚠ The ACTIVE section also paginates at 20** (same page size as Ended). Once a school has
+  more than 20 active classes, ascending and descending sorts show **two different 20-row
+  windows of a larger set** — so "descending is the exact reverse of ascending" is false even
+  though the sort is correct. Assert monotonic ordering and the direction flip; only assert an
+  exact reversal when `visible rows === Active classes (N)`.
+- **⚠ This school is SHARED and mutates under the suite.** Between 2026-08-17 morning and
+  afternoon another suite created many classes named `AutoClass_CreateOnly`, taking the active
+  count past 20 and introducing **duplicate class names**. Two assumptions died at once: that
+  the whole list is visible, and that names are unique. Do not build an assertion on the
+  current row count, or on names being distinct.
 - Class creation is asynchronous ("can take up to 12 hours"), so a newly created class does
   not appear in `Active classes (N)` immediately — see the Add Class feature notes.
