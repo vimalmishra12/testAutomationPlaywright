@@ -11,6 +11,7 @@ module.exports = {
   endDateInput: selectorFile.css.ComproC1.createClasses.endDateInput,
   endDateNextMonthBtn: selectorFile.css.ComproC1.createClasses.endDateNextMonthBtn,
   endDateDay15Cell: selectorFile.css.ComproC1.createClasses.endDateDay15Cell,
+  endDateDisabledCell: selectorFile.css.ComproC1.createClasses.endDateDisabledCell,
   createClassBtn: selectorFile.css.ComproC1.createClasses.createClassBtn,
   successDialogTitle: selectorFile.css.ComproC1.createClasses.successDialogTitle,
   addMaterialBtn: selectorFile.css.ComproC1.createClasses.addMaterialBtn,
@@ -19,6 +20,11 @@ module.exports = {
   addMaterialsConfirmBtn: selectorFile.css.ComproC1.createClasses.addMaterialsConfirmBtn,
   selectedMaterialInput: selectorFile.css.ComproC1.createClasses.selectedMaterialInput,
   backToDashboardLink: selectorFile.css.ComproC1.createClasses.backToDashboardLink,
+  // Row 2 of the bulk form (a new empty row auto-appends once row 1 is filled).
+  // Same dBulkClass-<row>-<col> qid pattern as row 1 (row index 0 → 1).
+  classNameInputRow2: selectorFile.css.ComproC1.createClasses.classNameInputRow2,
+  startDateInputRow2: selectorFile.css.ComproC1.createClasses.startDateInputRow2,
+  endDateInputRow2: selectorFile.css.ComproC1.createClasses.endDateInputRow2,
 
   /**
    * Confirms the "Create new classes" bulk form loaded.
@@ -50,6 +56,28 @@ module.exports = {
       await logger.logInto(
         await stackTrace.get(),
         res + "Value is NOT entered in classNameInput",
+        "error"
+      );
+    }
+    return res;
+  },
+
+  /**
+   * Clears the first row's Class name input. Used to establish a deterministic
+   * "incomplete row" precondition for the negative Create-disabled check (TST_CCLS_TC_9):
+   * the form auto-saves/restores a draft, so it is NOT guaranteed empty on load — clearing
+   * the name guarantees a missing required field regardless of any restored draft.
+   */
+  clear_className: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    res = await action.clearValue(this.classNameInput);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "classNameInput cleared");
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "classNameInput is NOT cleared",
         "error"
       );
     }
@@ -219,6 +247,136 @@ module.exports = {
       );
     }
     console.log("addMaterial", obj);
+    return obj;
+  },
+
+  // ── Form validation getters (bulk-create form; no class is created) ───────────
+  // Read-only checks backing the Edge/Negative scenario-#3 TCs. They never click
+  // "Create N class", so they seed no data and can run on a fresh, empty form.
+
+  /**
+   * Reads the class-name input's maxlength attribute as an integer.
+   * Returns { max: <int|null>, raw: <attribute string> }.
+   */
+  getData_classNameMaxLength: async function () {
+    await logger.logInto(await stackTrace.get());
+    var raw = await action.getAttribute(this.classNameInput, "maxlength");
+    var obj = { raw: raw, max: null };
+    if (typeof raw === "string" && /^\d+$/.test(raw)) {
+      obj.max = parseInt(raw, 10);
+    }
+    console.log("classNameMaxLength", obj);
+    return obj;
+  },
+
+  /**
+   * Whether the "Create N class" button is currently enabled. The button is gated
+   * on a row having class name + start + end date, so this backs the negative TCs
+   * (empty row / invalid name ⇒ expected false). Coerced to a strict boolean so an
+   * Error from the action layer never reads as truthy (Invariant 4).
+   */
+  getData_createBtnEnabled: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.isEnabled(this.createClassBtn);
+    var enabled = res === true;
+    console.log("createBtnEnabled", enabled);
+    return enabled;
+  },
+
+  /**
+   * Opens the End-date picker and counts the disabled day cells in the shown month.
+   * With a start date of today, days on/before the start are disabled
+   * (owl-dt-calendar-cell-disabled), so a count > 0 confirms an end date earlier
+   * than the start cannot be chosen. Call AFTER set_startDate. Returns an int count.
+   */
+  getData_endDatePickerDisabledCount: async function () {
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.endDateInput); // opens the calendar
+    await action.waitForDisplayed(this.endDateNextMonthBtn); // picker is open
+    var count = await action.getElementCount(this.endDateDisabledCell);
+    console.log("endDatePickerDisabledCount", count);
+    return count;
+  },
+
+  // ── Bulk (multi-row) creation — BCCF_TC_6 ────────────────────────────────────
+  // A new empty row auto-appends once the previous row is filled, so row 2 exists
+  // only after row 1 has a name/date. These mirror the row-1 methods against the
+  // row-2 qids; the date-picker OVERLAY selectors are shared (one picker at a time).
+
+  /**
+   * Types the class name into row 2. clearValue + addValue for the same
+   * Angular-validated-input reason as row 1 (Invariant 6 / ADR-013).
+   */
+  set_className_row2: async function (value) {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.clearValue(this.classNameInputRow2);
+    res = await action.addValue(this.classNameInputRow2, value);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Value is entered in classNameInputRow2");
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "Value is NOT entered in classNameInputRow2",
+        "error"
+      );
+    }
+    return res;
+  },
+
+  /**
+   * Sets row 2's Start date to TODAY (opens the picker, clicks the active cell).
+   */
+  set_startDate_row2: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.startDateInputRow2); // opens the calendar
+    await action.waitForDisplayed(this.startDateTodayCell);
+    res = await action.click(this.startDateTodayCell);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Row 2 start date set to today");
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "Row 2 start date is NOT set", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Sets row 2's End date to the 15th of NEXT month — same rationale as row 1
+   * (day 15 always exists, is always after today, and is unique in the grid).
+   */
+  set_endDate_row2: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.endDateInputRow2); // opens the calendar
+    await action.waitForDisplayed(this.endDateNextMonthBtn);
+    await action.click(this.endDateNextMonthBtn); // advance to next month
+    await action.waitForDisplayed(this.endDateDay15Cell);
+    res = await action.click(this.endDateDay15Cell);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Row 2 end date set to day 15 of next month");
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "Row 2 end date is NOT set", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Reads the Create button's label and the class count embedded in it
+   * ("Create 2 classes" → 2). The count is parsed from the label rather than
+   * assumed, because the form can restore an auto-saved draft (so the absolute
+   * starting count is not fixed) — callers assert the DELTA after filling a row.
+   * Returns { raw: <label text>, count: <int|null> }.
+   */
+  getData_createBtnLabel: async function () {
+    await logger.logInto(await stackTrace.get());
+    var raw = await action.getText(this.createClassBtn);
+    var obj = { raw: raw, count: null };
+    var m = typeof raw === "string" ? raw.match(/\d+/) : null;
+    if (m) {
+      obj.count = parseInt(m[0], 10);
+    }
+    console.log("createBtnLabel", obj);
     return obj;
   },
 

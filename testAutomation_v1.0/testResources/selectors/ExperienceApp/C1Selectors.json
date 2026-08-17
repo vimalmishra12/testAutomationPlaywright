@@ -1031,6 +1031,7 @@
         "endDateInput": "input[qid='dBulkClass-0-4']",
         "endDateNextMonthBtn": "button[aria-label='Next month']",
         "endDateDay15Cell": "td.owl-dt-calendar-cell:has(span.owl-dt-calendar-cell-content:text-is(\"15\"))",
+        "endDateDisabledCell": ".owl-dt-calendar-cell-disabled",
         "createClassBtn": "button[qid='dBulkClass-13']",
         "successDialogTitle": "#successCreateClassesModalLabel",
         "addMaterialBtn": "button[qid='dBulkClass-0-6']",
@@ -1038,7 +1039,10 @@
         "materialItem": "a.dropdown-item",
         "addMaterialsConfirmBtn": "button[qid='dBulkClass-add-learning-material-modal-2']",
         "selectedMaterialInput": "input[qid='dBulkClass-products0-6']",
-        "backToDashboardLink": "a[qid='dBulkClass-47']"
+        "backToDashboardLink": "a[qid='dBulkClass-47']",
+        "classNameInputRow2": "input[qid='dBulkClass-1-2']",
+        "startDateInputRow2": "input[qid='dBulkClass-1-3']",
+        "endDateInputRow2": "input[qid='dBulkClass-1-4']"
       },
       "createAdultStudentAccounts": {
         "pageHeading": "h1",

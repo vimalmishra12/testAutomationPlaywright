@@ -905,7 +905,7 @@ for the label TCs).
 | **Test Steps** | 1. Fill class name + start/end dates on row 1. 2. Fill row 2 similarly. 3. Click **Create 2 classes**. |
 | **Test Data** | 2 valid class rows |
 | **Expected Result** | The Create button reflects the count ("Create 2 classes"); creating shows the success dialog for N classes. New empty rows auto-append while filling. |
-| **Remarks** | — |
+| **Remarks** | Automated: `TST_CCLS_TC_13` (fills a 2nd row, asserts the Create-button count increases by one; does NOT click Create, so no class is created). |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1038,7 +1038,7 @@ for the label TCs).
 | **Test Steps** | 1. Enter a 50-character class name. |
 | **Test Data** | 50-char name |
 | **Expected Result** | The name is accepted (input enforces maxlength 50); no more than 50 characters can be entered. |
-| **Remarks** | — |
+| **Remarks** | Automated: `TST_CCLS_TC_11` (asserts class-name input maxlength = 50). |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1057,7 +1057,7 @@ for the label TCs).
 | **Test Steps** | 1. Open the **End date** picker. |
 | **Test Data** | Start = today |
 | **Expected Result** | Dates on/before the start date are disabled in the end-date picker, so an end date earlier than the start cannot be chosen. |
-| **Remarks** | Observed: days ≤ start are `owl-dt-calendar-cell-disabled`. |
+| **Remarks** | Observed: days ≤ start are `owl-dt-calendar-cell-disabled`. Automated: `TST_CCLS_TC_12`. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1076,7 +1076,7 @@ for the label TCs).
 | **Test Steps** | 1. Fill only some of {name, start date, end date} on a row. 2. Observe the **Create** button. |
 | **Test Data** | Incomplete row |
 | **Expected Result** | The "Create N class" button stays disabled until the row has a class name AND start date AND end date. |
-| **Remarks** | — |
+| **Remarks** | Automated: `TST_CCLS_TC_9` (asserts Create is disabled on an empty row). |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1095,7 +1095,7 @@ for the label TCs).
 | **Test Steps** | 1. Leave the class name empty, or enter only non-alphanumeric characters (e.g. `---`). 2. Attempt to create. |
 | **Test Data** | Name: (empty) / `---` |
 | **Expected Result** | The row is invalid — the name requires at least one alphanumeric character (pattern `.*[A-Za-z0-9]+.*`) — so the class cannot be created. `[ASSUMED]` — capture any inline error text shown. |
-| **Remarks** | — |
+| **Remarks** | Automated: `TST_CCLS_TC_10` (enters `---`, asserts Create stays disabled). |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |

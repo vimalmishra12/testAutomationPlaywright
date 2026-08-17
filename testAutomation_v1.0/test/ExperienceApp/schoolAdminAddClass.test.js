@@ -131,5 +131,113 @@ module.exports = {
       true,
       "School Classes dashboard did not load after 'Back to dashboard'"
     );
+  },
+
+  // ── Scenario #3 (bulk create form) — Edge / Negative validation ───────────────
+  // These run on a FRESH, empty create form (own execution suite) and never create a
+  // class. Manual doc mapping: TC_9←BCCF_TC_15, TC_10←BCCF_TC_16, TC_11←BCCF_TC_13,
+  // TC_12←BCCF_TC_14.
+
+  /**
+   * TST_CCLS_TC_9 (Negative) — "Create N class" is disabled when a row is missing a
+   * required field (BCCF_TC_15). The form auto-restores a saved draft, so it is not
+   * guaranteed empty on load; we clear the class name first to deterministically create
+   * an incomplete row, then assert Create stays disabled.
+   */
+  TST_CCLS_TC_9: async function (testdata) {
+    var cleared = await createClasses.clear_className();
+    await assertion.assertEqual(cleared, true, "class name could not be cleared");
+    var enabled = await createClasses.getData_createBtnEnabled();
+    await assertion.assertEqual(
+      enabled,
+      false,
+      "Create button should be disabled on an empty row but was enabled"
+    );
+  },
+
+  /**
+   * TST_CCLS_TC_10 (Negative) — a non-alphanumeric-only class name (e.g. "---") does
+   * not satisfy the name rule, so "Create N class" stays disabled (BCCF_TC_16).
+   * testdata: { invalidName }
+   */
+  TST_CCLS_TC_10: async function (testdata) {
+    sts = await createClasses.set_className(testdata.invalidName);
+    await assertion.assertEqual(sts, true, "invalidName is not set");
+    var enabled = await createClasses.getData_createBtnEnabled();
+    await assertion.assertEqual(
+      enabled,
+      false,
+      "Create button should stay disabled for a non-alphanumeric name '" +
+        testdata.invalidName + "' but was enabled"
+    );
+  },
+
+  /**
+   * TST_CCLS_TC_11 (Edge) — the class-name input caps input at 50 characters
+   * (maxlength=50), so a name cannot exceed the maximum (BCCF_TC_13).
+   * testdata: { classNameMaxLength }
+   */
+  TST_CCLS_TC_11: async function (testdata) {
+    var res = await createClasses.getData_classNameMaxLength();
+    await assertion.assertEqual(
+      res.max,
+      testdata.classNameMaxLength,
+      "class-name maxlength mismatch (raw: " + res.raw + ")"
+    );
+  },
+
+  /**
+   * TST_CCLS_TC_12 (Edge) — with a start date of today, the End-date picker disables
+   * days on/before the start, so an end date earlier than the start cannot be chosen
+   * (BCCF_TC_14).
+   */
+  TST_CCLS_TC_12: async function (testdata) {
+    var startSet = await createClasses.set_startDate();
+    await assertion.assertEqual(startSet, true, "startDate is not set");
+    var disabledCount = await createClasses.getData_endDatePickerDisabledCount();
+    await assertion.assert(
+      typeof disabledCount === "number" && disabledCount > 0,
+      "End-date picker showed no disabled cells for dates on/before the start date " +
+        "(count: " + disabledCount + ")"
+    );
+  },
+
+  /**
+   * TST_CCLS_TC_13 (Positive) — bulk: filling a SECOND class row increases the count in
+   * the "Create N class(es)" button by exactly one, proving the form accumulates rows
+   * for bulk creation (BCCF_TC_6). Deliberately asserts the DELTA and never clicks
+   * Create — the form can restore an auto-saved draft (so the starting count is not
+   * fixed), and no class is created, keeping the test school clean.
+   * testdata: { className, classNameRow2 }
+   */
+  TST_CCLS_TC_13: async function (testdata) {
+    // Row 1 is set explicitly so the baseline is a known-complete row regardless of draft.
+    sts = await createClasses.set_className(testdata.className);
+    await assertion.assertEqual(sts, true, "row 1 className is not set");
+    sts = await createClasses.set_startDate();
+    await assertion.assertEqual(sts, true, "row 1 startDate is not set");
+    sts = await createClasses.set_endDate();
+    await assertion.assertEqual(sts, true, "row 1 endDate is not set");
+
+    var before = await createClasses.getData_createBtnLabel();
+    await assertion.assert(
+      typeof before.count === "number",
+      "Create button count could not be read (label: " + before.raw + ")"
+    );
+
+    sts = await createClasses.set_className_row2(testdata.classNameRow2);
+    await assertion.assertEqual(sts, true, "row 2 className is not set");
+    sts = await createClasses.set_startDate_row2();
+    await assertion.assertEqual(sts, true, "row 2 startDate is not set");
+    sts = await createClasses.set_endDate_row2();
+    await assertion.assertEqual(sts, true, "row 2 endDate is not set");
+
+    var after = await createClasses.getData_createBtnLabel();
+    await assertion.assertEqual(
+      after.count,
+      before.count + 1,
+      "Create button count did not increase by 1 after filling a second row " +
+        "(before: " + before.raw + ", after: " + after.raw + ")"
+    );
   }
 };

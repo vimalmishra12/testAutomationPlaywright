@@ -1,0 +1,28 @@
+{
+  "Suite1": {
+    "Name": "Admin App | School-admin Add Class — Run 3 (bulk-form positives: no class created) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClassBulk" }] },
+      { "id": "TST_SCLS_TC_2", "description": "Click 'Add class' and open the create form", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClassBulk" }] },
+      { "id": "TST_CCLS_TC_13", "description": "BCCF_TC_6 (Pos) | Filling a second row increases the Create button class count by one", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClassBulk" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

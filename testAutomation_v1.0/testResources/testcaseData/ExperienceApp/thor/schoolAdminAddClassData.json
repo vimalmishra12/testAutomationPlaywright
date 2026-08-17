@@ -5,6 +5,16 @@
       "className": "AutoClass_CreateOnly",
       "material": "dev_test_ebook_bundle_104_bundle",
       "successMessage": "Success! We are now creating"
+    },
+    "adminAddClassValidation": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "invalidName": "---",
+      "classNameMaxLength": 50
+    },
+    "adminAddClassBulk": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "className": "AutoClass_Bulk_R1",
+      "classNameRow2": "AutoClass_Bulk_R2"
     }
   }
 }
