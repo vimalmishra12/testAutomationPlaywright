@@ -4447,7 +4447,7 @@
       ]
     },
     {
-      "modulename": "Admin App | Classes tab — load, filter, search & sort (Req #1 / #2 / #9 / #27)",
+      "modulename": "Admin App | Classes tab — load, filter, search, sort, rows, guide, launch, sections & load more",
       "moduleId": "CLST",
       "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
       "testcase": [
@@ -4459,7 +4459,17 @@
         { "id": "TST_CLST_TC_6", "description": "Verify search by class key returns the matching class",           "tags": "P1", "visualTest": false },
         { "id": "TST_CLST_TC_7", "description": "Verify sorting by Class name toggles ascending/descending",       "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_8", "description": "Verify sorting by Start date and End date",                       "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_9", "description": "Verify expanding a class row shows the class details",           "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_10", "description": "Verify collapsing an expanded class row hides the details",      "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_11", "description": "Verify expanding the user guide shows the help panel",           "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_12", "description": "Verify collapsing the user guide hides the help panel",          "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_13", "description": "Verify launching an Active class opens the Class Page",          "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_14", "description": "Verify Active and Ended classes appear in separate sections with counts", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_15", "description": "Verify expanding and collapsing the Ended classes section",      "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_16", "description": "Verify launching a class from the Ended section opens the Class Page", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_17", "description": "Verify 'Load more' loads additional classes in the Ended section", "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_18", "description": "Verify class search is case-insensitive and matches partial names", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_20", "description": "Verify 'Load more' no longer appears once all classes are loaded", "tags": "P3", "visualTest": false },
         { "id": "TST_CLST_TC_19", "description": "Verify 'Clear all' resets the filter selections",                 "tags": "P3", "visualTest": false },
         { "id": "TST_CLST_TC_21", "description": "Verify searching for a non-existent class shows a no-results state", "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "tags": "P3", "visualTest": false },

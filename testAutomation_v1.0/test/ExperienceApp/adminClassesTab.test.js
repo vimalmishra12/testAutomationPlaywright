@@ -273,12 +273,31 @@ module.exports = {
     await assertion.assertEqual(isSortDirection(secondStatus), true, "'Class name' column does not report a sort direction after the second click (got: " + secondStatus + ")");
     await assertion.assert(secondStatus !== firstStatus, "Second click did not toggle the sort direction (still '" + firstStatus + "')");
     await assertion.assertEqual(isSortedBy(secondNames, secondStatus, compareText), true, "Class names are not in " + secondStatus + " order: " + JSON.stringify(secondNames));
-    // Class names are unique, so the reversed order must match exactly.
-    await assertion.assertEqual(
-      JSON.stringify(secondNames),
-      JSON.stringify(firstNames.slice().reverse()),
-      "Descending order is not the exact reverse of ascending order"
-    );
+
+    // The exact-reverse check is the strongest assertion available here, but it is only VALID
+    // when the visible rows are the complete set and no two names tie. Both conditions used to
+    // hold on this school and both have since stopped:
+    //   - the Active list paginates at 20, and the school now has more than 20 active classes,
+    //     so ascending and descending show two DIFFERENT 20-row windows of a larger set - they
+    //     cannot be reverses of each other (the same lazy-load caveat TST_CLST_TC_3 already
+    //     respects);
+    //   - another suite has created many identically-named "AutoClass_CreateOnly" classes, so
+    //     names now tie and a reversal is undefined for them, exactly like the dates in TC_8.
+    // Asserting it unconditionally failed on correct product behaviour (live runs 2026-08-17).
+    var heading = await schoolClasses.getData_activeClassCount();
+    var listComplete = firstNames.length === heading.count;
+    var namesUnique = new Set(firstNames).size === firstNames.length;
+    if (listComplete && namesUnique) {
+      await assertion.assertEqual(
+        JSON.stringify(secondNames),
+        JSON.stringify(firstNames.slice().reverse()),
+        "Descending order is not the exact reverse of ascending order"
+      );
+    } else {
+      // Logged, not silently skipped: if this never runs again the reason should be visible.
+      console.log("TC_7 exact-reverse check not applicable — visible " + firstNames.length +
+        " of " + heading.count + " active classes, unique names: " + namesUnique);
+    }
   },
 
   /**
@@ -322,7 +341,257 @@ module.exports = {
     }
   },
 
+  /**
+   * TST_CLST_TC_9 — Req #18: Verify expanding a class row shows the class details.
+   * testdata: { detailsRowIndex }
+   */
+  TST_CLST_TC_9: async function (testdata) {
+    var row = testdata.detailsRowIndex;
+    // Start from a known state: a previous TC may have left this row expanded.
+    var before = await schoolClasses.getData_rowDetails(row);
+    if (before.panelDisplayed === true) {
+      sts = await schoolClasses.click_rowDetailsToggle(row, false);
+      await assertion.assertEqual(sts.pageStatus, true, "Could not collapse row " + row + " to establish the starting state");
+    }
+
+    sts = await schoolClasses.click_rowDetailsToggle(row, true);
+    await assertion.assertEqual(sts.pageStatus, true, "Class details panel did not open for row " + row);
+
+    var d = await schoolClasses.getData_rowDetails(row);
+    await assertion.assertEqual(d.panelDisplayed, true, "Class details panel is not displayed after expanding row " + row);
+    await assertion.assertEqual(d.labelsHeadingDisplayed, true, "'Class labels' heading not shown in the expanded details");
+    await assertion.assertEqual(d.materialsDisplayed, true, "Course materials column not shown in the expanded details");
+    // The materials column legitimately shows EITHER chosen materials OR the empty state, so
+    // assert it says one of the two rather than assuming this school's data.
+    var m = String(d.materialsText);
+    await assertion.assert(
+      m.indexOf("Course materials") > -1 || m.indexOf("haven't chosen learning materials") > -1,
+      "Materials column shows neither course materials nor the empty state: " + d.materialsText
+    );
+    var counts = String(d.countsText);
+    await assertion.assert(counts.indexOf("Students") > -1, "Students count not shown in the expanded details: " + d.countsText);
+    await assertion.assertEqual(d.toggleLabel, "Hide class details", "Row toggle should read 'Hide class details' while expanded");
+  },
+
+  /**
+   * TST_CLST_TC_10 — Req #18: Verify collapsing an expanded class row hides the details.
+   * testdata: { detailsRowIndex }
+   */
+  TST_CLST_TC_10: async function (testdata) {
+    var row = testdata.detailsRowIndex;
+    // Precondition per the manual TC: the row must be expanded before we collapse it.
+    var before = await schoolClasses.getData_rowDetails(row);
+    if (before.panelDisplayed !== true) {
+      sts = await schoolClasses.click_rowDetailsToggle(row, true);
+      await assertion.assertEqual(sts.pageStatus, true, "Could not expand row " + row + " to establish the precondition");
+    }
+
+    sts = await schoolClasses.click_rowDetailsToggle(row, false);
+    await assertion.assertEqual(sts.pageStatus, true, "Class details panel did not collapse for row " + row);
+
+    var d = await schoolClasses.getData_rowDetails(row);
+    // Visibility, NOT element count — the panel's content stays in the DOM while collapsed.
+    await assertion.assertEqual(d.panelDisplayed, false, "Class details panel is still displayed after collapsing row " + row);
+    await assertion.assertEqual(d.toggleLabel, "Show class details", "Row toggle should read 'Show class details' while collapsed");
+  },
+
+  /**
+   * TST_CLST_TC_11 — Req #17/#33: Verify expanding the user guide shows the help panel.
+   */
+  TST_CLST_TC_11: async function (testdata) {
+    var before = await schoolClasses.getData_userGuide();
+    if (before.panelDisplayed === true) {
+      sts = await schoolClasses.click_userGuideToggle(false);
+      await assertion.assertEqual(sts.pageStatus, true, "Could not collapse the user guide to establish the starting state");
+    }
+
+    sts = await schoolClasses.click_userGuideToggle(true);
+    await assertion.assertEqual(sts.pageStatus, true, "User guide panel did not open");
+
+    var g = await schoolClasses.getData_userGuide();
+    await assertion.assertEqual(g.panelDisplayed, true, "User guide panel is not displayed after opening it");
+    await assertion.assertEqual(g.toggleAriaLabel, "Hide the user guide", "User guide toggle should offer to hide the guide once open");
+    // The guide explains searching by class name and class code — assert the content, so an
+    // empty panel cannot pass.
+    var text = String(g.panelText);
+    await assertion.assert(text.indexOf("On this page you can") > -1, "User guide panel does not show its guidance text: " + g.panelText);
+    await assertion.assert(text.indexOf("class name") > -1, "User guide does not mention searching by class name: " + g.panelText);
+  },
+
+  /**
+   * TST_CLST_TC_12 — Req #17/#33: Verify collapsing the user guide hides the help panel.
+   */
+  TST_CLST_TC_12: async function (testdata) {
+    var before = await schoolClasses.getData_userGuide();
+    if (before.panelDisplayed !== true) {
+      sts = await schoolClasses.click_userGuideToggle(true);
+      await assertion.assertEqual(sts.pageStatus, true, "Could not open the user guide to establish the precondition");
+    }
+
+    sts = await schoolClasses.click_userGuideToggle(false);
+    await assertion.assertEqual(sts.pageStatus, true, "User guide panel did not collapse");
+
+    var g = await schoolClasses.getData_userGuide();
+    await assertion.assertEqual(g.panelDisplayed, false, "User guide panel is still displayed after collapsing it");
+    await assertion.assertEqual(g.toggleAriaLabel, "Open the user guide", "User guide toggle should offer to open the guide once closed");
+  },
+
+  /**
+   * TST_CLST_TC_13 — Req #19: Verify launching an Active class opens the Class Page.
+   * testdata: { launchRowIndex }
+   *
+   * Navigates away, so it returns to the Classes tab before finishing — otherwise every
+   * later TC would run against the class page (ADR-011: TCs must not depend on order).
+   */
+  TST_CLST_TC_13: async function (testdata) {
+    sts = await schoolClasses.click_className(testdata.launchRowIndex, "active");
+    await assertion.assertEqual(sts.pageStatus, true, "Class Page did not load after clicking an active class name");
+    await assertion.assert(
+      String(sts.url).indexOf("/class/") > -1 && String(sts.url).indexOf("/view") > -1,
+      "Launched URL is not a class page: " + sts.url
+    );
+    console.log("TC_13 launched:", sts.className, "→", sts.url);
+
+    var back = await schoolClasses.return_toClassesTab();
+    await assertion.assertEqual(back.pageStatus, true, "Could not return to the Classes tab after launching a class");
+  },
+
+  /**
+   * TST_CLST_TC_14 — Req #28: Verify Active and Ended classes appear in separate sections
+   * with counts.
+   */
+  TST_CLST_TC_14: async function (testdata) {
+    // The Active section is rendered on load, so its count is readable straight away.
+    var activeHeading = await schoolClasses.getData_activeClassCount();
+    await assertion.assert(typeof activeHeading.count === "number", "Could not read the 'Active classes (N)' count (raw: " + activeHeading.raw + ")");
+
+    // The Ended section exists as a separate, collapsed section from the moment the tab loads —
+    // that separation is the requirement, and it holds before anything is expanded.
+    var collapsed = await schoolClasses.getData_endedSection();
+    await assertion.assertEqual(collapsed.headingDisplayed, true, "'Ended classes' section heading is not displayed");
+
+    // Everything else about the Ended section is fetched WITH its rows, on expand — verified
+    // live 2026-08-17: while collapsed the heading reads a bare "Ended classes" and the count
+    // never arrives (polled 10s), then appears ~0.9s after expanding. So the count, the note
+    // and the Class status column can only be asserted once the section is open.
+    sts = await schoolClasses.expand_endedSectionIfCollapsed();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not expand the Ended classes section");
+
+    var ended = await schoolClasses.getData_endedSection();
+    await assertion.assert(typeof ended.count === "number", "Could not read the 'Ended classes (N)' count (raw: " + ended.headingRaw + ")");
+    await assertion.assert(
+      String(ended.sectionText).indexOf("automatically move into this section") > -1,
+      "Ended section does not carry its explanatory note: " + ended.sectionText
+    );
+    // The Class status column exists in the Ended table only — it is what distinguishes the
+    // two tables, so asserting it is what proves they are genuinely separate surfaces.
+    await assertion.assertEqual(ended.statusColumnDisplayed, true, "Ended table does not show the 'Class status' column");
+    await assertion.assert(ended.visibleRowCount > 0, "Ended section expanded but lists no classes");
+  },
+
+  /**
+   * TST_CLST_TC_15 — Req #28: Verify expanding and collapsing the Ended classes section.
+   *
+   * The section is COLLAPSED on load and renders no rows until opened, so this drives it
+   * from whatever state it is in rather than assuming one.
+   */
+  TST_CLST_TC_15: async function (testdata) {
+    var before = await schoolClasses.getData_endedSection();
+    if (before.expanded === true) {
+      sts = await schoolClasses.click_endedSectionToggle(false);
+      await assertion.assertEqual(sts.pageStatus, true, "Could not collapse the Ended section to establish the starting state");
+    }
+
+    // ── Open ──
+    sts = await schoolClasses.click_endedSectionToggle(true);
+    await assertion.assertEqual(sts.pageStatus, true, "Ended section did not expand");
+    var open = await schoolClasses.getData_endedSection();
+    await assertion.assertEqual(open.expanded, true, "Ended section does not report itself expanded");
+    await assertion.assertEqual(open.panelDisplayed, true, "Ended section panel is not displayed after opening");
+    await assertion.assertEqual(open.toggleText, "Close", "Ended section toggle should read 'Close' while open");
+    await assertion.assert(open.visibleRowCount > 0, "Ended section shows no class rows when open");
+
+    // ── Close ──
+    sts = await schoolClasses.click_endedSectionToggle(false);
+    await assertion.assertEqual(sts.pageStatus, true, "Ended section did not collapse");
+    var closed = await schoolClasses.getData_endedSection();
+    await assertion.assertEqual(closed.expanded, false, "Ended section still reports itself expanded after closing");
+    await assertion.assertEqual(closed.panelDisplayed, false, "Ended section panel is still displayed after closing");
+    await assertion.assertEqual(closed.toggleText, "Open", "Ended section toggle should read 'Open' while closed");
+  },
+
+  /**
+   * TST_CLST_TC_16 — Req #29: Verify launching a class from the Ended section opens the
+   * Class Page.
+   * testdata: { endedLaunchRowIndex }
+   */
+  TST_CLST_TC_16: async function (testdata) {
+    sts = await schoolClasses.expand_endedSectionIfCollapsed();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not expand the Ended classes section");
+
+    sts = await schoolClasses.click_className(testdata.endedLaunchRowIndex, "ended");
+    await assertion.assertEqual(sts.pageStatus, true, "Class Page did not load after clicking an ended class name");
+    await assertion.assert(
+      String(sts.url).indexOf("/class/") > -1 && String(sts.url).indexOf("/view") > -1,
+      "Launched URL is not a class page: " + sts.url
+    );
+    console.log("TC_16 launched ended class:", sts.className, "→", sts.url);
+
+    var back = await schoolClasses.return_toClassesTab();
+    await assertion.assertEqual(back.pageStatus, true, "Could not return to the Classes tab after launching an ended class");
+  },
+
+  /**
+   * TST_CLST_TC_17 — Req #20: Verify "Load more" loads additional classes.
+   *
+   * Reloads first: once "Load more" has run, the extra rows stay in the DOM even through a
+   * collapse/re-expand (verified live), so only a fresh page restores the first-page state
+   * this TC needs. That is what keeps it independent of TST_CLST_TC_20.
+   */
+  TST_CLST_TC_17: async function (testdata) {
+    sts = await schoolClasses.reload_classesTab();
+    await assertion.assertEqual(sts.pageStatus, true, "Classes tab did not reload");
+    sts = await schoolClasses.expand_endedSectionIfCollapsed();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not expand the Ended classes section");
+
+    var ended = await schoolClasses.getData_endedSection();
+    await assertion.assertEqual(ended.loadMoreDisplayed, true, "'Load more' is not shown — the Ended section needs more classes than one page (" + ended.visibleRowCount + " of " + ended.count + ")");
+
+    sts = await schoolClasses.click_loadMore();
+    await assertion.assertEqual(sts.pageStatus, true, "'Load more' did not add any class rows (before " + sts.before + ", after " + sts.after + ")");
+    await assertion.assert(sts.after > sts.before, "Visible ended rows did not increase: " + sts.before + " → " + sts.after);
+    // Rows are appended, never replaced, and must not exceed the section's own count.
+    await assertion.assert(sts.after <= ended.count, "More rows visible (" + sts.after + ") than the 'Ended classes (N)' heading reports (" + ended.count + ")");
+  },
+
   // ── EDGE ─────────────────────────────────────────────────────────────────────
+
+  /**
+   * TST_CLST_TC_20 — Req #20 (Edge): Verify "Load more" no longer appears once all classes
+   * are loaded.
+   *
+   * The manual TC left "hides vs disables" as [ASSUMED]; captured live 2026-08-17 — the link
+   * is REMOVED from the DOM entirely once the last batch has loaded.
+   */
+  TST_CLST_TC_20: async function (testdata) {
+    // Same reason as TST_CLST_TC_17: only a reload restores the not-fully-loaded state.
+    sts = await schoolClasses.reload_classesTab();
+    await assertion.assertEqual(sts.pageStatus, true, "Classes tab did not reload");
+    sts = await schoolClasses.expand_endedSectionIfCollapsed();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not expand the Ended classes section");
+
+    var ended = await schoolClasses.getData_endedSection();
+    await assertion.assertEqual(ended.loadMoreDisplayed, true, "'Load more' is not shown before loading all classes — nothing to exhaust");
+
+    var all = await schoolClasses.loadAll_endedClasses();
+    console.log("TC_20 loaded all ended classes →", all);
+
+    await assertion.assert(all.clicks > 0, "'Load more' was never clicked");
+    await assertion.assertEqual(all.loadMoreDisplayed, false, "'Load more' is still shown after loading every ended class");
+    // The link disappearing must mean everything is listed, not that loading broke — so tie
+    // the visible rows to the section's own count.
+    await assertion.assertEqual(all.rowCount, ended.count, "Ended rows listed (" + all.rowCount + ") do not match the 'Ended classes (N)' heading (" + ended.count + ")");
+  },
 
   /**
    * TST_CLST_TC_18 — Req #9 (Edge): Verify class search is case-insensitive and matches

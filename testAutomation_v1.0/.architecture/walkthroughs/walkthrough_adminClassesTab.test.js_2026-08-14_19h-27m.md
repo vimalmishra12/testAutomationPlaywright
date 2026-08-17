@@ -489,3 +489,128 @@ final code), Phase 3 ✅ (assessed, no candidates).
   (#18), user guide (#17/#33), launch a class (#19), Active/Ended sections (#28), ended-class
   launch (#29), load more (#20) = `TST_CLST_TC_9-TC_17, TC_20`, 10 TCs. Closes the CLST file.
   Remaining after that: 20 requirements / ~53 TCs across GCAT, BCCF, GSCL, CMGT, CGST, CLON, CTXC.
+
+---
+
+# Session 3 — 2026-08-17 (Req #18 / #17 / #33 / #19 / #28 / #29 / #20)
+
+## Task
+
+Close out module CLST: the remaining 10 read-only TCs —
+`TST_CLST_TC_9, TC_10` (expand/collapse class row), `TC_11, TC_12` (user guide),
+`TC_13` (launch class), `TC_14, TC_15` (Active/Ended sections), `TC_16` (launch ended class),
+`TC_17, TC_20` (load more). Suite is now **22 TCs, all passing**.
+
+## Reuse check (ADR-011)
+
+`TC_13`/`TC_16` navigate to the class page. `activeClass.page.js` already models it
+(`isInitialized()` anchors on the Actions button `cView-70`), so it was reused via a lazy
+require rather than adding a page object.
+
+## Live findings (all now in product-knowledge/ExperienceApp.md)
+
+1. **The Ended section is collapsed on load and renders NOTHING until expanded** — a fresh tab
+   has zero `ENDED_SECTION` rows and no "Load more" link. Rows arrive ~1.0s after expanding.
+2. **The `Ended classes (N)` count is fetched WITH the rows.** While collapsed the heading is a
+   bare "Ended classes" and the count never arrives (polled 10s); it appears ~0.9s after
+   expanding. This failed `TC_14` on the first run.
+3. **"Load more" is REMOVED from the DOM** when exhausted (not disabled) — resolves the
+   `[ASSUMED]` in `TC_20`. Page size 20; new rows land ~3.5s after the click.
+4. **Loaded rows survive collapse/re-expand** (26 stayed 26, link stayed gone). Only a page
+   reload restores first-page state — which is how `TC_17` and `TC_20` stay independent.
+5. **Row-details expand is a Bootstrap collapse with a ~700ms `collapsing` phase, and the panel
+   keeps its content in the DOM while collapsed.** Element counts cannot distinguish the
+   states, and waiting on the panel is not enough — Playwright calls it visible partway through
+   the expand while inner content is still clipped to zero height. This failed `TC_9`.
+6. The **user guide panel is REMOVED from the DOM** when collapsed, unlike the row-details panel
+   and the filter modal.
+7. Class status values: **Ended / Expired / Deleted** (the manual doc recorded only "Expired").
+8. A deep link to `/admin/admin/org_<slug>/class` returns `/dashboard/error` — school context
+   must be set by clicking the school card first.
+
+## Three failures, three fixes (each proposed and user-confirmed before editing)
+
+| # | TC | Cause | Fix |
+|---|---|---|---|
+| 1 | TC_9 | Waited on the panel; Playwright saw it "visible" mid-animation while the inner heading was clipped | Wait on a CONTENT element (`h3.class-label-heading`) |
+| 2 | TC_14 | Asserted the ended count before expanding; the app only fetches it with the rows | Expand first, then assert count/note/status column |
+| 3 | TC_7 | Asserted descending is the exact reverse of ascending | Only assert that when the whole list is visible AND names are unique |
+
+**Failure 3 is the instructive one.** `TC_7` passed for two sessions, then began failing with no
+code change. Cause: the shared school grew from **15 to 26 active classes** (another suite
+creating `AutoClass_CreateOnly` classes), which crossed the **20-row page size** — so ascending
+and descending became two different windows onto a larger set and could never be reverses. The
+duplicate names broke the second assumption at the same time. The product was correct
+throughout; two of my assumptions expired. The lazy-load caveat was already documented and
+already respected by `TC_3` — I simply failed to apply it to sorting.
+
+A related self-inflicted one on the way: `getData_rowDetails` read counts from the first
+`.font-weight-bold`, which is "Course materials" on any row that HAS materials. It read
+correctly during capture only because row 0 happened to have none; once the sort TCs reordered
+the list it broke. Selector built from one unrepresentative row + `getText` returning only the
+first match.
+
+### The recurring pattern across this whole feature
+
+Five bugs, one root cause — **the app signals ready before it is**:
+
+| Where | Wrong signal | Right signal |
+|---|---|---|
+| Filter panel close | element count | visibility (`display:none` persists) |
+| Sort direction | optimistic label (~100ms) | row content (~1.2-3.2s) |
+| Row details expand | container visible mid-animation | a content element |
+| Row details counts | first `.font-weight-bold` | the whole panel's text |
+| Ended count | read on load | read after expanding |
+
+## Run output
+
+`npm run P1AdminClassesTab_Thor` — after the fixes, **22 passing / 0 failing, twice
+consecutively** (169.6s, 151.3s). `TC_7` logs why the strongest check is inapplicable rather
+than skipping silently:
+
+```
+TC_7 exact-reverse check not applicable — visible 20 of 26 active classes, unique names: false
+22 passing (3m)
+[run] suites=1 tests=22 passes=22 failures=0 pending=0
+```
+
+## Phase 3 — visual assessment: NO CANDIDATES
+
+All 10 new TCs stay `visualTest: false`; nothing promoted, no `visualAcceptance_*` script,
+`package.json` untouched. Per AGENTS.md §8 a ❌ row means `false` without asking the user.
+
+| TC | Data in frame | Row | Decision |
+|---|---|---|---|
+| TC_9 / TC_10 | Students/Teachers counts, class names, materials | Paginated/dynamic counts | ❌ false |
+| TC_11 / TC_12 | guide copy is static, but the live class list and counts sit behind it | Paginated/dynamic counts | ❌ false |
+| TC_13 / TC_16 | class page for a specific class | User-generated keys | ❌ false |
+| TC_14 | Active (N) and Ended (N) counts | Paginated/dynamic counts | ❌ false |
+| TC_15 | Ended (N) count, ended rows | Paginated/dynamic counts | ❌ false |
+| TC_17 / TC_20 | row counts before/after loading | Paginated/dynamic counts | ❌ false |
+
+`TC_11`/`TC_12` are the only arguable ones — the user-guide copy is genuinely fixed text — but
+they fail for the same reason `TC_2` did in session 1: a screenshot captures the whole viewport,
+and the live class list sits behind the panel. Consistent with precedent, not a new call.
+
+> Third session running, same conclusion: **the Classes tab is structurally a poor
+> visual-testing surface.** Every screen in this module frames at least one live count, and the
+> school is shared and mutated by other suites. A baseline here fails on data churn, not on UI
+> regression. Worth treating as settled rather than re-litigating per TC.
+
+**MODULE CLST COMPLETE** — 22 TCs, Req #1, #2, #9, #27, #18, #17/#33, #19, #28, #29, #20.
+Phases 1-3 all ✅.
+
+## Carried forward
+
+- **X-close `// WORKAROUND`** in `classFilterModal.click_close()` — retained by user decision;
+  costs ~5s per run and suppresses TC_2's ability to catch the defect.
+- `TST_CLST_TC_RESET` still does not match the `TST_<MOD>_TC_<N>` convention.
+- `leftNav*` selectors are still loose text matches (search, table-header and user-guide ones
+  were fixed across sessions 2-3).
+- **Untracked `tooling/` at the worktree root** holds the Playwright-MCP Chrome profile with a
+  live session; not covered by `testAutomation_v1.0/.gitignore`. Must not be committed.
+- **Manual test cases (md + xlsx) not yet updated for these 10 TCs** — still show 12 Pass /
+  69 Not Run; should become 22 Pass / 59 Not Run, and `TC_20`'s `[ASSUMED]` is now resolved.
+- **Remaining in the manual doc:** 20 requirements / ~59 TCs across GCAT, BCCF, GSCL, CMGT,
+  CGST, CLON, CTXC. All involve creating or deleting real data, or (CTXC) are blocked pending
+  product clarification — a different risk profile from everything done so far.

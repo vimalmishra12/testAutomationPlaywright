@@ -5,7 +5,7 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-17):** **12 of 81 TCs automated and passing** — `TST_CLST_TC_1–8, 18, 19, 21, 22` (Requirements #1 tab load, #2 filter, #9 search, #27 sort) via `npm run P1AdminClassesTab_Thor` on **thor**. The remaining 69 TCs are **Not Run**.
+**Execution status (2026-08-17):** **22 of 81 TCs automated and passing** — the whole of module **CLST** (`TST_CLST_TC_1–22`), covering Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch and #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor**. The remaining **59 TCs are Not Run** (modules GCAT, BCCF, GSCL, CMGT, CGST, CLON, CTXC).
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -460,9 +460,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The row expands to show **Course materials**, **Class labels**, **Students** (count + Pending), and **Teachers** (count + Pending); the toggle changes to **Hide class details**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Expanding a class row revealed the details panel showing Course materials (or the 'You haven't chosen learning materials' empty state when the class has none), the Class labels heading, and the Students and Teachers counts; the toggle changed to 'Hide class details'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -479,9 +479,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The details panel collapses and the toggle returns to **Show class details**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Collapsing the row hid the details panel and the toggle returned to 'Show class details'. NOTE: the panel's content REMAINS in the DOM while collapsed, so only a visibility check distinguishes the two states. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -500,9 +500,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | A "User guide" help panel appears explaining you can search a class by name or class code, plus the deleted/restored-classes refresh tip; the toggle changes to **Hide the user guide**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The user guide panel opened showing 'On this page you can:' with guidance on searching by class name and class code; the toggle then offered 'Hide the user guide'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -519,9 +519,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The help panel collapses and the toggle returns to **Open the user guide**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Collapsing the user guide removed the panel from the DOM entirely and the toggle returned to 'Open the user guide'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -540,9 +540,9 @@ for the label TCs).
 | **Test Data** | Class: `SarthakTestClass1` |
 | **Expected Result** | The Class Page opens (URL `/class/teacher/org_<slug>/class/<uuid>/view`, title "Class Page | Cambridge One") for the selected class. |
 | **Remarks** | Launch opens the class in the teacher/class view context. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clicking an active class name opened the Class Page at /class/teacher/org_<slug>/class/<uuid>/view. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -561,9 +561,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Active and Ended classes are shown in two distinct sections, each with its own count; the Ended section notes that "Ended and deleted classes automatically move into this section" and includes a Class status column. |
 | **Remarks** | Nav "Classes (N)" total = Active + Ended. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Active and Ended classes are shown as two separate sections, each with its own count, and the Ended section carries the note that ended and deleted classes move into it plus a Class status column. NOTE: the Ended count and Class status column only render AFTER the section is expanded - while collapsed the heading reads a bare 'Ended classes' with no count. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -580,9 +580,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Ended section expands to reveal its class table on Open and collapses on Close; the toggle label switches Open ⇄ Close. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The Ended section expanded (toggle reads 'Close', class rows listed) and collapsed again (toggle reads 'Open', panel hidden). NOTE: the section is COLLAPSED by default and renders no rows at all until it is opened. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -601,9 +601,9 @@ for the label TCs).
 | **Test Data** | Ended class: `CQA Vimal` (key `y4G4-3iXC`) |
 | **Expected Result** | The Class Page opens for the selected ended class (same `/class/teacher/.../view` destination as active classes). |
 | **Remarks** | Confirms ended classes remain launchable (read/review). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clicking a class name in the Ended section opened the same Class Page destination as an active class, confirming ended classes remain launchable. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -622,9 +622,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Additional class rows are appended to the list without a full page reload; the count of visible rows increases. |
 | **Remarks** | "Load more" is count-gated — it appears only when more classes remain than are currently shown. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. 'Load more ...' appended additional ended class rows (20 to 26) without a full page reload, and the visible rows stayed within the 'Ended classes (N)' count. Page size is 20; new rows land about 3.5s after the click. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -639,11 +639,11 @@ for the label TCs).
 | **Preconditions** | Ended (or Active) section with a "Load more" link visible. |
 | **Test Steps** | 1. Click **Load more …** repeatedly until all classes are displayed. |
 | **Test Data** | — |
-| **Expected Result** | Once the last batch is loaded, the "Load more …" link is no longer shown. `[ASSUMED]` — confirm the link hides (vs disables) on live. |
+| **Expected Result** | Once the last batch is loaded, the "Load more …" link is **removed from the DOM** — it hides rather than becoming disabled. CONFIRMED live 2026-08-17. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. After clicking 'Load more ...' until every ended class was listed, the link was REMOVED from the DOM (it hides rather than disabling) and the visible row count equalled the 'Ended classes (N)' heading. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
