@@ -131,5 +131,15 @@ module.exports = {
       true,
       "School Classes dashboard did not load after 'Back to dashboard'"
     );
+  },
+
+  /**
+   * TST_CCLS_TC_9 — Set teacher email/name via Add Teacher modal during class creation.
+   * testdata: { teacherEmail } (or string teacher email value)
+   */
+  TST_CCLS_TC_9: async function (testdata) {
+    var teacherVal = typeof testdata === "string" ? testdata : (testdata.teacherEmail || (testdata.instructor && testdata.instructor.email) || "");
+    sts = await createClasses.set_teacher(teacherVal);
+    await assertion.assertEqual(sts, true, "teacher value was not set in class creation form");
   }
 };

@@ -18,6 +18,14 @@ module.exports = {
   materialItem: selectorFile.css.ComproC1.createClasses.materialItem,
   addMaterialsConfirmBtn: selectorFile.css.ComproC1.createClasses.addMaterialsConfirmBtn,
   selectedMaterialInput: selectorFile.css.ComproC1.createClasses.selectedMaterialInput,
+  // Selectors for Add Teacher modal resolved from C1Selectors.json → css.ComproC1.createClasses.*
+  addTeacherBtn: selectorFile.css.ComproC1.createClasses.addTeacherBtn,
+  teacherModalEmailInput: selectorFile.css.ComproC1.createClasses.teacherModalEmailInput,
+  teacherModalFirstNameInput: selectorFile.css.ComproC1.createClasses.teacherModalFirstNameInput,
+  teacherModalLastNameInput: selectorFile.css.ComproC1.createClasses.teacherModalLastNameInput,
+  teacherModalApplyBtn: selectorFile.css.ComproC1.createClasses.teacherModalApplyBtn,
+  teacherModalCancelBtn: selectorFile.css.ComproC1.createClasses.teacherModalCancelBtn,
+  selectedTeacherInput: selectorFile.css.ComproC1.createClasses.selectedTeacherInput,
   backToDashboardLink: selectorFile.css.ComproC1.createClasses.backToDashboardLink,
 
   /**
@@ -52,6 +60,50 @@ module.exports = {
         res + "Value is NOT entered in classNameInput",
         "error"
       );
+    }
+    return res;
+  },
+
+  /**
+   * Adds teacher email to the class during bulk creation via the Add Teacher modal.
+   * Clicks "Add teachers" button on the class row, enters teacher email in the modal input,
+   * and clicks "Apply changes" button.
+   */
+  set_teacher: async function (value) {
+    var res = false;
+    await logger.logInto(await stackTrace.get(), "teacherEmail: " + value);
+    if (!value) {
+      await logger.logInto(await stackTrace.get(), "No teacher value provided, skipping teacher input");
+      return true;
+    }
+    // Click "Add teachers" button on the row to open the modal
+    await action.waitForDisplayed(this.addTeacherBtn);
+    var clickRes = await action.click(this.addTeacherBtn);
+    if (true == clickRes) {
+      await logger.logInto(await stackTrace.get(), "addTeacherBtn is clicked");
+      // Wait for modal Email input to be displayed
+      var modalReady = await action.waitForDisplayed(this.teacherModalEmailInput);
+      if (true == modalReady) {
+        await action.clearValue(this.teacherModalEmailInput);
+        await action.addValue(this.teacherModalEmailInput, value);
+        await logger.logInto(await stackTrace.get(), "Entered teacher email: " + value);
+
+        // Click "Apply changes" button
+        await action.waitForDisplayed(this.teacherModalApplyBtn);
+        res = await action.click(this.teacherModalApplyBtn);
+        if (true == res) {
+          await logger.logInto(await stackTrace.get(), "teacherModalApplyBtn is clicked and teacher email applied: " + value);
+          // Wait for the modal dialog to dismiss and row teacher input to render
+          await action.waitForDisplayed(this.teacherModalApplyBtn, 10000, true);
+          await action.waitForDisplayed(this.selectedTeacherInput);
+        } else {
+          await logger.logInto(await stackTrace.get(), res + " teacherModalApplyBtn is NOT clicked", "error");
+        }
+      } else {
+        await logger.logInto(await stackTrace.get(), "teacherModalEmailInput did not appear", "error");
+      }
+    } else {
+      await logger.logInto(await stackTrace.get(), clickRes + " addTeacherBtn is NOT clicked", "error");
     }
     return res;
   },

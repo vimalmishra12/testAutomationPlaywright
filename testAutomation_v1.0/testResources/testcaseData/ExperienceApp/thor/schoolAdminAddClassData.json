@@ -4,7 +4,8 @@
       "schoolKey": "FCN-CHZ-PDA",
       "className": "AutoClass_CreateOnly",
       "material": "dev_test_ebook_bundle_104_bundle",
-      "successMessage": "Success! We are now creating"
+      "successMessage": "Success! We are now creating",
+      "teacherEmail": "teacher17aug2026@mailsac.com"
     }
   }
 }

@@ -27,6 +27,8 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
       { "id": "TST_CCLS_TC_3", "description": "Set end date (day 15 of next month)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
+      { "id": "TST_CCLS_TC_9", "description": "Set teacher email/name in the create class form via Add Teacher modal", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
       { "id": "TST_CCLS_TC_5", "description": "Open the 'Add Materials' modal", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/schoolAdminAddClassData.json", "jsonPath": "C1.adminAddClass" }] },
       { "id": "TST_CCLS_TC_6", "description": "Search and select the material (dev_test_ebook_bundle_104_bundle)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",

@@ -4443,7 +4443,8 @@
         { "id": "TST_CCLS_TC_6", "description": "Search and select the material by name",                                 "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify the material attached to the row",    "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify the success dialog appears",             "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and confirm the school Classes page reloads", "tags": "P1", "visualTest": false }
+        { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and confirm the school Classes page reloads", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_9", "description": "Set teacher email/name in the bulk create class form via Add Teacher modal", "tags": "P1", "visualTest": false }
       ]
     },
     {
