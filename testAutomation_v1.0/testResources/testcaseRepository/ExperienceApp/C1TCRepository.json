@@ -4443,7 +4443,21 @@
         { "id": "TST_CCLS_TC_6", "description": "Search and select the material by name",                                 "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify the material attached to the row",    "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify the success dialog appears",             "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and confirm the school Classes page reloads", "tags": "P1", "visualTest": false }
+        { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and confirm the school Classes page reloads", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_9",  "description": "BCCF_TC_15 (Neg) | 'Create' disabled on an empty row",                      "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_10", "description": "BCCF_TC_16 (Neg) | 'Create' stays disabled for a non-alphanumeric name",    "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_11", "description": "BCCF_TC_13 (Edge) | Class-name input maxlength is 50",                       "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_12", "description": "BCCF_TC_14 (Edge) | End-date picker disables days on/before the start date", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_13", "description": "BCCF_TC_6 (Pos) | Filling a second row increases the Create button class count by one", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_14", "description": "BCCF_TC_1 (Pos) | Bulk create form loads with all components", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_15", "description": "BCCF_TC_3 (Pos) | A teacher can be added to a class row", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_16", "description": "BCCF_TC_5 (Pos) | An existing label can be applied to a class row", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_17", "description": "BCCF_TC_9 (Pos) | Bulk toolbar sets start/end date on selected rows", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_18", "description": "BCCF_TC_7 (Pos) | Duplicate copies a selected class row with its details", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_19", "description": "BCCF_TC_11 (Pos) | Uploading a CSV bulk-populates the class rows", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_20", "description": "BCCF_TC_12 (Pos) | 'Create more classes' returns to a usable create form (CREATES A CLASS)", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_21", "description": "BCCF_TC_8 (Pos) | 'Copy an Existing Class' copies teachers/materials onto the selected row", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_22", "description": "BCCF_TC_10 (Pos) | 'Get CSV template' downloads the template with the correct headers", "tags": "P1", "visualTest": false }
       ]
     },
     {

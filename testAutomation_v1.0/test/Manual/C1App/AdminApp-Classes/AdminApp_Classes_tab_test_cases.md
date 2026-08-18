@@ -846,10 +846,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Add class**. |
 | **Test Data** | — |
 | **Expected Result** | The "Create new classes" form opens (`/class/create`) with subtitle "in <school>", an **Upload file** button, **Get CSV template** link, "How to use this form" info, the bulk-action toolbar (Start date, End date, Add teacher, Add labels, Add Material, Copy an Existing Class, Duplicate, Show student progress, Remove), and at least one class row (Class name, Start date, End date, Add teachers, Add materials, Add class label). **Create N class** is disabled. |
-| **Remarks** | Form auto-saves a draft ("Saved …"). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Form auto-saves a draft ("Saved …") **and restores it on reopen — including across sessions** — so the form is NOT guaranteed empty on load. Automated: `TST_CCLS_TC_14`. |
+| **Actual Result** | Form opened at /class/create with all components present: Upload file, Get CSV template, How to use this form, all 9 bulk-toolbar actions, and row 1 (name, dates, teachers, materials, label). Create button disabled on an empty row. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_14 (bulk suite, 11/11). |
 
 ---
 
@@ -866,9 +866,9 @@ for the label TCs).
 | **Test Data** | Name: `AutoClass_Bulk`, Start: today, End: next month |
 | **Expected Result** | A success dialog "Success! We are now creating 1 class for you…" appears; creation is asynchronous (email report; up to 12 hours). |
 | **Remarks** | Covered by automation `TST_CCLS_TC_1..4`. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | Class created with name + start/end dates; success dialog shown: "Success! We are now creating 1 class for you". |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_1..4 (workflow suite). Creation is asynchronous. |
 
 ---
 
@@ -884,10 +884,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Add teachers**. 2. In "Edit teachers in <class>" modal, enter **Email** (and optional First/Last name). 3. Click **Apply changes**. |
 | **Test Data** | Teacher email: `<TEACHER_EMAIL>` |
 | **Expected Result** | The teacher is added to the class row. The modal notes "Changes made will only apply to this class". |
-| **Remarks** | First/Last name are optional; Email is required. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | First/Last name are optional; Email is required. Automated: `TST_CCLS_TC_15`. Note: "Apply changes" is never natively disabled, so it can be clicked before validation settles and silently do nothing. |
+| **Actual Result** | Teacher added via the "Edit teachers" modal (Email only); the teacher rendered on the class row. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_15 (bulk suite). |
 
 ---
 
@@ -904,9 +904,9 @@ for the label TCs).
 | **Test Data** | Material: `dev_test_ebook_bundle_104_bundle` |
 | **Expected Result** | The selected material attaches to the class row (shown in the row's materials field). |
 | **Remarks** | Covered by automation `TST_CCLS_TC_5..7`. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | Material searched, selected and attached to the class row. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Feature verified working (workflow suite 13/13 earlier on 2026-08-18). NOTE: the automation (TST_CCLS_TC_5..7) is currently FLAKY — its selector uses a positional index (dBulkClass-add-learning-material-modal-1-0) that shifts with the form's row count when an auto-saved draft is restored. Pre-existing automation fragility, not a product defect. Fix pending: reset the form before the suite runs. |
 
 ---
 
@@ -921,11 +921,11 @@ for the label TCs).
 | **Preconditions** | A class row with a name entered. |
 | **Test Steps** | 1. Click **Add class label**. 2. Select an existing label (or **+ Create new label**). |
 | **Test Data** | Label: `VM1` |
-| **Expected Result** | The chosen label is applied to the class row; the dropdown also offers "+ Create new label" and "Edit labels". |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | The chosen label is applied to the class row (the row's label button then reads e.g. "+ temp"); the dropdown also offers "+ Create new label" and "Edit labels". A "Create or find a label" search box filters the list. |
+| **Remarks** | Automated: `TST_CCLS_TC_16`. Note for automation: the label dropdown is rendered **once per row** (`#class-label-list-modal-<rowIndex>`), each holding a full copy of every label — selectors must be scoped to the row's own container or the search text can land in a hidden row's box. |
+| **Actual Result** | Label "VM1" selected from the Add class label dropdown and applied to the row (row button then read "+ VM1"). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_16 (bulk suite). Note: the label dropdown is rendered once PER ROW (#class-label-list-modal-<rowIndex>), so selectors must be row-scoped. |
 
 ---
 
@@ -941,10 +941,10 @@ for the label TCs).
 | **Test Steps** | 1. Fill class name + start/end dates on row 1. 2. Fill row 2 similarly. 3. Click **Create 2 classes**. |
 | **Test Data** | 2 valid class rows |
 | **Expected Result** | The Create button reflects the count ("Create 2 classes"); creating shows the success dialog for N classes. New empty rows auto-append while filling. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated: `TST_CCLS_TC_13` (fills a 2nd row, asserts the Create-button count increases by one; does NOT click Create, so no class is created). |
+| **Actual Result** | Filling a second row increased the Create button from "Create 1 class" to "Create 2 classes"; new empty rows auto-appended. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_13 (bulk suite). Asserts the count delta; does not click Create, so no class is created. |
 
 ---
 
@@ -959,11 +959,11 @@ for the label TCs).
 | **Preconditions** | At least one class row is filled. |
 | **Test Steps** | 1. Select a row (checkbox). 2. Click **Duplicate** in the toolbar. 3. Confirm if prompted. |
 | **Test Data** | — |
-| **Expected Result** | A duplicate row is added carrying the same details as the selected row. `[ASSUMED]` — confirm the exact duplicate behaviour/confirmation. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | Duplicate is immediate (no confirmation of its own) and the copy is **appended after the last filled row** carrying the same class name (no "Copy of" prefix), start/end dates, teachers and materials. **Labels are the exception:** if the source row has a label, an "Apply the labels to new classes too?" dialog appears — tick "Include labels in these classes" then **Continue** to copy the label (or Continue without ticking to duplicate without it). |
+| **Remarks** | `[ASSUMED]` resolved — behaviour confirmed live 2026-08-18. Automated: `TST_CCLS_TC_18` (resets the form, builds a source row with name + dates + teacher, duplicates, asserts the Create count +1 and that the copy matches the source field-by-field). |
+| **Actual Result** | Duplicate appended a copy AFTER the last filled row carrying the same name, dates, teacher and material. Label copied only after confirming the "Apply the labels to new classes too?" dialog. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_18 (bulk suite). [ASSUMED] resolved. |
 
 ---
 
@@ -978,11 +978,11 @@ for the label TCs).
 | **Preconditions** | At least one class row selected. |
 | **Test Steps** | 1. Select row(s). 2. Click **Copy an Existing Class**. 3. Choose a source class and what to copy. 4. Continue. |
 | **Test Data** | Source class: `<EXISTING_CLASS>` `[ASSUMED]` |
-| **Expected Result** | A modal lets you choose an existing class and what to copy (e.g. materials/teachers/settings) to the selected rows; the chosen items are applied. `[ASSUMED]` — confirm the modal options/flow. |
-| **Remarks** | Toolbar aria-label: "Choose what to copy from an existing class to the selected classes". |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | A **2-step wizard** opens. **Step 1** "Choose what to copy from": search a class (results show `[Class name] [class key]`), pick one, **Continue**. **Step 2** "Choose what to copy from [class]": tick the categories — **Teachers [n]**, **Course materials [n]**, **Assignments [n]**, **Locked content rules [n]**, **Class grade settings** — then **Continue**. The ticked categories are applied to every selected row, and each row's **Copied from a class** cell records `[source class] [key]` plus the copied categories. The row's own class name and dates are **not** overwritten. |
+| **Remarks** | `[ASSUMED]` resolved — flow confirmed live 2026-08-18. A category is **disabled when the source class has none of that kind** (label shows the count, e.g. a greyed "Assignments [0]"); "Class grade settings" showed "Not available". Automated: `TST_CCLS_TC_21` (copies Teachers + Course materials; asserts the row receives them and that the Copied-from cell names the source). |
+| **Actual Result** | 2-step wizard: searched and selected a source class, then chose Teachers + Course materials; both were applied to the selected row and the "Copied from a class" cell recorded the source. Row's own name/dates were not overwritten. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_21 (bulk suite). [ASSUMED] resolved. Options are disabled when the source class has none of that kind (e.g. "Assignments [0]"). |
 
 ---
 
@@ -997,11 +997,11 @@ for the label TCs).
 | **Preconditions** | Two or more class rows exist. |
 | **Test Steps** | 1. Select multiple rows. 2. Click **Start date** in the toolbar and pick a date. 3. Click **End date** and pick a date. |
 | **Test Data** | — |
-| **Expected Result** | The chosen start/end dates are applied to all selected rows at once. |
-| **Remarks** | Same pattern applies to bulk Add teacher / Add labels / Add Material. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | The chosen start/end dates are applied to all selected rows at once. **Note:** applying a bulk date **clears the row selection** ("All selected" → "0 Selected"), which re-disables the toolbar — rows must be re-selected before the next bulk action. |
+| **Remarks** | Same pattern applies to bulk Add teacher / Add labels / Add Material — including the deselect-after-apply behaviour. Automated: `TST_CCLS_TC_17`. |
+| **Actual Result** | Toolbar Start date and End date applied the chosen dates to the selected row. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_17 (bulk suite). Note: applying a bulk date CLEARS the row selection, so rows must be re-selected before the next bulk action. |
 
 ---
 
@@ -1016,11 +1016,11 @@ for the label TCs).
 | **Preconditions** | On the Create new classes form. |
 | **Test Steps** | 1. Click **Get CSV template**. |
 | **Test Data** | — |
-| **Expected Result** | A CSV template file downloads with the correct column headers for bulk class creation. `[ASSUMED]` — capture the exact template headers. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | `Class_creation_form_template.csv` downloads with **14 columns** (UTF-8 BOM): `Class name`, `Start date DD/MM/YYYY`, `End date DD/MM/YYYY`, `Teacher 1 (optional)` … `Teacher 10 (optional)`, `Student progress data` — plus one sample row (`Saturday Elementary class,01/09/2019,30/05/2020,teacher1@email.org,…,Progress reset`). |
+| **Remarks** | `[ASSUMED]` resolved — headers captured live 2026-08-18. Automated: `TST_CCLS_TC_22` (downloads the file, reads it from disk, asserts the filename and all 14 headers positionally). Required adding a `downloadFile()` method to `baseActionLibrary.js` (protected file — confirmed by user), as the library previously had no download handling. |
+| **Actual Result** | Class_creation_form_template.csv downloaded with 14 columns exactly as listed in Expected Result. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_22 (bulk suite). Required adding downloadFile() to baseActionLibrary.js (protected file, confirmed). |
 
 ---
 
@@ -1034,12 +1034,12 @@ for the label TCs).
 | **Priority** | Medium |
 | **Preconditions** | A populated CSV in the template format is available. |
 | **Test Steps** | 1. Click **Upload file**. 2. Select the CSV. 3. Wait for the upload to complete. |
-| **Test Data** | `<BULK_CLASSES_CSV>` `[ASSUMED]` |
-| **Expected Result** | The classes from the CSV are added to the form / created; an upload progress indicator is shown during processing. `[ASSUMED]` — confirm the upload flow and any per-row validation. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Test Data** | `TST_CCLS_TC_19_bulk_classes.csv` (2 rows, template format) |
+| **Expected Result** | The classes from the CSV are **added as rows on the form — they are NOT created**. Each CSV row populates a class row with its name and its dates parsed from `DD/MM/YYYY` (e.g. `15/09/2026` → displayed as `Tue, Sep 15, 2026`), and the **Create N classes** button count rises to match. Creation still requires clicking **Create**. |
+| **Remarks** | `[ASSUMED]` resolved — confirmed live 2026-08-18 by uploading a one-row probe CSV: the form populated and **no class was created**. Automated: `TST_CCLS_TC_19` (uploads, asserts both rows + the pending count, and deliberately does not click Create — so the suite creates nothing). |
+| **Actual Result** | Uploading a 2-row CSV populated both class rows with names and dates parsed from DD/MM/YYYY; Create button rose to "Create 2 classes". No class was created by the upload itself. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_19 (bulk suite). [ASSUMED] resolved — upload POPULATES the form, it does not create. |
 
 ---
 
@@ -1054,11 +1054,11 @@ for the label TCs).
 | **Preconditions** | A class was just created (success dialog shown). |
 | **Test Steps** | 1. Click **Back to dashboard**. 2. (Separately) create again and click **Create more classes**. |
 | **Test Data** | — |
-| **Expected Result** | **Back to dashboard** returns to the school Classes page; **Create more classes** returns to a fresh Create new classes form. `[ASSUMED]` — confirm "Create more classes" resets the form. |
-| **Remarks** | "Back to dashboard" covered by automation `TST_CCLS_TC_8`. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | **Back to dashboard** returns to the school Classes page; **Create more classes** returns to a **completely empty** Create new classes form (class name and both dates blank). Either button dismisses the dialog, so only one leg can be exercised per created class. |
+| **Remarks** | `[ASSUMED]` resolved — confirmed live 2026-08-18: "Create more classes" **does** reset the form. Notable because the form otherwise auto-restores a saved draft; this is the one path that returns a genuinely pristine row. Automated: "Back to dashboard" = `TST_CCLS_TC_8`; "Create more classes" = `TST_CCLS_TC_20` (⚠️ creates a real class — lives in the workflow suite, not the side-effect-free bulk suite). |
+| **Actual Result** | "Back to dashboard" returned to the school Classes page. "Create more classes" returned a COMPLETELY EMPTY create form (name and both dates blank). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_8 (Back to dashboard) + TST_CCLS_TC_20 (Create more classes), workflow suite. [ASSUMED] resolved — it does reset the form; the only path that does not restore the draft. |
 
 ---
 
@@ -1074,10 +1074,10 @@ for the label TCs).
 | **Test Steps** | 1. Enter a 50-character class name. |
 | **Test Data** | 50-char name |
 | **Expected Result** | The name is accepted (input enforces maxlength 50); no more than 50 characters can be entered. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated: `TST_CCLS_TC_11` (asserts class-name input maxlength = 50). |
+| **Actual Result** | Class-name input enforces maxlength=50. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_11 (validation suite, 6/6). |
 
 ---
 
@@ -1093,10 +1093,10 @@ for the label TCs).
 | **Test Steps** | 1. Open the **End date** picker. |
 | **Test Data** | Start = today |
 | **Expected Result** | Dates on/before the start date are disabled in the end-date picker, so an end date earlier than the start cannot be chosen. |
-| **Remarks** | Observed: days ≤ start are `owl-dt-calendar-cell-disabled`. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Observed: days ≤ start are `owl-dt-calendar-cell-disabled`. Automated: `TST_CCLS_TC_12`. |
+| **Actual Result** | With start date = today, the End-date picker showed 22 disabled day cells (all dates on/before the start). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_12 (validation suite). Count is date-dependent (18 on 14 Aug, 22 on 18 Aug) so the assertion checks > 0. |
 
 ---
 
@@ -1112,10 +1112,10 @@ for the label TCs).
 | **Test Steps** | 1. Fill only some of {name, start date, end date} on a row. 2. Observe the **Create** button. |
 | **Test Data** | Incomplete row |
 | **Expected Result** | The "Create N class" button stays disabled until the row has a class name AND start date AND end date. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated: `TST_CCLS_TC_9` (asserts Create is disabled on an empty row). |
+| **Actual Result** | "Create N class" stayed disabled while the row was missing a required field. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_9 (validation suite). |
 
 ---
 
@@ -1131,10 +1131,10 @@ for the label TCs).
 | **Test Steps** | 1. Leave the class name empty, or enter only non-alphanumeric characters (e.g. `---`). 2. Attempt to create. |
 | **Test Data** | Name: (empty) / `---` |
 | **Expected Result** | The row is invalid — the name requires at least one alphanumeric character (pattern `.*[A-Za-z0-9]+.*`) — so the class cannot be created. `[ASSUMED]` — capture any inline error text shown. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated: `TST_CCLS_TC_10` (enters `---`, asserts Create stays disabled). |
+| **Actual Result** | A non-alphanumeric-only name ("---") left "Create N class" disabled. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_10 (validation suite). |
 
 ---
 

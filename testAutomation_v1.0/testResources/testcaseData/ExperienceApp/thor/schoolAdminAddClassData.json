@@ -4,7 +4,44 @@
       "schoolKey": "FCN-CHZ-PDA",
       "className": "AutoClass_CreateOnly",
       "material": "dev_test_ebook_bundle_104_bundle",
-      "successMessage": "Success! We are now creating"
+      "successMessage": "Success! We are now creating",
+      "createMoreClassName": "AutoClass_CreateMore"
+    },
+    "adminAddClassValidation": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "invalidName": "---",
+      "classNameMaxLength": 50
+    },
+    "adminAddClassBulk": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "className": "AutoClass_Bulk_R1",
+      "classNameRow2": "AutoClass_Bulk_R2",
+      "teacherEmail": "autotest.teacher@mailsac.com",
+      "classLabel": "VM1",
+      "csvPath": "./test/Manual/C1App/AdminApp-Classes/TST_CCLS_TC_19_bulk_classes.csv",
+      "csvClass1Name": "BulkCSV_Class_1",
+      "csvClass2Name": "BulkCSV_Class_2",
+      "csvStartDate": "Tue, Sep 15, 2026",
+      "csvEndDate": "Wed, Jun 30, 2027",
+      "csvClassCount": 2,
+      "copySourceClass": "A11y test class 25 09",
+      "csvTemplateFileName": "Class_creation_form_template.csv",
+      "csvTemplateHeaders": [
+        "Class name",
+        "Start date DD/MM/YYYY",
+        "End date DD/MM/YYYY",
+        "Teacher 1 (optional)",
+        "Teacher 2 (optional)",
+        "Teacher 3 (optional)",
+        "Teacher 4 (optional)",
+        "Teacher 5 (optional)",
+        "Teacher 6 (optional)",
+        "Teacher 7 (optional)",
+        "Teacher 8 (optional)",
+        "Teacher 9 (optional)",
+        "Teacher 10 (optional)",
+        "Student progress data"
+      ]
     }
   }
 }

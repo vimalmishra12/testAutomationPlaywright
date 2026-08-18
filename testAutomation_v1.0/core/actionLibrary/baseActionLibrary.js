@@ -633,6 +633,35 @@ module.exports = {
         }
     },
 
+    // [2026-08-18] Added for BCCF_TC_10 ("Get CSV template") — confirmed by user.
+    // Clicks a download-triggering element and saves the resulting file.
+    // The 'download' event fires on the PAGE (never a FrameLocator), so it is awaited
+    // on global.page even when an iframe is active; the CLICK still resolves through
+    // el() so iframe scoping and Locator/string inputs behave as everywhere else.
+    // Click and listener are awaited TOGETHER (Promise.all) — attaching the listener
+    // after the click would miss a fast download. Returns a data object rather than
+    // bare true, per the ADR-009 getter exception:
+    //   { downloaded: <bool>, fileName: <string>, filePath: <absolute path> } / Error.
+    // saveDir defaults to output/downloads (output/ is gitignored).
+    downloadFile: async function (selector, saveDir, timeout) {
+        message = "element:" + selector;
+        try {
+            const dir = saveDir ? path.resolve(saveDir) : path.join(process.cwd(), "output", "downloads");
+            const [download] = await Promise.all([
+                global.page.waitForEvent("download", { timeout: timeout || 30000 }),
+                el(selector).click()
+            ]);
+            const fileName = download.suggestedFilename();
+            const filePath = path.join(dir, fileName);
+            await download.saveAs(filePath); // creates parent dirs as needed
+            await logger.logInto(await stackTrace.get(), message + " downloaded -> " + filePath);
+            return { downloaded: true, fileName: fileName, filePath: filePath };
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
     parentElement: async function (selector) {
         message = "element:" + selector;
         try {
