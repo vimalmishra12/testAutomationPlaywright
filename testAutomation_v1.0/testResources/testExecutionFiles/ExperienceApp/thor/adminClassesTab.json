@@ -1,73 +1,595 @@
 {
   "Suite1": {
-    "Name": "Admin App | Classes tab — Req #1 (tab load) + #2 (filter) + #9 (search) + #27 (sort) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "Name": "Admin App | Classes tab — Layout & Filter Validation (Req #1 & Req #2) | 3 July Test School 1 (FCN-CHZ-PDA)",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
     "Before": [
-      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
-      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
-      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
-      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
-      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
-      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
     ],
     "BeforeEach": [
-      { "id": "TST_CLST_TC_RESET", "description": "Clear any applied filter so this TC starts from an unfiltered list", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so this TC starts from an unfiltered list",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
     ],
     "Test": [
-      { "id": "TST_CLST_TC_1", "description": "Verify the Classes tab loads with all expected components", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_5", "description": "Verify search by class name returns the matching class", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_6", "description": "Verify search by class key returns the matching class", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_18", "description": "Verify class search is case-insensitive and matches partial names", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_21", "description": "Verify searching for a non-existent class shows a no-results state", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_7", "description": "Verify sorting by Class name toggles ascending/descending", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_8", "description": "Verify sorting by Start date and End date", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_9", "description": "Verify expanding a class row shows the class details", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_10", "description": "Verify collapsing an expanded class row hides the details", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_11", "description": "Verify expanding the user guide shows the help panel", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_12", "description": "Verify collapsing the user guide hides the help panel", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_13", "description": "Verify launching an Active class opens the Class Page", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_14", "description": "Verify Active and Ended classes appear in separate sections with counts", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_15", "description": "Verify expanding and collapsing the Ended classes section", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_16", "description": "Verify launching a class from the Ended section opens the Class Page", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_17", "description": "Verify 'Load more' loads additional classes in the Ended section", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_20", "description": "Verify 'Load more' no longer appears once all classes are loaded", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_19", "description": "Verify 'Clear all' resets the filter selections", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
-      { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
+      {
+        "id": "TST_CLST_TC_1",
+        "description": "Verify the Classes tab loads with all expected components",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_2",
+        "description": "Verify the Filter modal opens and shows all filter options",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_3",
+        "description": "Verify filtering by Class status returns only classes of that status",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_4",
+        "description": "Verify filtering by a Class label returns only classes with that label",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_19",
+        "description": "Verify 'Clear all' resets the filter selections",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_22",
+        "description": "Verify a filter combination with no matches shows an empty state",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
     ],
     "AfterEach": [
-      { "id": "TST_CLST_TC_RESET", "description": "Clear any applied filter so the next TC starts unfiltered", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
-        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so the next TC starts unfiltered",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "After": []
+  },
+  "Suite2": {
+    "Name": "Admin App | Classes tab — Search Functionality (Req #9) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so this TC starts from an unfiltered list",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_CLST_TC_5",
+        "description": "Verify search by class name returns the matching class",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_6",
+        "description": "Verify search by class key returns the matching class",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_18",
+        "description": "Verify class search is case-insensitive and matches partial names",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_21",
+        "description": "Verify searching for a non-existent class shows a no-results state",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so the next TC starts unfiltered",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "After": []
+  },
+  "Suite3": {
+    "Name": "Admin App | Classes tab — Sort Functionality (Req #27) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so this TC starts from an unfiltered list",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_CLST_TC_7",
+        "description": "Verify sorting by Class name toggles ascending/descending",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_8",
+        "description": "Verify sorting by Start date and End date",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so the next TC starts unfiltered",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "After": []
+  },
+  "Suite4": {
+    "Name": "Admin App | Classes tab — Class Details, User Guide, Active/Ended Sections & Load More (Req #17, #18, #19, #20, #28, #29) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so this TC starts from an unfiltered list",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_CLST_TC_9",
+        "description": "Verify expanding a class row shows the class details",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_10",
+        "description": "Verify collapsing an expanded class row hides the details",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_11",
+        "description": "Verify expanding the user guide shows the help panel",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_12",
+        "description": "Verify collapsing the user guide hides the help panel",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_13",
+        "description": "Verify launching an Active class opens the Class Page",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_14",
+        "description": "Verify Active and Ended classes appear in separate sections with counts",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_15",
+        "description": "Verify expanding and collapsing the Ended classes section",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_16",
+        "description": "Verify launching a class from the Ended section opens the Class Page",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_17",
+        "description": "Verify 'Load more' loads additional classes in the Ended section",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      },
+      {
+        "id": "TST_CLST_TC_20",
+        "description": "Verify 'Load more' no longer appears once all classes are loaded",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [
+      {
+        "id": "TST_CLST_TC_RESET",
+        "description": "Clear any applied filter so the next TC starts unfiltered",
+        "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json",
+            "jsonPath": "C1.adminClassesTab"
+          }
+        ]
+      }
     ],
     "After": []
   }
