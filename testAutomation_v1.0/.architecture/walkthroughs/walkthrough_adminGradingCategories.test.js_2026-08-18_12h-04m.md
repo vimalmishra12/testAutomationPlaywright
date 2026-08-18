@@ -140,8 +140,10 @@ container) recurring in a new place.
   moments **before** its screenshot — every create/delete TC would be evidenced by a picture of an
   empty list. Sweeping only in `BeforeEach` preserves the evidence and still guarantees a clean
   start, including after a crashed run.
-  > ⚠️ **New pattern** — differs from `TST_CLST_TC_RESET`, which runs in both. Consider an ADR:
-  > *"cleanup that would erase a TC's visual evidence belongs in BeforeEach, not AfterEach."*
+  > ✅ **Written up as ADR-019** (`decisions.md`) — *"Cleanup That Would Erase a TC's Evidence
+  > Belongs in `BeforeEach`, Not `AfterEach`"*. It records that CLST's both-hooks pattern stays
+  > correct (its reset clears a filter, which no screenshot depends on), so GCAT's empty
+  > `AfterEach` must not be "aligned" to it by symmetry. Confirmed by the user 2026-08-18.
 - **Housekeeping TC named `TST_GCAT_TC_10`**, conforming to `TST_<MOD>_TC_<N>` — deliberately not
   repeating the `TST_CLST_TC_RESET` naming that the previous handoff flagged as off-convention.
 - **Per-run unique, sweepable data names** (`AutoCat_<tag>_<epoch-ms>`): unique so name→index
