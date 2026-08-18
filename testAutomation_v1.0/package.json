@@ -130,6 +130,7 @@
     "NEMO24306_csvUploadTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=NEMO-24306_csvUpload.json --browserCapability=desktop-chrome-1920",
     "P1Adminclassworkflow_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=desktop-chrome-1920",
     "P1AdminClassesTab_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminClassesTab.json --browserCapability=desktop-chrome-1920",
+    "P1AdminGradingCategories_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminGradingCategories.json --browserCapability=desktop-chrome-1920",
     "poc:smoke": "mocha",
     "poc:thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
     "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920"

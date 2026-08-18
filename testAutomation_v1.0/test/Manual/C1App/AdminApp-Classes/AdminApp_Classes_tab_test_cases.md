@@ -5,7 +5,11 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-17):** **22 of 81 TCs automated and passing** — the whole of module **CLST** (`TST_CLST_TC_1–22`), covering Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch and #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor**. The remaining **59 TCs are Not Run** (modules GCAT, BCCF, GSCL, CMGT, CGST, CLON, CTXC).
+**Execution status (2026-08-18):** **27 of 81 TCs automated and passing.**
+- Module **CLST** (`TST_CLST_TC_1–22`, 22 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17).
+- Module **GCAT** (`TST_GCAT_TC_2, 3, 5, 8, 9`, 5 TCs) — Requirements **#5 create grading category** and **#8 delete grading category** — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-18, 2 consecutive clean runs).
+
+The remaining **54 TCs are Not Run** (rest of GCAT, plus BCCF, GSCL, CMGT, CGST, CLON, CTXC). Within GCAT, `TST_GCAT_TC_1/6/7` are simply not yet automated, while **`TST_GCAT_TC_4` is BLOCKED** — see its Comments row for why.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -682,10 +686,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Create a grading category**. 2. Enter `AutoTest Category`. 3. Click **Save**. |
 | **Test Data** | Name: `AutoTest Category` |
 | **Expected Result** | The modal closes, a banner "Grading category successfully created" is shown, and the new category appears in the list. |
-| **Remarks** | Repeated runs create duplicate-named categories (counts toward the max). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_2`. The name is generated per run as `AutoCat_create_<epoch-ms>`, so repeated runs never collide and the housekeeping hook removes them — duplicate names no longer accumulate against the school maximum. |
+| **Actual Result** | As expected. Banner "Grading category successfully created" appeared (~1.4 s) and the category was listed at the same moment. Both are asserted — the banner alone would pass even if nothing were created. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -700,11 +704,11 @@ for the label TCs).
 | **Preconditions** | On the Create a grading category modal. |
 | **Test Steps** | 1. Enter a 50-character name. 2. Click **Save**. |
 | **Test Data** | 50-char name (e.g. `AAAAAAAAAA...` × 50) |
-| **Expected Result** | The name is accepted (input enforces maxlength 50) and the category is created. `[ASSUMED]` — confirm the field truncates at 50 and no >50 input is possible. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | The name is accepted (input enforces maxlength 50) and the category is created. **Confirmed live 2026-08-18** — `#gradingCategoryNameInput` carries `maxlength="50"`, so input longer than 50 cannot be entered. `[ASSUMED]` removed. |
+| **Remarks** | Automated as `TST_GCAT_TC_3`. The test asserts the generated name is exactly 50 characters *before* using it, so a helper bug cannot quietly turn this into a short-name test that never exercises the boundary. |
+| **Actual Result** | As expected. A 50-character name was accepted and the category appeared in the list. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -719,11 +723,11 @@ for the label TCs).
 | **Preconditions** | School is already at the maximum number of grading categories. |
 | **Test Steps** | 1. Attempt to create another grading category. |
 | **Test Data** | — |
-| **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. `[ASSUMED]` — confirm the exact maximum count. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. **Copy confirmed live 2026-08-18** — this modal is pre-rendered in the DOM at all times, so its exact wording is verified; only the *triggering* of it is blocked. The exact maximum count is still `[ASSUMED]`. |
+| **Remarks** | **NOT AUTOMATED — BLOCKED.** Deliberately absent from the test file, the TC repository and the execution file (not merely skipped), so it cannot run by accident. |
+| **Actual Result** | — (not executed) |
+| **Status** | Not Run — **Blocked** |
+| **Comments / Defect ID** | **Why blocked (2026-08-18):** the precondition is "the school is already at its maximum", so the test must first *fill* the school with grading categories. Three problems: **(1)** the maximum is unknown, so the only way to find it is to keep creating until the app refuses; **(2)** `3 July Test School 1` (FCN-CHZ-PDA) is **shared** — while it sits at the cap, *nobody else* can create a grading category, and other suites would fail with a misleading error (the same class of cross-suite interference that broke two `TST_CLST_TC_7` assertions on 2026-08-17); **(3)** if a run crashes before cleanup, the school stays full until someone clears it by hand. **To unblock — any one of:** (a) a **dedicated school** used only by this test *(recommended — cheapest and fully safe)*; (b) product/dev supply the exact maximum, plus agreement to accept the shared-school impact; (c) an environment where no other suite is running. Once a dedicated school exists this is a short TC, since the expected copy is already verified. |
 
 ---
 
@@ -739,10 +743,10 @@ for the label TCs).
 | **Test Steps** | 1. Leave the **Grading category name** empty. 2. Observe the **Save** button. |
 | **Test Data** | Name: (empty) |
 | **Expected Result** | The **Save** button is disabled while the name is empty, so an empty-named category cannot be created. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_5`. Checked **both ways** — disabled when empty, enabled once a character is typed, disabled again when cleared. A one-way check would still pass against a permanently disabled Save, which is itself a defect worth catching. The test deliberately ends with the modal open so the end-of-test screenshot shows the disabled Save; nothing is saved. |
+| **Actual Result** | As expected. Save was disabled with an empty name, became enabled on input, and returned to disabled when the field was cleared. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -802,10 +806,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Open grade options** on a category. 2. Click **Remove**. 3. In the confirmation, click **Yes, remove**. |
 | **Test Data** | Category: `AutoTest Category` |
 | **Expected Result** | A confirmation modal appears ("Remove grading category — Are you sure you want to remove this? Removing the category will not affect classes currently using it, but you will not be able to add it to any new classes"). After **Yes, remove**, a banner "Grading category successfully removed" is shown and the category no longer appears in the list. |
-| **Remarks** | Product note: removal does not affect classes already using the category. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_8`. Creates its own `AutoCat_remove_<epoch-ms>` first, so the destructive confirmation is only ever aimed at our own data — never at a pre-existing school category. Also asserts the category **is** listed before removing it: "it is gone now" proves nothing if it was never there. |
+| **Actual Result** | As expected. Confirmation modal shown with the expected copy; after **Yes, remove** the banner "Grading category successfully removed" appeared (~2.2 s) and the category left the list. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -821,10 +825,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Open grade options** → **Remove**. 2. In the confirmation, click **No, go back**. |
 | **Test Data** | — |
 | **Expected Result** | The confirmation modal closes and the category remains in the list (not removed). |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_9`. Creates its own `AutoCat_cancelremove_<epoch-ms>` so the Remove confirmation is never opened against real school data. Modal closure is asserted on **visibility**, not presence — all four modals on this page stay in the DOM permanently, so a presence check could never fail. |
+| **Actual Result** | As expected. After **No, go back** the confirmation closed and the category was still listed. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -1817,8 +1821,8 @@ for the label TCs).
 3. **Load-more** (TST_CLST_TC_20): whether the link hides or disables once all classes are loaded; page size.
 4. **Class label** (TST_CLST_TC_4): a concrete existing label value (`<EXISTING_CLASS_LABEL>`), pending scenario #21 (Add label).
 5. Whether filtering updates the section counts, and whether "Ended/Expired/Deleted" statuses each render distinctly.
-6. **Grading categories — max count** (TST_GCAT_TC_4): the exact maximum number of grading categories per school.
-7. **Grading categories — 50-char boundary** (TST_GCAT_TC_3): confirm the name field truncates at 50 and rejects longer input.
+6. **Grading categories — max count** (TST_GCAT_TC_4): **STILL OPEN / BLOCKED.** The exact maximum per school is unknown, and discovering it means filling a shared school to its cap. Needs a dedicated school (recommended) or the number from product — see TC_4's Comments row.
+7. ~~**Grading categories — 50-char boundary** (TST_GCAT_TC_3)~~ — **RESOLVED 2026-08-18.** `#gradingCategoryNameInput` carries `maxlength="50"`; a 50-character name is accepted and longer input cannot be typed. Automated and passing.
 8. **Grading categories — launch grade settings** (TST_GCAT_TC_7): the exact class link/destination on a category's details page once the category is applied to a class (all categories tested had 0 classes).
 9. **Bulk form — Duplicate** (TST_BCCF_TC_7): exact duplicate behaviour / confirmation.
 10. **Bulk form — Copy an Existing Class** (TST_BCCF_TC_8): the modal's source-class selection and copy options.

@@ -1,0 +1,37 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Manage grading categories — Req #5 (create) + #8 (delete) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_GCAT_TC_10", "description": "Housekeeping — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] }
+    ],
+    "Test": [
+      { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
+      { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
+      { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
+      { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
+      { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}
