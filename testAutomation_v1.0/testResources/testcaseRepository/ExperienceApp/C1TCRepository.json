@@ -4477,6 +4477,19 @@
       ]
     },
     {
+      "modulename": "Admin App | Manage grading categories — create (Req #5) & delete (Req #8)",
+      "moduleId": "GCAT",
+      "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+      "testcase": [
+        { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name",            "tags": "P1", "visualTest": false },
+        { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "tags": "P3", "visualTest": false },
+        { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name",   "tags": "P2", "visualTest": false },
+        { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation",          "tags": "P1", "visualTest": false },
+        { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled",              "tags": "P3", "visualTest": false },
+        { "id": "TST_GCAT_TC_10", "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "tags": "P3", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "ebookFocusA11y",
       "moduleId": "",
       "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
