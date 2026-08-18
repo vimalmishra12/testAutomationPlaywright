@@ -255,7 +255,10 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
   *Reported to the team [2026-08-15]; fix pending.*
 
 - **The applied filter persists SERVER-SIDE, per user account** [2026-08-15]
-  `[UNCONFIRMED — product decision pending 2026-08-17]`.
+  **`[CONFIRMED 2026-08-17 — INTENDED BEHAVIOUR, per product decision]`. Not a defect; do
+  not raise it as one.** The same persistence applies to the **class search term** (see
+  "Class search" below). The testing impact below is unchanged: intended or not, the suite
+  still cannot assume a clean start, so the Before/AfterEach reset stays.
   Reproduced manually end-to-end: a filter applied on the Classes tab survives a **page
   reload**, a **full logout + login**, and a **different browser / incognito window** —
   which leaves the server, keyed to the account, as the only possible store. It was first
@@ -272,8 +275,135 @@ error interfering. Recorded as the standard pattern for AC3-style record-count T
     running the suite with the same account will interfere with each other. This is why
     `adminClassesTab.json` resets in **BeforeEach**, not only AfterEach.
 
+##### Class search (Req #9)
+
+*Captured live on Thor [2026-08-17] during Phase 1 of the search/sort batch, same school.*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Search input | `input[qid='aClass-1']` | Angular-backed; type with `addValue`, click the field first |
+| Search button | `button[qid='aClass-2']` | `type=submit` inside the `form.search-bar` |
+| No-results text | `.active-section empty-class-state p.no-search-result-container` | Same node as the filter empty state |
+
+- **Submit-driven, NOT live/debounced.** Typing alone changes nothing — the list only
+  updates when **Search** is clicked. (Contrast with the filter panel's *label* search,
+  which IS debounced.) Settles in **~1.0–1.2 s**.
+- **Case-insensitive and partial-matching** — `sarthak` returns `SarthakTestClass1`.
+  This resolves the `[ASSUMED]` in `TST_CLST_TC_18`.
+- **Searches BOTH sections.** The Active and Ended headings both re-count; a term can match
+  an ended class and not an active one.
+- **No-results copy echoes the term:** `No classes that match your search <term>` (the term
+  in a `<strong>`). Resolves the `[ASSUMED]` in `TST_CLST_TC_21`.
+- **The search term PERSISTS server-side, exactly like the applied filter** — it survived a
+  full page reload with the list still narrowed to one class. **Intended behaviour** (same
+  product decision as the filter, 2026-08-17). *Testing impact:* the housekeeping reset must
+  clear the **search as well as the filter**, or the search TCs hand the sort TCs a one-row
+  list and the term leaks into the next run.
+- **There is no clear/X control** on the search field — the reset is *empty the input, then
+  click Search*.
+
+##### Class list sorting (Req #27)
+
+*Captured live on Thor [2026-08-17].*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Sort by class name | `button[qid='aClass-3ACTIVE_SECTION']` | `aria-label="Sort by class name"` |
+| Sort by start date | `button[qid='aClass-4ACTIVE_SECTION']` | |
+| Sort by end date | `button[qid='aClass-5ACTIVE_SECTION']` | |
+| Sort status (name) | `#sortStatus-class-title-a-ACTIVE_SECTION` | `sr-only`; note `title`, not `name` |
+| Sort status (start) | `#sortStatus-class-startdate-a-ACTIVE_SECTION` | all-lowercase `startdate` |
+| Sort status (end) | `#sortStatus-class-enddate-a-ACTIVE_SECTION` | all-lowercase `enddate` |
+
+> The `qid`s are **suffixed with the section** (`…ACTIVE_SECTION`), so the Ended table's
+> headers are separate elements — an unsuffixed `qid` matches nothing.
+
+- **Class key is NOT sortable** — its header is a `span.list-info.disabled`, not a button.
+  Only class name, start date and end date sort.
+- **Each click toggles** ascending ⇄ descending. The status span is rendered **only inside
+  the currently active sort column's button** — the other columns' spans are removed from
+  the DOM entirely, so `null` reliably means "not the sort column".
+- **⚠ The sort status label is OPTIMISTIC UI.** Measured: the label flips to
+  "sorted ascending"/"sorted descending" in **~90–120 ms**, but the **rows only re-order at
+  ~1.2–3.2 s**. Waiting on the label and then reading the rows reads the *previous* order.
+  **Wait on the row content changing, never on the label.**
+- **Sorting does NOT persist** across a page load — unlike the filter and the search, it
+  resets. Within a session it does survive between TCs, so a test must not assume the first
+  click yields ascending.
+- **Collation is by code point**, not locale/case-insensitive: `(` < `A` < `S` < `T` < `c` < `t`,
+  so `(14 aug) class 1` < `AutoClass_CreateOnly` < `class_L_…`, and `test Class 14 aug 2` <
+  `testClass1` (space before `C`). A `localeCompare` assertion would NOT match the product.
+
+**Row cells (Active section) — stable indexed ids**
+
+`#class-cell-name-ACTIVE_SECTION-<n> a.class-details` · `#class-cell-key-ACTIVE_SECTION-<n>`
+· `#class-cell-startDate-ACTIVE_SECTION-<n>` · `#class-cell-endDate-ACTIVE_SECTION-<n>`
+(`<n>` = 0-based row index; note the camelCase `startDate`/`endDate` here versus the
+lowercase forms in the sort-status ids). Column headers use the matching
+`#class-col-<field>-ACTIVE_SECTION` ids. Dates render as `Aug 17, 2026`.
+
+##### Ended classes section, row details & user guide (Req #18 / #17 / #28 / #20)
+
+*Captured live on Thor [2026-08-17].*
+
+| Element | Selector | Notes |
+|---|---|---|
+| Ended section root | `.ended-section` | Holds the note "Ended and deleted classes automatically move into this section" |
+| Ended section toggle | `a#endedSectionCollapseBtn` | `qid` is lower-case `aclass-17`; `aria-expanded` carries the state |
+| Ended section panel | `#endedSectionCollapse` | |
+| Open/Close label | `.ended-section-heading span.toggle-text` | Reads `Open` when closed, `Close` when open |
+| Ended Class status header | `#class-col-class-status-ENDED_SECTION` | Note the doubled `class-class` |
+| Ended row cells | `#class-cell-<field>-ENDED_SECTION-<n>` | Adds `status` to the Active section's fields |
+| Load more | `a[qid='aClass-8']` | Lives in the **Ended** section |
+| Row details toggle | `a[data-toggle='collapse'][aria-controls='itemCollapseACTIVE_SECTION<n>']` | The `qid`s run 1,3,5… — use `aria-controls`, it is cleanly index-based |
+| Row details panel | `#itemCollapseACTIVE_SECTION<n>` | |
+| User guide toggle | `a[qid='aClass-11']` | `aria-label` flips `Open the user guide` ⇄ `Hide the user guide` |
+| User guide panel | `.collapseUserGuide` | |
+
+- **The Ended section is COLLAPSED on load and renders NOTHING until expanded** — a freshly
+  loaded tab has **zero** `ENDED_SECTION` rows and no "Load more" link. Rows arrive ~1.0 s
+  after expanding.
+- **⚠ The `Ended classes (N)` count is fetched WITH the rows, not on page load.** While
+  collapsed the heading reads a bare `Ended classes` and the count **never** appears (polled
+  10 s); it lands ~0.9 s after expanding. Any assertion on the ended count must expand first.
+  This failed `TST_CLST_TC_14` on its first run.
+- **"Load more" is REMOVED from the DOM** once the last batch loads (it does not merely
+  disable) — resolves the `[ASSUMED]` in `TST_CLST_TC_20`. Page size is **20**; the new rows
+  land ~3.5 s after the click.
+- **Loaded rows are NOT reset by collapsing and re-expanding** the section (verified: 26 rows
+  stayed 26, link stayed gone). **Only a page reload** restores the first-page state — which is
+  what keeps the two load-more TCs independent.
+- **Class status values seen:** `Ended`, `Expired`, `Deleted` (the manual doc recorded only
+  "Expired").
+- **⚠ Row-details expand is a Bootstrap collapse with a ~700 ms `collapsing` phase, and the
+  panel's CONTENT stays in the DOM while collapsed.** Two consequences: element counts can
+  never distinguish the states (use `isDisplayed`), and **waiting on the panel is not enough** —
+  Playwright calls the panel visible partway through the expand, while the panel is still
+  shorter than its content and inner elements are clipped to zero height. Wait on a **content**
+  element (e.g. `h3.class-label-heading`). This failed `TST_CLST_TC_9` on its first run.
+- The **user guide panel is REMOVED from the DOM** when collapsed — unlike the row-details
+  panel and the filter modal, which both persist.
+- **Launching a class** (active or ended) opens the same class page; `activeClass.page.js`
+  already models it (anchors on the Actions button), so no new page object is needed. A
+  deep-link to `/admin/admin/org_<slug>/class` returns `/dashboard/error` — the school context
+  must be set by clicking the school card first.
+
 **Data notes**
 
 - Label `VM1` matches **no active class** — filtering `Active` + `VM1` returns zero.
+- `SarthakTestClass1` (key `97Cc-y7bs`) is the search fixture — an active class whose name
+  no other class shares a prefix with.
+- Six active classes share the start date `Aug 14, 2026`, so date sorting must be asserted
+  as **monotonic, not strictly increasing**, and descending is not an exact reversal.
+- **⚠ The ACTIVE section also paginates at 20** (same page size as Ended). Once a school has
+  more than 20 active classes, ascending and descending sorts show **two different 20-row
+  windows of a larger set** — so "descending is the exact reverse of ascending" is false even
+  though the sort is correct. Assert monotonic ordering and the direction flip; only assert an
+  exact reversal when `visible rows === Active classes (N)`.
+- **⚠ This school is SHARED and mutates under the suite.** Between 2026-08-17 morning and
+  afternoon another suite created many classes named `AutoClass_CreateOnly`, taking the active
+  count past 20 and introducing **duplicate class names**. Two assumptions died at once: that
+  the whole list is visible, and that names are unique. Do not build an assertion on the
+  current row count, or on names being distinct.
 - Class creation is asynchronous ("can take up to 12 hours"), so a newly created class does
   not appear in `Active classes (N)` immediately — see the Add Class feature notes.

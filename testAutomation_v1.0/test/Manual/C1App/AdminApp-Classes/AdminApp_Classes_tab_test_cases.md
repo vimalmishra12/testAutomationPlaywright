@@ -5,6 +5,11 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
+**Execution status (2026-08-18):** **27 of 81 TCs automated and passing.**
+- Module **CLST** (`TST_CLST_TC_1–22`, 22 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17).
+- Module **GCAT** (`TST_GCAT_TC_2, 3, 5, 8, 9`, 5 TCs) — Requirements **#5 create grading category** and **#8 delete grading category** — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-18, 2 consecutive clean runs).
+
+The remaining **54 TCs are Not Run** (rest of GCAT, plus BCCF, GSCL, CMGT, CGST, CLON, CTXC). Within GCAT, `TST_GCAT_TC_1/6/7` are simply not yet automated, while **`TST_GCAT_TC_4` is BLOCKED** — see its Comments row for why.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -223,9 +228,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Classes tab loads showing: "Active classes (N)" heading, Search box, Add class button, Filter link, User guide toggle, select-all + disabled Delete class, the class table (Class name, Class key, Start date, End date, Student progress), and a separate "Ended classes (N)" section. Left nav shows Classes/Students/Staff/Library/Reports. |
 | **Remarks** | Classes(N) in nav = Active + Ended counts. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Classes tab loaded with every listed component: 'Active classes (15)' heading, search box, Add class, Filter, User guide toggle, select-all checkbox with a disabled Delete class button, all five column headers, a separate 'Ended classes (26)' section, and the five left-nav items. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -244,9 +249,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | A Filter modal opens with **Class status** options (Not started, Active, Ended, Expired, Deleted), a **Class labels** section with a "Find a label" input, and **Clear all** and **Apply** buttons. |
 | **Remarks** | Filter is a modal dialog, not an inline panel. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Filter modal opened showing all five Class status options (Not started / Active / Ended / Expired / Deleted), the 'Find a label' input, and the Clear all and Apply buttons. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. PRODUCT NOTE: the panel's X close button is unreliable - a click reports success but the panel can stay open. Automation carries an authorised retry marked // WORKAROUND. App-side fix reported landed 2026-08-17; retry retained pending removal. |
 
 ---
 
@@ -263,9 +268,9 @@ for the label TCs).
 | **Test Data** | Class status: Active |
 | **Expected Result** | The modal closes and the list shows only Active classes; the "Active classes (N)" count reflects the filtered result. Ended/Expired/Deleted classes are not shown in the active list. |
 | **Remarks** | Repeat conceptually for Ended / Expired / Deleted / Not started. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Applying Class status = Active closed the modal and filtered the list; the page-level 'Clear' link appeared (the app's own signal that a filter is applied) and the visible rows were consistent with the 'Active classes (N)' heading. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -282,9 +287,9 @@ for the label TCs).
 | **Test Data** | Label: `VM1` (a real existing label; others: `A11y test`, `aditya`) |
 | **Expected Result** | Only classes carrying the selected label are listed. |
 | **Remarks** | Label list confirmed live on the create-class label dropdown; confirm a class actually carries `VM1` before running. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The label filter was applied (confirmed via the 'Clear' link) and the list settled into exactly one valid state - populated with matching classes, or the empty state. NOTE: label VM1 matches no ACTIVE class on this school, so an Active + VM1 combination legitimately returns zero. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -301,9 +306,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | All filter selections are cleared back to the default (unfiltered) state within the modal. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clear all cleared the selections and closed the panel, and the page-level 'Clear' link disappeared, confirming the applied filter was reset. NOTE: during the panel's ~3.6s close it still holds its pre-clear markup, so the reset must be verified at page level, not from the panel's own chips. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -317,12 +322,12 @@ for the label TCs).
 | **Priority** | Low |
 | **Preconditions** | On the Classes tab. |
 | **Test Steps** | 1. Open **Filter**. 2. Select a Class status + a label combination that no class satisfies. 3. Click **Apply**. |
-| **Test Data** | Status + label combo with zero matches `[ASSUMED]` |
-| **Expected Result** | The list shows an empty/no-matching-classes state with no error. `[ASSUMED]` — capture exact empty-state text on live. |
+| **Test Data** | Status: `Deleted` + Label: `A11y test` (a combination confirmed to match zero classes) |
+| **Expected Result** | The list shows the empty/no-matching-classes state with no error, reading **No classes that are &lt;status&gt;, &lt;label&gt;** (e.g. "No classes that are Deleted, A11y test"). CONFIRMED live 2026-08-15. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Filtering Class status = Deleted together with label 'A11y test' matched no classes and showed the empty state, with no error. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -341,9 +346,9 @@ for the label TCs).
 | **Test Data** | Class name: `SarthakTestClass1` |
 | **Expected Result** | The list is filtered to the class(es) whose name matches "SarthakTestClass1". |
 | **Remarks** | Any existing active class name may be substituted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching 'SarthakTestClass1' returned that class, and every returned row matched the term. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -360,9 +365,9 @@ for the label TCs).
 | **Test Data** | Class key: `97Cc-y7bs` |
 | **Expected Result** | The list is filtered to the single class with class key `97Cc-y7bs`. |
 | **Remarks** | Confirms search accepts both class name and class key. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching class key '97Cc-y7bs' returned exactly one class - SarthakTestClass1 - confirming search accepts a class key as well as a name. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -377,11 +382,11 @@ for the label TCs).
 | **Preconditions** | A class named `SarthakTestClass1` exists. |
 | **Test Steps** | 1. Search `sarthak` (lower-case, partial). 2. Click **Search**. |
 | **Test Data** | Search term: `sarthak` |
-| **Expected Result** | `SarthakTestClass1` is returned, confirming search is case-insensitive and matches partial names. `[ASSUMED]` — confirm partial/case behaviour on live. |
+| **Expected Result** | `SarthakTestClass1` is returned, confirming search is case-insensitive and matches partial names. CONFIRMED live 2026-08-17. |
 | **Remarks** | If search is exact-match only, record actual behaviour and split into separate positive/negative TCs. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The lower-case partial term 'sarthak' returned 'SarthakTestClass1'. CONFIRMED: class search IS case-insensitive and DOES match partial names - the previously ASSUMED behaviour is correct, so no split into separate positive/negative TCs is needed. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -396,11 +401,11 @@ for the label TCs).
 | **Preconditions** | On the Classes tab. |
 | **Test Steps** | 1. Search `zzz-no-such-class-9999`. 2. Click **Search**. |
 | **Test Data** | Search term: `zzz-no-such-class-9999` |
-| **Expected Result** | No classes are listed and an empty/no-results state is shown (no error/crash). `[ASSUMED]` — capture the exact empty-state message/text on live. |
+| **Expected Result** | No classes are listed and the no-results state is shown (no error/crash), reading exactly: **No classes that match your search &lt;term&gt;** (the term echoed in bold). CONFIRMED live 2026-08-17. |
 | **Remarks** | Record the no-results copy so it can be asserted when automated. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Searching 'zzz-no-such-class-9999' returned 0 classes and displayed the no-results state with no error. CAPTURED COPY: 'No classes that match your search zzz-no-such-class-9999' - the searched term is echoed back in bold. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -419,9 +424,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | First click sorts classes A→Z by name; second click reverses to Z→A (sort indicator updates accordingly). |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The first click sorted by class name and the column reported 'sorted ascending'; the second click reported 'sorted descending' and the order was the exact reverse of the first. NOTE: the product sorts by CODE POINT, so uppercase names sort before lowercase ones (for example 'Test Class 14 Aug' before 'class_L_...'). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -438,9 +443,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Classes reorder chronologically by the selected date column, and each header toggles ascending/descending. |
 | **Remarks** | Sort headers are present in both Active and Ended tables. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Start date and End date each reordered the list chronologically and toggled direction on the second click. NOTE: dates repeat (six active classes share Aug 14, 2026), so the order is monotonic rather than strictly increasing, and descending is not an exact reversal of ascending. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -459,9 +464,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The row expands to show **Course materials**, **Class labels**, **Students** (count + Pending), and **Teachers** (count + Pending); the toggle changes to **Hide class details**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Expanding a class row revealed the details panel showing Course materials (or the 'You haven't chosen learning materials' empty state when the class has none), the Class labels heading, and the Students and Teachers counts; the toggle changed to 'Hide class details'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -478,9 +483,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The details panel collapses and the toggle returns to **Show class details**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Collapsing the row hid the details panel and the toggle returned to 'Show class details'. NOTE: the panel's content REMAINS in the DOM while collapsed, so only a visibility check distinguishes the two states. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -499,9 +504,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | A "User guide" help panel appears explaining you can search a class by name or class code, plus the deleted/restored-classes refresh tip; the toggle changes to **Hide the user guide**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The user guide panel opened showing 'On this page you can:' with guidance on searching by class name and class code; the toggle then offered 'Hide the user guide'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -518,9 +523,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The help panel collapses and the toggle returns to **Open the user guide**. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Collapsing the user guide removed the panel from the DOM entirely and the toggle returned to 'Open the user guide'. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -539,9 +544,9 @@ for the label TCs).
 | **Test Data** | Class: `SarthakTestClass1` |
 | **Expected Result** | The Class Page opens (URL `/class/teacher/org_<slug>/class/<uuid>/view`, title "Class Page | Cambridge One") for the selected class. |
 | **Remarks** | Launch opens the class in the teacher/class view context. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clicking an active class name opened the Class Page at /class/teacher/org_<slug>/class/<uuid>/view. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -560,9 +565,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Active and Ended classes are shown in two distinct sections, each with its own count; the Ended section notes that "Ended and deleted classes automatically move into this section" and includes a Class status column. |
 | **Remarks** | Nav "Classes (N)" total = Active + Ended. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Active and Ended classes are shown as two separate sections, each with its own count, and the Ended section carries the note that ended and deleted classes move into it plus a Class status column. NOTE: the Ended count and Class status column only render AFTER the section is expanded - while collapsed the heading reads a bare 'Ended classes' with no count. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -579,9 +584,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Ended section expands to reveal its class table on Open and collapses on Close; the toggle label switches Open ⇄ Close. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. The Ended section expanded (toggle reads 'Close', class rows listed) and collapsed again (toggle reads 'Open', panel hidden). NOTE: the section is COLLAPSED by default and renders no rows at all until it is opened. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -600,9 +605,9 @@ for the label TCs).
 | **Test Data** | Ended class: `CQA Vimal` (key `y4G4-3iXC`) |
 | **Expected Result** | The Class Page opens for the selected ended class (same `/class/teacher/.../view` destination as active classes). |
 | **Remarks** | Confirms ended classes remain launchable (read/review). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. Clicking a class name in the Ended section opened the same Class Page destination as an active class, confirming ended classes remain launchable. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -621,9 +626,9 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | Additional class rows are appended to the list without a full page reload; the count of visible rows increases. |
 | **Remarks** | "Load more" is count-gated — it appears only when more classes remain than are currently shown. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. 'Load more ...' appended additional ended class rows (20 to 26) without a full page reload, and the visible rows stayed within the 'Ended classes (N)' count. Page size is 20; new rows land about 3.5s after the click. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -638,11 +643,11 @@ for the label TCs).
 | **Preconditions** | Ended (or Active) section with a "Load more" link visible. |
 | **Test Steps** | 1. Click **Load more …** repeatedly until all classes are displayed. |
 | **Test Data** | — |
-| **Expected Result** | Once the last batch is loaded, the "Load more …" link is no longer shown. `[ASSUMED]` — confirm the link hides (vs disables) on live. |
+| **Expected Result** | Once the last batch is loaded, the "Load more …" link is **removed from the DOM** — it hides rather than becoming disabled. CONFIRMED live 2026-08-17. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Actual Result** | PASS. After clicking 'Load more ...' until every ended class was listed, the link was REMOVED from the DOM (it hides rather than disabling) and the visible row count equalled the 'Ended classes (N)' heading. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---
 
@@ -681,10 +686,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Create a grading category**. 2. Enter `AutoTest Category`. 3. Click **Save**. |
 | **Test Data** | Name: `AutoTest Category` |
 | **Expected Result** | The modal closes, a banner "Grading category successfully created" is shown, and the new category appears in the list. |
-| **Remarks** | Repeated runs create duplicate-named categories (counts toward the max). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_2`. The name is generated per run as `AutoCat_create_<epoch-ms>`, so repeated runs never collide and the housekeeping hook removes them — duplicate names no longer accumulate against the school maximum. |
+| **Actual Result** | As expected. Banner "Grading category successfully created" appeared (~1.4 s) and the category was listed at the same moment. Both are asserted — the banner alone would pass even if nothing were created. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -699,11 +704,11 @@ for the label TCs).
 | **Preconditions** | On the Create a grading category modal. |
 | **Test Steps** | 1. Enter a 50-character name. 2. Click **Save**. |
 | **Test Data** | 50-char name (e.g. `AAAAAAAAAA...` × 50) |
-| **Expected Result** | The name is accepted (input enforces maxlength 50) and the category is created. `[ASSUMED]` — confirm the field truncates at 50 and no >50 input is possible. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | The name is accepted (input enforces maxlength 50) and the category is created. **Confirmed live 2026-08-18** — `#gradingCategoryNameInput` carries `maxlength="50"`, so input longer than 50 cannot be entered. `[ASSUMED]` removed. |
+| **Remarks** | Automated as `TST_GCAT_TC_3`. The test asserts the generated name is exactly 50 characters *before* using it, so a helper bug cannot quietly turn this into a short-name test that never exercises the boundary. |
+| **Actual Result** | As expected. A 50-character name was accepted and the category appeared in the list. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -718,11 +723,11 @@ for the label TCs).
 | **Preconditions** | School is already at the maximum number of grading categories. |
 | **Test Steps** | 1. Attempt to create another grading category. |
 | **Test Data** | — |
-| **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. `[ASSUMED]` — confirm the exact maximum count. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. **Copy confirmed live 2026-08-18** — this modal is pre-rendered in the DOM at all times, so its exact wording is verified; only the *triggering* of it is blocked. The exact maximum count is still `[ASSUMED]`. |
+| **Remarks** | **NOT AUTOMATED — BLOCKED.** Deliberately absent from the test file, the TC repository and the execution file (not merely skipped), so it cannot run by accident. |
+| **Actual Result** | — (not executed) |
+| **Status** | Not Run — **Blocked** |
+| **Comments / Defect ID** | **Why blocked (2026-08-18):** the precondition is "the school is already at its maximum", so the test must first *fill* the school with grading categories. Three problems: **(1)** the maximum is unknown, so the only way to find it is to keep creating until the app refuses; **(2)** `3 July Test School 1` (FCN-CHZ-PDA) is **shared** — while it sits at the cap, *nobody else* can create a grading category, and other suites would fail with a misleading error (the same class of cross-suite interference that broke two `TST_CLST_TC_7` assertions on 2026-08-17); **(3)** if a run crashes before cleanup, the school stays full until someone clears it by hand. **To unblock — any one of:** (a) a **dedicated school** used only by this test *(recommended — cheapest and fully safe)*; (b) product/dev supply the exact maximum, plus agreement to accept the shared-school impact; (c) an environment where no other suite is running. Once a dedicated school exists this is a short TC, since the expected copy is already verified. |
 
 ---
 
@@ -738,10 +743,10 @@ for the label TCs).
 | **Test Steps** | 1. Leave the **Grading category name** empty. 2. Observe the **Save** button. |
 | **Test Data** | Name: (empty) |
 | **Expected Result** | The **Save** button is disabled while the name is empty, so an empty-named category cannot be created. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_5`. Checked **both ways** — disabled when empty, enabled once a character is typed, disabled again when cleared. A one-way check would still pass against a permanently disabled Save, which is itself a defect worth catching. The test deliberately ends with the modal open so the end-of-test screenshot shows the disabled Save; nothing is saved. |
+| **Actual Result** | As expected. Save was disabled with an empty name, became enabled on input, and returned to disabled when the field was cleared. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -801,10 +806,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Open grade options** on a category. 2. Click **Remove**. 3. In the confirmation, click **Yes, remove**. |
 | **Test Data** | Category: `AutoTest Category` |
 | **Expected Result** | A confirmation modal appears ("Remove grading category — Are you sure you want to remove this? Removing the category will not affect classes currently using it, but you will not be able to add it to any new classes"). After **Yes, remove**, a banner "Grading category successfully removed" is shown and the category no longer appears in the list. |
-| **Remarks** | Product note: removal does not affect classes already using the category. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_8`. Creates its own `AutoCat_remove_<epoch-ms>` first, so the destructive confirmation is only ever aimed at our own data — never at a pre-existing school category. Also asserts the category **is** listed before removing it: "it is gone now" proves nothing if it was never there. |
+| **Actual Result** | As expected. Confirmation modal shown with the expected copy; after **Yes, remove** the banner "Grading category successfully removed" appeared (~2.2 s) and the category left the list. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -820,10 +825,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Open grade options** → **Remove**. 2. In the confirmation, click **No, go back**. |
 | **Test Data** | — |
 | **Expected Result** | The confirmation modal closes and the category remains in the list (not removed). |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** | |
+| **Remarks** | Automated as `TST_GCAT_TC_9`. Creates its own `AutoCat_cancelremove_<epoch-ms>` so the Remove confirmation is never opened against real school data. Modal closure is asserted on **visibility**, not presence — all four modals on this page stay in the DOM permanently, so a presence check could never fail. |
+| **Actual Result** | As expected. After **No, go back** the confirmation closed and the category was still listed. |
+| **Status** | Pass |
+| **Comments / Defect ID** | — |
 
 ---
 
@@ -1816,8 +1821,8 @@ for the label TCs).
 3. **Load-more** (TST_CLST_TC_20): whether the link hides or disables once all classes are loaded; page size.
 4. **Class label** (TST_CLST_TC_4): a concrete existing label value (`<EXISTING_CLASS_LABEL>`), pending scenario #21 (Add label).
 5. Whether filtering updates the section counts, and whether "Ended/Expired/Deleted" statuses each render distinctly.
-6. **Grading categories — max count** (TST_GCAT_TC_4): the exact maximum number of grading categories per school.
-7. **Grading categories — 50-char boundary** (TST_GCAT_TC_3): confirm the name field truncates at 50 and rejects longer input.
+6. **Grading categories — max count** (TST_GCAT_TC_4): **STILL OPEN / BLOCKED.** The exact maximum per school is unknown, and discovering it means filling a shared school to its cap. Needs a dedicated school (recommended) or the number from product — see TC_4's Comments row.
+7. ~~**Grading categories — 50-char boundary** (TST_GCAT_TC_3)~~ — **RESOLVED 2026-08-18.** `#gradingCategoryNameInput` carries `maxlength="50"`; a 50-character name is accepted and longer input cannot be typed. Automated and passing.
 8. **Grading categories — launch grade settings** (TST_GCAT_TC_7): the exact class link/destination on a category's details page once the category is applied to a class (all categories tested had 0 classes).
 9. **Bulk form — Duplicate** (TST_BCCF_TC_7): exact duplicate behaviour / confirmation.
 10. **Bulk form — Copy an Existing Class** (TST_BCCF_TC_8): the modal's source-class selection and copy options.

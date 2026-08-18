@@ -1,0 +1,10 @@
+{
+  "C1": {
+    "adminGradingCategories": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "namePrefix": "AutoCat_",
+      "maxNameLength": 50,
+      "removeModalCopy": "Removing the category will not affect classes currently using it"
+    }
+  }
+}

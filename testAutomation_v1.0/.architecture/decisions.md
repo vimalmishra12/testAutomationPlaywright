@@ -584,3 +584,63 @@ visible in every session since it is always read.
   session records, and the surviving index path keeps their references meaningful).
 - Cross-app lessons live in the index (and, for automation rules, ARCHITECTURE-INVARIANTS.md);
   app-specific detail stays in the app's own file.
+
+---
+
+## ADR-019: Cleanup That Would Erase a TC's Evidence Belongs in `BeforeEach`, Not `AfterEach`
+
+**Status:** Accepted (2026-08-18)
+
+**Context:** mochawesome captures **one screenshot per test, at the end of the test**
+(`core/runner/playwright.setup.js`, root `afterEach`). The execution file's own `AfterEach` list
+is executed by a **suite-level** `afterEach` registered in `core/runner/testrunner.js`. Mocha runs
+`afterEach` hooks innermost-first, so the ordering is fixed and non-obvious:
+
+```
+test body ends
+  -> suite-level afterEach   (exec file's AfterEach TCs — e.g. the cleanup/reset TC)
+  -> root afterEach          (screenshot)
+```
+
+Module GCAT (`adminGradingCategories.test.js`, Req #5 create / #8 delete) is the first module in
+this area whose TCs **create and delete real data**, and whose screenshot evidence *is* that data:
+`TST_GCAT_TC_2` is evidenced by the new category being visible in the list, `TST_GCAT_TC_8` by its
+absence. With the sweep registered in `AfterEach`, every category would be deleted **microseconds
+before its own screenshot**, and each create/delete TC would be evidenced by a picture of an empty
+list — while still reporting green. The existing module CLST registers `TST_CLST_TC_RESET` in
+**both** `BeforeEach` and `AfterEach`, so the naive reading is that GCAT's empty `AfterEach` is an
+oversight.
+
+**Decision:** Cleanup is placed by asking one question — **would this cleanup destroy the state the
+TC's screenshot is meant to prove?**
+
+- **Yes** → the cleanup goes in **`BeforeEach` only**; the exec file's `AfterEach` stays empty.
+  Each TC clears whatever the previous TC left behind.
+- **No** → either hook is fine; `BeforeEach` + `AfterEach` (the CLST pattern) remains valid.
+
+This is *not* a blanket ban on `AfterEach`. CLST's reset clears an applied filter and search — the
+screenshot does not depend on them — so CLST is correct as written and must not be "aligned" to
+GCAT. The two modules differ because their cleanups differ in kind, not because one is wrong.
+
+**Rationale:** A `BeforeEach`-only sweep gives every guarantee an `AfterEach` sweep gives — each TC
+still starts from a known-clean state — and additionally survives a crashed run, whose leftovers
+would otherwise persist (for GCAT, accumulating against the school's maximum-categories limit).
+The only property it gives up is "the environment is pristine the instant the suite ends", which
+no assertion depends on; the next run's first `BeforeEach` restores it. Weighed against silently
+worthless evidence, that is a clear trade.
+
+This is Invariant 13 in a new guise: cleanup must never hide anything. A sweep that erases the
+proof is a quieter failure than one that throws — the suite stays green and the report merely
+becomes useless, which is far harder to notice than a red test.
+
+**Consequences:**
+- An **empty `AfterEach` in an execution file is a deliberate signal**, not an omission. Any exec
+  file relying on this carries a comment in its test file explaining why (see
+  `TST_GCAT_TC_10`'s doc comment). Do not "restore" it by symmetry with another module.
+- The housekeeping TC follows the `TST_<MOD>_TC_<N>` convention (`TST_GCAT_TC_10`), not the older
+  `TST_<MOD>_TC_RESET` form, which was previously flagged as off-convention.
+- Any TC whose evidence is created **data** (as opposed to a transient UI state) should end on the
+  screen showing that data, and must not navigate away or tidy up as its final step.
+- If mid-test screenshots are ever added to `baseActionLibrary.js` (protected file — discussed and
+  deferred 2026-08-17), this constraint relaxes: evidence would no longer depend solely on the
+  end-of-test frame, and `AfterEach` cleanup could return. Revisit this ADR at that point.

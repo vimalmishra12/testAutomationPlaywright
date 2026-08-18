@@ -7,7 +7,16 @@
       "clearAllStatus": "Active",
       "clearAllLabel": "sarthak1",
       "noMatchStatus": "Deleted",
-      "noMatchLabel": "A11y test"
+      "noMatchLabel": "A11y test",
+      "searchByName": "SarthakTestClass1",
+      "searchByKey": "97Cc-y7bs",
+      "searchByKeyExpectedName": "SarthakTestClass1",
+      "searchPartial": "sarthak",
+      "searchPartialExpectedName": "SarthakTestClass1",
+      "searchNoMatch": "zzz-no-such-class-9999",
+      "detailsRowIndex": 0,
+      "launchRowIndex": 0,
+      "endedLaunchRowIndex": 0
     }
   }
 }

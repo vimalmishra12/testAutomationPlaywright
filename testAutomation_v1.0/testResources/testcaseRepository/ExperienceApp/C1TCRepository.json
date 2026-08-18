@@ -4461,7 +4461,7 @@
       ]
     },
     {
-      "modulename": "Admin App | Classes tab — load & filter (Req #1 / #2)",
+      "modulename": "Admin App | Classes tab — load, filter, search, sort, rows, guide, launch, sections & load more",
       "moduleId": "CLST",
       "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
       "testcase": [
@@ -4469,9 +4469,38 @@
         { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options",       "tags": "P1", "visualTest": false },
         { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "tags": "P1", "visualTest": false },
         { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_5", "description": "Verify search by class name returns the matching class",          "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_6", "description": "Verify search by class key returns the matching class",           "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_7", "description": "Verify sorting by Class name toggles ascending/descending",       "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_8", "description": "Verify sorting by Start date and End date",                       "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_9", "description": "Verify expanding a class row shows the class details",           "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_10", "description": "Verify collapsing an expanded class row hides the details",      "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_11", "description": "Verify expanding the user guide shows the help panel",           "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_12", "description": "Verify collapsing the user guide hides the help panel",          "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_13", "description": "Verify launching an Active class opens the Class Page",          "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_14", "description": "Verify Active and Ended classes appear in separate sections with counts", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_15", "description": "Verify expanding and collapsing the Ended classes section",      "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_16", "description": "Verify launching a class from the Ended section opens the Class Page", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_17", "description": "Verify 'Load more' loads additional classes in the Ended section", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_18", "description": "Verify class search is case-insensitive and matches partial names", "tags": "P2", "visualTest": false },
+        { "id": "TST_CLST_TC_20", "description": "Verify 'Load more' no longer appears once all classes are loaded", "tags": "P3", "visualTest": false },
         { "id": "TST_CLST_TC_19", "description": "Verify 'Clear all' resets the filter selections",                 "tags": "P3", "visualTest": false },
+        { "id": "TST_CLST_TC_21", "description": "Verify searching for a non-existent class shows a no-results state", "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_RESET", "description": "AfterEach — clear applied filters so each TC starts unfiltered", "tags": "P3", "visualTest": false }
+        { "id": "TST_CLST_TC_RESET", "description": "Before/AfterEach — clear applied filters and search so each TC starts from the full list", "tags": "P3", "visualTest": false }
+      ]
+    },
+    {
+      "modulename": "Admin App | Manage grading categories — create (Req #5) & delete (Req #8)",
+      "moduleId": "GCAT",
+      "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+      "testcase": [
+        { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name",            "tags": "P1", "visualTest": false },
+        { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "tags": "P3", "visualTest": false },
+        { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name",   "tags": "P2", "visualTest": false },
+        { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation",          "tags": "P1", "visualTest": false },
+        { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled",              "tags": "P3", "visualTest": false },
+        { "id": "TST_GCAT_TC_10", "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "tags": "P3", "visualTest": false }
       ]
     },
     {
