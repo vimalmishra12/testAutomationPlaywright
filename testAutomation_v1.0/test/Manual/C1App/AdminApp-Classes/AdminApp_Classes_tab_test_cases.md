@@ -5,11 +5,17 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-18):** **27 of 81 TCs automated and passing.**
+**Execution status (2026-08-19):** **55 of 81 TCs automated and passing.**
 - Module **CLST** (`TST_CLST_TC_1–22`, 22 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17).
-- Module **GCAT** (`TST_GCAT_TC_2, 3, 5, 8, 9`, 5 TCs) — Requirements **#5 create grading category** and **#8 delete grading category** — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-18, 2 consecutive clean runs).
+- Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
+- Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
+- Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
 
-The remaining **54 TCs are Not Run** (rest of GCAT, plus BCCF, GSCL, CMGT, CGST, CLON, CTXC). Within GCAT, `TST_GCAT_TC_1/6/7` are simply not yet automated, while **`TST_GCAT_TC_4` is BLOCKED** — see its Comments row for why.
+The remaining **26 TCs are Not Run** (CMGT, CGST, CLON, CTXC, plus four stragglers below).
+
+**Two are BLOCKED, both for the same reason** — see their Comments rows: `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are the maximum-categories / maximum-scales limits, whose precondition is a school already at its cap. `3 July Test School 1` is **shared**, so holding it at the cap would break other suites mid-run. Both modals are pre-rendered in the DOM, so their **expected copy is already verified word for word** — each is short work once a dedicated school exists.
+
+**Two are DEFERRED to CGST**: `TST_GCAT_TC_7` and `TST_GSCL_TC_7` both launch the class grade settings page from a category's / scale's details page, which requires that category or scale to be **applied to a class** — a CGST operation. They are best picked up alongside Requirement #22 rather than duplicated.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -666,8 +672,8 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Manage grading categories page opens (`/manage-grading-categories`) with heading "Manage grading categories", the description about creating/removing categories, a **Create a grading category** button, and a Grading categories list where each row has an **Open grade options** menu (**See details**, **Remove**). |
 | **Remarks** | Reached via the School settings dropdown. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. Page opened at `/manage-grading-categories` with heading "Manage grading categories", the description "Create (or remove) grading categories for your school. Categories can then be applied to a class on the class grade settings page", the **Create a grading category** button and the "Grading categories" list (3 rows). Opening a row's **Open grade options** menu showed **See details** and **Remove**. Automated as `TST_GCAT_TC_1`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -764,9 +770,9 @@ for the label TCs).
 | **Test Steps** | 1. Click **Open grade options** on a category. 2. Click **See details**. |
 | **Test Data** | Category: `AutoTest Category` |
 | **Expected Result** | The details page opens (`/manage-grading-categories/<id>/classes`, title = category name) showing **Active classes (N)**; when the category is applied to no classes it shows "The category has not been added to any active classes". |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Remarks** | Automation creates its own `AutoCat_*` category first, so "Active classes (0)" and the empty state are deterministic — a shared category could gain a class at any time. |
+| **Actual Result** | As expected. URL changed to `/manage-grading-categories/<id>/classes`, the page title was the category name, **Active classes (0)** was shown, and the empty state read "The category has not been added to any active classes". Automated as `TST_GCAT_TC_6`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1153,8 +1159,8 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The Grading scales page opens (`/grading-scales/manage`) with heading "Grading scales", a **User guide**, a **Create grading scale** button, and a list of scales. The system "Cambridge One grading scale" shows a **default** badge and only **View details**; custom scales offer **View details / Set as default / Delete** via **Open drop down**. |
 | **Remarks** | Reached via the School settings dropdown. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. Page opened at `/grading-scales/manage` with heading "Grading scales", the **User guide**, the **Create grading scale** button, and the scale list. "Cambridge One grading scale" carried the **default** badge. Automated as `TST_GSCL_TC_1`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1173,9 +1179,9 @@ for the label TCs).
 | **Test Steps** | 1. Click **Create grading scale**. 2. Enter a title. 3. Enter the Highest grade name + **From %**. 4. Enter the Lowest grade name + **To %**. 5. Mark a band as **Set as target score**. 6. Click **Save grading scale**. |
 | **Test Data** | Title `AutoTest Scale`; Highest `A` 50–100%; Lowest `F` 0–49%; target = A |
 | **Expected Result** | The scale is created and appears in the list showing its target score; bands cover 0–100% without overlap. |
-| **Remarks** | Highest To is fixed 100%, Lowest From is fixed 0%. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Remarks** | The **Grading scale title** input carries `maxlength="20"` (captured live 2026-08-19); grade-name inputs are also 20 and From/To are 3. Not previously documented - there is no boundary test case for it. |
+| **Actual Result** | As expected. **Save grading scale** was disabled on the empty form and became enabled once title + bands + target were set; the scale was created and appeared in the list showing "Target score 50%". Bands A 50-100% / F 0-49% cover 0-100% without overlap. Automated as `TST_GSCL_TC_2`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1192,9 +1198,9 @@ for the label TCs).
 | **Test Steps** | 1. Click **+ Add new grade**. 2. Enter the middle band's name + From–To %. |
 | **Test Data** | Middle band `B` 50–79%, adjust others to keep 0–100% coverage |
 | **Expected Result** | A middle band row is added between Highest and Lowest; the scale still requires bands to cover 0–100% without overlap. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Remarks** | Adding a middle band RE-INDEXES the Lowest grade row from 1 to 2. Any automation addressing bands by index must re-read the row count. |
+| **Actual Result** | As expected. **+ Add new grade** inserted a middle band between Highest and Lowest. Note the re-indexing: before the click the rows are 0 = Highest, 1 = Lowest; after it they are 0 = Highest, 1 = the new middle band, 2 = Lowest. The new middle band exposes BOTH From and To. Automated as `TST_GSCL_TC_3` (creates nothing - it cancels out). |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1211,9 +1217,9 @@ for the label TCs).
 | **Test Steps** | 1. Attempt to create another grading scale. |
 | **Test Data** | — |
 | **Expected Result** | A modal is shown: "You have reached the maximum number of grading scales for this school. Please remove at least one grading scale to add a new one"; no new scale is created. `[ASSUMED]` — confirm the exact maximum. |
-| **Remarks** | — |
+| **Remarks** | The expected modal copy is now VERIFIED word for word - the modal is pre-rendered in the DOM, so it was captured without filling the school to its cap. Only triggering it is blocked (shared school). |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Not Run — **Blocked** |
 | **Comments / Defect ID** | |
 
 ---
@@ -1231,8 +1237,8 @@ for the label TCs).
 | **Test Data** | Incomplete/invalid bands |
 | **Expected Result** | **Save grading scale** stays disabled until the scale has a title, bands covering 0–100% without overlap, and a target score selected. `[ASSUMED]` — capture the exact overlap/gap validation copy. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. **Save grading scale** stayed disabled on an empty form, with bands entered but no title, and with a title but incomplete bands. Automated as `TST_GSCL_TC_5`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1252,8 +1258,8 @@ for the label TCs).
 | **Test Data** | Scale: `AutoTest Scale` |
 | **Expected Result** | The details page opens (`/grading-scales/<id>`, title = scale name) with a collapsible **Grading scale bands** section and a **Classes (N)** section; when applied to no classes it shows "No classes yet. To associate the grading scale with a class, go to its 'Class grade settings' page". |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. URL changed to `/grading-scales/<id>`, the page title was the scale name, **Grading scale bands** was present and collapsed, **Classes (0)** was shown, and the empty state read "No classes yet / To associate the grading scale with a class, go to its 'Class grade settings' page". Automated as `TST_GSCL_TC_6`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1294,8 +1300,8 @@ for the label TCs).
 | **Test Data** | Scale: `AutoTest Scale` |
 | **Expected Result** | A confirmation "Set as default for the school? All newly created classes will be associated with this grading scale. Existing classes will not be affected" is shown; after **Yes, set as default** the scale becomes the default (the **default** badge moves to it). |
 | **Remarks** | Only non-default scales offer "Set as default". |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. The confirmation read "Set as default for the school? All newly created classes will be associated with this grading scale. Existing classes will not be affected", and after **Yes, set as default** the **default** badge moved to the new scale. Automated as `TST_GSCL_TC_8`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1315,8 +1321,8 @@ for the label TCs).
 | **Test Data** | Scale: `AutoTest Scale` |
 | **Expected Result** | A confirmation "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won't be available to apply to any new classes." is shown; after **Yes, delete** the scale is removed from the list. |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. The confirmation read "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won’t be available to apply to any new classes. Delete this grading scale from your school?", and after **Yes, delete** the scale left the list. Automated as `TST_GSCL_TC_9`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1334,8 +1340,8 @@ for the label TCs).
 | **Test Data** | — |
 | **Expected Result** | The confirmation closes and the scale remains in the list (not deleted). |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. **No, go back** closed the confirmation and the scale remained in the list. Automated as `TST_GSCL_TC_10`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1352,9 +1358,9 @@ for the label TCs).
 | **Test Steps** | 1. Open the **Open drop down** on the default scale. |
 | **Test Data** | Default scale: `Cambridge One grading scale` |
 | **Expected Result** | The default scale's menu offers only **View details** — there is no **Delete** (nor **Set as default**) — so the default scale cannot be deleted. |
-| **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Remarks** | The default scale's Delete / Set as default options are omitted from the DOM, not hidden - so their absence is genuinely assertable. |
+| **Actual Result** | As expected. The default scale's menu offered only **View details** - **Delete** and **Set as default** are absent from the DOM entirely (element count 0), not merely hidden. Automated as `TST_GSCL_TC_11`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1374,8 +1380,8 @@ for the label TCs).
 | **Test Data** | Scale: `AutoTest Scale` |
 | **Expected Result** | The section expands to list the bands as **Grade name / Band** (e.g. `A` → `50% - 100%` with "Target score: 50%", `F` → `0% - 49%`). |
 | **Remarks** | — |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Actual Result** | As expected. Clicking **Grading scale bands** expanded the section to show Grade name / Band rows: `A` 50% - 100% with "Target score: 50%", and `F` 0% - 49%. Automated as `TST_GSCL_TC_12`. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---

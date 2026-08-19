@@ -210,3 +210,139 @@ feature passed through Phases 1–3 within a single session, so it never had one
    though interactive capture could not drive it.
 4. `org_perf_testschool_1` is the legacy org slug for `FCN-CHZ-PDA` ("3 July Test School 1"). Two
    schools share that display name — **always select by key** (confirmed again this session).
+
+---
+
+# Session 2 — 2026-08-19 · Req #4 (`TST_GCAT_TC_1`) and Req #6 (`TST_GCAT_TC_6`)
+
+**Scope agreed with the user:** close the two cheap GCAT leftovers before moving to GSCL.
+Phases 1–3 all completed in this session. Environment **thor**, school **FCN-CHZ-PDA**
+(`org_perf_testschool_1`). Result: **7 passing / 0 failing, two consecutive clean runs (~34–37 s)**,
+up from 5 passing.
+
+## Result
+
+| | Before | After |
+|---|---|---|
+| `P1AdminGradingCategories_Thor` | 5 passing | **7 passing / 0 failing** |
+| GCAT selectors | 21 | **32** |
+| Manual register | 43 Pass / 37 Not Run | **45 Pass / 35 Not Run** |
+
+Requirements **#4 and #6 are now fully covered** (one TC each). GCAT's only remaining gaps are
+`TC_4` (blocked — see session 1) and `TC_7` (deferred to CGST).
+
+## What the live capture found
+
+Selectors were captured against the live page before any code was written. Three things came out
+of it that were **not** in the previous session's notes:
+
+**1. Page-scoping anchors exist.** Both views render an unclassed `<h1>` and exactly one
+`h2.heading-2`, so a bare `h1` selector would silently match the wrong page. The two views expose
+mutually exclusive Angular component tags — `<manage-grading-category>` (list, note the SINGULAR
+"category") and `<grading-category-classes>` (details). Every new selector is scoped to one of
+them. The singular tag name was **guessed wrong first** (`manage-grading-categories` returned 0
+elements) — worth re-checking rather than assuming.
+
+**2. NEW TRAP — the row menu items are permanently in the DOM (page-object trap 5).**
+With 3 categories listed and no menu open: **3 "See details" links present, 0 visible.** Opening
+one row's menu makes only that row's items visible (its `.dropdown-menu` gains `.show`). This is
+the same false-green family as the four permanent modals found in session 1 — a count-based check
+of "each row has See details / Remove" would pass on a page where the menu never opens at all.
+`TST_GCAT_TC_1` therefore OPENS the menu and checks each item with `isDisplayed`.
+
+**3. NEW TRAP — the details page cannot be recovered from (page-object trap 6).**
+The details page does **not** contain `#changeClassKeyActionsLink`, so `navigate_fromClassesTab()`
+— which `reset_state()` uses to recover — cannot work from there. This mattered immediately:
+ADR-019 requires `TST_GCAT_TC_6` to END on the details page so its screenshot proves the page
+opened, which would have broken the very next `BeforeEach`.
+
+Fixed by giving `reset_state()` a first branch that steps back via the details page's own Back
+link (`a[qid='gradingCategoryClass-1']`, verified live to return to the Manage page). Raised with
+the user before editing, since `reset_state` is shared by five already-passing TCs.
+
+**A second state-bleed of the same shape** was caught by reasoning rather than by a failure:
+`TST_GCAT_TC_1` ends with a dropdown open (that IS its evidence). Measured live, the open menu does
+not overlap the Create button — but it is absolutely positioned over the list and can sit over
+another row's toggle, which the sweep clicks. `Escape` was verified live to close it (menu loses
+`.show`, toggle returns to `aria-expanded="false"`) and `reset_state` now does that too.
+
+> Both fixes are asserted, not fire-and-forget — a silent failure here would bleed state into the
+> next TC (Invariant 13).
+
+## Design decision — `TST_GCAT_TC_6` creates its own category
+
+It does **not** open one of the school's three shared categories (`new catagory`,
+`new Grading Category`, `some`). Two reasons, both about determinism on a shared environment:
+
+- `BeforeEach` sweeps every `AutoCat_*`, so a category created by an earlier TC is already gone —
+  it cannot borrow one.
+- A brand-new category is **guaranteed** to have zero classes applied, which is what makes
+  `Active classes (0)` and the empty-state copy safe to assert verbatim. A shared category could
+  gain a class from another team at any moment.
+
+## Product copy captured (asserted verbatim)
+
+| Where | Text |
+|---|---|
+| Manage `h1` | `Manage grading categories` |
+| Manage description | `Create (or remove) grading categories for your school. Categories can then be applied to a class on the class grade settings page` |
+| Manage list `h2` | `Grading categories` |
+| Details `h1` / tab title | the category name |
+| Details `h2` (new category) | `Active classes (0)` |
+| Details empty state | `The category has not been added to any active classes` |
+| Details URL | `**/manage-grading-categories/*/classes` |
+
+## Files touched
+
+| Layer | Change |
+|---|---|
+| Selectors | `css.ComproC1.manageGradingCategories` 21 → 32 (5 manage-page, 5 details-page, 1 `rowMenuOpen`) |
+| Page object | traps 5 + 6 and a PAGE SCOPING note added to the header; `readText` helper; `getData_pageComponents`, `click_openRowMenu`, `click_closeRowMenu`, `getData_onDetailsPage`, `isDetailsInitialized`, `click_seeDetails`, `getData_detailsPage`, `click_backFromDetails`; `reset_state` gained the details-page and open-menu branches |
+| Test file | `TST_GCAT_TC_1`, `TST_GCAT_TC_6`; scope note updated to Req #4/#5/#6/#8 |
+| TC repository | both registered `visualTest: false`; module name updated |
+| Exec file | both added to `Test` |
+| Manual register | `.md` and `.xlsx` rows 24 / 29 → Pass, with Actual Result |
+
+No protected file was touched. No new npm script was needed — the suite already existed.
+
+## Phase 3 — visual assessment
+
+| TC | Data | Decision-table row | Verdict |
+|---|---|---|---|
+| `TST_GCAT_TC_1` | the school's live category list (names + row count) | Paginated / dynamic counts ❌ | Not a candidate |
+| `TST_GCAT_TC_6` | `AutoCat_details_<epoch-ms>`, rendered as the page title | Timestamps ❌ | Not a candidate |
+
+Both carry ❌-row data, so per Invariant 12 they **stay `visualTest: false` with no confirmation
+prompt**. This is the fifth consecutive assessment on this page family to reach the same
+conclusion, for the same structural reason recorded in session 1: every screen frames a live,
+shared, mutable list.
+
+## Note on the `.xlsx`
+
+The repo has **no** xlsx tooling (`exceljs` / `xlsx` are not dependencies, Python is not installed
+on this machine). The register was updated by patching `xl/worksheets/sheet1.xml` inside the zip
+directly — the workbook uses **inline strings** (no `sharedStrings.xml`), so cell edits are local
+and safe. Only that one zip entry was rewritten; everything else is byte-for-byte unchanged. The
+result was verified before replacing the tracked file: 9 entries present, XML well-formed, 82 rows,
+column order `A…M` intact on both edited rows, tally `Pass=45 / Not Run=35 / Blocked=1` matching
+the `.md`. Anyone repeating this should check the file is not open in Excel first — the script
+does, and aborts if it is locked.
+
+---
+
+## Correction — 2026-08-19 (from the GSCL session)
+
+Session 1's open item #3 recorded that the **School settings → Manage grading categories** click
+"could not be driven through Playwright-MCP (the MCP click did not fire the Angular handler on
+`javascript:void(0)` anchors; a JS `.click()` did)".
+
+**That diagnosis was wrong.** It is not an Angular quirk. The Playwright-MCP browser in this
+environment does not deliver real input events at all: `page.keyboard.type` produces nothing and
+`locator.click()` does not even focus the element, while a JS `.focus()` / `.click()` works
+normally. Established while debugging the grading-scales create form on 2026-08-19 — see
+`walkthrough_adminGradingScales.test.js_2026-08-19_12h-04m.md`, "Run 2".
+
+The practical consequences are the same as before (drive capture through JS evaluation), but the
+cause matters: **do not write product-level workarounds for it**, and expect any form behaviour to
+need diagnosing through suite runs until the MCP browser is fixed. The framework's own browser is
+unaffected, which is why every suite runs normally.

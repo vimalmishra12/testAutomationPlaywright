@@ -35,6 +35,26 @@ var SETTLE_TIMEOUT = 15000;
  * 4. .message-banner-panel-wrapper is the ONE element here that is genuinely removed from
  *    the DOM when it is not showing (polled 20 s, never present). For the banner only,
  *    presence is a truthful signal.
+ *
+ * 5. The row dropdown ITEMS ("See details" / "Remove") are in the DOM for EVERY row at all
+ *    times, menu open or closed - verified live 2026-08-19: with 3 categories listed and
+ *    no menu open, 3 "See details" links exist and 0 are visible. Opening one row's menu
+ *    makes only THAT row's items visible (its .dropdown-menu gains .show). So counting the
+ *    items is the same false green as trap 1: TST_GCAT_TC_1 opens the menu and checks each
+ *    item with isDisplayed.
+ *
+ * 6. The DETAILS page (.../manage-grading-categories/<id>/classes) does NOT contain the
+ *    Classes-tab "School settings" toggle - verified live 2026-08-19. navigate_fromClassesTab
+ *    therefore CANNOT recover from there, and reset_state must first step back via the
+ *    details page's own Back link (a[qid=gradingCategoryClass-1], verified to return to the
+ *    Manage page). This matters because TST_GCAT_TC_6 deliberately ENDS on the details page
+ *    so its screenshot carries the evidence (ADR-019).
+ *
+ * PAGE SCOPING: the two views expose mutually exclusive Angular component tags -
+ * <manage-grading-category> (list) and <grading-category-classes> (details). Both views
+ * render an unclassed <h1> and a single h2.heading-2, so the component tag is what keeps
+ * "the Manage page heading" and "the details page title" from silently matching each
+ * other. Never shorten these selectors to a bare h1/h2.
  */
 
 // Product copy for the two success banners, measured live 2026-08-18. Held here because
@@ -67,6 +87,16 @@ async function waitForBannerText(expected, timeoutMs) {
     await browser.pause(200); // polling interval - the text can change without any other signal
   }
   return { matched: false, text: last };
+}
+
+/**
+ * getText with ADR-009's Error return folded into "", so callers can compare plain strings.
+ * An unreadable element and an empty one are deliberately indistinguishable here: both mean
+ * "the expected copy is not on screen", which is exactly what the TCs assert against.
+ */
+async function readText(selector) {
+  var t = await action.getText(selector);
+  return t && t.message ? "" : String(t).trim();
 }
 
 /** Reads every category name currently listed, in DOM order. Returns [] if unreadable. */
@@ -119,6 +149,19 @@ module.exports = {
   removeCancelBtn: mgc.removeCancelBtn,
   messageBanner: mgc.messageBanner,
   messageBannerText: mgc.messageBannerText,
+  // Manage page chrome (Req #4). Scoped to <manage-grading-category> - see PAGE SCOPING above.
+  pageHeading: mgc.pageHeading,
+  pageDescription: mgc.pageDescription,
+  listHeading: mgc.listHeading,
+  categoryRow: mgc.categoryRow,
+  rowMenuByIndex: mgc.rowMenuByIndex,
+  rowMenuOpen: mgc.rowMenuOpen,
+  // "See details" page (Req #6). Scoped to <grading-category-classes>.
+  detailsPage: mgc.detailsPage,
+  detailsHeading: mgc.detailsHeading,
+  detailsActiveClassesHeading: mgc.detailsActiveClassesHeading,
+  detailsNoClassesMessage: mgc.detailsNoClassesMessage,
+  detailsBackLink: mgc.detailsBackLink,
 
   /**
    * Confirms the Manage grading categories page has loaded.
@@ -370,6 +413,136 @@ module.exports = {
   },
 
   /**
+   * Everything TST_GCAT_TC_1 (Req #4) asserts about the Manage page, read in one pass:
+   * the heading, the description copy, the list heading, the Create button's VISIBILITY,
+   * and how many category rows are rendered.
+   *
+   * createBtnDisplayed goes through isDisplayed rather than a count because
+   * isInitialized already waited on the same element - a count here would re-prove
+   * nothing and would pass on a hidden button (Invariant 1).
+   */
+  getData_pageComponents: async function () {
+    await logger.logInto(await stackTrace.get());
+    var rows = await action.getElementCount(this.categoryRow);
+    return {
+      heading: await readText(this.pageHeading),
+      description: await readText(this.pageDescription),
+      listHeading: await readText(this.listHeading),
+      createBtnDisplayed: (await action.isDisplayed(this.createCategoryBtn)) === true,
+      rowCount: typeof rows === "number" ? rows : -1,
+      pageStatus: true
+    };
+  },
+
+  /**
+   * Opens the "Open grade options" menu for the category called `name` and reports whether
+   * THAT row's items really became visible.
+   *
+   * Every row's See details / Remove links exist in the DOM permanently (trap 5), so the
+   * only honest check is isDisplayed on the specific row's items after opening its menu.
+   * The row index is looked up by name on every call (traps 2 and 3).
+   */
+  click_openRowMenu: async function (name) {
+    var res = { pageStatus: false, index: -1, menuDisplayed: false, seeDetailsDisplayed: false, removeDisplayed: false };
+    await logger.logInto(await stackTrace.get());
+    var names = await readCategoryNames();
+    res.index = names.indexOf(name);
+    if (res.index === -1) return res;
+    var i = String(res.index);
+    res.toggleClicked = await action.click(this.rowActionsToggleByIndex.replace("{{n}}", i));
+    if (true != res.toggleClicked) return res;
+    res.menuDisplayed = (await action.waitForDisplayed(this.rowMenuByIndex.replace("{{n}}", i), SETTLE_TIMEOUT)) === true;
+    if (!res.menuDisplayed) return res;
+    res.seeDetailsDisplayed = (await action.isDisplayed(this.rowSeeDetailsByIndex.replace("{{n}}", i))) === true;
+    res.removeDisplayed = (await action.isDisplayed(this.rowRemoveByIndex.replace("{{n}}", i))) === true;
+    res.pageStatus = true;
+    return res;
+  },
+
+  /**
+   * Closes an open row dropdown with Escape (verified live 2026-08-19: the menu loses
+   * .show and the toggle returns to aria-expanded="false").
+   *
+   * Housekeeping only. TST_GCAT_TC_1 deliberately ENDS with a menu open so its screenshot
+   * shows the See details / Remove items, and an open menu is absolutely positioned over
+   * the list - it does not cover the Create button, but it can sit over another row's
+   * toggle, which the sweep clicks.
+   */
+  click_closeRowMenu: async function () {
+    var res = { pageStatus: false };
+    await logger.logInto(await stackTrace.get());
+    res.pressed = await action.keyPress("Escape");
+    if (true != res.pressed) return res;
+    res.pageStatus = await action.waitForDisplayed(this.rowMenuOpen, SETTLE_TIMEOUT, true);
+    return res;
+  },
+
+  /** True when the "See details" page is currently on screen. */
+  getData_onDetailsPage: async function () {
+    await logger.logInto(await stackTrace.get());
+    return { displayed: (await action.isDisplayed(this.detailsPage)) === true, pageStatus: true };
+  },
+
+  /**
+   * Confirms the "See details" page has loaded. Anchors on its Back link, which is unique
+   * to this view (the Manage page's Back carries a different qid).
+   */
+  isDetailsInitialized: async function () {
+    await logger.logInto(await stackTrace.get());
+    await action.waitForDocumentLoad();
+    return { pageStatus: await action.waitForDisplayed(this.detailsBackLink, SETTLE_TIMEOUT) };
+  },
+
+  /**
+   * Opens `name`'s "See details" page (Req #6) by the real user route: row menu -> See details.
+   *
+   * Both signals the app gives are captured and returned - the URL change AND the page's own
+   * anchor - because either one alone could be satisfied while the other is not (an SPA route
+   * can change before the view renders).
+   */
+  click_seeDetails: async function (name) {
+    var res = { pageStatus: false, index: -1, urlMatched: false };
+    await logger.logInto(await stackTrace.get());
+    var opened = await this.click_openRowMenu(name);
+    res.index = opened.index;
+    res.menuOpened = opened.pageStatus;
+    if (true != opened.pageStatus) return res;
+    res.clicked = await action.click(this.rowSeeDetailsByIndex.replace("{{n}}", String(opened.index)));
+    if (true != res.clicked) return res;
+    res.urlMatched = (await action.waitForUrl("**/manage-grading-categories/*/classes", SETTLE_TIMEOUT)) === true;
+    var init = await this.isDetailsInitialized();
+    res.pageStatus = init.pageStatus === true && res.urlMatched;
+    return res;
+  },
+
+  /**
+   * Everything TST_GCAT_TC_6 asserts about the details page. `noClassesDisplayed` is read
+   * separately from its text because the empty-state paragraph only renders when the
+   * category has no active classes - a freshly created category always has none.
+   */
+  getData_detailsPage: async function () {
+    await logger.logInto(await stackTrace.get());
+    return {
+      heading: await readText(this.detailsHeading),
+      activeClassesHeading: await readText(this.detailsActiveClassesHeading),
+      noClassesDisplayed: (await action.isDisplayed(this.detailsNoClassesMessage)) === true,
+      noClassesMessage: await readText(this.detailsNoClassesMessage),
+      pageStatus: true
+    };
+  },
+
+  /** Returns from the details page to the Manage page via its own Back link (trap 6). */
+  click_backFromDetails: async function () {
+    var res = { pageStatus: false };
+    await logger.logInto(await stackTrace.get());
+    res.clicked = await action.click(this.detailsBackLink);
+    if (true != res.clicked) return res;
+    var init = await this.isInitialized();
+    res.pageStatus = init.pageStatus;
+    return res;
+  },
+
+  /**
    * Housekeeping: leaves the page in a known state - on the categories page, no modal open,
    * and no category whose name starts with `prefix`.
    *
@@ -380,6 +553,22 @@ module.exports = {
   reset_state: async function (prefix) {
     var res = { pageStatus: false, removed: [], failed: [] };
     await logger.logInto(await stackTrace.get());
+
+    // A previous TC (TST_GCAT_TC_6) ends on the "See details" page on purpose, so its
+    // screenshot proves the page opened (ADR-019). That page has no School settings toggle
+    // (trap 6), so navigate_fromClassesTab below could not recover from it - step back via
+    // the details page's own Back link first. Asserted, not fire-and-forget (Invariant 13).
+    if ((await this.getData_onDetailsPage()).displayed) {
+      res.leftDetailsPage = (await this.click_backFromDetails()).pageStatus;
+      if (true != res.leftDetailsPage) return res;
+    }
+
+    // A row dropdown left open by TST_GCAT_TC_1 can sit over another row's toggle, which
+    // the sweep below clicks.
+    if ((await action.isDisplayed(this.rowMenuOpen)) === true) {
+      res.closedRowMenu = (await this.click_closeRowMenu()).pageStatus;
+      if (true != res.closedRowMenu) return res;
+    }
 
     // A modal left open by a previous TC (TST_GCAT_TC_5 ends with one open on purpose)
     // would block every click that follows.

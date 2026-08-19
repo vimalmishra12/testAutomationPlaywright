@@ -20,11 +20,15 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] }
     ],
     "Test": [
+      { "id": "TST_GCAT_TC_1", "description": "Verify the Manage grading categories page loads with all components", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
       { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
       { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
       { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
+      { "id": "TST_GCAT_TC_6", "description": "Verify the grading category 'See details' page opens", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },
       { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled", "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingCategoriesData.json", "jsonPath": "C1.adminGradingCategories" }] },

@@ -179,3 +179,29 @@ AGENTS.md Rule B's dual-script requirement does not apply yet (revisit if Phase 
   target school AND have ≥1 teacher and ≥1 course material (copy options are disabled otherwise).
   It has a dated name so it may eventually be cleaned up — swap the value in
   `schoolAdminAddClassData.json` if the test starts failing on "source class could not be selected".
+
+## adminGradingScales (ExperienceApp, thor)
+Module **GSCL** — Requirements #10, #11, #12, #14, #15, #16. New suite `P1AdminGradingScales_Thor`.
+- Phase 1 (build):   ✅ 2026-08-19 — TST_GSCL_TC_1/2/3/5/6/8/9/10/11/12 registered (10 of 12);
+  executed: 4 passing / 6 failing on first run. TC_4 (max-scales limit) is BLOCKED on the shared
+  school and TC_7 is deferred to CGST — neither is registered anywhere.
+- Phase 2 (run/fix): ✅ 2026-08-19 — **10/10 passing, 2 consecutive clean runs (~58 s)**.
+  Three fix rounds: (1) the title field's `maxlength="20"` truncated every generated name —
+  switched to a base36 timestamp and added a length guard plus a fail-fast in `set_title`
+  (run time 3 min → 58 s); (2) Save stayed disabled because the last field was never blurred and
+  the target radio was never actually clicked; (3) copy assertions compared through `squash()`
+  after the product turned out to render blank lines between heading and body.
+  School state verified clean after the run: default back on "Cambridge One grading scale",
+  zero `AutoScale_*` leftovers, `new Grading Auto` untouched.
+- Phase 3 (visual):  ⬜ **pending ONE decision** — 9 of 10 TCs are ❌-row data (timestamps / live
+  shared list) and stay `visualTest: false` with no prompt (Invariant 12). `TST_GSCL_TC_5` is the
+  first genuine candidate this page family has produced: it ends on the **create form**, which
+  does not frame the shared mutable list, and all its data is fixed. Open question is whether a
+  banner from BeforeEach's sweep can linger onto it — never probed. Awaiting the user's Rule A
+  confirmation; left `false` until then.
+
+**Follow-ups (not blocking):** no boundary manual TC exists for the 20-character title limit
+(GCAT has one for its 50-char field); an NPS survey popup can render a full-viewport overlay with
+no close control — never hit during a run, so no workaround was built; the Playwright-MCP browser
+delivers no real input events in this environment (JS evaluation works), which also corrects the
+2026-08-18 GCAT note that blamed Angular.

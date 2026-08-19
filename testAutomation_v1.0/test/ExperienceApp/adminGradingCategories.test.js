@@ -1,16 +1,18 @@
 "use strict";
-// Admin App - Manage grading categories: Req #5 (create grading category) and
-// Req #8 (delete grading category).
+// Admin App - Manage grading categories: Req #4 (manage page), #5 (create grading
+// category), #6 (see details page) and Req #8 (delete grading category).
 // Manual source: test/Manual/C1App/AdminApp-Classes/AdminApp_Classes_tab_test_cases.md
 // Module code: GCAT - pages/ExperienceApp/manageGradingCategories.page.js
 //
-// SCOPE NOTE: this batch covers Req #5 and #8 ONLY.
+// SCOPE NOTE: this file covers Req #4, #5, #6 and #8.
 //   TST_GCAT_TC_4 (maximum-categories limit) is deliberately NOT automated. Its
 //   precondition is "the school is already at its maximum", and reaching that state means
 //   filling a SHARED thor school to its cap, which would break other suites mid-run. The
 //   exact modal copy is captured in product knowledge; the TC stays blocked pending a
 //   dedicated school or a product-supplied maximum. Deferred with the user, 2026-08-18.
-//   TST_GCAT_TC_1 / TC_6 / TC_7 belong to Req #4 / #6 / #7 and are out of scope here.
+//   TST_GCAT_TC_7 (Req #7 - launch class grade settings from a category's details page)
+//   needs the category APPLIED to a class, which is a CGST operation. It is deferred to
+//   the CGST module rather than duplicated here.
 //
 // DATA SAFETY: every category these TCs create is named with the `namePrefix` from test
 // data ("AutoCat_") plus a timestamp, so it is unique per run and unmistakably ours.
@@ -24,6 +26,18 @@ var sts;
 // caught rather than silently tolerated.
 var BANNER_CREATED = "Grading category successfully created";
 var BANNER_REMOVED = "Grading category successfully removed";
+
+// Exact page copy, captured live 2026-08-19 (thor, FCN-CHZ-PDA). Asserted verbatim for the
+// same reason as the banners: a wording change should fail a test, not pass unnoticed.
+var PAGE_HEADING = "Manage grading categories";
+var PAGE_DESCRIPTION =
+  "Create (or remove) grading categories for your school. Categories can then be applied to a class on the class grade settings page";
+var LIST_HEADING = "Grading categories";
+
+// Details page copy. A category this suite has just created has no classes applied, so
+// "(0)" is deterministic here - it is NOT a general truth about the page.
+var DETAILS_ACTIVE_CLASSES_HEADING = "Active classes (0)";
+var DETAILS_NO_CLASSES_MESSAGE = "The category has not been added to any active classes";
 
 // Single character used only to prove the Save button can leave its disabled state
 // (TST_GCAT_TC_5). Never saved - see the comment at its call site for why it is one char.
@@ -45,6 +59,58 @@ function nameOfLength(prefix, len) {
 }
 
 module.exports = {
+  /**
+   * TST_GCAT_TC_1 - Req #4: Verify the Manage grading categories page loads with all
+   * components. testdata: none used.
+   *
+   * The page is REACHED by BeforeEach (TST_GCAT_TC_10 -> reset_state), which navigates the
+   * real School settings route. This TC therefore asserts what is on screen, not the
+   * navigation - that is already covered by the housekeeping's own assertion.
+   *
+   * The row menu is OPENED rather than counted. Every row's "See details" and "Remove"
+   * links sit in the DOM permanently whether the menu is open or not (page-object trap 5:
+   * 3 rows -> 3 links present, 0 visible), so a count-based check here would pass on a
+   * page where the menu never opens at all.
+   *
+   * Ends deliberately with the menu open, so the end-of-test screenshot shows both menu
+   * items (ADR-019). The next BeforeEach closes it with Escape.
+   */
+  TST_GCAT_TC_1: async function () {
+    var page = await manageGradingCategories.getData_pageComponents();
+    console.log("TC_1 page →", page);
+
+    await assertion.assertEqual(page.heading, PAGE_HEADING,
+      "Manage grading categories heading did not match the expected copy");
+    await assertion.assertEqual(page.description, PAGE_DESCRIPTION,
+      "Page description did not match the expected copy");
+    await assertion.assertEqual(page.listHeading, LIST_HEADING,
+      "Grading categories list heading did not match the expected copy");
+    await assertion.assertEqual(page.createBtnDisplayed, true,
+      "'Create a grading category' button is not visible on the Manage page");
+
+    // The row count and the readable names must agree - if they diverge, one of the two
+    // reads is looking at the wrong thing and every row-index lookup in this file is suspect.
+    var list = await manageGradingCategories.getData_categoryNames();
+    console.log("TC_1 categories →", list.names);
+    await assertion.assertEqual(page.rowCount, list.count,
+      "Rendered row count (" + page.rowCount + ") does not match the number of readable category names (" +
+      list.count + "): " + JSON.stringify(list.names));
+
+    // Precondition, and it can genuinely fail: the school's own categories must be listed
+    // for "each row has an Open grade options menu" to mean anything.
+    await assertion.assertEqual(list.count > 0, true,
+      "No grading categories are listed, so the row menu could not be verified");
+
+    var menu = await manageGradingCategories.click_openRowMenu(list.names[0]);
+    console.log("TC_1 row menu →", menu);
+    await assertion.assertEqual(menu.menuDisplayed, true,
+      "'Open grade options' menu did not become visible for category '" + list.names[0] + "'");
+    await assertion.assertEqual(menu.seeDetailsDisplayed, true,
+      "'See details' is not visible in the open row menu");
+    await assertion.assertEqual(menu.removeDisplayed, true,
+      "'Remove' is not visible in the open row menu");
+  },
+
   /**
    * TST_GCAT_TC_2 - Req #5: Verify a grading category is created with a valid name.
    * testdata: { namePrefix }
@@ -143,6 +209,48 @@ module.exports = {
     await assertion.assertEqual(sts.enabled, false, "Save did not return to disabled after the name was cleared");
     sts = await manageGradingCategories.getData_createModalDisplayed();
     await assertion.assertEqual(sts.displayed, true, "Create modal was not still open at the end of the test");
+  },
+
+  /**
+   * TST_GCAT_TC_6 - Req #6: Verify the grading category "See details" page opens.
+   * testdata: { namePrefix }
+   *
+   * Creates its OWN category first rather than opening one of the school's three shared
+   * ones. Two reasons, both about determinism on a shared environment:
+   *   - BeforeEach sweeps every AutoCat_* category, so a category created by an earlier TC
+   *     is already gone by the time this one runs - it cannot borrow one.
+   *   - A brand-new category is GUARANTEED to have zero classes applied, which is what
+   *     makes "Active classes (0)" and the empty-state copy safe to assert verbatim. A
+   *     shared category could have a class attached by another team at any time.
+   *
+   * Ends deliberately ON the details page so the end-of-test screenshot proves it opened
+   * (ADR-019). That page has no School settings toggle, so the next BeforeEach steps back
+   * via its own Back link - see page-object trap 6.
+   */
+  TST_GCAT_TC_6: async function (testdata) {
+    var name = uniqueName(testdata.namePrefix, "details");
+
+    sts = await manageGradingCategories.create_category(name);
+    await assertion.assertEqual(sts.pageStatus, true,
+      "Could not create the precondition category '" + name + "' for the See details check");
+
+    var opened = await manageGradingCategories.click_seeDetails(name);
+    console.log("TC_6 opened →", opened);
+    await assertion.assertEqual(opened.urlMatched, true,
+      "URL did not change to the category details route (.../manage-grading-categories/<id>/classes)");
+    await assertion.assertEqual(opened.pageStatus, true,
+      "'See details' page did not load for category '" + name + "'");
+
+    var details = await manageGradingCategories.getData_detailsPage();
+    console.log("TC_6 details →", details);
+    await assertion.assertEqual(details.heading, name,
+      "Details page title is not the category name");
+    await assertion.assertEqual(details.activeClassesHeading, DETAILS_ACTIVE_CLASSES_HEADING,
+      "Active classes heading did not match the expected copy for a category with no classes");
+    await assertion.assertEqual(details.noClassesDisplayed, true,
+      "The 'no active classes' empty state is not visible on a newly created category's details page");
+    await assertion.assertEqual(details.noClassesMessage, DETAILS_NO_CLASSES_MESSAGE,
+      "Empty-state message did not match the expected copy");
   },
 
   /**

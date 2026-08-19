@@ -1,0 +1,50 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Grading scales (Req #10, #11, #12, #14, #15, #16) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_GSCL_TC_13", "description": "Housekeeping — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] }
+    ],
+    "Test": [
+      { "id": "TST_GSCL_TC_1", "description": "Verify the Manage grading scales page loads with all components", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_11", "description": "Verify the default grading scale cannot be deleted", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_5", "description": "Verify Save is disabled until title, valid bands and target are provided", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_3", "description": "Verify a middle band can be added with '+ Add new grade'", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_2", "description": "Verify a grading scale is created with a title, bands and target score", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_6", "description": "Verify the grading scale View details page opens", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_12", "description": "Verify expanding the grading scale bands shows the bands", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_10", "description": "Verify deleting a grading scale can be cancelled", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_9", "description": "Verify a grading scale is deleted after confirmation", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_8", "description": "Verify a grading scale can be set as the school default (school-wide state — restored by the next BeforeEach)", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_GSCL_TC_13", "description": "End-of-run cleanup — restore the school default and sweep leftover AutoScale_* scales. Safe here (unlike AfterEach): suite-level After runs once, after every test's screenshot has been taken, so no evidence is destroyed (ADR-019). Needed because TST_GSCL_TC_8 runs LAST and leaves our scale as the school default, with no further BeforeEach to hand the badge back.", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] }
+    ]
+  }
+}

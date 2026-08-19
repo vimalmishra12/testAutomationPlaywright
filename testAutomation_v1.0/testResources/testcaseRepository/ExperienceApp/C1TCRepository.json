@@ -4491,16 +4491,36 @@
       ]
     },
     {
-      "modulename": "Admin App | Manage grading categories — create (Req #5) & delete (Req #8)",
+      "modulename": "Admin App | Manage grading categories — manage page (Req #4), create (Req #5), see details (Req #6) & delete (Req #8)",
       "moduleId": "GCAT",
       "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
       "testcase": [
+        { "id": "TST_GCAT_TC_1", "description": "Verify the Manage grading categories page loads with all components", "tags": "P1", "visualTest": false },
         { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name",            "tags": "P1", "visualTest": false },
         { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "tags": "P3", "visualTest": false },
         { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name",   "tags": "P2", "visualTest": false },
+        { "id": "TST_GCAT_TC_6", "description": "Verify the grading category 'See details' page opens",             "tags": "P2", "visualTest": false },
         { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation",          "tags": "P1", "visualTest": false },
         { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled",              "tags": "P3", "visualTest": false },
         { "id": "TST_GCAT_TC_10", "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "tags": "P3", "visualTest": false }
+      ]
+    },
+    {
+      "modulename": "Admin App | Grading scales — manage page (Req #10), create (Req #11), view details (Req #12), set as default (Req #14), delete (Req #15) & expand bands (Req #16)",
+      "moduleId": "GSCL",
+      "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+      "testcase": [
+        { "id": "TST_GSCL_TC_1", "description": "Verify the Manage grading scales page loads with all components", "tags": "P1", "visualTest": false },
+        { "id": "TST_GSCL_TC_2", "description": "Verify a grading scale is created with a title, bands and target score", "tags": "P1", "visualTest": false },
+        { "id": "TST_GSCL_TC_3", "description": "Verify a middle band can be added with '+ Add new grade'", "tags": "P2", "visualTest": false },
+        { "id": "TST_GSCL_TC_5", "description": "Verify Save is disabled until title, valid bands and target are provided", "tags": "P1", "visualTest": false },
+        { "id": "TST_GSCL_TC_6", "description": "Verify the grading scale View details page opens", "tags": "P2", "visualTest": false },
+        { "id": "TST_GSCL_TC_8", "description": "Verify a grading scale can be set as the school default", "tags": "P1", "visualTest": false },
+        { "id": "TST_GSCL_TC_9", "description": "Verify a grading scale is deleted after confirmation", "tags": "P1", "visualTest": false },
+        { "id": "TST_GSCL_TC_10", "description": "Verify deleting a grading scale can be cancelled", "tags": "P3", "visualTest": false },
+        { "id": "TST_GSCL_TC_11", "description": "Verify the default grading scale cannot be deleted", "tags": "P2", "visualTest": false },
+        { "id": "TST_GSCL_TC_12", "description": "Verify expanding the grading scale bands shows the bands", "tags": "P2", "visualTest": false },
+        { "id": "TST_GSCL_TC_13", "description": "BeforeEach — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales", "tags": "P3", "visualTest": false }
       ]
     },
     {
