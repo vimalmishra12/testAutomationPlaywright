@@ -192,6 +192,22 @@ user's decision (AGENTS.md §8 Rule A requires explicit confirmation before any 
    answering it (which submits real feedback and must not be automated) or removing the element
    client-side. It did not appear during any suite run, so **no workaround was built**; if a run
    ever fails on "element intercepts pointer events", this is the first thing to check.
-5. **Playwright-MCP input channel is dead** in this environment (see Run 2). Capture via JS
-   evaluation works; interactive typing/clicking does not. Worth fixing before the next capture
-   session, otherwise all form behaviour must be diagnosed through suite runs.
+5. **Playwright-MCP input channel went dead — RESOLVED, and the fix is just a restart.**
+
+   Symptom (see Run 2): `page.keyboard.type` produced nothing and `locator.click()` did not even
+   focus the element, while `document.querySelector(...).focus()` / `.click()` via JS evaluation
+   worked normally. So DOM reads and capture were fine; only real input events were lost.
+
+   **Cause: a stale MCP browser process.** Restarting Claude Code (which restarts the MCP server
+   and its browser) fixed it — verified 2026-08-19 with a probe that injects a plain `<input>`,
+   clicks it, and types: focus lands and `pressSequentially` / `keyboard.type` both register.
+
+   **No config change is needed.** A `--browser chrome` → `chromium` switch in `.mcp.json` was
+   tried first and appeared to fix it, but reverting to `chrome` after the restart still worked —
+   so the browser channel was never the problem. `.mcp.json` is left untouched. (It is a TRACKED
+   file despite being listed in `.gitignore`, so changing it would have altered everyone's setup
+   for no reason.)
+
+   An earlier guess that Chrome had outrun Playwright's version was also wrong: the bundled
+   Chromium reports the same 151.x as the installed Chrome. **If interactive input ever stops
+   working again, restart first — do not go looking for a version mismatch.**

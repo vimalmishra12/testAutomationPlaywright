@@ -342,7 +342,11 @@ environment does not deliver real input events at all: `page.keyboard.type` prod
 normally. Established while debugging the grading-scales create form on 2026-08-19 — see
 `walkthrough_adminGradingScales.test.js_2026-08-19_12h-04m.md`, "Run 2".
 
-The practical consequences are the same as before (drive capture through JS evaluation), but the
-cause matters: **do not write product-level workarounds for it**, and expect any form behaviour to
-need diagnosing through suite runs until the MCP browser is fixed. The framework's own browser is
-unaffected, which is why every suite runs normally.
+The cause matters: **do not write product-level workarounds for it.** The framework's own browser
+is unaffected, which is why every suite runs normally.
+
+**Resolved the same day.** It was a stale MCP browser process — restarting Claude Code fixed it,
+verified with an input probe. No config change was needed (a `--browser chrome` → `chromium`
+switch was tried and then reverted, because `chrome` worked fine once restarted). So if the
+School settings dropdown, or any other control, ever stops responding to an MCP click again:
+**restart first.** Details in the grading-scales walkthrough, open item 5.
