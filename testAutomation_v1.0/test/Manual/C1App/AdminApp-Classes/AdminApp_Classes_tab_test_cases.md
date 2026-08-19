@@ -869,9 +869,9 @@ for the label TCs).
 | **Priority** | High |
 | **Preconditions** | On the Create new classes form. |
 | **Test Steps** | 1. Enter a class name. 2. Set **Start date** (today). 3. Set **End date**. 4. Click **Create 1 class**. |
-| **Test Data** | Name: `AutoClass_Bulk`, Start: today, End: next month |
+| **Test Data** | Name: `AutoClass_CreateOnly`, Start: today, End: day 15 of next month |
 | **Expected Result** | A success dialog "Success! We are now creating 1 class for you…" appears; creation is asynchronous (email report; up to 12 hours). |
-| **Remarks** | Covered by automation `TST_CCLS_TC_1..4`. |
+| **Remarks** | Covered by automation `TST_CCLS_TC_1..4`. Corrected 2026-08-19: the register previously named `AutoClass_Bulk`, which is the *bulk* suite's fixture — the workflow suite that actually runs this case uses `AutoClass_CreateOnly` (`C1.adminAddClass`). The automated run also applies a label and a teacher (`TST_CCLS_TC_16`/`TC_15`) and attaches a material before clicking Create, so it covers more than this case's four steps. |
 | **Actual Result** | Class created with name + start/end dates; success dialog shown: "Success! We are now creating 1 class for you". |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_1..4 (workflow suite). Creation is asynchronous. |
@@ -893,7 +893,7 @@ for the label TCs).
 | **Remarks** | First/Last name are optional; Email is required. Automated: `TST_CCLS_TC_15`. Note: "Apply changes" is never natively disabled, so it can be clicked before validation settles and silently do nothing. |
 | **Actual Result** | Teacher added via the "Edit teachers" modal (Email only); the teacher rendered on the class row. |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated: TST_CCLS_TC_15 (bulk suite). |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_15 (workflow suite — moved from the bulk suite 2026-08-19, so the created class now carries a teacher). |
 
 ---
 
@@ -931,7 +931,7 @@ for the label TCs).
 | **Remarks** | Automated: `TST_CCLS_TC_16`. Note for automation: the label dropdown is rendered **once per row** (`#class-label-list-modal-<rowIndex>`), each holding a full copy of every label — selectors must be scoped to the row's own container or the search text can land in a hidden row's box. |
 | **Actual Result** | Label "VM1" selected from the Add class label dropdown and applied to the row (row button then read "+ VM1"). |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated: TST_CCLS_TC_16 (bulk suite). Note: the label dropdown is rendered once PER ROW (#class-label-list-modal-<rowIndex>), so selectors must be row-scoped. |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_16 (workflow suite — moved from the bulk suite 2026-08-19, so the created class now carries a label). Note: the label dropdown is rendered once PER ROW (#class-label-list-modal-<rowIndex>), so selectors must be row-scoped. |
 
 ---
 

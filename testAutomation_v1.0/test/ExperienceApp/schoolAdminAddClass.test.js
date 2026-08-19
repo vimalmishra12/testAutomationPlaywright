@@ -199,8 +199,6 @@ module.exports = {
    * session, then 0 once the bulk suite had left dates in the draft.
    */
   TST_CCLS_TC_12: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
     var startSet = await createClasses.set_startDate();
     await assertion.assertEqual(startSet, true, "startDate is not set");
     var disabledCount = await createClasses.getData_endDatePickerDisabledCount();
@@ -223,8 +221,6 @@ module.exports = {
     // Reset first: the form restores an auto-saved draft, so row 2 may ALREADY be
     // filled from a previous run (e.g. by TST_CCLS_TC_18's duplicate) — re-filling an
     // already-complete row adds no class, and the +1 delta below would never happen.
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
     // Row 1 is set explicitly so the baseline is a known-complete row regardless of draft.
     sts = await createClasses.set_className(testdata.className);
     await assertion.assertEqual(sts, true, "row 1 className is not set");
@@ -300,17 +296,16 @@ module.exports = {
    * TST_CCLS_TC_16 (Positive) — BCCF_TC_5: an existing label can be selected from
    * the "Add class label" dropdown and applies to the row.
    *
-   * Resets and sets its own name rather than inheriting a row from a previous TC:
-   * a restored draft can arrive with the label ALREADY applied, and re-selecting it
-   * would toggle it off instead of on.
-   * testdata: { className, classLabel }
+   * Label-only by design: the form reset is TST_CCLS_TC_23 and the class name is
+   * TST_CCLS_TC_1 — this TC does neither, so it can be composed into either a
+   * side-effect-free suite or a class-creating one without carrying their concerns.
+   *
+   * ⚠️ Requires a preceding reset in the same suite (TST_CCLS_TC_23, in BeforeEach or
+   * the Test list). The form restores an auto-saved draft, which can arrive with the
+   * label ALREADY applied — re-selecting it would toggle it OFF instead of on.
+   * testdata: { classLabel }
    */
   TST_CCLS_TC_16: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
-    sts = await createClasses.set_className(testdata.className);
-    await assertion.assertEqual(sts, true, "className is not set");
-
     var opened = await createClasses.click_addLabelBtn();
     await assertion.assertEqual(opened, true, "Add class label dropdown did not open");
     var selected = await createClasses.select_classLabel(testdata.classLabel);
@@ -337,8 +332,6 @@ module.exports = {
    * source has none of that kind (label shows e.g. "Assignments [0]").
    */
   TST_CCLS_TC_21: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
 
     sts = await createClasses.set_className(testdata.className);
     await assertion.assertEqual(sts, true, "className is not set");
@@ -465,8 +458,6 @@ module.exports = {
    * testdata: { csvPath, csvClass1Name, csvClass2Name, csvStartDate, csvEndDate, csvClassCount }
    */
   TST_CCLS_TC_19: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
 
     var uploaded = await createClasses.upload_csvFile(testdata.csvPath);
     await assertion.assertEqual(uploaded, true, "CSV upload did not populate the form");
@@ -505,8 +496,6 @@ module.exports = {
    * testdata: { className, teacherEmail }
    */
   TST_CCLS_TC_18: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
 
     // Build a known source row: name + both dates + a teacher (proves non-date
     // fields are copied too). Label is deliberately NOT set — see TC_16.
@@ -562,8 +551,6 @@ module.exports = {
    * testdata: { className }
    */
   TST_CCLS_TC_17: async function (testdata) {
-    var wasReset = await createClasses.reset_formToSingleEmptyRow();
-    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
     sts = await createClasses.set_className(testdata.className);
     await assertion.assertEqual(sts, true, "className is not set");
 
@@ -586,5 +573,37 @@ module.exports = {
       typeof dates.end === "string" && dates.end.length > 0,
       "Row end date was not applied by the bulk toolbar action (raw: " + dates.end + ")"
     );
+  },
+
+  /**
+   * TST_CCLS_TC_23 — Housekeeping: reset the create form to a single empty row.
+   *
+   * The bulk create form restores an auto-saved draft, so it is NEVER guaranteed empty
+   * on load — rows, dates, labels and teachers survive from a previous run. Every TC
+   * that asserts on a row index, a row count, or a toggle-on state needs a known-clean
+   * form first.
+   *
+   * This used to be duplicated inline at the top of seven TCs (TC_12/13/16/17/18/19/21).
+   * Extracting it means:
+   *  - each of those TCs now tests only the thing its title claims;
+   *  - the reset is composed by the EXECUTION FILE, so a suite can choose its placement:
+   *      · bulk / validation suites → `BeforeEach` (every TC is independent, so each one
+   *        gets a clean form of its own). TST_CCLS_TC_12 depends on this specifically: a
+   *        draft holding a future start date makes the end-date picker open on a month
+   *        where nothing is disabled, so its disabled-cell count would read 0;
+   *      · the workflow suite → ONCE in the `Test` list, right after the form opens,
+   *        because its TCs deliberately ACCUMULATE state onto one row (name → dates →
+   *        label → teacher → material → Create). A `BeforeEach` reset there would delete
+   *        the half-built class before every step.
+   *
+   * Safe to run when no form is open: `reset_formToSingleEmptyRow()` returns true when
+   * there are no removable rows, so it is a no-op on the school dashboard.
+   *
+   * Cleanup, so it belongs in BeforeEach and never AfterEach (ADR-019) — an AfterEach
+   * reset would delete each TC's row microseconds before its screenshot was taken.
+   */
+  TST_CCLS_TC_23: async function (testdata) {
+    var wasReset = await createClasses.reset_formToSingleEmptyRow();
+    await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
   }
 };

@@ -3,6 +3,8 @@
     "adminAddClass": {
       "schoolKey": "FCN-CHZ-PDA",
       "className": "AutoClass_CreateOnly",
+      "classLabel": "VM1",
+      "teacherEmail": "teacher17aug2026@mailsac.com",
       "material": "dev_test_ebook_bundle_104_bundle",
       "successMessage": "Success! We are now creating",
       "createMoreClassName": "AutoClass_CreateMore"

@@ -4457,7 +4457,8 @@
         { "id": "TST_CCLS_TC_19", "description": "BCCF_TC_11 (Pos) | Uploading a CSV bulk-populates the class rows", "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_20", "description": "BCCF_TC_12 (Pos) | 'Create more classes' returns to a usable create form (CREATES A CLASS)", "tags": "P1", "visualTest": false },
         { "id": "TST_CCLS_TC_21", "description": "BCCF_TC_8 (Pos) | 'Copy an Existing Class' copies teachers/materials onto the selected row", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_22", "description": "BCCF_TC_10 (Pos) | 'Get CSV template' downloads the template with the correct headers", "tags": "P1", "visualTest": false }
+        { "id": "TST_CCLS_TC_22", "description": "BCCF_TC_10 (Pos) | 'Get CSV template' downloads the template with the correct headers", "tags": "P1", "visualTest": false },
+        { "id": "TST_CCLS_TC_23", "description": "Housekeeping | Reset the create form to a single empty row (the form restores an auto-saved draft)", "tags": "P1", "visualTest": false }
       ]
     },
     {

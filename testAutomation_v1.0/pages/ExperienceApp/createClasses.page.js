@@ -968,6 +968,18 @@ module.exports = {
    */
   reset_formToSingleEmptyRow: async function () {
     await logger.logInto(await stackTrace.get());
+    // Guard: only act when the CREATE FORM is actually on screen. This method is
+    // composed as a BeforeEach housekeeping step (TST_CCLS_TC_23), so it also fires on
+    // the school dashboard and the Classes tab. `rowCheckbox` is a structural match
+    // (`name^='checkbox-'`) that could plausibly match another page's row checkboxes,
+    // and the select-all / Remove ids below are form-specific — so without this guard a
+    // false positive would stall for the dialog's full 10 s timeout and fail the hook.
+    // Anchor on the form's own class-name input instead.
+    var formOpen = await action.getElementCount(this.classNameInput);
+    if (formOpen === 0) {
+      await logger.logInto(await stackTrace.get(), "create form is not open — reset skipped");
+      return true;
+    }
     // Select-all is a no-op when the form is already a lone empty row (its row
     // checkbox is disabled), so treat "nothing to remove" as success.
     var rowCount = await action.getElementCount(this.rowCheckbox);

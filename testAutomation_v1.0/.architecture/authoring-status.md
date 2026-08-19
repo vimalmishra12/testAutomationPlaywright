@@ -156,8 +156,50 @@ and the bulk suite is deliberately side-effect free.
   auto-saved draft — everywhere else the form repopulates.
 
 **✅ SCENARIO #3 IS FULLY AUTOMATED — all 16 BCCF manual cases covered (2026-08-18).**
-Coverage map: bulk suite = BCCF_TC_1/3/5/6/7/8/9/10/11 (creates nothing) · workflow suite =
-BCCF_TC_2/4/12 (creates 2 classes/run) · validation suite = BCCF_TC_13/14/15/16.
+Coverage map **(revised 2026-08-19 — see the reset refactor below)**: bulk suite =
+BCCF_TC_1/6/7/8/9/10/11 (creates nothing) · workflow suite = BCCF_TC_2/4/12 **+ 3 (teacher)
++ 5 (label)** (creates 2 classes/run) · validation suite = BCCF_TC_13/14/15/16.
+
+### Reset extracted to its own TC — `TST_CCLS_TC_23` (2026-08-19, ⚠️ NOT YET EXECUTED)
+
+`reset_formToSingleEmptyRow()` was duplicated inline at the top of **seven** TCs
+(`TC_12/13/16/17/18/19/21`). That mixed housekeeping into TCs whose titles promised one thing,
+and it made `TC_16` impossible to compose into a class-creating flow: its reset would delete the
+row the surrounding TCs were building. Extracted to `TST_CCLS_TC_23` (registered,
+`visualTest: false`) and removed from all seven bodies.
+
+Placement is now the **execution file's** choice, and it differs per suite by necessity:
+- **bulk + validation suites → `BeforeEach`.** Every TC there is independent, so each gets its
+  own clean form. `BeforeEach`, never `AfterEach` (ADR-019).
+- **workflow suite → ONCE in the `Test` list**, right after the form opens. Its TCs deliberately
+  ACCUMULATE onto one row (name → dates → label → teacher → material → Create); a per-test reset
+  would delete the half-built class before every step.
+
+That per-suite split is the whole payoff — it is only expressible once the reset is its own
+composable unit.
+
+`TST_CCLS_TC_16` is now **label-only** (no reset, no `set_className`) and REQUIRES a preceding
+`TC_23` in its suite: a restored draft can arrive with the label already applied, and
+re-selecting it would toggle it OFF. `TST_CCLS_TC_15` (teacher) needed no change.
+
+**Guard added to `reset_formToSingleEmptyRow()`** (page object, non-protected): it now returns
+early unless the form's own `classNameInput` is present. Needed because as a `BeforeEach` step it
+also fires on the school dashboard and Classes tab, where `rowCheckbox` (`name^='checkbox-'`) is a
+structural match that could hit another page's row checkboxes — the select-all/Remove ids are
+form-specific, so a false positive would have stalled for the dialog's full 10 s timeout and
+failed the hook.
+
+**Workflow suite (`P1Adminclassworkflow_Thor`) order is now:**
+`TST_SADB_TC_1 → SCLS_TC_1 → SCLS_TC_2 → CCLS_TC_23 (reset) → TC_1 (name) → TC_2 (start) →
+TC_3 (end) → TC_16 (label) → TC_15 (teacher) → TC_5/6/7 (material) → TC_4 (Create) → TC_8 →
+SCLS_TC_2 → TC_20`. The created class now carries a label and a teacher. Teacher email for this
+suite is `teacher17aug2026@mailsac.com` (`C1.adminAddClass`); the bulk suite keeps
+`autotest.teacher@mailsac.com`.
+
+⚠️ **All three suites are UNVERIFIED since this refactor — none has been executed.** Per the ⚠️
+rule at the top of this file, treat every placement decision above as an untested hypothesis until
+a run confirms it. Verify bulk + validation first (they create nothing); the workflow suite costs
+2 real classes per run.
 
 **Protected-file change made (confirmed by user, 2026-08-18):** `downloadFile(selector, saveDir,
 timeout)` added to `core/actionLibrary/baseActionLibrary.js` — the library had NO download

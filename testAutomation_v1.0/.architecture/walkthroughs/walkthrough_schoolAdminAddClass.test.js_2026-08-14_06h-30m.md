@@ -226,3 +226,143 @@ list. So the destination is the existing `schoolClasses` page object (reused its
 - Optionally harden TST_CCLS_TC_6's material search (fill vs per-keystroke) if it flakes.
 - Promote the captured NEMO admin product-knowledge (school Classes page, create form, async
   creation, material component) into `product-knowledge/ExperienceApp.md`.
+
+---
+
+# Session — 2026-08-19 (evening)
+
+## Summary
+Refactor session, no new coverage. Extracted the create-form reset into its own test case
+(`TST_CCLS_TC_23`) and enriched the class the workflow suite creates: it now carries a
+**label** and a **teacher** as well as a name, dates and a material.
+
+The trigger was a composition problem. The ask was to move `TST_CCLS_TC_16` (label) and
+`TST_CCLS_TC_15` (teacher) into the class-creating workflow suite. `TC_15` moved cleanly, but
+`TC_16` began with `reset_formToSingleEmptyRow()` — dropped in after `TC_1/2/3` it would have
+**deleted the very row those TCs had just filled**, and the suite could have gone green while
+creating the wrong class.
+
+The user's diagnosis was the right one, and better than the first two workarounds discussed
+(remove the reset from `TC_16`; or reorder so `TC_16` runs first): **the reset does not belong
+inside any TC.** `TC_16`'s title promises a label test; it was doing housekeeping, a class name
+and a label. Reset is its own concern, name is `TC_1`'s job, label is `TC_16`'s.
+
+## Changes Made
+
+### 1. test/ExperienceApp/schoolAdminAddClass.test.js
+- **Type:** Modified
+- **Layer:** Test Cases
+- Added **`TST_CCLS_TC_23`** — reset only, nothing else.
+- Removed the inline `reset_formToSingleEmptyRow()` + assertion pair from **seven** TCs:
+  `TC_12, 13, 16, 17, 18, 19, 21`. (Seven, not the five first estimated — `TC_12` in the
+  validation suite was found during the edit.)
+- `TST_CCLS_TC_16` is now **label-only**: its `set_className()` was removed too, and its doc
+  comment records that it REQUIRES a preceding `TC_23` in its suite (a restored draft can arrive
+  with the label already applied, and re-selecting it would toggle it OFF).
+- `TST_CCLS_TC_15` (teacher) needed no change — it never had a reset.
+
+### 2. pages/ExperienceApp/createClasses.page.js
+- **Type:** Modified (non-protected)
+- `reset_formToSingleEmptyRow()` now returns early unless the form's own `classNameInput` is
+  present. **Found while reviewing the blast radius, not from a failure.** As a `BeforeEach`
+  step the reset also fires on the school dashboard and the Classes tab, and its old guard
+  (`rowCheckbox` = `input[type=checkbox][name^='checkbox-']`) is a structural match that could
+  hit another page's row checkboxes. Checked and confirmed it could **not** have deleted real
+  classes — the select-all/Remove ids are form-specific — but a false positive would have
+  stalled for the remove-dialog's full 10 s timeout and failed the hook.
+
+### 3. Execution files — placement is now the exec file's decision
+- `schoolAdminAddClass.json` — `TC_23` **once** in the `Test` list after the form opens; then
+  `TC_16` (label) and `TC_15` (teacher) inserted after `TC_3`.
+- `schoolAdminAddClassBulk.json` — `TC_23` in **`BeforeEach`**; `TC_15` and `TC_16` removed
+  (11 → 9 TCs).
+- `schoolAdminAddClassValidation.json` — `TC_23` in **`BeforeEach`**.
+
+**This per-suite split is the whole payoff.** The bulk and validation suites hold independent
+TCs, so each wants its own clean form — `BeforeEach`. The workflow suite's TCs deliberately
+ACCUMULATE onto one row (name → dates → label → teacher → material → Create), so a per-test
+reset there would delete the half-built class before every step. One TC, two placements — only
+expressible once the reset is a composable unit of its own. `BeforeEach` and never `AfterEach`
+in both cases (ADR-019).
+
+### 4. Test data / TC repository / manual register
+- `schoolAdminAddClassData.json` → `C1.adminAddClass` gained `classLabel: "VM1"` and
+  `teacherEmail: "teacher17aug2026@mailsac.com"`. The bulk suite keeps
+  `autotest.teacher@mailsac.com`.
+- `C1TCRepository.json` → `TST_CCLS_TC_23` registered, `visualTest: false` (Invariant 12).
+- Manual register: BCCF_TC_3 / BCCF_TC_5 re-attributed from the bulk suite to the workflow
+  suite; BCCF_TC_2's Test Data corrected from `AutoClass_Bulk` (the bulk fixture) to
+  `AutoClass_CreateOnly`, with a note that the automated path now also applies a label, a
+  teacher and a material beyond that case's four steps.
+
+## Result
+
+All three suites green on the **first** run after the refactor:
+
+| Suite | Result | Time |
+|---|---|---|
+| `P1AdminclassBulk_Thor` | **9/9** | 64 s |
+| `P1AdminclassValidation_Thor` | **6/6** | 23 s |
+| `P1Adminclassworkflow_Thor` | **16/16** | 31 s |
+
+The workflow log shows the accumulation surviving to Create — `appliedLabel { raw: ' + VM1 ' }`,
+then `{ added: true, email: 'teacher17aug2026@mailsac.com' }`, then the material, then
+`'Success! We are now creating 1 class for you'`.
+
+⚠️ **One clean run each, not the usual two** — the user judged a second pass unnecessary. The
+workflow suite creates 2 real classes per run, so a second pass is not free.
+
+Incidental: `TST_CCLS_TC_12` now reads **23** disabled date cells (was 18). Expected — the count
+depends on today's date and the picker's month; the TC asserts `> 0`, not a fixed number.
+
+## Follow-ups
+
+1. **CLEANUP OWED — manual-TC ↔ automation mapping is unclear and needs tidying.** Two separate
+   confusions, both live:
+   - **One manual TC maps to MANY automation TC ids.** `TST_BCCF_TC_2` alone is covered by
+     `TST_CCLS_TC_1..4`; the manual register records this only as free text in a Remarks cell,
+     with no consistent format. There is no way to ask "which automation TCs cover this manual
+     case?" other than reading prose.
+   - **Which execution file does a given TC run in?** `schoolAdminAddClass.test.js` holds
+     `TC_1..TC_23` spread across THREE exec files, and the test file itself gives no hint.
+     Reading a TC does not tell you which suite it belongs to.
+
+   **Important finding from this session: the relationship is MANY-TO-MANY, not one-to-one.**
+   `TST_CCLS_TC_23` runs in all three suites (`Test` in the workflow suite, `BeforeEach` in the
+   other two); `TST_SCLS_TC_2` in all three; `TST_SADB_TC_1` in **six** exec files across four
+   features. So a hand-maintained mapping file would be correct on the day it is written and
+   silently wrong after the next exec-file edit — it would add a fourth place to keep in sync on
+   top of the existing test file + TC repo + exec file.
+
+   Options weighed (decision deferred, nothing built):
+   - (A) hand-written mapping file — highest drift risk;
+   - (B) suite name in each TC's doc comment — still hand-maintained;
+   - (C) **recommended** — derive it: a small `tooling/` script reading `testExecutionFiles/`,
+     with a `--check` mode that fails when stale, output either as a generated header block in
+     the test file or a generated `.md`. Zero drift, because the exec files stay the single
+     source of truth. It also detects **orphan TCs** (defined in a test file, referenced by no
+     exec file) — currently zero, which is exactly the kind of rot that hides for months;
+   - (D) split the test file per suite — **rejected**: `TC_23`, `TST_SCLS_TC_2` and
+     `TST_SADB_TC_1` are shared across suites, so splitting would force duplication — the very
+     thing this session removed.
+
+2. **`TST_CCLS_TC_23`'s description in `schoolAdminAddClass.json` is too long** — it prints in
+   full in the mocha output. Shorten it and keep the reasoning in the test file's doc comment.
+
+3. Still open from earlier sessions: the X-close `// WORKAROUND` in
+   `classFilterModal.click_close()`; `TST_CLST_TC_RESET` off-convention naming; loose `leftNav*`
+   text-match selectors.
+
+4. **The `.xlsx` register was NOT updated this session, only the `.md`.** Working agreement #10
+   says update BOTH. No Status cell changed (all affected rows were already `Pass`), but three
+   text cells did: BCCF_TC_2's Test Data (`AutoClass_Bulk` → `AutoClass_CreateOnly`) and the
+   Comments cells for BCCF_TC_3 / BCCF_TC_5 (bulk suite → workflow suite). Left for the user to
+   decide — the xlsx is patched by rewriting `xl/worksheets/sheet1.xml` inside the zip, which
+   must not be attempted while the workbook is open in Excel.
+
+**Post-session note (2026-08-19, after the description trim):** `TST_CCLS_TC_23`'s over-long
+descriptions were shortened in all three exec files (follow-up 2 above — now closed), with the
+detail moved into the TC's doc comment so nothing was lost. Re-verified: bulk **9/9** (57 s) and
+validation **6/6** (25 s) — both now at **2 consecutive clean runs**. The workflow suite was not
+re-run (only a description string changed, and each run creates 2 real classes), so it remains at
+**one** clean run.
