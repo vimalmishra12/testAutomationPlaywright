@@ -366,3 +366,39 @@ detail moved into the TC's doc comment so nothing was lost. Re-verified: bulk **
 validation **6/6** (25 s) — both now at **2 consecutive clean runs**. The workflow suite was not
 re-run (only a description string changed, and each run creates 2 real classes), so it remains at
 **one** clean run.
+
+---
+
+## Addendum — xlsx tooling added (2026-08-19, late evening)
+
+Follow-up 4 above (the `.xlsx`/`.md` sync) exposed that the register had no tooling at all, so
+every edit meant hand-patching `xl/worksheets/sheet1.xml` inside the zip. That technique depends
+on the workbook staying in **inline-string** format, and Excel silently breaks it on save.
+
+**`exceljs@4.4.0` added as a devDependency (user-approved).** Anyone pulling this needs
+`npm install`.
+
+**New tool: `tooling/xlsxRegister.js`**, exposed as `npm run register --`:
+
+| Command | Purpose |
+|---|---|
+| `dump <file>` | every non-empty cell as `ref<TAB>value` |
+| `find <file> <substring>` | locate cells by content |
+| `get <file> <A1>...` | read specific cells |
+| `set <file> <A1>=<value>...` | write cells in place |
+| `status <file> <TestCaseId> <Pass\|Fail\|Not Run\|Blocked>` | the common case — finds the row by Test Case ID, writes the Status column |
+
+Two guards, both deliberate: it **refuses to run** when a `~$<name>.xlsx` lock file exists (the
+workbook is open in Excel), and every write is **read back from the saved file** and verified —
+plus it reports any cell that changed as a side effect. A silent no-op write is the failure mode
+worth guarding against here, since the register is tracked in git as a binary.
+
+**Round-trip fidelity verified before adopting it** (on a copy, not the tracked file): all
+**1057 cells identical**, Cambridge-purple header fill preserved, bold white header font
+preserved, frozen header row preserved. The Status dropdown data-validation described in
+`manual-test-standard.md` is **not present in this workbook** (it read `undefined` before the
+round trip too), so nothing was lost — but note the standard and the artefact disagree.
+
+Consequence: the zip-patching technique is retired. The read-only rule for Excel still matters
+(an Excel save rewrites the whole file and produces a large meaningless binary diff), but it is
+no longer load-bearing for editing.

@@ -134,6 +134,7 @@
     "P1AdminClassesTab_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminClassesTab.json --browserCapability=desktop-chrome-1920",
     "P1AdminGradingCategories_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminGradingCategories.json --browserCapability=desktop-chrome-1920",
     "P1AdminGradingScales_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminGradingScales.json --browserCapability=desktop-chrome-1920",
+    "register": "node tooling/xlsxRegister.js",
     "poc:smoke": "mocha",
     "poc:thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
     "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920"
@@ -178,6 +179,7 @@
   },
   "devDependencies": {
     "date-fns": "^2.30.0",
+    "exceljs": "^4.4.0",
     "humanize-duration": "^3.33.2",
     "mochawesome": "^7.1.4",
     "react": "^16.14.0",
