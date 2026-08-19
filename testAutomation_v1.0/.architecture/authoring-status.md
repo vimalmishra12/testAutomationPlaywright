@@ -193,12 +193,14 @@ Module **GSCL** — Requirements #10, #11, #12, #14, #15, #16. New suite `P1Admi
   after the product turned out to render blank lines between heading and body.
   School state verified clean after the run: default back on "Cambridge One grading scale",
   zero `AutoScale_*` leftovers, `new Grading Auto` untouched.
-- Phase 3 (visual):  ⬜ **pending ONE decision** — 9 of 10 TCs are ❌-row data (timestamps / live
-  shared list) and stay `visualTest: false` with no prompt (Invariant 12). `TST_GSCL_TC_5` is the
-  first genuine candidate this page family has produced: it ends on the **create form**, which
-  does not frame the shared mutable list, and all its data is fixed. Open question is whether a
-  banner from BeforeEach's sweep can linger onto it — never probed. Awaiting the user's Rule A
-  confirmation; left `false` until then.
+- Phase 3 (visual):  ✅ 2026-08-19 — assessed; **all 10 TCs stay `visualTest: false`.**
+  9 of 10 carry ❌-row data (timestamps / live shared list) and stay false with no prompt
+  (Invariant 12). `TST_GSCL_TC_5` is the first genuine ✅-row candidate this page family has
+  produced — it ends on the **create form**, which does not frame the shared mutable list, and
+  all its data is fixed. It was raised with the user under AGENTS.md §8 Rule A, and the user
+  **declined promotion for now** (2026-08-19), so it stays `false`.
+  Re-open only if visual coverage is wanted later; the one unverified risk is whether a banner
+  from BeforeEach's sweep can linger onto the form — never probed.
 
 **Follow-ups (not blocking):** no boundary manual TC exists for the 20-character title limit
 (GCAT has one for its 50-char field); an NPS survey popup can render a full-viewport overlay with
