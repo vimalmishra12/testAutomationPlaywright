@@ -1,0 +1,3 @@
+Class name,Start date DD/MM/YYYY,End date DD/MM/YYYY,Teacher 1 (optional),Teacher 2 (optional),Teacher 3 (optional),Teacher 4 (optional),Teacher 5 (optional),Teacher 6 (optional),Teacher 7 (optional),Teacher 8 (optional),Teacher 9 (optional),Teacher 10 (optional),Student progress data
+BulkCSV_Class1,15/09/2026,30/06/2027,teacher17aug2026@mailsac.com,,,,,,,,,,Progress reset
+BulkCSV_Class2,15/09/2026,30/06/2027,teacher17aug2026@mailsac.com,,,,,,,,,,
