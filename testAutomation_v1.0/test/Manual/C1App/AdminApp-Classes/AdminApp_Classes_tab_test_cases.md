@@ -1579,7 +1579,7 @@ for the label TCs).
 | **Expected Result** | The Class grade settings page opens (`/class/…/grade-weighting`, title "Class grade settings") showing: Grading Scale (+ Change), Score settings (teacher-override toggle), Score calculation (Best/First score), per-material Weightage %, Other grading categories (+ Add a grading category), Total grade: 100%, and Save changes / Cancel. |
 | **Remarks** | This is the destination the grading-category/scale details pages link to (`TST_GCAT_TC_7`, `TST_GSCL_TC_7`). |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1598,7 +1598,7 @@ for the label TCs).
 | **Expected Result** | The class's grading scale updates to the selected scale; the class then appears under that scale's details page ("Classes"). `[ASSUMED]` — confirm the change-scale selector. |
 | **Remarks** | Associates a scale with a class — resolves `TST_GSCL_TC_7`. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1617,7 +1617,7 @@ for the label TCs).
 | **Expected Result** | The grading category is added to the class with a weightage; the class then appears under that category's details page. `[ASSUMED]` — confirm the add-category selector. |
 | **Remarks** | Associates a category with a class — resolves `TST_GCAT_TC_7`. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1636,7 +1636,7 @@ for the label TCs).
 | **Expected Result** | The selected score type is saved as the score that counts toward students' progress. |
 | **Remarks** | — |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1655,7 +1655,7 @@ for the label TCs).
 | **Expected Result** | The override setting is saved in the state it was toggled to. |
 | **Remarks** | — |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1674,7 +1674,7 @@ for the label TCs).
 | **Expected Result** | Saving is prevented / an error is shown until the **Total grade** equals 100%. `[ASSUMED]` — confirm the exact validation copy. |
 | **Remarks** | Page shows a running "Total grade: 100%". |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---

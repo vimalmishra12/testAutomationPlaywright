@@ -4525,6 +4525,22 @@
       ]
     },
     {
+      "modulename": "Admin App | Class grade settings (Req #22)",
+      "moduleId": "CGST",
+      "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+      "testcase": [
+        { "id": "TST_CGST_TC_1", "description": "Verify the Class grade settings page launches from a class page", "tags": "P1", "visualTest": false },
+        { "id": "TST_CGST_TC_2", "description": "Verify the grading scale can be changed for a class (and the scale itself is unchanged)", "tags": "P1", "visualTest": false },
+        { "id": "TST_CGST_TC_3", "description": "Verify a grading category can be added to a class", "tags": "P1", "visualTest": false },
+        { "id": "TST_CGST_TC_4", "description": "Verify the score calculation (Best / First score) can be changed", "tags": "P2", "visualTest": false },
+        { "id": "TST_CGST_TC_5", "description": "Verify the teacher score-override setting can be toggled", "tags": "P3", "visualTest": false },
+        { "id": "TST_CGST_TC_6", "description": "Verify the total grade weightage must equal 100%", "tags": "P2", "visualTest": false },
+        { "id": "TST_CGST_TC_7", "description": "Housekeeping — sweep any leftover AutoClass_CGST class from the Active list", "tags": "P3", "visualTest": false },
+        { "id": "TST_CGST_TC_8", "description": "Helper — poll for the newly created class and launch it", "tags": "P3", "visualTest": false },
+        { "id": "TST_CGST_TC_9", "description": "Cleanup — return to the Classes tab and delete the class under test", "tags": "P3", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "ebookFocusA11y",
       "moduleId": "",
       "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",

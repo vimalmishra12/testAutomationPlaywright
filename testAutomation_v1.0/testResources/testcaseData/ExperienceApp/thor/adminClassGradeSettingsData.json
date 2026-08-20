@@ -1,0 +1,24 @@
+{
+  "C1": {
+    "adminClassGradeSettings": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "className": "AutoClass_CGST",
+      "material": "dev_test_ebook_bundle_104_bundle",
+      "successMessage": "Success! We are now creating",
+
+      "defaultScaleName": "Cambridge One grading scale",
+      "scaleName": "new Grading Auto",
+      "categoryName": "some",
+
+      "materialWeightage": 70,
+      "categoryWeightage": 30,
+
+      "scoreCalcDefault": "Best score",
+      "scoreCalcTarget": "First score",
+
+      "invalidMaterialWeightage": 90,
+      "invalidTotal": "120%",
+      "outOfRangeWeightage": 150
+    }
+  }
+}

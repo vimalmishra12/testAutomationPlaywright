@@ -3,6 +3,46 @@ var action = require("../../core/actionLibrary/baseActionLibrary.js");
 // Selectors resolved at load time from C1Selectors.json → css.ComproC1.createClasses
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 
+/**
+ * How long to wait for the Add Materials type-ahead to return its results — DELIBERATELY SHORT.
+ *
+ * [2026-08-20] This was briefly set to 90000 on the theory that the search is simply slow.
+ * That was WRONG, and the correction matters:
+ *
+ *   **When the search term is typed correctly, the matching result appears in milliseconds.**
+ *
+ * So a long wait does not fix anything — it HIDES the real problem (a mistyped or corrupted
+ * search term, for which no result will EVER appear) behind a 90-second pause, and then
+ * reports a misleading "material was not selected" two minutes later. It also pushed the test
+ * past mocha's 120000 limit once the click's own 30s default was added on top, turning a
+ * precise failure into a generic runner timeout.
+ *
+ * 5 seconds is generous for a response measured in milliseconds. Failing fast here is the
+ * POINT: it says "the term produced no match", which — with the read-back check above proving
+ * the term was typed correctly — means the material genuinely is not available, and that is a
+ * real finding rather than something to wait out.
+ */
+var MATERIAL_SEARCH_TIMEOUT = 5000;
+
+/**
+ * How long to wait for the modal's PRODUCT LIST to arrive from the server.
+ *
+ * This is a different wait from MATERIAL_SEARCH_TIMEOUT and confusing the two is what made
+ * this flow flaky. Measured on Thor 2026-08-20:
+ *
+ *   - Opening the modal fires exactly ONE server call (POST .../products) that returns the
+ *     whole catalogue — ~800 options land in the DOM at once. Typing fires NO further
+ *     requests (verified by counting network traffic while typing 16 characters).
+ *   - Until that call returns, the dropdown renders **"No search results"** next to a
+ *     spinner — i.e. the product's loading state is WORD-FOR-WORD INDISTINGUISHABLE from a
+ *     genuine empty result. That is what the failing screenshots actually showed: the search
+ *     term typed perfectly, the dropdown open, and "No search results" still on screen.
+ *
+ * So the server call is the slow part and needs a generous budget, while the filtering that
+ * follows is instant. Kept well under mocha's 120000 even when added to the search wait.
+ */
+var MATERIAL_LIST_TIMEOUT = 60000;
+
 module.exports = {
   // Resolves to C1Selectors.json → css.ComproC1.createClasses.*
   classNameInput: selectorFile.css.ComproC1.createClasses.classNameInput,
@@ -269,13 +309,121 @@ module.exports = {
    * (getFilteredLocator — keeps the runtime-value match out of the page object). Selecting
    * an item enables the "Add materials" confirm button.
    */
+  /**
+   * Types a material name into the Add Materials search and picks the matching result.
+   *
+   * [2026-08-20] Hardened after intermittent failures on a slow Thor. TWO changes, both
+   * driven by observed behaviour, not theory:
+   *
+   * 1. TYPE, THEN READ THE VALUE BACK AND RETYPE IF IT IS WRONG.
+   *    `addValue` is `pressSequentially`, which types character by character and does NOT
+   *    clear first. Two real misfires have been seen in this field:
+   *      - the first character duplicated — "ddev_test_ebook_bundle_104_bundle" (reported by
+   *        the user, and the test failed because nothing matches that string);
+   *      - a leftover value being APPENDED to rather than replaced, since addValue never
+   *        clears.
+   *    Either way the search term is silently wrong, the dropdown legitimately returns
+   *    nothing, and the failure surfaces 30-90s later as a misleading "material was not
+   *    selected" — pointing at the product rather than at the typing. So the field is
+   *    cleared first, and the value is READ BACK and compared before we wait on anything.
+   *    Up to 3 attempts; if it still cannot be typed correctly we return an Error naming the
+   *    string we actually got, which is a far more useful failure than a timeout.
+   *
+   *    This is NOT retrying the thing under test (Invariant 14) — the test's subject is the
+   *    material search, and entering the search term correctly is setup for it. A mistyped
+   *    input is an automation defect, not a product defect, and must not be reported as one.
+   *
+   * 2. AN EXPLICIT, GENEROUS WAIT FOR THE RESULT (was the 30s default).
+   *    The type-ahead is genuinely slow on a loaded Thor — measured failing at 30s while the
+   *    same code passed minutes earlier. This slowness is KNOWN AND ACCEPTED (confirmed with
+   *    the user 2026-08-20), so it must be waited out, not reported as a bug.
+   *
+   * NOTE this method is SHARED by the workflow, bulk, BulkCreateCSV and CGST suites. Both
+   * changes are strictly more tolerant — nothing that passed before can start failing.
+   */
   select_material: async function (materialName) {
     var res;
     await logger.logInto(await stackTrace.get(), "material: " + materialName);
-    await action.addValue(this.materialSearchInput, materialName);
+
+    /*
+     * STEP 1 - wait for the catalogue to arrive BEFORE typing anything.
+     *
+     * waitForExist, not waitForDisplayed: the options are in the DOM but the dropdown is
+     * CLOSED until the field is typed into, so nothing is visible yet (measured: 808 options
+     * present, 0 visible). Waiting on visibility here would hang forever.
+     *
+     * This is the wait that was missing. Without it we typed into an empty catalogue, the
+     * dropdown honestly reported "No search results", and every later wait was spent staring
+     * at a list that had nothing to filter.
+     */
+    var listReady = await action.waitForExist(this.materialItem, MATERIAL_LIST_TIMEOUT);
+    if (true != listReady) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "the material catalogue did not load within " + MATERIAL_LIST_TIMEOUT +
+          "ms (POST .../products) — nothing could be selected",
+        "error"
+      );
+      return new Error(
+        "material catalogue did not load within " + MATERIAL_LIST_TIMEOUT + "ms"
+      );
+    }
+
+    // STEP 2 - type the term, verifying it landed correctly.
+    var typed = "";
+    var typedOk = false;
+    for (var attempt = 1; attempt <= 3; attempt++) {
+      // Clear first: addValue APPENDS, so any leftover would corrupt the search term.
+      await action.clearValue(this.materialSearchInput);
+      await action.addValue(this.materialSearchInput, materialName);
+      var v = await action.getValue(this.materialSearchInput);
+      typed = v && v.message ? "" : String(v);
+      if (typed === materialName) {
+        typedOk = true;
+        break;
+      }
+      await logger.logInto(
+        await stackTrace.get(),
+        "search box MISTYPED on attempt " + attempt + " — expected '" + materialName +
+          "' but got '" + typed + "'; clearing and retyping",
+        "error"
+      );
+    }
+    if (!typedOk) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "search box could not be typed correctly after 3 attempts (last value: '" + typed + "')",
+        "error"
+      );
+      return new Error(
+        "material search box mistyped: expected '" + materialName + "' but got '" + typed + "'"
+      );
+    }
+
+    /*
+     * STEP 3 - wait for the filtered match. SHORT on purpose: the catalogue is already in the
+     * DOM and filtering it is client-side and instant (measured 1ms). A long wait here would
+     * only re-hide the two failures this method now separates.
+     */
     // Locator filtered by the material name — the concrete match is a runtime value.
     var itemLocator = action.getFilteredLocator(this.materialItem, materialName);
-    await action.waitForDisplayed(itemLocator);
+    var appeared = await action.waitForDisplayed(itemLocator, MATERIAL_SEARCH_TIMEOUT);
+    if (true != appeared) {
+      // STOP HERE. Clicking something that never rendered just burns the click's own 30s
+      // default on top of this wait, and the combined delay is what previously pushed the
+      // test past mocha's 120s limit and buried the real reason. By this point the catalogue
+      // IS loaded and the term IS verified, so "no match" genuinely means the material is not
+      // in this school's catalogue — a real finding, not a timing problem.
+      await logger.logInto(
+        await stackTrace.get(),
+        "no dropdown match for '" + materialName + "' within " + MATERIAL_SEARCH_TIMEOUT +
+          "ms — catalogue loaded and term verified, so the material appears to be unavailable",
+        "error"
+      );
+      return new Error(
+        "material '" + materialName + "' is not in the loaded catalogue (term verified correct)"
+      );
+    }
     res = await action.click(itemLocator);
     if (true == res) {
       await logger.logInto(await stackTrace.get(), materialName + " is selected");

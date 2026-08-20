@@ -249,3 +249,82 @@ Module **GSCL** — Requirements #10, #11, #12, #14, #15, #16. New suite `P1Admi
 no close control — never hit during a run, so no workaround was built; the Playwright-MCP browser
 delivers no real input events in this environment (JS evaluation works), which also corrects the
 2026-08-18 GCAT note that blamed Angular.
+
+## adminClassGradeSettings (ExperienceApp, thor)
+Module **CGST** — Requirement #22. New suite `P1AdminClassGradeSettings_Thor`.
+- Phase 1 (build):   ✅ 2026-08-20 — `TST_CGST_TC_1..9` registered, all `visualTest: false`.
+  First run 13 passing / 6 failing; **final run 19/19 passing in 97 s**.
+  Visual candidates: none assessed yet — that is Phase 3's job.
+- Phase 2 (run/fix): ✅ 2026-08-20 — **19/19 passing.** Nine runs, six distinct defects fixed
+  (see below). A second confirmation run was executed; school state verified clean after each
+  (Active back to 21, no `AutoClass_CGST`, search cleared).
+- Phase 3 (visual):  ✅ 2026-08-20 — assessed; **all 9 TCs stay `visualTest: false`.**
+  Every one of them frames either a class created fresh in the same run (so its name, dates and
+  key differ every time) or the shared school's live Classes list — AGENTS.md §8 ❌-row data, which
+  means they stay false with no prompt needed (Invariant 12). Unlike GSCL, this module produced
+  **no borderline candidate at all**: even `TST_CGST_TC_1`, the most static-looking screen, prints
+  the run's own class name under its heading. The user elected to skip visual promotion
+  (2026-08-20); the assessment reaches the same answer independently, so nothing is deferred.
+  No `visualAcceptance_*` npm script is required (AGENTS.md Rule B applies only once a TC is true).
+
+**Manual register updated 2026-08-20** — `TST_CGST_TC_1..6` set to **Pass** in BOTH
+`AdminApp_Classes_tab_test_cases.md` and the `.xlsx` (via `npm run register`, which verified no
+other cell changed). Register now **61 Pass / 18 Not Run**; the 2 max-limit TCs remain absent by
+design. The 3 helper TCs (`TC_7/8/9`) have no manual counterpart and are not in the register.
+
+**The suite owns its data** (agreed with the user): it creates `AutoClass_CGST` with a course
+material in the `Test` list, runs CGST against it, and deletes it in the suite-level `After`.
+`TST_CGST_TC_7` also sweeps leftovers BEFORE creating, so a crashed run self-heals next time.
+
+**Six real defects found and fixed — all but one were in the new code:**
+
+1. **The teacher score-override toggle raises a confirmation dialog** that nothing closed. An
+   unclosed modal is a full overlay that blocks every later click **while every read keeps
+   working**, so four unrelated TCs failed with individually plausible symptoms. Cost 1 run.
+2. **A successful Save opens `#changesSavedConfirmationModal`** — same failure mode, cost 1 run.
+   `click_saveChanges` now waits for that dialog (a stronger success signal than a disabled
+   button) and closes it via the X, never "Back to class data" (which navigates away).
+3. **`isInitialized` returned before the Angular form state settled**, so a pristine page briefly
+   reported Save as ENABLED and `TST_CGST_TC_1` failed its "pristine form cannot be saved" check.
+4. **`search_class()` is NOT idempotent** — it waits for the class list to CHANGE, so calling it
+   twice with the same term waits out its full budget and reports failure even though the search
+   worked. This broke the TC_8 poll AND the cleanup sweep. Every call site now clears first.
+5. **Cleanup depended on the very path that breaks it.** `TST_CGST_TC_9` re-found the class by
+   searching; when search failed, cleanup failed and a real class was left on a SHARED school
+   (happened three times, hand-cleaned each time). TC_8 now records the created class's URL and
+   TC_9 deletes via that URL directly — no search, no row matching. The sweep remains a fallback.
+6. **`select_material` typed before the material catalogue had loaded** (the one fix in shared,
+   pre-existing code). See the product-knowledge entry: the modal's loading state renders the
+   words **"No search results"**, identical to a genuine empty result, so the failure looked like
+   a product bug for five runs. Now: wait for the catalogue (`waitForExist`, 60 s) → type and
+   **read the value back** → wait for the filtered match (5 s, because filtering is client-side
+   and measured at 1 ms).
+
+**Two timeout mistakes worth not repeating:** a poll budget set to exactly mocha's `timeout`
+(120000) is killed at the same instant it expires, so the failure surfaces as a generic runner
+timeout instead of the TC's own message. Made twice — once in `CLASS_APPEAR_TIMEOUT`, once by
+stacking a 90 s wait and the click's own 30 s default.
+
+**Shared-file changes (all strictly more tolerant, nothing that passed can start failing):**
+- `createClasses.page.js` → `select_material` hardened (catalogue wait + type-verify + fail fast).
+  Shared by the workflow, bulk and BulkCreateCSV suites.
+- `activeClass.page.js` → ADDED `click_classGradeSettings()` and `delete_class()`; no existing
+  method touched. `delete_class` tolerates the confirmation dialog being ABSENT — verified live
+  that deleting a freshly created class with no students raises no confirmation at all.
+- `C1Selectors.json` → new `css.ComproC1.classGradeSettings` block (61 keys, every one verified
+  live) + `activeClass.classGradeSettingsLink`; `createClasses.materialItem` scoped to the modal
+  (it was page-wide and matched the header profile menu — up to 885 elements).
+
+**Pending / follow-up:**
+- **`CLASS_APPEAR_TIMEOUT` is at 100000, close to its practical ceiling.** Class creation was
+  measured at ~24 s on a responsive Thor but exceeded 90 s on a loaded one. If it regularly needs
+  more, the answer is NOT a bigger number — it is raising mocha's timeout (PROTECTED file, needs
+  confirmation) or splitting the wait and the launch into two TCs so each gets its own budget.
+- **`SAVE_TIMEOUT` (20 s) is still a budget, not a measurement** — Phase 2 never logged the real
+  save round-trip. Worth replacing with a measured figure.
+- **Thor throughput varies ~4x** (97 s to 12.5 min for the same suite). Do not tighten any timeout
+  on the strength of one fast run.
+- `TST_GSCL_TC_7` and `TST_GCAT_TC_7` are now genuinely unblocked — CGST proves a scale and a
+  category can be applied to a class. They remain unwritten (deliberately out of this batch).
+- The manual register has NOT been updated to Pass yet — awaiting the user's call, given how much
+  timing variance Thor showed today.
