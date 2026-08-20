@@ -44,6 +44,33 @@
         "Teacher 10 (optional)",
         "Student progress data"
       ]
+    },
+    "adminAddClassBulkCreateCSV": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "csvPath": "./test/Manual/C1App/AdminApp-Classes/BulkUploadCSV - Class_creation_form_template.csv",
+      "csvClass1Name": "BulkCSV_Class1",
+      "csvClass2Name": "BulkCSV_Class2",
+      "csvStartDate": "Tue, Sep 15, 2026",
+      "csvEndDate": "Wed, Jun 30, 2027",
+      "csvClassCount": 2,
+      "csvTemplateFileName": "Class_creation_form_template.csv",
+      "csvTemplateHeaders": [
+        "Class name",
+        "Start date DD/MM/YYYY",
+        "End date DD/MM/YYYY",
+        "Teacher 1 (optional)",
+        "Teacher 2 (optional)",
+        "Teacher 3 (optional)",
+        "Teacher 4 (optional)",
+        "Teacher 5 (optional)",
+        "Teacher 6 (optional)",
+        "Teacher 7 (optional)",
+        "Teacher 8 (optional)",
+        "Teacher 9 (optional)",
+        "Teacher 10 (optional)",
+        "Student progress data"
+      ],
+      "successMessage": "Success! We are now creating"
     }
   }
 }
