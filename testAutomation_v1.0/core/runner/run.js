@@ -97,6 +97,9 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
             json: true,
             overwrite: true,
             quiet: false,
+            // [2026-08-21] Inline CSS/JS/fonts into report.html so the single HTML file
+            // can be shared/opened standalone (without the assets/ folder alongside).
+            inlineAssets: true,
             // Hide the (large, engine-level) test source code so each test shows
             // just its result + the attached screenshot — clean Timeline-style view.
             code: false
