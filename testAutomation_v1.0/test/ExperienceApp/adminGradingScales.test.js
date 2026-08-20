@@ -10,10 +10,14 @@
 //   suite's scale creation mid-run. Same call as TST_GCAT_TC_4. The expected modal copy is
 //   already verified word for word (the modal is pre-rendered in the DOM, so capturing it
 //   cost nothing), so this is short work once a dedicated school exists.
-//   TST_GSCL_TC_7 (Req #13 - launch class grade settings from a scale's details page).
-//   It needs the scale APPLIED to a class, which is a CGST operation; deferred to the CGST
-//   module alongside TST_GCAT_TC_7 rather than duplicated here.
 // Neither is registered anywhere, so neither can run by accident.
+//
+// TST_GSCL_TC_7 (Req #13) LIVES HERE but RUNS IN THE CGST SUITE. It needs the scale applied
+// to a live class, which only the CGST suite produces, so it is listed in
+// testExecutionFiles/.../adminClassGradeSettings.json between TST_CGST_TC_3 (which applies
+// the scale and SAVES) and TST_CGST_TC_9 (which deletes the class). It is registered here,
+// not in the CGST test file, because the page it exercises is the SCALE details page and
+// module ownership follows the page object (AGENTS.md Rule 6).
 //
 // DATA SAFETY: every scale these TCs create is named `namePrefix` ("AutoScale_") + a
 // timestamp, so it is unique per run and unmistakably ours. TST_GSCL_TC_13 sweeps that
@@ -21,6 +25,8 @@
 // The school's own scales - "Cambridge One grading scale" (system default) and
 // "new Grading Auto" - are never touched.
 var manageGradingScales = require("../../pages/ExperienceApp/manageGradingScales.page.js");
+var schoolClasses = require("../../pages/ExperienceApp/schoolClasses.page.js");
+var classGradeSettings = require("../../pages/ExperienceApp/classGradeSettings.page.js");
 
 var sts;
 
@@ -46,6 +52,8 @@ var SET_DEFAULT_MODAL_COPY =
   "grading scale. Existing classes will not be affected";
 
 /** Collapses whitespace runs to single spaces so copy is compared by wording, not layout. */
+var CLASS_GRADE_SETTINGS_HEADING = "Class grade settings";
+
 function squash(s) {
   return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
 }
@@ -539,6 +547,123 @@ module.exports = {
       "A Delete option is visible in the default scale's menu");
     await assertion.assertEqual(menu.setDefaultCount, 0,
       "The default scale's menu contains 'Set as default' - it is already the default");
+  },
+
+  /**
+   * TST_GSCL_TC_7 (Positive, Req #13) - the class grade settings page launches from a
+   * grading scale's details page.
+   *
+   * RUNS INSIDE THE CGST SUITE, not the GSCL one: its precondition is "the scale is applied
+   * to >= 1 class", and TST_CGST_TC_2 is what applies (and SAVES) `scaleName` onto the class
+   * that suite creates. Slotted after TST_CGST_TC_3 and before TST_CGST_TC_9 (the delete).
+   *
+   * THE MANUAL CASE'S STEP 2 IS WRONG. It reads "click a listed class"; it was written from a
+   * details page that had NO classes on it, so nobody had seen the populated layout. Captured
+   * live 2026-08-20: the class name is plain text (`span.item-text`) and the row's only
+   * control is a dedicated "Class grade settings" link. Corrected in the manual register.
+   *
+   * ⚠ THE CLASS MUST STILL BE ACTIVE. This page lists Deleted classes too (delete is soft),
+   * and clicking the link on a Deleted row does NOT open grade settings - it drops the school
+   * context and lands on "My school accounts" with "Sorry! The item is not available because
+   * the class is no longer active". Hence the explicit `status === "Active"` assertion below:
+   * without it, this TC could pass its "row is listed" check against a corpse from an earlier
+   * run and then fail confusingly at the click.
+   *
+   * WHY THE KEY IS RESOLVED AT RUNTIME instead of being test data: the class is created by
+   * this run, so its key does not exist until then. Names cannot be used as the handle -
+   * FCN-CHZ-PDA is a SHARED school with duplicate class names, and every past CGST run has
+   * left another Deleted `AutoClass_CGST` row on this very page. Asserting "exactly one
+   * ACTIVE class with this name" both yields the key and fails loudly (rather than silently
+   * testing the wrong class) if someone else's run created a second one concurrently.
+   */
+  TST_GSCL_TC_7: async function (testdata) {
+    // --- 1. Resolve the class under test, and its unique key, from the Classes tab. -------
+    sts = await schoolClasses.return_toClassesTab();
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Could not return to the Classes tab to resolve the class under test"
+    );
+
+    /*
+     * CLEAR BEFORE SEARCHING - search_class() is NOT idempotent.
+     *
+     * It waits for the class LIST TO CHANGE, and the search term PERSISTS SERVER-SIDE
+     * (documented, confirmed-intended product behaviour). TST_CGST_TC_8 has already searched
+     * for this very class name and does not clear it, so by the time this TC runs the list is
+     * STILL filtered to it. Re-typing the same term changes nothing, so the wait burns its
+     * full 20s budget and reports failure even though the search worked perfectly.
+     *
+     * That is exactly how this TC failed on its first run (2026-08-20). Clearing first makes
+     * both steps real changes: filtered -> all rows, then all rows -> filtered.
+     */
+    await schoolClasses.clear_search();
+    sts = await schoolClasses.search_class(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle");
+    var rows = await schoolClasses.getData_classRows();
+    var mine = rows.filter(function (r) { return String(r.name).trim() === testdata.className; });
+    // Clear BEFORE asserting: the search term persists SERVER-SIDE into the next TC and the
+    // next run, so a failed assertion must not leave the list filtered (documented product
+    // behaviour, confirmed intended 2026-08-17).
+    await schoolClasses.clear_search();
+    await assertion.assertEqual(
+      mine.length, 1,
+      "Expected exactly one ACTIVE class named '" + testdata.className + "' to resolve its " +
+        "key, found " + mine.length + " - the suite's own sweep should guarantee one"
+    );
+    var classKey = mine[0].key;
+    await assertion.assert(
+      classKey !== "",
+      "Could not read the class key for '" + testdata.className + "'"
+    );
+
+    // --- 2. Open the scale's details page by the real user route. -------------------------
+    sts = await manageGradingScales.navigate_fromClassesTab();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not open the Grading scales page");
+
+    sts = await manageGradingScales.click_viewDetails(testdata.scaleName);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "View details did not open for grading scale '" + testdata.scaleName + "'"
+    );
+
+    // --- 3. The class the scale was applied to is listed on that page. --------------------
+    var row = await manageGradingScales.getData_detailsClassRow(classKey);
+    await assertion.assertEqual(
+      row.found, true,
+      "Class '" + testdata.className + "' (" + classKey + ") is not listed on the details " +
+        "page for scale '" + testdata.scaleName + "' after being applied to it"
+    );
+    await assertion.assertEqual(
+      squash(row.name), testdata.className,
+      "The listed row's class name does not match the class under test"
+    );
+    await assertion.assertEqual(
+      squash(row.status), "Active",
+      "The class under test is not Active on the scale's details page - the grade settings " +
+        "link only works for an active class"
+    );
+
+    // --- 4. The row's link opens THAT class's grade settings page. ------------------------
+    sts = await manageGradingScales.click_classGradeSettingsByKey(classKey);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "'Class grade settings' did not open the grade settings page from the scale's details page"
+    );
+
+    var page = await classGradeSettings.getData_pageLayout();
+    await assertion.assertEqual(
+      squash(page.heading), CLASS_GRADE_SETTINGS_HEADING,
+      "The destination is not the Class grade settings page"
+    );
+    await assertion.assertEqual(
+      squash(page.className), testdata.className,
+      "The grade settings page opened for the wrong class"
+    );
+    // Arriving via this scale's details page must land on a class actually using that scale.
+    await assertion.assertEqual(
+      squash(page.scaleName), testdata.scaleName,
+      "The class's applied grading scale is not the scale whose details page we came from"
+    );
   },
 
   /**

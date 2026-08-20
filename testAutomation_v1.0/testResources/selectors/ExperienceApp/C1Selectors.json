@@ -1264,7 +1264,14 @@
         "detailsHeading": "grading-category-classes h1",
         "detailsActiveClassesHeading": "grading-category-classes h2.heading-2",
         "detailsNoClassesMessage": "grading-category-classes p.text-color",
-        "detailsBackLink": "a[qid='gradingCategoryClass-1']"
+        "detailsBackLink": "a[qid='gradingCategoryClass-1']",
+        "detailsClassRow": "grading-category-classes div.row.no-gutters.py-0",
+        "detailsClassRowByKey": "grading-category-classes div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}'))",
+        "detailsClassNameByKey": "grading-category-classes div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) span.item-text",
+        "detailsClassGradeSettingsLinkByKey": "grading-category-classes div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) a[qid^='gradingCategoryClass-3-']",
+        "detailsSearchInput": "#searchClassText",
+        "detailsSearchBtn": "a[qid='gradingCategoryClass-6']",
+        "detailsSortByClassNameBtn": "a[qid='gradingCategoryClass-2']"
       },
       "manageGradingScales": {
         "schoolSettingsToggle": "#changeClassKeyActionsLink",
@@ -1319,7 +1326,13 @@
         "bandTargetScore": "grading-scale-details span.target-score-text",
         "detailsClassesHeading": "grading-scale-details p.classes-heading",
         "detailsNoClassesBox": "grading-scale-details div.no-classes-box",
-        "detailsNoClassesText": "grading-scale-details p.no-classes-text"
+        "detailsNoClassesText": "grading-scale-details p.no-classes-text",
+        "detailsClassRow": "grading-scale-details div.row.no-gutters.py-0",
+        "detailsClassRowByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}'))",
+        "detailsClassNameByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) span.item-text",
+        "detailsClassStatusByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) div.item-info span",
+        "detailsClassGradeSettingsLinkByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) a[qid^='gradingScaleDetails-3-']",
+        "detailsLoadMoreLink": "a[qid='gradingScaleDetails-4']"
       }
     }
   }

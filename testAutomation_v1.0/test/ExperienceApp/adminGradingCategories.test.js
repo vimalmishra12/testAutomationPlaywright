@@ -10,15 +10,19 @@
 //   filling a SHARED thor school to its cap, which would break other suites mid-run. The
 //   exact modal copy is captured in product knowledge; the TC stays blocked pending a
 //   dedicated school or a product-supplied maximum. Deferred with the user, 2026-08-18.
-//   TST_GCAT_TC_7 (Req #7 - launch class grade settings from a category's details page)
-//   needs the category APPLIED to a class, which is a CGST operation. It is deferred to
-//   the CGST module rather than duplicated here.
+//   TST_GCAT_TC_7 (Req #7) LIVES HERE but RUNS IN THE CGST SUITE - it needs the category
+//   applied to a live class, which only the CGST suite produces. It is listed in
+//   testExecutionFiles/.../adminClassGradeSettings.json before TST_CGST_TC_9 (the delete).
+//   Registered here, not in the CGST test file, because the page it exercises is the
+//   CATEGORY details page and module ownership follows the page object (AGENTS.md Rule 6).
 //
 // DATA SAFETY: every category these TCs create is named with the `namePrefix` from test
 // data ("AutoCat_") plus a timestamp, so it is unique per run and unmistakably ours.
 // TST_GCAT_TC_10 sweeps that prefix in BeforeEach - see its comment for why BeforeEach
 // and NOT AfterEach.
 var manageGradingCategories = require("../../pages/ExperienceApp/manageGradingCategories.page.js");
+var schoolClasses = require("../../pages/ExperienceApp/schoolClasses.page.js");
+var classGradeSettings = require("../../pages/ExperienceApp/classGradeSettings.page.js");
 
 var sts;
 
@@ -42,6 +46,13 @@ var DETAILS_NO_CLASSES_MESSAGE = "The category has not been added to any active 
 // Single character used only to prove the Save button can leave its disabled state
 // (TST_GCAT_TC_5). Never saved - see the comment at its call site for why it is one char.
 var SAVE_ENABLED_PROBE = "A";
+
+var CLASS_GRADE_SETTINGS_HEADING = "Class grade settings";
+
+/** Collapses runs of whitespace so multi-element copy compares as one line. */
+function squash(s) {
+  return String(s || "").replace(/\s+/g, " ").trim();
+}
 
 /** Unique, sweepable category name: <prefix><tag>_<epoch-ms>. */
 function uniqueName(prefix, tag) {
@@ -309,6 +320,106 @@ module.exports = {
     await assertion.assertEqual(sts.bannerShown, true, "Success banner did not appear after 'Yes, remove'");
     await assertion.assertEqual(sts.bannerText, BANNER_REMOVED, "Removal banner text did not match the expected copy");
     await assertion.assertEqual(sts.removed, true, "Category '" + name + "' was still listed after confirming the removal");
+  },
+
+  /**
+   * TST_GCAT_TC_7 (Positive, Req #7) - the class grade settings page launches from a grading
+   * category's details page.
+   *
+   * RUNS INSIDE THE CGST SUITE, not the GCAT one: its precondition is "the category is
+   * applied to >= 1 active class", and TST_CGST_TC_3 is what applies (and SAVES)
+   * `categoryName` onto the class that suite creates. Slotted before TST_CGST_TC_9.
+   *
+   * ⚠ THIS PAGE COUNTS *ACTIVE* CLASSES ONLY - its heading reads `Active classes (N)`, where
+   * the equivalent scales page reads `Classes (N)` and includes Deleted rows. That single
+   * difference is why this TC sat blocked for weeks: all three categories on FCN-CHZ-PDA
+   * read `Active classes (0)` because every class they had ever been applied to had since
+   * been deleted. The row therefore disappears the moment the class is deleted, which is
+   * exactly why this must run BEFORE the suite's cleanup.
+   *
+   * As on the scales page, the manual case's "click a listed class" is wrong - the class name
+   * is plain text and the row's only control is a "Class grade settings" link. Captured live
+   * 2026-08-20; corrected in the manual register.
+   *
+   * The class key is resolved at runtime for the same reason as TST_GSCL_TC_7 - see that
+   * TC's comment for the full rationale.
+   */
+  TST_GCAT_TC_7: async function (testdata) {
+    // --- 1. Resolve the class under test, and its unique key, from the Classes tab. -------
+    sts = await schoolClasses.return_toClassesTab();
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Could not return to the Classes tab to resolve the class under test"
+    );
+
+    // Clear before searching - search_class() is not idempotent and the term persists
+    // server-side, so re-searching the same term waits out its budget and fails. See the
+    // full explanation on TST_GSCL_TC_7, which failed this way on its first run.
+    await schoolClasses.clear_search();
+    sts = await schoolClasses.search_class(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle");
+    var rows = await schoolClasses.getData_classRows();
+    var mine = rows.filter(function (r) { return String(r.name).trim() === testdata.className; });
+    // Cleared before asserting - the search term persists server-side into the next run.
+    await schoolClasses.clear_search();
+    await assertion.assertEqual(
+      mine.length, 1,
+      "Expected exactly one ACTIVE class named '" + testdata.className + "' to resolve its " +
+        "key, found " + mine.length
+    );
+    var classKey = mine[0].key;
+    await assertion.assert(
+      classKey !== "",
+      "Could not read the class key for '" + testdata.className + "'"
+    );
+
+    // --- 2. Open the category's See details page by the real user route. ------------------
+    sts = await manageGradingCategories.navigate_fromClassesTab();
+    await assertion.assertEqual(
+      sts.pageStatus, true, "Could not open the Manage grading categories page"
+    );
+
+    sts = await manageGradingCategories.click_seeDetails(testdata.categoryName);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "See details did not open for grading category '" + testdata.categoryName + "'"
+    );
+
+    // --- 3. The class the category was applied to is listed on that page. -----------------
+    var details = await manageGradingCategories.getData_detailsPage();
+    await assertion.assertEqual(
+      details.noClassesDisplayed, false,
+      "The category still shows its empty state after being applied to a class"
+    );
+
+    var row = await manageGradingCategories.getData_detailsClassRow(classKey);
+    await assertion.assertEqual(
+      row.found, true,
+      "Class '" + testdata.className + "' (" + classKey + ") is not listed on the details " +
+        "page for category '" + testdata.categoryName + "' after being applied to it"
+    );
+    await assertion.assertEqual(
+      squash(row.name), testdata.className,
+      "The listed row's class name does not match the class under test"
+    );
+
+    // --- 4. The row's link opens THAT class's grade settings page. ------------------------
+    sts = await manageGradingCategories.click_classGradeSettingsByKey(classKey);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "'Class grade settings' did not open the grade settings page from the category's " +
+        "details page"
+    );
+
+    var page = await classGradeSettings.getData_pageLayout();
+    await assertion.assertEqual(
+      squash(page.heading), CLASS_GRADE_SETTINGS_HEADING,
+      "The destination is not the Class grade settings page"
+    );
+    await assertion.assertEqual(
+      squash(page.className), testdata.className,
+      "The grade settings page opened for the wrong class"
+    );
   },
 
   /**

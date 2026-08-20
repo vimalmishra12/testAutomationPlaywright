@@ -250,6 +250,56 @@ no close control — never hit during a run, so no workaround was built; the Pla
 delivers no real input events in this environment (JS evaluation works), which also corrects the
 2026-08-18 GCAT note that blamed Angular.
 
+## adminGradingScales / adminGradingCategories — TC_7 pair (ExperienceApp, thor)
+Requirements **#13** (GSCL) and **#7** (GCAT) — `TST_GSCL_TC_7` + `TST_GCAT_TC_7`. These are
+GSCL/GCAT test cases that **run inside the CGST suite** (`P1AdminClassGradeSettings_Thor`),
+because their precondition is a scale/category applied to a LIVE class, which only the CGST
+suite produces. They are registered in their own module files so ownership follows the page
+object (AGENTS.md Rule 6), and listed in `adminClassGradeSettings.json` after `TST_CGST_TC_6`
+and before the `After` block's `TST_CGST_TC_9` (the delete).
+- Phase 1 (build):   ✅ 2026-08-20 — both registered, `visualTest: false`. Executed: first run
+  **19 passing / 2 failing**, both new TCs failing at the same call; fixed; **21/21 passing**.
+- Phase 2 (run/fix): ✅ 2026-08-20 — **21/21 passing.** One defect, one fix round:
+  `search_class()` is NOT idempotent (it waits for the class list to CHANGE) and the search term
+  PERSISTS SERVER-SIDE. `TST_CGST_TC_8` had already searched the same class name and never
+  cleared it, so re-searching it changed nothing and the wait burned its full 20 s budget —
+  reported as "The class search did not settle" while the search had in fact worked.
+  Fix: `clear_search()` before `search_class()` in both TCs — the documented remedy (handoff
+  trap 4) and the pattern TC_8/TC_9 already use. Cleanup verified after the run: class deleted
+  by URL, sweep removed 0, search cleared.
+- Phase 3 (visual):  ✅ 2026-08-20 — assessed; **both TCs stay `visualTest: false`.**
+  Each ends on the Class grade settings page of a class **created fresh in the same run**, so its
+  class key and dates differ every time, and each passes through a details page listing the
+  shared school's live class set — which for the scale page grows by one soft-deleted row per
+  run. That is AGENTS.md §8 ❌-row data on both counts, so they stay false with no prompt needed
+  (Invariant 12). No borderline candidate; no `visualAcceptance_*` script required (Rule B
+  applies only once a TC is true).
+
+**What the live capture resolved.** Both manual cases carried `[ASSUMED]` expected results
+because every scale/category anyone had ever opened had ZERO classes, so the populated layout
+had never been seen. Captured live 2026-08-20; full detail in
+`product-knowledge/ExperienceApp.md`. Two corrections to the manual cases:
+- The step "click a listed class" is **wrong** — the class name is plain text; the row's only
+  control is a dedicated "Class grade settings" link.
+- The two pages are **not** symmetric: the scale page reads `Classes (N)` and **includes
+  deleted classes**; the category page reads `Active classes (N)` and does not. That is why
+  GCAT_TC_7 looked blocked for weeks — every category read `Active classes (0)` purely because
+  the classes they had been applied to were since soft-deleted.
+
+**New permanent fixture on thor:** `Fixture_GradeSettings_DO_NOT_DELETE` (key `62k3-AXm6`,
+FCN-CHZ-PDA, start Aug 20 2026, end **Dec 31 2036**, course material + category `some` applied,
+grade settings saved at 70/30). Created with explicit user approval so this DOM can be
+re-captured without re-deriving the state. **It is not used by any test** — both TCs use the
+class the CGST suite creates and deletes. Do not delete it; no sweep prefix matches it.
+
+**Follow-up (agreed with the user, not started):** a `seedAdminFixtures_<env>.json` seeding
+exec file, to make the fixture reproducible when porting to qa/rel/production. Blocked on a
+real gap rather than effort: `createClasses.set_endDate()` is hardcoded to "day 15 of next
+month", so a seeded fixture would expire inside a month and lose the whole point. Needs an
+**additive** data-driven end-date method on `createClasses.page.js` (shared by four green
+suites — add alongside `set_endDate`, never modify it) plus datepicker selectors for the
+period button and the year/month cells. Note the product caps the year picker at **2036**.
+
 ## adminClassGradeSettings (ExperienceApp, thor)
 Module **CGST** — Requirement #22. New suite `P1AdminClassGradeSettings_Thor`.
 - Phase 1 (build):   ✅ 2026-08-20 — `TST_CGST_TC_1..9` registered, all `visualTest: false`.

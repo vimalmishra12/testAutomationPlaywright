@@ -5,17 +5,19 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
 **Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-19):** **55 of 81 TCs automated and passing.**
+**Execution status (2026-08-20):** **63 of 81 TCs automated and passing.**
 - Module **CLST** (`TST_CLST_TC_1–22`, 22 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
 - Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
+- Module **CGST** (`TST_CGST_TC_1–6`, 6 TCs) — Requirement **#22 class grade settings** — via `npm run P1AdminClassGradeSettings_Thor` on **thor** (2026-08-20, 2 consecutive clean runs). The suite **owns its data**: it creates a throwaway class with course material, runs against it, and deletes it afterwards.
+- **`TST_GSCL_TC_7` + `TST_GCAT_TC_7`** (2 TCs) — Requirements **#13** and **#7**, launching class grade settings from a scale's / category's details page. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20, 2 consecutive clean runs, 21/21).
 
-The remaining **26 TCs are Not Run** (CMGT, CGST, CLON, CTXC, plus four stragglers below).
+The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
 
 **Two are BLOCKED, both for the same reason** — see their Comments rows: `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are the maximum-categories / maximum-scales limits, whose precondition is a school already at its cap. `3 July Test School 1` is **shared**, so holding it at the cap would break other suites mid-run. Both modals are pre-rendered in the DOM, so their **expected copy is already verified word for word** — each is short work once a dedicated school exists.
 
-**Two are DEFERRED to CGST**: `TST_GCAT_TC_7` and `TST_GSCL_TC_7` both launch the class grade settings page from a category's / scale's details page, which requires that category or scale to be **applied to a class** — a CGST operation. They are best picked up alongside Requirement #22 rather than duplicated.
+**`TST_GCAT_TC_7` and `TST_GSCL_TC_7` are now DONE [2026-08-20].** Both were long deferred because they need the category / scale **applied to a live class** — a CGST operation. They are registered in their own modules but **run inside the CGST suite**, which creates exactly that state. Their expected results were `[ASSUMED]` until 2026-08-20 (every scale and category anyone had opened had zero classes); both are now captured live and both manual cases were **corrected** — see their Remarks rows.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -788,12 +790,12 @@ for the label TCs).
 | **Type** | Positive |
 | **Priority** | Medium |
 | **Preconditions** | The grading category is applied to ≥ 1 active class (so the details page lists it). |
-| **Test Steps** | 1. Open the category's **See details** page. 2. Click a listed class under "Active classes". |
-| **Test Data** | A category applied to a class `[ASSUMED]` |
-| **Expected Result** | The class grade settings page opens for the selected class. `[ASSUMED]` — exact link/destination pending a category that is applied to a class (categories tested were applied to 0 classes). |
-| **Remarks** | Requires applying a category to a class via the class grade settings page first. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Test Steps** | 1. Open the category's **See details** page. 2. Click the row's **Class grade settings** link. |
+| **Test Data** | Grading category `some` applied to an active class (applied and saved by `TST_CGST_TC_3`) |
+| **Expected Result** | The details page lists the class under **Active classes (N)** with its class name and class key, and the row's **Class grade settings** link opens the Class grade settings page for that class. |
+| **Remarks** | **CORRECTED [2026-08-20] after live capture.** Step 2 previously read "click a listed class" — the class name is plain text; the row's only control is a **Class grade settings** link. This page counts **ACTIVE classes only**, so the row disappears the moment the class is deleted. Automated as `TST_GCAT_TC_7`, which runs inside the CGST suite (the category must be applied to a live class). |
+| **Actual Result** | As expected. 'Active classes (1)' listed the class under test with its class name and key; the row's Class grade settings link opened the Class grade settings page for that class. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---
@@ -1275,12 +1277,12 @@ for the label TCs).
 | **Type** | Positive |
 | **Priority** | Medium |
 | **Preconditions** | The grading scale is applied to ≥ 1 class (so the details page lists it). |
-| **Test Steps** | 1. Open the scale's **View details** page. 2. Click a listed class under "Classes". |
-| **Test Data** | A scale applied to a class `[ASSUMED]` |
-| **Expected Result** | The class grade settings page opens for the selected class. `[ASSUMED]` — exact destination pending a scale applied to a class (tested scale had 0 classes). |
-| **Remarks** | Associate a scale with a class via the class grade settings page first. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Test Steps** | 1. Open the scale's **View details** page. 2. Click the row's **Class grade settings** link. |
+| **Test Data** | Grading scale `new Grading Auto` applied to an active class (applied and saved by `TST_CGST_TC_2`) |
+| **Expected Result** | The details page lists the class under **Classes (N)** with its class name, key, dates and status, and the row's **Class grade settings** link opens the Class grade settings page for that class. |
+| **Remarks** | **CORRECTED [2026-08-20] after live capture.** Step 2 previously read "click a listed class" — the class name is plain text; the row's only control is a **Class grade settings** link. This page **also lists deleted classes**, and the link only works while the class is **Active** (a Deleted row redirects to *My school accounts* with "The item is not available because the class is no longer active"). Automated as `TST_GSCL_TC_7`, which runs inside the CGST suite. |
+| **Actual Result** | As expected. The class under test was listed with status Active; the row's Class grade settings link opened the Class grade settings page for that class, showing the applied scale 'new Grading Auto'. |
+| **Status** | Pass |
 | **Comments / Defect ID** | |
 
 ---

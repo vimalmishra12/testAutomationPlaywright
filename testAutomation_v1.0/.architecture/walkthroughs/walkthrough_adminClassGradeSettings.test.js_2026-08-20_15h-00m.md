@@ -205,3 +205,134 @@ time, and defect 5 above is the fix that stopped it recurring.
 - `createClasses.materialItem` was page-wide (`a.dropdown-item`) and matched the header profile
   menu — up to 885 elements. Now scoped to the modal. Other page objects may carry similar
   page-wide `.dropdown-item` selectors; not audited.
+
+---
+---
+
+# Session 2 — 2026-08-20 (later) · `TST_GSCL_TC_7` + `TST_GCAT_TC_7`
+
+**Outcome: 21/21 passing, confirmed twice (4 min and 3 min). School state clean after every run.**
+The suite grew from 19 to 21 TCs; the manual register moved **61 → 63 Pass**.
+
+These are **GSCL and GCAT test cases that run inside the CGST suite.** Their precondition is a
+scale / category applied to a *live* class, which only this suite produces. They are registered
+in `adminGradingScales.test.js` / `adminGradingCategories.test.js` — ownership follows the page
+object (AGENTS.md Rule 6) — and listed in `adminClassGradeSettings.json` after `TST_CGST_TC_6`,
+before the `After` block's `TST_CGST_TC_9` (the delete).
+
+## 1. Why these sat blocked for weeks, and what actually unblocked them
+
+Both manual cases carried `[ASSUMED]` expected results with the note *"pending a scale/category
+applied to a class"*. The real obstacle was subtler than "nobody applied one":
+
+**The category details page counts ACTIVE classes only.** Every category on `FCN-CHZ-PDA` read
+`Active classes (0)` — not because no category had ever been applied to a class, but because
+every class they had been applied to had since been **soft-deleted**. The evidence erases itself.
+The scales page does *not* behave this way: it lists deleted classes too, which is why
+`new Grading Auto` showed `Classes (2)` (two dead `AutoClass_CGST` rows from earlier runs) while
+the category `some` showed zero, despite both being applied by the same suite on the same class.
+
+So the two pages are **not symmetric**, and assuming they were would have produced a page object
+that worked for one and silently failed for the other.
+
+| | Scale details (`grading-scale-details`) | Category details (`grading-category-classes`) |
+|---|---|---|
+| Heading | `p.classes-heading` → `Classes (N)` | `h2.heading-2` → `Active classes (N)` |
+| Lists deleted classes | **yes** | **no** |
+| Columns | name, key, start, end, status | name, key |
+| Row link | `a[qid='gradingScaleDetails-3-<n>']` | `a[qid='gradingCategoryClass-3-<n>']` |
+| Load more | `a[qid='gradingScaleDetails-4']`, page size 20 | none |
+| Search / sort | none | `#searchClassText`, `gradingCategoryClass-6`, sort `-2` |
+
+## 2. The manual test steps were wrong
+
+Both read *"click a listed class"*. There is **no clickable class name** — the name is plain text
+in a `span.item-text`; the row's only control is a dedicated **"Class grade settings"** link. The
+step had been written from a details page that had no classes on it, so nobody had ever seen the
+populated layout. Both manual cases corrected in the `.md` and the `.xlsx`.
+
+*Lesson, and it is the same one as last session's "Cancel does not reset the form" correction:*
+**a document written against an empty state is a hypothesis, not a spec.**
+
+## 3. The fixture, and the data problem behind it
+
+Capture needed a category applied to a live class, and nothing on the school could provide it:
+
+- All three categories read `Active classes (0)`.
+- Every automation leftover **has no course material**, and the grade settings page is fully gated
+  without it (*"You haven't chosen any learning materials yet"*). `AutoClass_CreateOnly` /
+  `AutoClass_CreateMore` are created without material, and the **bulk-CSV template has no material
+  column at all** — so `BulkCSV_Class*` have none either.
+- The only active classes with material belong to other people.
+
+Agreed with the user, so **`Fixture_GradeSettings_DO_NOT_DELETE`** (key `62k3-AXm6`) was created:
+start Aug 20 2026, end **Dec 31 2036**, material `dev_test_ebook_bundle_104_bundle`, grade
+settings saved at material 70% + category `some` 30%.
+
+Two constraints worth recording, both discovered while creating it:
+- **2036 is the product's ceiling.** The end-date year picker offers 2026–2036 and disables every
+  other year. Ten years is the most expiry-proofing available.
+- **The start date must stay in the past.** A future start makes the class `Not started`, and the
+  category page counts *active* classes — the fixture would silently stop working.
+
+**The fixture is not used by any test.** Both TCs use the class the CGST suite creates and
+deletes. Its only job is to make this DOM re-capturable without re-deriving the state.
+
+## 4. Why the class key is resolved at runtime
+
+The obvious design — put the class name in test data and match rows by it — is wrong here:
+
+- The class is created by the run, so its key does not exist beforehand.
+- Class names on this school are **already duplicated**, and every past CGST run leaves another
+  soft-deleted `AutoClass_CGST` row on the scale's page **permanently**.
+
+So each TC searches the Classes tab, asserts **exactly one ACTIVE class** with that name, and
+takes its key. If a concurrent run creates a second one, the TC fails loudly instead of quietly
+testing the wrong class. (The school does mutate under you — active classes went 25 → 27 → 32
+during this session's capture alone.) For the same reason, **nothing asserts on `Classes (N)`**.
+
+## 5. The one defect, and why it was self-inflicted
+
+First run: **19 passing / 2 failing**, both new TCs, both at the same line —
+*"The class search did not settle"*.
+
+`search_class()` is **not idempotent**: it waits for the class list to *change*. The search term
+**persists server-side**. `TST_CGST_TC_8` had already searched the same class name and never
+cleared it, so by the time the new TCs ran the list was still filtered to it; re-typing the same
+term changed nothing, the wait burned its full 20 s budget, and it reported failure although the
+search had worked perfectly.
+
+This is **trap 4 in the previous session's own handoff**, verbatim: *"Clear before every search."*
+Fix: `clear_search()` before `search_class()` in both TCs — the documented remedy and the pattern
+`TC_8`/`TC_9` already use. Then 21/21, twice.
+
+*Lesson: the trap list was read and still not applied. A known trap only helps if it is checked
+against the code being written, not just read at session start.*
+
+## 6. Also captured
+
+- **Clicking the row link on a DELETED class is a dead end.** It drops the school context, lands
+  on *My school accounts*, and raises *"Sorry! — The item is not available because the class is no
+  longer active"* (a generic `div.modal-content`, `p.modal-title` / `p.modal-description`, **no
+  `qid`**). This is the product explaining itself, **not a defect** — but it is why
+  `TST_GSCL_TC_7` explicitly asserts `status === "Active"` before clicking, and why both TCs must
+  run before the suite's delete step.
+- The category page's **search bar and sort control render only when the category has ≥1 active
+  class**, which is why the page object written on 2026-08-18 has no model for them.
+- Destination URLs differ by entry point: `?gradingScaleId=<id>` vs `?gradingCategory=<id>`.
+
+## 7. Open / follow-ups
+
+- **Phase 3 (visual) is DONE** — assessed, both stay `visualTest: false`: each ends on a class
+  created fresh in the run (key and dates differ every time) and passes through a details page
+  framing the shared school's live, growing class list. ❌-row data on both counts, so they stay
+  false with no prompt needed (Invariant 12).
+- **`seedAdminFixtures_<env>.json` was agreed but NOT built.** It is blocked on a real gap, not
+  effort: `createClasses.set_endDate()` is hardcoded to "day 15 of next month", so a seeded
+  fixture would expire inside a month and lose its whole purpose. Needs an **additive**
+  data-driven end-date method on `createClasses.page.js` (shared by four green suites — add
+  alongside `set_endDate`, never modify it) plus datepicker selectors for the period button and
+  the year/month cells. Deliberately not started as a side effect of a capture task.
+- The header summary in the manual `.md` was **stale** — it still read "55 of 81" dated
+  2026-08-19, having never been rolled up when CGST's six landed. Corrected to 63 of 81. Worth a
+  glance each session; the per-row statuses and the summary drift apart silently.

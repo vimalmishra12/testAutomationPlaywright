@@ -4501,6 +4501,7 @@
         { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "tags": "P3", "visualTest": false },
         { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name",   "tags": "P2", "visualTest": false },
         { "id": "TST_GCAT_TC_6", "description": "Verify the grading category 'See details' page opens",             "tags": "P2", "visualTest": false },
+        { "id": "TST_GCAT_TC_7", "description": "Verify the class grade settings page launches from a category details page", "tags": "P2", "visualTest": false },
         { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation",          "tags": "P1", "visualTest": false },
         { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled",              "tags": "P3", "visualTest": false },
         { "id": "TST_GCAT_TC_10", "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "tags": "P3", "visualTest": false }
@@ -4516,6 +4517,7 @@
         { "id": "TST_GSCL_TC_3", "description": "Verify a middle band can be added with '+ Add new grade'", "tags": "P2", "visualTest": false },
         { "id": "TST_GSCL_TC_5", "description": "Verify Save is disabled until title, valid bands and target are provided", "tags": "P1", "visualTest": false },
         { "id": "TST_GSCL_TC_6", "description": "Verify the grading scale View details page opens", "tags": "P2", "visualTest": false },
+        { "id": "TST_GSCL_TC_7", "description": "Verify the class grade settings page launches from a scale details page", "tags": "P2", "visualTest": false },
         { "id": "TST_GSCL_TC_8", "description": "Verify a grading scale can be set as the school default", "tags": "P1", "visualTest": false },
         { "id": "TST_GSCL_TC_9", "description": "Verify a grading scale is deleted after confirmation", "tags": "P1", "visualTest": false },
         { "id": "TST_GSCL_TC_10", "description": "Verify deleting a grading scale can be cancelled", "tags": "P3", "visualTest": false },

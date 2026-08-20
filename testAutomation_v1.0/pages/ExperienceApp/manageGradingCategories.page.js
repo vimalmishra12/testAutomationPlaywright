@@ -162,6 +162,16 @@ module.exports = {
   detailsActiveClassesHeading: mgc.detailsActiveClassesHeading,
   detailsNoClassesMessage: mgc.detailsNoClassesMessage,
   detailsBackLink: mgc.detailsBackLink,
+  // The classes list + its search/sort controls. These render ONLY when the category has at
+  // least one ACTIVE class, which is why they were absent when this page object was first
+  // written (every category then had zero). Captured live 2026-08-20.
+  detailsClassRow: mgc.detailsClassRow,
+  detailsClassRowByKey: mgc.detailsClassRowByKey,
+  detailsClassNameByKey: mgc.detailsClassNameByKey,
+  detailsClassGradeSettingsLinkByKey: mgc.detailsClassGradeSettingsLinkByKey,
+  detailsSearchInput: mgc.detailsSearchInput,
+  detailsSearchBtn: mgc.detailsSearchBtn,
+  detailsSortByClassNameBtn: mgc.detailsSortByClassNameBtn,
 
   /**
    * Confirms the Manage grading categories page has loaded.
@@ -529,6 +539,65 @@ module.exports = {
       noClassesMessage: await readText(this.detailsNoClassesMessage),
       pageStatus: true
     };
+  },
+
+  /* ------------------------------------------- details page: the CLASSES list (TC_7) ----- */
+
+  /**
+   * Reads the row a class occupies on a category's details page (Req #7 / TST_GCAT_TC_7).
+   * Addressed by class KEY, not name - same reasoning as the scales page (names on this
+   * school are duplicated).
+   *
+   * ⚠ THIS PAGE COUNTS *ACTIVE* CLASSES ONLY - the heading literally reads
+   * `Active classes (N)`, where the scales page's reads `Classes (N)` and includes Deleted
+   * rows. That difference is why no category on FCN-CHZ-PDA showed a class for weeks: every
+   * class a category had ever been applied to had since been deleted, so all three read
+   * `Active classes (0)`. A category row therefore VANISHES the moment its class is deleted.
+   *
+   * There is no "Load more" here (unlike the scales page), so no paging loop.
+   */
+  getData_detailsClassRow: async function (classKey) {
+    var res = { found: false, name: "", rowCount: 0, pageStatus: true };
+    await logger.logInto(await stackTrace.get());
+    var rowSel = this.detailsClassRowByKey.replace("{{key}}", classKey);
+    res.rowCount = await action.getElementCount(this.detailsClassRow);
+    res.found = (await action.getElementCount(rowSel)) > 0;
+    if (res.found) {
+      res.name = await readText(this.detailsClassNameByKey.replace("{{key}}", classKey));
+    }
+    return res;
+  },
+
+  /**
+   * Clicks a listed class's "Class grade settings" link and lands on that class's grade
+   * settings page (TST_GCAT_TC_7).
+   *
+   * As on the scales page, the manual test case's "click a listed class" is wrong: the class
+   * name is plain text and the row's only control is the "Class grade settings" link.
+   * Verified live 2026-08-20 - destination URL carries `?gradingCategory=<id>`.
+   */
+  click_classGradeSettingsByKey: async function (classKey) {
+    var res = { pageStatus: false, found: false, name: "" };
+    await logger.logInto(await stackTrace.get());
+    var row = await this.getData_detailsClassRow(classKey);
+    res.found = row.found;
+    res.name = row.name;
+    if (true != row.found) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "class key '" + classKey + "' is not listed on this category's details page",
+        "error"
+      );
+      return res;
+    }
+    res.clicked = await action.click(
+      this.detailsClassGradeSettingsLinkByKey.replace("{{key}}", classKey)
+    );
+    if (true != res.clicked) return res;
+    var init = await require("./classGradeSettings.page").isInitialized();
+    res.pageStatus = init.pageStatus === true;
+    res.formSettled = init.formSettled;
+    return res;
   },
 
   /** Returns from the details page to the Manage page via its own Back link (trap 6). */

@@ -178,6 +178,12 @@ module.exports = {
   detailsClassesHeading: mgs.detailsClassesHeading,
   detailsNoClassesBox: mgs.detailsNoClassesBox,
   detailsNoClassesText: mgs.detailsNoClassesText,
+  detailsClassRow: mgs.detailsClassRow,
+  detailsClassRowByKey: mgs.detailsClassRowByKey,
+  detailsClassNameByKey: mgs.detailsClassNameByKey,
+  detailsClassStatusByKey: mgs.detailsClassStatusByKey,
+  detailsClassGradeSettingsLinkByKey: mgs.detailsClassGradeSettingsLinkByKey,
+  detailsLoadMoreLink: mgs.detailsLoadMoreLink,
 
   /**
    * Confirms the Grading scales (Manage) page has loaded. Anchors on "Create grading
@@ -702,6 +708,89 @@ module.exports = {
       panelDisplayed: (await action.isDisplayed(this.bandsPanelOpen)) === true,
       pageStatus: true
     };
+  },
+
+  /* ------------------------------------------- details page: the CLASSES list (TC_7) ----- */
+
+  /**
+   * Reads the row a class occupies on a scale's details page (Req #13 / TST_GSCL_TC_7).
+   *
+   * ADDRESSED BY CLASS KEY, NEVER BY NAME. Two reasons, both observed live 2026-08-20:
+   *   - Class names on FCN-CHZ-PDA are already duplicated (many `BulkCSV_Class1`,
+   *     `AutoClass_CreateOnly`, and one `AutoClass_CGST` per past CGST run).
+   *   - DELETE IS SOFT, and this page lists Deleted classes alongside Active ones, so every
+   *     run of the CGST suite leaves another same-named row here permanently.
+   * The key is unique per class, so it is the only safe handle.
+   *
+   * The list PAGINATES AT 20 (heading read `Classes (69)` with 20 rows rendered). A newly
+   * created class sorts to the top, so page 1 is normally enough - but the loop below pages
+   * forward rather than assuming that ordering, because a silent "not found" caused by
+   * pagination would look identical to the feature being broken. Bounded, and it reports
+   * how many pages it took (Invariant 13/14: this is real user interaction, not a retry).
+   */
+  getData_detailsClassRow: async function (classKey, maxPages) {
+    var res = { found: false, name: "", status: "", pagesLoaded: 0, rowCount: 0, pageStatus: true };
+    await logger.logInto(await stackTrace.get());
+    var rowSel = this.detailsClassRowByKey.replace("{{key}}", classKey);
+    var limit = typeof maxPages === "number" ? maxPages : 10;
+
+    for (var page = 0; page <= limit; page++) {
+      res.rowCount = await action.getElementCount(this.detailsClassRow);
+      if ((await action.getElementCount(rowSel)) > 0) { res.found = true; break; }
+      // Load more is REMOVED from the DOM once the last batch is in, so its absence is the
+      // authoritative "no more pages" signal (same behaviour as the Classes tab).
+      if ((await action.getElementCount(this.detailsLoadMoreLink)) === 0) break;
+      if (true != (await action.click(this.detailsLoadMoreLink))) break;
+      res.pagesLoaded++;
+      await action.waitForDocumentLoad();
+    }
+
+    if (res.found) {
+      res.name = await readText(this.detailsClassNameByKey.replace("{{key}}", classKey));
+      res.status = await readText(this.detailsClassStatusByKey.replace("{{key}}", classKey));
+    }
+    return res;
+  },
+
+  /**
+   * Clicks a listed class's "Class grade settings" link and lands on that class's grade
+   * settings page (TST_GSCL_TC_7).
+   *
+   * NOTE the manual test case says "click a listed class" - that is WRONG and was written
+   * before anyone had seen this page with classes on it. The class name is plain text
+   * (`span.item-text`); the only control in the row is a dedicated "Class grade settings"
+   * link. Verified live 2026-08-20.
+   *
+   * ⚠ ONLY MEANINGFUL FOR AN ACTIVE CLASS. Clicking this link on a row whose status is
+   * `Deleted` does NOT open grade settings - it drops the school context entirely and lands
+   * back on "My school accounts" with a dialog reading "Sorry! The item is not available
+   * because the class is no longer active". That is the product explaining itself, not a
+   * bug - but it means this TC must run while the class under test is still live, i.e.
+   * BEFORE the suite's delete step.
+   */
+  click_classGradeSettingsByKey: async function (classKey) {
+    var res = { pageStatus: false, found: false, status: "" };
+    await logger.logInto(await stackTrace.get());
+    var row = await this.getData_detailsClassRow(classKey);
+    res.found = row.found;
+    res.name = row.name;
+    res.status = row.status;
+    if (true != row.found) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "class key '" + classKey + "' is not listed on this scale's details page",
+        "error"
+      );
+      return res;
+    }
+    res.clicked = await action.click(
+      this.detailsClassGradeSettingsLinkByKey.replace("{{key}}", classKey)
+    );
+    if (true != res.clicked) return res;
+    var init = await require("./classGradeSettings.page").isInitialized();
+    res.pageStatus = init.pageStatus === true;
+    res.formSettled = init.formSettled;
+    return res;
   },
 
   /** Returns from the details page to the Manage list via its own Back link. */

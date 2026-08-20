@@ -256,6 +256,28 @@
             "jsonPath": "C1.adminClassGradeSettings"
           }
         ]
+      },
+      {
+        "id": "TST_GSCL_TC_7",
+        "description": "GSCL_TC_7 (Pos) | Class grade settings launches from the scale details page",
+        "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_GCAT_TC_7",
+        "description": "GCAT_TC_7 (Pos) | Class grade settings launches from the category details page",
+        "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
       }
     ],
     "AfterEach": [],
