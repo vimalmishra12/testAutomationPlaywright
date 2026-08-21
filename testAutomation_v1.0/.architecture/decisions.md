@@ -544,7 +544,9 @@ badges — while the teacher view shows none; the PE TOC is collapsed by default
 
 ## ADR-018: Product Knowledge Split Per Application
 
-**Status:** Accepted (2026-07-14)
+**Status:** Accepted (2026-07-14) — **extended by ADR-020 (2026-08-21)**, which adds a split one
+level below the application (feature-area files) and **supersedes the reading rule below**. The
+per-application split itself stands unchanged.
 
 **Context:** `.architecture/product-knowledge.md` had grown to ~456 lines holding all three
 application families (Cambridge One / NEMO, Builder, Blackboard/LTI) in a single file. Every
@@ -644,3 +646,161 @@ becomes useless, which is far harder to notice than a red test.
 - If mid-test screenshots are ever added to `baseActionLibrary.js` (protected file — discussed and
   deferred 2026-08-17), this constraint relaxes: evidence would no longer depend solely on the
   end-of-test frame, and `AfterEach` cleanup could return. Revisit this ADR at that point.
+
+---
+
+## ADR-020: Product Knowledge Splits Per Feature Area Within an App
+
+**Status:** Accepted (2026-08-21) — extends ADR-018; migration mandated as a follow-up (see Consequences)
+
+**Context:** ADR-018 [2026-07-14] split product knowledge **per application** — `ExperienceApp.md`,
+`Builder.md`, `Integrations.md` — and CLAUDE.md makes reading the per-app file mandatory at session
+start. That was the right first cut, and it has now been outgrown in both directions at once.
+
+**Too much in one file.** `ExperienceApp.md` is **772 lines / 49 KB and 100% Admin App content** —
+one app, one role (`school-admin`), four features, every one of them an admin screen. Yet **16 of
+51 C1 page objects are clearly non-admin** (eBook, player, homework, progress, notes, drawing
+tool). A future eBook task must load 49 KB of grading-scale detail to reach knowledge that is not
+there. The file is not an app file containing some admin content; it is an admin file wearing an
+app file's name.
+
+**Too little, everywhere else.** The Phase 1 admin programme (2026-08-14 → 08-21) produced its
+richest knowledge — the bulk create form's 15 traps, the grading pages' modal and positional-id
+traps, the measured timings — in **session walkthroughs, a HANDOFF file and page-object headers**,
+none of which are read at session start. Three heavily-worked screens had *no* durable product
+knowledge at all until 2026-08-21. Each new admin tab therefore re-derived the same traps; the
+`adminClassesTab` first run was 2/6 and took ~15 debug runs, while the same page captured properly
+a session later ran 12/12 first time.
+
+The pattern that fixed it was not "write more in the app file" but **a shared file plus per-screen
+files**: `admin-shared.md` carries what is true of *every* admin screen, so a new screen starts at
+~80% known and only sweeps for what is new.
+
+**Decision:** Product knowledge splits **one level below the application**.
+
+```
+product-knowledge.md                  <- INDEX: usage rules, reading rule, app + feature-area map
+product-knowledge/
+  <App>.md                            <- app INDEX: app header, environment URLs, roles, file map
+  <App>/
+    <area>-shared.md                  <- what is true of EVERY screen in that area  (optional)
+    <area>-<screen>.md                <- one feature area / screen
+```
+
+- **A feature area earns its own file when it has its own module code and page object** — the same
+  boundary the automation already uses (AGENTS.md Rule 6). A second trigger: the app file passing
+  ~500 lines.
+- **An `<area>-shared.md` is created once a second screen in the same area repeats a trap.** It is
+  the highest-value file in the set and must be split so both halves of the pipeline can use it:
+  **Part A — product behaviour** (feeds manual test design) and **Part B — automation traps** (feeds
+  Phase 1). See `ExperienceApp/admin-shared.md`.
+- **The app file becomes an index**, not a container: app header, environment URLs, roles, and the
+  map of feature-area files.
+
+**Reading rule (supersedes ADR-018's):** index → the app file → the **area shared file** if the
+task touches that area → the **per-screen file(s)** the task actually touches. Ambiguity still
+defaults to reading more, never less.
+
+**Rationale:** The cost that matters is per-session context, and it is paid on *every* task
+regardless of relevance. Splitting keeps that cost proportional to the task instead of to the app's
+total history, which is the only way the knowledge base can keep growing without the mandatory read
+becoming untenable.
+
+Splitting also creates the shared file, which is the part that actually makes the next screen fast.
+A per-screen file alone would still leave each new screen re-deriving the cross-screen traps.
+
+The alternative considered — **"new content only; leave existing content where it is"** — was
+rejected. It locks in a permanent two-homes split: the reading cost stays, and there is a rule
+saying that is fine. The migration is also unusually cheap *now*, while `ExperienceApp.md` is
+entirely one area and no judgement is needed about where anything belongs.
+
+**Consequences:**
+- **Migration is mandated, not optional.** `ExperienceApp.md`'s four remaining features (bulk
+  account CSV, Classes tab, Class grade settings, the grading details pages) move into
+  `product-knowledge/ExperienceApp/`, leaving the app file as an index. To be done as a **pure
+  move** in its own change, with content verified byte-identical, so the review question is "is the
+  new location right?" and never "did anything get lost?"
+- Until that lands, `admin-shared.md` §A2 records **where each screen's knowledge actually lives**.
+  That table is a transitional artefact and should shrink to a plain file map afterwards.
+- **CLAUDE.md's mandatory-read rule** is updated to name the area shared file.
+- **ADR-018 is extended, not superseded** — the per-application split stands; this adds a level
+  below it.
+- A new application still seeds one app index plus its first feature-area file, never a single
+  growing file.
+- **Walkthroughs remain session records, not knowledge.** A trap discovered in a session is not
+  "documented" until it reaches a knowledge file. This is the failure mode ADR-020 exists to stop.
+
+---
+
+## ADR-021: Shared-Environment Test Data Protocol
+
+**Status:** Accepted (2026-08-21)
+
+**Context:** Every admin suite runs against **`FCN-CHZ-PDA` ("3 July Test School 1") on thor**, a
+school shared with, and actively mutated by, other teams. During a single capture session its
+active-class count moved **25 → 27 → 32**. Over the programme it grew **15 → 26**, crossing the
+list's 20-row page size and breaking a sort assertion that had passed for two sessions — the
+product was correct throughout; two of the test's assumptions had expired.
+
+Deletion is **soft**, so nothing ever really leaves: every past `AutoClass_CGST` run still shows on
+a grading scale's details page, and the school already carries duplicate class names from crashed
+runs. Cleanup failed three times in one session and left real classes behind, each hand-cleaned;
+the cause was that cleanup re-found its class **by searching**, and search was the very thing that
+had broken. A run that died after setting a grading scale as default left one of our own scales as
+the school default — which then **could not be deleted**, because a default scale exposes no Delete
+option.
+
+These rules were re-derived independently in GCAT, GSCL and CGST. They belong in one place.
+
+**Decision:** Any suite touching a shared environment follows this protocol.
+
+1. **Never assert an absolute count** of shared data (`Active classes (21)`), and never assume a
+   list fits one page. Assert deltas, membership, or "exactly one match", and re-read what the
+   product reports rather than what a previous run recorded.
+2. **Name every created object with a unique, prefixed, sweepable name** —
+   `<Prefix>_<tag>_<timestamp>`, e.g. `AutoClass_`, `AutoCat_`, `AutoScale_`, `BulkCSV_`. Unique so
+   a name-to-row lookup is unambiguous; prefixed so leftovers are recognisable and removable.
+   **Check the field's `maxlength` first** — a generated name silently truncated to the cap is
+   indistinguishable from a product bug until it is read back.
+3. **Sweep BEFORE creating, not only after.** Soft delete plus a crashed run means a leftover is
+   still live, and two objects with one name make "the one under test" ambiguous.
+4. **Cleanup must never depend on the path under test.** Record the created object's URL or key at
+   creation and delete via that directly; keep any search- or list-based sweep as a *fallback and
+   verification pass*, never the primary route.
+5. **Restore school-wide state before sweeping, and mind the order.** Anything global (a default
+   grading scale, a school setting) is restored first, because our own object may not be removable
+   while it holds that status.
+6. **Suites that create data live apart from side-effect-free suites.** Mixing them means a
+   read-only case cannot be re-run freely, and it hides which suite is responsible for a leftover.
+   Where creation *is* the requirement (e.g. bulk creation via CSV), that is stated in the suite's
+   knowledge file along with what it leaves behind.
+7. **Never create data on a shared environment unasked** (Invariant 14). Missing test data is a
+   question for the user, not a decision: create it, change the data, or change the test.
+8. **Maintain a never-delete list and a fixture registry** in the area's knowledge file — the
+   objects that belong to other people, and any permanent fixture we own, with its key and its
+   purpose.
+9. **"Blocked by the shared environment" is a design-time status, not a test failure.** A case whose
+   precondition is "the school is at its maximum" cannot run here; it is written and marked
+   `Blocked` with the reason and the unblock options on the day it is designed.
+
+**Rationale:** Each rule exists because its absence cost a run, a leaked object, or a false
+diagnosis — none is precautionary. Rules 1 and 3 protect against other people's changes; 2, 4 and 5
+protect against our own crashed runs; 6-9 protect the environment and the people sharing it.
+
+Rule 4 is the load-bearing one. Resilience in cleanup is legitimate housekeeping (Invariant 14
+permits it there and nowhere else), but cleanup that routes through the feature under test inherits
+every one of its failure modes exactly when they are most likely to be firing.
+
+**Consequences:**
+- A dedicated school (or an equivalent isolated environment) is the standing unblock for
+  maximum-limit cases; today `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are both blocked on it, and one
+  school unblocks both. Their expected copy is already captured, so each is short work once it
+  exists.
+- Fixture registry and never-delete list for the Admin App live in
+  `product-knowledge/ExperienceApp/admin-shared.md` §A7, alongside a table of which suites leave
+  objects behind and under what name.
+- A sweep prefix must match what is **actually created** — the CSV suites use two spellings
+  (`BulkCSV_Class_1` never reaches the school, `BulkCSV_Class1` does), so a sweep written for the
+  wrong one reports clean while leftovers remain. Sweep on the shortest safe prefix.
+- Test data whose existence depends on someone else (a named source class for a copy operation) is
+  a documented dependency with a stated symptom when it disappears, not an invisible assumption.
