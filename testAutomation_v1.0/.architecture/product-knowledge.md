@@ -22,6 +22,13 @@
 | Feature area | appType | Knowledge file |
 |---|---|---|
 | **Admin App (school-admin)** — shared across every admin screen | `ExperienceApp` | [`product-knowledge/ExperienceApp/admin-shared.md`](product-knowledge/ExperienceApp/admin-shared.md) |
+| ↳ Create new classes (bulk form) — `BCCF` / `CCLS` | `ExperienceApp` | [`ExperienceApp/admin-create-classes-form.md`](product-knowledge/ExperienceApp/admin-create-classes-form.md) |
+| ↳ Manage grading categories — `GCAT` | `ExperienceApp` | [`ExperienceApp/admin-grading-categories.md`](product-knowledge/ExperienceApp/admin-grading-categories.md) |
+| ↳ Manage grading scales — `GSCL` | `ExperienceApp` | [`ExperienceApp/admin-grading-scales.md`](product-knowledge/ExperienceApp/admin-grading-scales.md) |
+
+> Read `admin-shared.md` **plus the per-screen file(s) your task touches** — its §A2 table maps
+> every admin screen to where its knowledge currently lives (some is still inside
+> `ExperienceApp.md`).
 
 ## Reading rule
 
