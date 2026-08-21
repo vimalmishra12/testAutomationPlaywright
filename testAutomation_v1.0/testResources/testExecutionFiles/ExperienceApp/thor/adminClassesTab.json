@@ -24,6 +24,8 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
+      { "id": "TST_CLST_TC_23", "description": "Verify the X button closes the Filter modal without applying a filter", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
@@ -65,10 +67,10 @@
       { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
     ],
-    "AfterEach": [
-      { "id": "TST_CLST_TC_RESET", "description": "Clear any applied filter so the next TC starts unfiltered", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_CLST_TC_RESET", "description": "Clear the search/filter once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach - the report screenshot is taken after AfterEach, so clearing there erased the very evidence the search/filter TCs assert)", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] }
-    ],
-    "After": []
+    ]
   }
 }

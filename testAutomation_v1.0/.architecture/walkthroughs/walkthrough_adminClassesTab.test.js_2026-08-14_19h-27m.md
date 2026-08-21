@@ -614,3 +614,137 @@ Phases 1-3 all ✅.
 - **Remaining in the manual doc:** 20 requirements / ~59 TCs across GCAT, BCCF, GSCL, CMGT,
   CGST, CLON, CTXC. All involve creating or deleting real data, or (CTXC) are blocked pending
   product clarification — a different risk profile from everything done so far.
+
+---
+
+# Session 4 — 2026-08-21 (screenshot evidence, TC_2/TC_23 split, X-close re-diagnosis)
+
+## Task
+
+Started as a handoff review (`HANDOFF_adminClasses_2026-08-20_evening.md`, which recommended
+CLON TC_1 + TC_3). Never reached CLON — the user spotted that **the search TCs' report
+screenshots showed no search result**, and that became the session.
+
+## 1. Screenshot evidence was being erased by AfterEach (the user's find)
+
+`TST_CLST_TC_RESET` was registered in **both** `BeforeEach` and **`AfterEach`**.
+
+The mochawesome screenshot is taken in a **root-level `afterEach`**
+(`core/runner/playwright.setup.js`), and mocha runs root hooks **last**. So every run did:
+
+```
+TST_CLST_TC_5 asserts the filtered list  ->  AfterEach RESET clears the search  ->  screenshot
+```
+
+The image therefore showed the **full unfiltered list** for every search and filter TC —
+`TC_3, TC_4, TC_5, TC_6, TC_18, TC_21, TC_22`. The tests were correct and passing; only the
+evidence was worthless, and worthless exactly when a failure would need it.
+
+**Fix:** moved the entry from `AfterEach` to the (previously empty) suite-level `After`.
+`BeforeEach` untouched, so per-TC isolation is unchanged; the `After` copy still stops the
+search/filter term leaking into the next run. This is ADR-019 / working agreement #7 — the rule
+was already written, just not applied to this exec file.
+
+Verified 22/22, and TC_21's image now shows *"No classes that match your search
+zzz-no-such-class-9999"*; TC_6's shows `Active classes (1)` with the single matching row.
+
+## 2. TST_CLST_TC_2 split into TC_2 (open) + TC_23 (close)
+
+Same root problem: TC_2 opened the panel, asserted its options, then closed it — so its
+end-of-test screenshot showed a **closed** panel. TC_2 now ends with the panel open; the new
+`TST_CLST_TC_23` owns the close.
+
+`TC_23` opens the modal **itself** rather than inheriting TC_2's: the `BeforeEach` reset closes
+any open panel between TCs (`reset_filters` gates on panel visibility), so chaining is not
+possible without deleting a `BeforeEach` that protects all 23 TCs. Re-opening costs ~1s. It is
+also listed immediately after TC_2 in the exec file so the report shows the open panel one row
+above — a **readability** benefit, not a dependency.
+
+**Four assertions, and why each is needed:**
+
+1. panel VISIBLE before the click — else "not visible" at the end is satisfied by a panel that
+   never opened, and the TC could not fail;
+2. gone after ONE click;
+3. **no filter applied** (`getData_filterApplied()` — the page-level Clear link) — the one that
+   matters, because **Apply also closes the panel**, so without it the TC would still pass if X
+   silently started applying the selection;
+4. class row count unchanged.
+
+Added `classFilterModal.getData_modalDisplayed()` (additive) because
+`getData_filterOptions().modalDisplayed` uses `getElementCount() > 0` and
+**`#classSortFilterModal` stays in the DOM when closed** — that reading is always `true` and can
+never fail. Same trap that broke `reset_filters` on 2026-08-15.
+
+The close TC's screenshot is **inherently weak** (a closed panel looks identical to one that
+never opened). Its evidence is the assertions; TC_2's image, one row above, carries the visual.
+
+## 3. The X-close "product defect" was NOT a product defect
+
+The 3x re-click `// WORKAROUND` (added 2026-08-15, retained by user decision) was removed after
+the user reported the app fixed. `TST_CLST_TC_23` then failed **5 times running**. Two
+hypotheses were formed and **both were wrong**:
+
+- *"the click lands mid slide-in animation"* — wrong: `action.click()` is `locator.click()`,
+  which already waits for geometric stability.
+- *"X only works on the panel's first open"* — wrong: TC_23 fails alone, on a first open.
+
+A third guess was not made. A **live diagnostic** was written instead (temporary
+`_scratch_diag.test.js`, since deleted), which found:
+
+| Probe | Result |
+|---|---|
+| `elementFromPoint` at the X centre | the button itself; `pointer-events: auto`, not disabled, nothing overlapping |
+| locator.click / real mouse / dispatchEvent / focus+Enter, **after an 800ms settle** | **4/4 closed** |
+| `click_close()` itself, after a settle | **3/3 closed**, `{pageStatus:true}` |
+| the reverse `waitForDisplayed(..., hidden)` | correct |
+
+So **the click, the button and the check were all fine.** The only difference was an 800ms wait
+after opening. The panel is visible and geometrically stable **before its close handler is
+bound**, and a bound listener is not observable from the DOM — so Playwright cannot wait for it,
+and automation was simply clicking too early. A human never is (user: 10/10 manual single clicks
+closed it).
+
+**An intermediate fix that failed, recorded because the reasoning error is the lesson:** the
+close was first preceded by `getData_filterOptions()` on the theory that its five reads bought
+~300ms. They buy ~20ms — `locator.count()` returns immediately — and the TC still failed 3/3.
+The reads were kept (they assert something true and cheap) but their comment was corrected; the
+real wait is the settle inside `click_close()`.
+
+**`browser.pause(800)` in `click_close()` is a BUDGET, not a measurement.** The threshold was
+never measured — 300ms might do, and 800ms might one day be short. It is NOT the old retry: the
+click still gets exactly one attempt, so a genuine X-close regression still fails TC_23.
+
+Verified: scratch 3/3, then the full suite **23/23** (2m).
+
+## 4. Also fixed: search race in the CGST suite
+
+`adminClassGradeSettings.test.js` called `search_class()` immediately after
+`sweepClassesNamed()`, which exits its loop with the term **still applied**. `search_class()`
+waits for the class list to CHANGE, so that second search was a no-op that burned its full 20s
+budget and reported a failure the search never had. It only ever passed because clicking Search
+re-renders the grid and `getText` momentarily returns an error, shifting the list signature — a
+race. `clear_search()` added before both searches (TC_7, TC_9). Verified 21/21.
+
+Other call sites were audited and are safe: `adminClassesTab`'s four search TCs are covered by
+the `BeforeEach` reset, and `sweepClassesNamed` already clears on every iteration.
+
+## Process notes
+
+- The user's instinct to iterate against a **2-TC scratch exec file** was right: 132s -> ~45s,
+  but the real gain was 2 screenshots to read instead of 22. Login + school selection is ~40s of
+  any run and cannot be avoided. All scratch files were deleted and the full suite run at the end.
+- **Two wrong hypotheses were stated with too much confidence before anything was measured.** The
+  live diagnostic settled it in one run. Measure rather than make a third guess.
+
+## Carried forward
+
+- **`browser.pause(800)` in `click_close()`** — empirical. Worth measuring the real threshold, or
+  finding an observable readiness signal if one ever exists.
+- Session 2's "Carried forward" entry for the X-close `// WORKAROUND` is now **resolved** — the
+  retry is gone and the defect was not a defect.
+- `TST_CLST_TC_RESET` still does not match the `TST_<MOD>_TC_<N>` convention.
+- `TST_CLST_TC_23` is registered `visualTest: false`; Phase 3 not attempted.
+- Manual `.md` + `.xlsx` updated: **82 TCs · 64 Pass · 2 Blocked · 16 Not Run**. TC_23 was
+  appended as S.No. 82 rather than inserted after TC_2, by user decision — inserting would have
+  renumbered 79 rows in both files for no gain, and the requirement-#2 index row lists it.
+- CLON TC_1 + TC_3 (the handoff's actual recommendation) is **still the next batch** — untouched.

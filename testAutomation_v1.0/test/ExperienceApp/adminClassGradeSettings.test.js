@@ -452,6 +452,13 @@ module.exports = {
     var removed = await sweepClassesNamed(testdata.className);
     console.log("TST_CGST_TC_7 swept " + removed + " leftover '" + testdata.className + "' class(es)");
     // The list must now be unambiguous - that is the whole point of the sweep.
+    // CLEAR BEFORE SEARCHING. sweepClassesNamed() exits its loop with the term STILL
+    // applied, so re-searching it here is a no-op: search_class() waits for the list to
+    // CHANGE, nothing changes, and it burns its full 20s budget before reporting a failure
+    // the search never had. It only passed before because clicking Search re-renders the
+    // grid and getText momentarily returns an error, which shifts the list signature - a
+    // race, not a guarantee.
+    await schoolClasses.clear_search();
     sts = await schoolClasses.search_class(testdata.className);
     await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle after sweeping");
     var rows = await schoolClasses.getData_classRows();
@@ -517,6 +524,13 @@ module.exports = {
     console.log("TST_CGST_TC_9 sweep removed " + removed + " class(es)");
 
     // The real check: nothing of ours is left on the shared school.
+    // CLEAR BEFORE SEARCHING. sweepClassesNamed() exits its loop with the term STILL
+    // applied, so re-searching it here is a no-op: search_class() waits for the list to
+    // CHANGE, nothing changes, and it burns its full 20s budget before reporting a failure
+    // the search never had. It only passed before because clicking Search re-renders the
+    // grid and getText momentarily returns an error, which shifts the list signature - a
+    // race, not a guarantee.
+    await schoolClasses.clear_search();
     sts = await schoolClasses.search_class(testdata.className);
     await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle while verifying cleanup");
     var rows = await schoolClasses.getData_classRows();

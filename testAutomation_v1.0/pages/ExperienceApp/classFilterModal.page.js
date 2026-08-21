@@ -36,6 +36,21 @@ module.exports = {
    * at least one Class status option, the Class labels "Find a label" input, Clear all
    * and Apply buttons.
    */
+  /**
+   * Reports whether the Filter panel is actually VISIBLE.
+   *
+   * Deliberately separate from getData_filterOptions(), which counts elements: the panel
+   * root stays in the DOM when closed (display:none), so getElementCount() > 0 is ALWAYS
+   * true and can neither confirm an open panel nor a closed one (same trap that broke
+   * reset_filters, diagnosed 2026-08-15). isDisplayed() is the only reading that can fail.
+   *
+   * Added 2026-08-21 for TST_CLST_TC_23. Additive - nothing existing was changed.
+   */
+  getData_modalDisplayed: async function () {
+    await logger.logInto(await stackTrace.get());
+    return (await action.isDisplayed(this.modalRoot)) === true;
+  },
+
   getData_filterOptions: async function () {
     await logger.logInto(await stackTrace.get());
     var obj = {
@@ -267,41 +282,50 @@ module.exports = {
   click_close: async function () {
     await logger.logInto(await stackTrace.get());
     // Gate on the close button being clickable first. isInitialized() resolves as soon as the
-    // panel root becomes visible, which is EARLY in the slide-in animation — clicking X at
+    // panel root becomes visible, which is EARLY in the slide-in animation - clicking X at
     // that point was swallowed by the still-animating panel, so the modal never closed and
-    // this returned a TimeoutError. It went unnoticed because TST_CLST_TC_2 did not assert
-    // the result and the AfterEach reset closed the panel for it (diagnosed 2026-08-15).
+    // this returned a TimeoutError (diagnosed 2026-08-15). That gate stays.
+    //
+    // The 3x re-click WORKAROUND that used to live here is GONE (removed 2026-08-21, on the
+    // user report that the product defect is fixed). It routed around the bug and made a
+    // failed first click indistinguishable from a clean close, so no regression could ever
+    // be caught (Invariant 14). ONE click is now the contract: if the panel needs a second
+    // click, this returns false and TST_CLST_TC_23 fails - which is the point.
     await action.waitForDisplayed(this.closeBtn, 10000);
-    var res = { pageStatus: false };
-    // WORKAROUND — product bug, Filter panel X close (reported 2026-08-15, fix pending).
-    // This is a PRODUCT defect, not an automation timing issue: action.click() reports
-    // success but the panel stays open, and waiting longer does not help (a clean 0.9s close
-    // and a full 15s timeout were observed on consecutive runs with identical code and data).
-    // Re-clicking is what resolves it. Retained by explicit user decision to keep the suite
-    // green until the app is fixed — REMOVE this retry then, so TST_CLST_TC_2 goes back to
-    // catching the defect rather than routing around it (Invariant 14).
-    for (var attempt = 1; attempt <= 3; attempt++) {
-      await action.waitForClickable(this.closeBtn, 10000);
-      var clicked = await action.click(this.closeBtn);
-      if (true != clicked) {
-        await logger.logInto(
-          await stackTrace.get(),
-          clicked + " closeBtn is NOT clicked (attempt " + attempt + "/3)",
-          "error"
-        );
-        continue;
-      }
-      await logger.logInto(await stackTrace.get(), "closeBtn is clicked (attempt " + attempt + "/3)");
-      if (true == (await action.waitForDisplayed(this.modalRoot, 5000, true))) {
-        res.pageStatus = true;
-        return res;
-      }
+    await action.waitForClickable(this.closeBtn, 10000);
+    /*
+     * SETTLE BEFORE CLICKING - an EMPIRICAL wait, and labelled as such.
+     *
+     * Measured live 2026-08-21: with a settle after the panel opens, the X closes on the
+     * FIRST click 8 times out of 8 (locator.click, real mouse down/up, dispatchEvent,
+     * focus+Enter, and three click_close() calls). Without it, 5 of 6 single clicks left the
+     * panel open - the click lands and the X even takes focus, but nothing happens. Clicking
+     * by hand always works because a human is never this fast (10/10 manual single clicks).
+     *
+     * Why it cannot be done properly: the panel is visible and geometrically stable well
+     * before its close handler is bound, and Playwright already waits for both - a bound
+     * listener is simply not observable from the DOM, so there is nothing better to wait on.
+     * 800ms is the value that was tested and worked; the true threshold was NOT measured, so
+     * treat this as a budget, not a measurement.
+     *
+     * This is NOT the retry workaround that was removed earlier today. The click still gets
+     * exactly ONE attempt, so a real X-close regression still fails TST_CLST_TC_23.
+     */
+    await browser.pause(800);
+    var clicked = await action.click(this.closeBtn);
+    if (true != clicked) {
+      await logger.logInto(await stackTrace.get(), clicked + " closeBtn is NOT clicked", "error");
+      return { pageStatus: false };
+    }
+    await logger.logInto(await stackTrace.get(), "closeBtn is clicked");
+    var closed = await action.waitForDisplayed(this.modalRoot, 5000, true);
+    if (true != closed) {
       await logger.logInto(
         await stackTrace.get(),
-        "panel still open after close attempt " + attempt + "/3 — retrying",
+        "panel still open 5s after a single close click - the X-close defect is back",
         "error"
       );
     }
-    return res;
+    return { pageStatus: closed === true };
   }
 };
