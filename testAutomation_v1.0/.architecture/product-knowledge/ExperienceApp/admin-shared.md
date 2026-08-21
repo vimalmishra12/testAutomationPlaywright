@@ -85,17 +85,22 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 
 ## A2. Coverage so far
 
-| Screen | Manual module | Automation module | Per-screen file |
+| Screen | Manual module | Automation module | Where its knowledge lives |
 |---|---|---|---|
-| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | `admin-classes-tab.md` |
-| Create new classes (bulk form) | `BCCF` | **`CCLS`** | *to be written* |
-| Manage grading categories | `GCAT` | `GCAT` | *to be written* |
-| Manage grading scales | `GSCL` | `GSCL` | *to be written* |
-| Class grade settings | `CGST` | `CGST` | `admin-class-grade-settings.md` |
-| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | `admin-grading-details-pages.md` |
+| Create new classes (bulk form) | `BCCF` | **`CCLS`** | [`admin-create-classes-form.md`](admin-create-classes-form.md) |
+| Manage grading categories | `GCAT` | `GCAT` | [`admin-grading-categories.md`](admin-grading-categories.md) |
+| Manage grading scales | `GSCL` | `GSCL` | [`admin-grading-scales.md`](admin-grading-scales.md) |
+| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | `../ExperienceApp.md` § *Feature: Classes tab — list, and the Filter panel* |
+| Class grade settings | `CGST` | `CGST` | `../ExperienceApp.md` § *Feature: Class grade settings (CGST, Req #22)* |
+| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | `../ExperienceApp.md` § *Feature: The "classes using this" lists…* |
 | Class management (label / delete / count) | `CMGT` | — not automated | — |
 | Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | — |
 | Context class | `CTXC` | — **blocked**, no entry point found | — |
+
+> **Two homes today, deliberately.** The three screens above with their own file were written
+> during the Phase 1 review `[2026-08-21]`; the three still inside `ExperienceApp.md` were written
+> earlier and have **not been moved**, because moving them is the wider split (proposed ADR-020) and
+> is a separate decision. Look in both places until that lands.
 
 > **Note the `BCCF` → `CCLS` mismatch.** Manual module codes are invented per manual batch;
 > automation module codes come from the **page object** (AGENTS.md Rule 6). When these disagree the
