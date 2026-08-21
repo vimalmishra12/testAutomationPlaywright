@@ -51,7 +51,7 @@ function isSortDirection(status) {
 
 module.exports = {
   /**
-   * TST_CLST_TC_RESET — Before/AfterEach housekeeping, not a functional test.
+   * TST_CLST_TC_RESET — BeforeEach + suite-level After housekeeping, not a functional test.
    * Clears any applied Class status / label filter AND any class search, so the next TC
    * starts from the full, unfiltered list (ADR-011: TCs must not depend on what ran before
    * them). Intentionally carries no assertions — a reset must never fail the suite.
@@ -60,6 +60,13 @@ module.exports = {
    * filter (verified live 2026-08-17 — it survived a full page reload), so without it the
    * search TCs would hand TST_CLST_TC_7/8 a single-row list to sort, and would leak into
    * the next run.
+   *
+   * REGISTERED IN BeforeEach AND THE SUITE-LEVEL After — NEVER AfterEach (ADR-019).
+   * The mochawesome screenshot is taken in a ROOT afterEach (core/runner/playwright.setup.js),
+   * and mocha runs root afterEach hooks LAST, so an AfterEach reset fires BEFORE the shot:
+   * every search/filter TC was photographed on the full unfiltered list, with the result it
+   * had just asserted already wiped off the screen. BeforeEach gives each TC the same clean
+   * start, and the After entry still stops the term leaking into the next run.
    */
   TST_CLST_TC_RESET: async function (testdata) {
     // ORDER MATTERS — clear the search FIRST. reset_filters() finishes by waiting for the
@@ -95,6 +102,14 @@ module.exports = {
 
   /**
    * TST_CLST_TC_2 — Req #2: Verify the Filter modal opens and shows all filter options.
+   *
+   * OPEN ONLY — closing is TST_CLST_TC_23. Split on 2026-08-21: one TC doing both left the
+   * report screenshot (taken at end of test) showing a CLOSED panel, so the one image that
+   * should prove "all filter options are displayed" proved nothing. Ending here leaves the
+   * panel open and photographed with its options on screen.
+   *
+   * Leaving the modal open is safe: the BeforeEach TST_CLST_TC_RESET closes it before the
+   * next TC (classFilterModal.reset_filters, which gates on the panel being visible).
    */
   TST_CLST_TC_2: async function (testdata) {
     sts = await schoolClasses.click_filter();
@@ -105,12 +120,64 @@ module.exports = {
     await assertion.assertEqual(sts.labelSearchInputDisplayed, true, "'Find a label' input not displayed in Filter modal");
     await assertion.assertEqual(sts.clearAllBtnDisplayed, true, "'Clear all' button not displayed in Filter modal");
     await assertion.assertEqual(sts.applyBtnDisplayed, true, "'Apply' button not displayed in Filter modal");
-    // Close without applying so the modal doesn't stay open for the next TC's click_filter().
-    // Asserted, not fire-and-forget: this call was silently returning a TimeoutError (the X
-    // click landed mid-animation and never closed the panel) and the failure was masked by
-    // the AfterEach reset tidying up afterwards.
+  },
+
+  /**
+   * TST_CLST_TC_23 — Req #2: Verify the X button closes the Filter modal without applying
+   * a filter. Split out of TST_CLST_TC_2 on 2026-08-21.
+   *
+   * OPENS THE MODAL ITSELF rather than inheriting TST_CLST_TC_2's. It has to: the BeforeEach
+   * reset closes any open panel between TCs, so there is nothing to inherit. That also keeps
+   * this TC runnable on its own and independent of whether TST_CLST_TC_2 passed (ADR-011).
+   *
+   * WHY FOUR ASSERTIONS, not just "the panel is gone":
+   *  1. The panel must be VISIBLE first — otherwise "not visible" at the end is satisfied by a
+   *     panel that never opened, and the TC could not fail. Read via getData_modalDisplayed()
+   *     (isDisplayed), NOT getData_filterOptions(): the panel root stays in the DOM when
+   *     closed, so its element-count reading is always true and can never fail.
+   *  2. The panel is gone after ONE click. click_close() carries that contract since the 3x
+   *     re-click workaround was removed (2026-08-21, X-close defect fixed).
+   *  3. NO FILTER WAS APPLIED. This is the one that matters: Apply also closes the panel, so
+   *     without it the TC would still pass if X silently started applying the selection.
+   *  4. The class list is untouched — the same property read a second way.
+   *
+   * The end-of-test screenshot is WEAK here by nature (a closed panel looks identical to one
+   * that never opened), which is exactly why the evidence lives in these assertions. Listed
+   * directly after TST_CLST_TC_2 in the exec file so the report shows the open panel one row
+   * above this result.
+   */
+  TST_CLST_TC_23: async function (testdata) {
+    var before = await schoolClasses.getData_visibleClassRowCount();
+
+    sts = await schoolClasses.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "Filter modal did not open");
+    var openedVisible = await classFilterModal.getData_modalDisplayed();
+    await assertion.assertEqual(openedVisible, true, "Filter modal was not visible before the close click");
+
+    /*
+     * The panel is not just visible but fully RENDERED - its controls are present.
+     *
+     * These reads were first added believing they also bought the render time the close
+     * click needs. THEY DO NOT: locator.count() returns immediately, so all five together
+     * cost ~20ms and the TC still failed 3/3. The wait that actually matters lives in
+     * click_close() (see the settle comment there). They are kept because they assert
+     * something true and cheap, not because of any timing effect.
+     */
+    var controls = await classFilterModal.getData_filterOptions();
+    await assertion.assertEqual(controls.statusOptionsDisplayed, true, "Class status options were not rendered before the close click");
+    await assertion.assertEqual(controls.applyBtnDisplayed, true, "Apply button was not rendered before the close click");
+
     sts = await classFilterModal.click_close();
-    await assertion.assertEqual(sts.pageStatus, true, "Filter modal did not close via the X button");
+    await assertion.assertEqual(sts.pageStatus, true, "Filter modal did not close on a single X click");
+
+    var stillVisible = await classFilterModal.getData_modalDisplayed();
+    var applied = await schoolClasses.getData_filterApplied();
+    var after = await schoolClasses.getData_visibleClassRowCount();
+    console.log("TC_23 →", { modalVisible: stillVisible, filterApplied: applied, rowsBefore: before.count, rowsAfter: after.count });
+
+    await assertion.assertEqual(stillVisible, false, "Filter modal is still visible after the X click");
+    await assertion.assertEqual(applied, false, "Closing with X applied a filter — the page-level Clear link is present");
+    await assertion.assertEqual(after.count, before.count, "The class list changed after closing the Filter modal with X (" + before.count + " -> " + after.count + ")");
   },
 
   /**

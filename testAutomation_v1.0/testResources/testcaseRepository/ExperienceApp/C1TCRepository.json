@@ -4468,6 +4468,7 @@
       "testcase": [
         { "id": "TST_CLST_TC_1", "description": "Verify the Classes tab loads with all expected components",       "tags": "P1", "visualTest": false },
         { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options",       "tags": "P1", "visualTest": false },
+        { "id": "TST_CLST_TC_23", "description": "Verify the X button closes the Filter modal without applying a filter", "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "tags": "P1", "visualTest": false },
         { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "tags": "P2", "visualTest": false },
         { "id": "TST_CLST_TC_5", "description": "Verify search by class name returns the matching class",          "tags": "P1", "visualTest": false },

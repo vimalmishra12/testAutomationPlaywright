@@ -4,9 +4,9 @@
 **Module:** CLST (Classes Tab) — *maps to the future `schoolClasses` page object when automated*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
-**Generated:** 2026-08-14 | **Total TCs:** 81 (59 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-20):** **63 of 81 TCs automated and passing.**
-- Module **CLST** (`TST_CLST_TC_1–22`, 22 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17).
+**Generated:** 2026-08-14 | **Total TCs:** 82 (60 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
+**Execution status (2026-08-21):** **64 of 82 TCs automated and passing.**
+- Module **CLST** (`TST_CLST_TC_1–23`, 23 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
 - Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
@@ -15,10 +15,12 @@
 
 The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
 
+**[2026-08-21] `TST_CLST_TC_23` is NEW** — the Filter panel's X close, split out of `TST_CLST_TC_2` so each TC's screenshot carries its own evidence. CLST is now **23 TCs**. The same session also removed the X-close `// WORKAROUND` retry after re-diagnosing it as an automation timing issue rather than a product defect — see TC_2 Comments.
+
 **Two are BLOCKED, both for the same reason** — see their Comments rows: `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are the maximum-categories / maximum-scales limits, whose precondition is a school already at its cap. `3 July Test School 1` is **shared**, so holding it at the cap would break other suites mid-run. Both modals are pre-rendered in the DOM, so their **expected copy is already verified word for word** — each is short work once a dedicated school exists.
 
 **`TST_GCAT_TC_7` and `TST_GSCL_TC_7` are now DONE [2026-08-20].** Both were long deferred because they need the category / scale **applied to a live class** — a CGST operation. They are registered in their own modules but **run inside the CGST suite**, which creates exactly that state. Their expected results were `[ASSUMED]` until 2026-08-20 (every scale and category anyone had opened had zero classes); both are now captured live and both manual cases were **corrected** — see their Remarks rows.
-**Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 22 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
+**Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 23 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
 > TCs sit together; within each group they run **Positive → Edge → Negative**. (This intentionally
@@ -39,7 +41,7 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | Linked Requirement (scenario) | Mapped TC IDs (P → E → N) |
 |---|---|
 | #1 — Verify class tab is loading | TST_CLST_TC_1 |
-| #2 — Verify filter functionality is working fine | TST_CLST_TC_2, TC_3, TC_4, TC_19 (E), TC_22 (N) |
+| #2 — Verify filter functionality is working fine | TST_CLST_TC_2, TC_3, TC_4, TC_19 (E), TC_22 (N), TC_23 |
 | #9 — Verify search for class key and class name working fine | TST_CLST_TC_5, TC_6, TC_18 (E), TC_21 (N) |
 | #27 — Verify Sort by class name/start date/end date | TST_CLST_TC_7, TC_8 |
 | #18 — Verify expanding a class row | TST_CLST_TC_9, TC_10 |
@@ -256,10 +258,10 @@ for the label TCs).
 | **Test Steps** | 1. Click **Filter**. 2. Observe the modal. |
 | **Test Data** | — |
 | **Expected Result** | A Filter modal opens with **Class status** options (Not started, Active, Ended, Expired, Deleted), a **Class labels** section with a "Find a label" input, and **Clear all** and **Apply** buttons. |
-| **Remarks** | Filter is a modal dialog, not an inline panel. |
+| **Remarks** | Filter is a modal dialog, not an inline panel. **Open only** — closing via X is TST_CLST_TC_23 (split 2026-08-21 so this TC's end-of-test screenshot shows the panel OPEN with its options, which is what the expected result describes). |
 | **Actual Result** | PASS. Filter modal opened showing all five Class status options (Not started / Active / Ended / Expired / Deleted), the 'Find a label' input, and the Clear all and Apply buttons. |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. PRODUCT NOTE: the panel's X close button is unreliable - a click reports success but the panel can stay open. Automation carries an authorised retry marked // WORKAROUND. App-side fix reported landed 2026-08-17; retry retained pending removal. |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-21: 23/23 passing. **X-close history CORRECTED 2026-08-21:** the 3x re-click // WORKAROUND was removed and the behaviour re-investigated live. It is **NOT a product bug** — 10/10 manual single clicks close the panel, and 8/8 automated closes succeed when the panel is given time to settle after opening (locator.click, real mouse, dispatchEvent, focus+Enter all work). The panel is visible and geometrically stable before its close handler is bound, which Playwright cannot detect, so automation was simply clicking too early. Closing now lives in TST_CLST_TC_23. |
 
 ---
 
@@ -1819,6 +1821,25 @@ for the label TCs).
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 82 |
+| **Test Case ID** | TST_CLST_TC_23 |
+| **Title** | Verify the X button closes the Filter modal without applying a filter |
+| **Linked Requirement** | #2 — Verify filter functionality is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the Classes tab, with no filter applied. |
+| **Test Steps** | 1. Click **Filter** and confirm the modal is open. 2. Click the **X** close button once. 3. Observe the modal and the class list. |
+| **Test Data** | — |
+| **Expected Result** | The modal closes on a **single** click. **No filter is applied** — the page-level "Clear" link does not appear — and the class list is unchanged. |
+| **Remarks** | Split out of TST_CLST_TC_2 on 2026-08-21: one TC that both opened and closed the modal was photographed at end of test with the panel already closed, so its screenshot could not evidence the open panel. TC_2 now ends with the modal open; this TC owns the close. Listed immediately after TC_2 in the execution file so the report shows the open panel one row above this result. Asserting that no filter was applied is what distinguishes closing from applying — Apply also closes the panel. |
+| **Actual Result** | PASS. The modal closed on a single X click; no Clear link appeared and the Active class count was unchanged. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-21: 23/23 passing. See TC_2 Comments for the X-close history — the 2026-08-15 "product defect" was re-diagnosed on 2026-08-21 as an automation timing issue, not a product bug. |
 
 ---
 
