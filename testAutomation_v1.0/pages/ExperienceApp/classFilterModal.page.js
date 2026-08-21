@@ -215,18 +215,16 @@ module.exports = {
       // left by one run was still applied after a completely fresh browser login), so a
       // half-completed clear leaks into the next TC and the next run. One click is normally
       // enough; the loop is the safety net.
-      for (var attempt = 1; attempt <= 3; attempt++) {
-        if (true !== (await action.isDisplayed(schoolClasses.clearFilterLink))) break;
-        await action.click(schoolClasses.clearFilterLink);
-        await action.waitForDisplayed(schoolClasses.clearFilterLink, 10000, true);
+      var hadFilter = await action.isDisplayed(schoolClasses.clearFilterLink);
+      if (true === hadFilter) {
+        for (var attempt = 1; attempt <= 3; attempt++) {
+          if (true !== (await action.isDisplayed(schoolClasses.clearFilterLink))) break;
+          await action.click(schoolClasses.clearFilterLink);
+          await action.waitForDisplayed(schoolClasses.clearFilterLink, 10000, true);
+        }
+        await browser.pause(1000);
+        await action.waitForDisplayed(schoolClasses.classRow, 20000);
       }
-      // The "Clear" link disappears as soon as the filter is dropped, but the class grid is
-      // re-fetched asynchronously and is EMPTY for a moment afterwards. Returning here would
-      // hand the next TC a page with no rows — which broke two TCs in different ways:
-      // TST_CLST_TC_1 read the layout before the select-all checkbox existed, and
-      // TST_CLST_TC_19's label search (scoped to the currently listed classes) came back
-      // empty so the label could never be selected. Wait for the grid to actually repopulate.
-      await action.waitForDisplayed(schoolClasses.classRow, 20000);
     } catch (e) {
       await logger.logInto(await stackTrace.get(), "reset_filters ignored: " + e.message, "error");
     }

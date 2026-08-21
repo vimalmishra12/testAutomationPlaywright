@@ -320,7 +320,6 @@ module.exports = {
    */
   search_class: async function (term) {
     await logger.logInto(await stackTrace.get(), "searching classes for: " + term);
-    var before = await readListSignature();
     await action.waitForDisplayed(this.searchInput, 15000);
     // Click the field before typing — same Angular focus requirement as the filter panel's
     // label search (Invariant 6).
@@ -332,6 +331,7 @@ module.exports = {
       await logger.logInto(await stackTrace.get(), res + " search term NOT entered", "error");
       return { pageStatus: false };
     }
+    var before = await readListSignature();
     await action.waitForClickable(this.searchBtn, 10000);
     res = await action.click(this.searchBtn);
     if (true != res) {
