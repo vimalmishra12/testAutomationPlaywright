@@ -30,6 +30,10 @@ For ALL test-automation work in this repo, the authoritative skills are the
 repo-tracked ones under `.agent/skills/` — they version with the code and are
 always the latest:
 
+- `c1-manual-test-authoring` — designing MANUAL functional test cases from
+  scenarios/requirements, and maintaining the `.md` + `.xlsx` registers under
+  `test/Manual/`. This is the FIRST step of the pipeline
+  (scenarios → manual TCs → automation); it hands off to `c1-test-authoring`.
 - `c1-test-authoring` — writing/editing tests, page objects, selectors,
   execution files, running/verifying tests, adding an appType.
 - `c1-environment-test-replicator` — porting/replicating a test to another
