@@ -57,10 +57,43 @@ carried it — and no amount of code fixing could make that TC pass.
 each assertion and ask: *what input would make this fail?* If there isn't one, it is not a
 test. See Invariants 13 and 14.
 
+## Evidence audit — the report must show what the TC claims
+
+A passing TC whose screenshot proves nothing is a TC you cannot debug when it eventually fails.
+This is not hypothetical: seven search/filter TCs in `adminClassesTab` ran green for weeks while
+**every one of their screenshots showed the full unfiltered list** — the evidence was worthless
+precisely when a failure would have needed it. It was spotted by the user, not by the process.
+
+**Open `output/reports/TestReports/mochawesome/report.html` and walk every TC.** For each, ask:
+*does this image show the thing the TC asserts?*
+
+Two causes, both mechanical:
+
+1. **Cleanup running before the screenshot.** The screenshot is taken in a **root** `afterEach`
+   (`playwright.setup.js`), and mocha runs root hooks **last** — so anything in the exec file's
+   suite-level `AfterEach` fires *first* and can erase the state being photographed.
+   **Cleanup belongs in `BeforeEach`, or in a suite-level `After` — never `AfterEach`** (ADR-019).
+   `BeforeEach` still guarantees a clean start, including after a crashed run; a suite-level
+   `After` still stops state leaking into the next run.
+   > ADR-019 was already written when this happened. It simply had not been applied to that exec
+   > file — which is why it is now a checklist item and not just a decision record.
+2. **One TC doing two things.** A TC that opens a panel and then closes it photographs the
+   *closed* panel. **Split it** — one TC ends open (and carries the visual), one owns the close.
+   Give the close TC assertions strong enough to stand without its image: a closed panel looks
+   identical to one that never opened, so assert it was open *before* the click, that one click
+   sufficed, and that no side effect fired.
+
 ## Exit checklist (mandatory — completes the phase)
 
 - [ ] All TCs passing; real output shown to the user; 2 consecutive clean runs.
 - [ ] Every assertion is falsifiable (Invariant 13) — no `>= 0`, no unasserted state changes.
+- [ ] **Evidence audit done** — the report was opened and every TC's screenshot shows what that TC
+      asserts. No cleanup in a suite-level `AfterEach` (ADR-019); no TC that opens and closes the
+      same thing.
+- [ ] **Phase 1's applicable-traps table re-checked against the shipped code** — every "applies
+      here" row has a real handler in the code, not just an intention. Any row that turned out to
+      apply and was missed is recorded in the walkthrough (that is how a documented trap gets hit
+      twice, and it is worth knowing it happened).
 - [ ] Any product defect found was **reported to the user, not worked around** (Invariant 14);
       any authorised workaround is marked `// WORKAROUND — <ref>`.
 - [ ] Any missing/invalid test data was raised with the user rather than silently substituted.
