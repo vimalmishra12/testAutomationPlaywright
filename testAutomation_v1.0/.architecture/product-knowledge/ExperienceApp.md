@@ -30,6 +30,14 @@ bulk student account creation for the Cambridge One platform.
 
 ### Role: school-admin
 
+> 📌 **Admin App tasks — read [`ExperienceApp/admin-shared.md`](ExperienceApp/admin-shared.md)
+> as well.** `[2026-08-21]` It holds what is true of **every** admin screen — navigation,
+> field caps, async/persistence behaviour, shared-school constraints and fixtures (Part A,
+> for manual test design) plus the automation traps: pre-rendered modals, positional ids,
+> CSS-only-disabled buttons, Angular typing, optimistic UI, measured timings, and the settled
+> visual-testing verdict (Part B). The sections below cover **individual** admin screens; the
+> shared file is what stops each new tab re-deriving the same ten traps.
+
 #### Feature: Bulk new account creation via CSV upload
 
 **Entry path:** Students tab → "Create adult student accounts" /
