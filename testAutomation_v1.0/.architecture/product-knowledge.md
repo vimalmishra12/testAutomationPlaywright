@@ -25,6 +25,7 @@
 | ↳ Create new classes (bulk form) — `BCCF` / `CCLS` | `ExperienceApp` | [`ExperienceApp/admin-create-classes-form.md`](product-knowledge/ExperienceApp/admin-create-classes-form.md) |
 | ↳ Manage grading categories — `GCAT` | `ExperienceApp` | [`ExperienceApp/admin-grading-categories.md`](product-knowledge/ExperienceApp/admin-grading-categories.md) |
 | ↳ Manage grading scales — `GSCL` | `ExperienceApp` | [`ExperienceApp/admin-grading-scales.md`](product-knowledge/ExperienceApp/admin-grading-scales.md) |
+| ↳ **Students tab** — list, profile, manage account, bulk student ops — `SLST` / `SPRF` / `SBLK` | `ExperienceApp` | [`ExperienceApp/admin-students-tab.md`](product-knowledge/ExperienceApp/admin-students-tab.md) |
 
 > Read `admin-shared.md` **plus the per-screen file(s) your task touches** — its §A2 table maps
 > every admin screen to where its knowledge currently lives (some is still inside
