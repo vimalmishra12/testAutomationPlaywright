@@ -69,31 +69,56 @@
         "id": "TST_KBOA_TC_2",
         "description": "Press Tab and check focus on Notes",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_3",
         "description": "Press Tab and check focus on Home",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_4",
         "description": "Press Tab and check focus loops back to Notes",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.shiftTabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_5",
         "description": "Keyboard click Notes and check panel opens",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.enterKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_6",
         "description": "Keyboard click Close and check panel closes",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.enterKey"
+          }
+        ]
       }
     ],
     "AfterEach": [],
@@ -169,25 +194,45 @@
         "id": "TST_KBOA_TC_8",
         "description": "Press Tab and check focus on Hotlink",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_9",
         "description": "Press Tab and check focus on Home",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_10",
         "description": "Press Shift+Tab and check focus moves back to Hotlink",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.shiftTabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_11",
         "description": "Keyboard click Hotlink and check navigation jump to Page 28",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.enterKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_12",
@@ -269,7 +314,12 @@
         "id": "TST_KBOA_TC_14",
         "description": "Press Tab and check focus on Home directly",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       }
     ],
     "AfterEach": [],
@@ -345,19 +395,34 @@
         "id": "TST_KBOA_TC_16",
         "description": "Press Tab and check focus on Note first",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_17",
         "description": "Press Tab and check focus on Hotlink second",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_18",
         "description": "Press Tab and check focus on Home third",
         "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
-        "testData": []
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookData.json",
+            "jsonPath": "C1.ebook.keyboard.tabKey"
+          }
+        ]
       },
       {
         "id": "TST_KBOA_TC_19",

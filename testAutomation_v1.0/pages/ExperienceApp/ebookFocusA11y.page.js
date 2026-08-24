@@ -41,38 +41,86 @@ module.exports = {
     return await action.focus(this.readerOuterContainer);
   },
 
-  pressTab: async function () {
+  pressTab: async function (keyName) {
     await logger.logInto(await stackTrace.get());
-    return await action.pressTab();
+    // Delegating to baseActionLibrary.pressKeyboardKey to avoid hardcoded Tab keys
+    return await action.pressKeyboardKey(keyName);
   },
 
-  pressShiftTab: async function () {
+  pressShiftTab: async function (keyName) {
     await logger.logInto(await stackTrace.get());
-    return await action.pressShiftTab();
+    // Delegating to baseActionLibrary.pressKeyboardKey to avoid hardcoded Shift+Tab keys
+    return await action.pressKeyboardKey(keyName);
   },
 
-  pressEnter: async function (selectorName) {
-    await logger.logInto(await stackTrace.get(), "press Enter on selector: " + selectorName);
-    const sel = this[selectorName];
-    return await action.pressEnter(sel);
+  pressEnterOnNote: async function (keyName) {
+    // Wrapper to perform dynamic Enter press on note icon avoiding selector leaking to test case
+    try {
+      const focusRes = await action.focus(this.noteIconOnPage);
+      if (focusRes instanceof Error) throw focusRes;
+      await browser.pause(500);
+      const res = await action.pressKeyboardKey(keyName);
+      if (res instanceof Error) throw res;
+      return true;
+    } catch (err) {
+      await logger.logInto(await stackTrace.get(), err.message, "error");
+      return err;
+    }
   },
 
-  assertFocusOn: async function (selectorName, message) {
-    await logger.logInto(await stackTrace.get(), "assert focus on: " + selectorName);
-    const sel = this[selectorName];
-    return await action.assertFocusOn(sel, message);
+  pressEnterOnNotesClose: async function (keyName) {
+    // Wrapper to perform dynamic Enter press on note close button avoiding selector leaking to test case
+    try {
+      const focusRes = await action.focus(this.notesCloseBtn);
+      if (focusRes instanceof Error) throw focusRes;
+      await browser.pause(500);
+      const res = await action.pressKeyboardKey(keyName);
+      if (res instanceof Error) throw res;
+      return true;
+    } catch (err) {
+      await logger.logInto(await stackTrace.get(), err.message, "error");
+      return err;
+    }
   },
 
-  assertPanelVisible: async function (selectorName, message) {
-    await logger.logInto(await stackTrace.get(), "assert panel visible: " + selectorName);
-    const sel = this[selectorName];
-    return await action.assertPanelVisible(sel, message);
+  pressEnterOnHotlink: async function (keyName) {
+    // Wrapper to perform dynamic Enter press on hotlink icon avoiding selector leaking to test case
+    try {
+      const focusRes = await action.focus(this.hotlinkIconOnPage);
+      if (focusRes instanceof Error) throw focusRes;
+      await browser.pause(500);
+      const res = await action.pressKeyboardKey(keyName);
+      if (res instanceof Error) throw res;
+      return true;
+    } catch (err) {
+      await logger.logInto(await stackTrace.get(), err.message, "error");
+      return err;
+    }
   },
 
-  assertPanelClosed: async function (selectorName, message) {
-    await logger.logInto(await stackTrace.get(), "assert panel closed: " + selectorName);
-    const sel = this[selectorName];
-    return await action.assertPanelClosed(sel, message);
+  assertFocusOnNote: async function (message) {
+    // Assert focus on noteIconOnPage imported from c1selector
+    return await action.assertFocusOn(this.noteIconOnPage, message);
+  },
+
+  assertFocusOnHome: async function (message) {
+    // Assert focus on homeButton imported from c1selector
+    return await action.assertFocusOn(this.homeButton, message);
+  },
+
+  assertFocusOnHotlink: async function (message) {
+    // Assert focus on hotlinkIconOnPage imported from c1selector
+    return await action.assertFocusOn(this.hotlinkIconOnPage, message);
+  },
+
+  assertNotesPanelVisible: async function (message) {
+    // Assert notes panel is visible by checking eBookNotesHeadingTxt from c1selector
+    return await action.assertPanelVisible(this.eBookNotesHeadingTxt, message);
+  },
+
+  assertNotesPanelClosed: async function (message) {
+    // Assert notes panel is closed by checking eBookNotesHeadingTxt from c1selector
+    return await action.assertPanelClosed(this.eBookNotesHeadingTxt, message);
   },
 
   assertOnPage: async function (expectedPage, message) {

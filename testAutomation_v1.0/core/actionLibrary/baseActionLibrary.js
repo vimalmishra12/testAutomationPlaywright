@@ -64,7 +64,7 @@ module.exports = {
     click: async function (selector, options) {
         message = "element:" + selector;
         try {
-            await el(selector).scrollIntoViewIfNeeded().catch(() => {}); // best-effort; click auto-scrolls anyway
+            await el(selector).scrollIntoViewIfNeeded().catch(() => { }); // best-effort; click auto-scrolls anyway
             await el(selector).click(options);
             await logger.logInto(await stackTrace.get(), message);
             return true;
@@ -212,7 +212,7 @@ module.exports = {
         // Scrolls into view + hovers the element centre (Playwright hover does both).
         message = "element:" + selector;
         try {
-            await el(selector).scrollIntoViewIfNeeded().catch(() => {});
+            await el(selector).scrollIntoViewIfNeeded().catch(() => { });
             await el(selector).hover();
             await logger.logInto(await stackTrace.get(), message);
             return true;
@@ -409,7 +409,7 @@ module.exports = {
     // Covers patterns like "find umbrella card by name, then find its component link".
     getNestedFilteredLocator: function (outerSel, outerText, innerSel, innerText) {
         return root().locator(outerSel).filter({ hasText: outerText })
-                     .locator(innerSel).filter({ hasText: innerText });
+            .locator(innerSel).filter({ hasText: innerText });
     },
 
     // Waits for the page URL to match a pattern (string glob or RegExp).
@@ -466,7 +466,7 @@ module.exports = {
             // real readiness gate; "load" stalls on telemetry-heavy LTI SPA assets — confirmed by user.
             await newPage.waitForLoadState("domcontentloaded");
             global.page = newPage;
-            global.$  = (sel) => global.page.locator(sel);
+            global.$ = (sel) => global.page.locator(sel);
             global.$$ = (sel) => global.page.locator(sel);
             await logger.logInto(await stackTrace.get(), "switched to new tab — URL:" + newPage.url());
             return true;
@@ -492,7 +492,7 @@ module.exports = {
             // Assumes a simple tab topology: the tab to return to is the FIRST page (the
             // original course tab). Valid for the controlled deeplink flow.
             global.page = context.pages()[0];
-            global.$  = (sel) => global.page.locator(sel);
+            global.$ = (sel) => global.page.locator(sel);
             global.$$ = (sel) => global.page.locator(sel);
             await global.page.bringToFront();
             await logger.logInto(await stackTrace.get(), "closed active tab — refocused first tab");
@@ -818,50 +818,10 @@ module.exports = {
         await global.page.mouse.up();
     },
 
-    // [2026-07-15] Added keyboard and focus accessibility wrappers — approved in plan.
-    pressTab: async function () {
-        message = "Pressing Tab key";
-        try {
-            await global.page.keyboard.press("Tab");
-            await logger.logInto(await stackTrace.get(), message);
-            return true;
-        } catch (err) {
-            await logger.logInto(await stackTrace.get(), err.message, "error");
-            return err;
-        }
-    },
-
-    pressShiftTab: async function () {
-        message = "Pressing Shift+Tab key";
-        try {
-            await global.page.keyboard.press("Shift+Tab");
-            await logger.logInto(await stackTrace.get(), message);
-            return true;
-        } catch (err) {
-            await logger.logInto(await stackTrace.get(), err.message, "error");
-            return err;
-        }
-    },
-
     pressKey: async function (selector, key) {
         message = `Pressing key '${key}' on element: ` + selector;
         try {
             await el(selector).press(key);
-            await logger.logInto(await stackTrace.get(), message);
-            return true;
-        } catch (err) {
-            await logger.logInto(await stackTrace.get(), err.message, "error");
-            return err;
-        }
-    },
-
-    pressEnter: async function (selector) {
-        message = "Pressing Enter on element: " + selector;
-        try {
-            const element = el(selector);
-            await element.focus();
-            await browser.pause(500);
-            await page.keyboard.press("Enter");
             await logger.logInto(await stackTrace.get(), message);
             return true;
         } catch (err) {
@@ -969,6 +929,44 @@ module.exports = {
             });
             await logger.logInto(await stackTrace.get(), message);
             return descriptor;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+
+
+    // [2026-07-31] Removed pressTab, pressShiftTab, and pressEnter to delegate to pressKeyboardKey via testdata — confirmed by user
+    // [2026-07-30] Added pressKeyboardKey to trigger global.page.keyboard.press dynamically — confirmed by user
+    pressKeyboardKey: async function (key) {
+        message = `Pressing keyboard key: ${key}`;
+        try {
+            await global.page.keyboard.press(key);
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
+    // [2026-07-30] Added selectElementText to highlight/select DOM text for clipboard copying — confirmed by user
+    selectElementText: async function (selector) {
+        message = `Selecting text of element: ${selector}`;
+        try {
+            await (global.__activeFrame ? global.__activeFrame : global.page).evaluate((sel) => {
+                const element = document.querySelector(sel);
+                if (element) {
+                    const range = document.createRange();
+                    range.selectNodeContents(element);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            }, selector);
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
             return err;

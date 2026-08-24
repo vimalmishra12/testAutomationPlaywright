@@ -53,14 +53,16 @@ module.exports = {
     return await action.focus(this.readerOuterContainer);
   },
 
-  pressTab: async function () {
+  pressTab: async function (keyName) {
     await logger.logInto(await stackTrace.get());
-    return await action.pressTab();
+    // Delegating to baseActionLibrary.pressKeyboardKey to avoid hardcoded Tab keys
+    return await action.pressKeyboardKey(keyName);
   },
 
-  pressShiftTab: async function () {
+  pressShiftTab: async function (keyName) {
     await logger.logInto(await stackTrace.get());
-    return await action.pressShiftTab();
+    // Delegating to baseActionLibrary.pressKeyboardKey to avoid hardcoded Shift+Tab keys
+    return await action.pressKeyboardKey(keyName);
   },
 
   click: async function (selectorName) {
@@ -69,16 +71,100 @@ module.exports = {
     return await action.click(sel);
   },
 
-  pressEnter: async function (selectorName) {
+  pressEnter: async function (selectorName, keyName) {
     await logger.logInto(await stackTrace.get(), "press Enter on selector: " + selectorName);
     const sel = this[selectorName];
-    return await action.pressEnter(sel);
+    try {
+      const focusRes = await action.focus(sel);
+      if (focusRes instanceof Error) throw focusRes;
+      await browser.pause(500);
+      // Delegating the enter keyboard press to pressKeyboardKey after focus and wait
+      const res = await action.pressKeyboardKey(keyName);
+      if (res instanceof Error) throw res;
+      return true;
+    } catch (err) {
+      await logger.logInto(await stackTrace.get(), err.message, "error");
+      return err;
+    }
   },
 
-  assertFocusOn: async function (selectorName, message) {
-    await logger.logInto(await stackTrace.get(), "assert focus on: " + selectorName);
-    const sel = this[selectorName];
-    return await action.assertFocusOn(sel, message);
+  closePageNumberPopover: async function () {
+    // Encapsulates page evaluate popover-closure logic so class selectors are kept out of test files
+    await logger.logInto(await stackTrace.get());
+    return await global.page.evaluate(() => {
+      const popovers = document.querySelectorAll(".page-number-dropdown, .popover, .dropdown-menu");
+      popovers.forEach(el => el.classList.remove("show"));
+    });
+  },
+
+  assertFocusOnHome: async function (message) {
+    // Assert focus on homeButton imported from c1selector
+    return await action.assertFocusOn(this.homeButton, message);
+  },
+
+  assertFocusOnContent: async function (message) {
+    // Assert focus on contentButton imported from c1selector
+    return await action.assertFocusOn(this.contentButton, message);
+  },
+
+  assertFocusOnTools: async function (message) {
+    // Assert focus on toolsButton imported from c1selector
+    return await action.assertFocusOn(this.toolsButton, message);
+  },
+
+  assertFocusOnZoomOut: async function (message) {
+    // Assert focus on zoomOutBtn imported from c1selector
+    return await action.assertFocusOn(this.zoomOutBtn, message);
+  },
+
+  assertFocusOnZoomIn: async function (message) {
+    // Assert focus on zoomInBtn imported from c1selector
+    return await action.assertFocusOn(this.zoomInBtn, message);
+  },
+
+  assertFocusOnFitToHeight: async function (message) {
+    // Assert focus on fitToHeightBtn imported from c1selector
+    return await action.assertFocusOn(this.fitToHeightBtn, message);
+  },
+
+  assertFocusOnPageNumber: async function (message) {
+    // Assert focus on pageNumber button imported from c1selector
+    return await action.assertFocusOn(this.pageNumber, message);
+  },
+
+  assertFocusOnPreviousPage: async function (message) {
+    // Assert focus on previousPage button imported from c1selector
+    return await action.assertFocusOn(this.previousPage, message);
+  },
+
+  assertFocusOnTOCButton: async function (message) {
+    // Assert focus on pageNavigateButton imported from c1selector
+    return await action.assertFocusOn(this.pageNavigateButton, message);
+  },
+
+  assertFocusOnNextPage: async function (message) {
+    // Assert focus on nextPage button imported from c1selector
+    return await action.assertFocusOn(this.nextPage, message);
+  },
+
+  assertFocusOnSinglePageView: async function (message) {
+    // Assert focus on toggleLayoutBtn imported from c1selector
+    return await action.assertFocusOn(this.toggleLayoutBtn, message);
+  },
+
+  assertFocusOnChangeCourseMaterial: async function (message) {
+    // Assert focus on changeCourseMaterialBtn imported from c1selector
+    return await action.assertFocusOn(this.changeCourseMaterialBtn, message);
+  },
+
+  assertFocusOnMoveToolbar: async function (message) {
+    // Assert focus on moveToolbarBtn imported from c1selector
+    return await action.assertFocusOn(this.moveToolbarBtn, message);
+  },
+
+  assertFocusOnToolbarStatus: async function (message) {
+    // Assert focus on toolbarStatusBtn imported from c1selector
+    return await action.assertFocusOn(this.toolbarStatusBtn, message);
   },
 
   assertOnPage: async function (expectedPage, message) {

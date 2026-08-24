@@ -280,6 +280,11 @@
           "info": {}
         }
       },
+      "keyboard": {
+        "tabKey": "Tab",
+        "shiftTabKey": "Shift+Tab",
+        "enterKey": "Enter"
+      },
       "dropdownBook": {
         "ebookOneName": "vm_automation_ebook_latest_01",
         "ebookTwoName": "vm_automation_ebook_latest_02"
