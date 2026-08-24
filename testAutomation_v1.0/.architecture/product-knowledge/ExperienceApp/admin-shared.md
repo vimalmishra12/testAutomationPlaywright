@@ -93,17 +93,17 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Students tab** (list, search, sort, user guide, load more) | `SLST` | `SLST` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Student profile / manage account / individual activation** | `SPRF` | `SPRF` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Bulk student operations** (add new / add existing / bulk activate) | `SBLK` | `SBLK` | [`admin-students-tab.md`](admin-students-tab.md) |
-| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | `../ExperienceApp.md` § *Feature: Classes tab — list, and the Filter panel* |
-| Class grade settings | `CGST` | `CGST` | `../ExperienceApp.md` § *Feature: Class grade settings (CGST, Req #22)* |
-| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | `../ExperienceApp.md` § *Feature: The "classes using this" lists…* |
-| Class management (label / delete / count) | `CMGT` | — not automated | — |
-| Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | — |
-| Context class | `CTXC` | — **blocked**, no entry point found | — |
+| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
+| Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](admin-class-grade-settings.md) |
+| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](admin-grading-details-pages.md) |
+| Bulk new account creation via CSV upload | — | `NEMO24306` | [`admin-bulk-account-csv.md`](admin-bulk-account-csv.md) |
+| Class management (label / delete / count) | `CMGT` | — not automated | *(none yet)* |
+| Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | *(none yet)* |
+| Context class | `CTXC` | — **blocked**, no entry point found | *(none yet)* |
 
-> **Two homes today, deliberately.** The three screens above with their own file were written
-> during the Phase 1 review `[2026-08-21]`; the three still inside `ExperienceApp.md` were written
-> earlier and have **not been moved**, because moving them is the wider split (proposed ADR-020) and
-> is a separate decision. Look in both places until that lands.
+> **One home now.** `[2026-08-21]` The ADR-020 migration is complete — every admin screen's
+> knowledge lives in its own file in this folder, and `../ExperienceApp.md` is an index. The
+> earlier "look in both places" note is retired.
 
 > **Note the `BCCF` → `CCLS` mismatch.** Manual module codes are invented per manual batch;
 > automation module codes come from the **page object** (AGENTS.md Rule 6). When these disagree the
@@ -190,6 +190,11 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 - **Clicking a DELETED class's row link is a dead end** — it drops the school context, lands on
   *My school accounts*, and raises *"Sorry! — The item is not available because the class is no
   longer active"*. That is the product explaining itself, not a defect. `[2026-08-20]`
+- **The Students tab adds its own design-time blockers on this school** `[2026-08-22]`: it holds
+  26 students (25 adults with email, 1 child with a username), so a case needing an
+  **adult-with-username** account, or **51+ students** to hit the 50-student removal cap, is
+  **Blocked** here. Student **removal is also destructive and reported only by email** — never run
+  it against a student the suite did not create.
 
 ## A6. Verified copy, `[ASSUMED]` copy, and the free-capture trick
 
@@ -203,6 +208,9 @@ This has already resolved three `[ASSUMED]` expected results at zero data cost:
 | Max-grading-categories limit modal | Pre-rendered on the Manage page `[2026-08-18]` |
 | Max-grading-scales limit modal | Pre-rendered on the Manage page `[2026-08-19]` |
 | Class-creation success dialog + both its links | Pre-rendered before any class was created `[2026-08-18]` |
+| All 3 Students-tab removal dialogs (confirm, 50-student cap, async notice) | Pre-rendered on the Students tab `[2026-08-22]` |
+| All 11 bulk-activation dialogs | Pre-rendered on `/bulk_activation` — **this is how the untranslated success-dialog keys were found before anyone ran a bulk activation** `[2026-08-22]` |
+| "Save changes?" unsaved-changes dialog | Pre-rendered on Manage learner profile `[2026-08-22]` |
 
 **Do this first on any new admin screen** — it turns `[ASSUMED]` expected results into verified
 ones before a single test runs, and costs nothing.
@@ -336,6 +344,9 @@ Ten minutes here replaces multiple debug rounds. Every item below caused a real 
 | Grading category rows | Row menu items are permanent — with 3 categories and no menu open: **3 "See details" present, 0 visible** |
 | Create-classes form | The label dropdown is rendered **once per row**, each with a full copy of every label (~87 on MQA, ~15 on FCN) |
 | Create-classes success dialog | Present and hidden **before any class is created** |
+| Students tab | Row menu items pre-rendered **once per row** — 26 students meant **26** hidden `View student profile` links, all sharing one identifier; plus 3 removal `.modal-content` `[2026-08-22]` |
+| Bulk activation | **11** `.modal-content`, all hidden `[2026-08-22]` |
+| Manage learner profile → Password | A whole **Gigya screen-set** injects dozens of extra hidden `profile.*` / `password` / `username` inputs `[2026-08-22]` |
 
 **Consequences**
 

@@ -22,14 +22,18 @@
 | Feature area | appType | Knowledge file |
 |---|---|---|
 | **Admin App (school-admin)** — shared across every admin screen | `ExperienceApp` | [`product-knowledge/ExperienceApp/admin-shared.md`](product-knowledge/ExperienceApp/admin-shared.md) |
+| ↳ Classes tab — `CLST` | `ExperienceApp` | [`ExperienceApp/admin-classes-tab.md`](product-knowledge/ExperienceApp/admin-classes-tab.md) |
 | ↳ Create new classes (bulk form) — `BCCF` / `CCLS` | `ExperienceApp` | [`ExperienceApp/admin-create-classes-form.md`](product-knowledge/ExperienceApp/admin-create-classes-form.md) |
 | ↳ Manage grading categories — `GCAT` | `ExperienceApp` | [`ExperienceApp/admin-grading-categories.md`](product-knowledge/ExperienceApp/admin-grading-categories.md) |
 | ↳ Manage grading scales — `GSCL` | `ExperienceApp` | [`ExperienceApp/admin-grading-scales.md`](product-knowledge/ExperienceApp/admin-grading-scales.md) |
 | ↳ **Students tab** — list, profile, manage account, bulk student ops — `SLST` / `SPRF` / `SBLK` | `ExperienceApp` | [`ExperienceApp/admin-students-tab.md`](product-knowledge/ExperienceApp/admin-students-tab.md) |
+| ↳ Class grade settings — `CGST` | `ExperienceApp` | [`ExperienceApp/admin-class-grade-settings.md`](product-knowledge/ExperienceApp/admin-class-grade-settings.md) |
+| ↳ Grading scale / category details pages | `ExperienceApp` | [`ExperienceApp/admin-grading-details-pages.md`](product-knowledge/ExperienceApp/admin-grading-details-pages.md) |
+| ↳ Bulk new account creation via CSV — `NEMO24306` | `ExperienceApp` | [`ExperienceApp/admin-bulk-account-csv.md`](product-knowledge/ExperienceApp/admin-bulk-account-csv.md) |
 
-> Read `admin-shared.md` **plus the per-screen file(s) your task touches** — its §A2 table maps
-> every admin screen to where its knowledge currently lives (some is still inside
-> `ExperienceApp.md`).
+> **`ExperienceApp.md` is an INDEX (ADR-020).** Read it for the app header, environment URLs and the
+> file map, then `admin-shared.md`, then the per-screen file(s) your task touches. Do not append
+> knowledge to the app file.
 
 ## Reading rule
 

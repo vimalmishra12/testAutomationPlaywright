@@ -720,8 +720,12 @@ entirely one area and no judgement is needed about where anything belongs.
   `product-knowledge/ExperienceApp/`, leaving the app file as an index. To be done as a **pure
   move** in its own change, with content verified byte-identical, so the review question is "is the
   new location right?" and never "did anything get lost?"
-- Until that lands, `admin-shared.md` §A2 records **where each screen's knowledge actually lives**.
-  That table is a transitional artefact and should shrink to a plain file map afterwards.
+  > ✅ **DONE [2026-08-21].** All four moved; `ExperienceApp.md` is now a 79-line index (was 772).
+  > Losslessness proven mechanically: the four migrated bodies concatenate to a byte-for-byte match
+  > of the original's feature content (47,494 bytes, identical sha256). `ExperienceApp/` now holds
+  > eight files. `admin-shared.md` §A2 has been reduced to a plain file map.
+- `admin-shared.md` §A2 is the screen→file map for the admin area; the app file carries the same
+  map plus the app header, environment URLs and roles.
 - **CLAUDE.md's mandatory-read rule** is updated to name the area shared file.
 - **ADR-018 is extended, not superseded** — the per-application split stands; this adds a level
   below it.
