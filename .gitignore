@@ -3,9 +3,17 @@ package-lock.json
 allure-results/
 logs/
 output/
+# Stray runtime error log written at the repo root by a test run (0 bytes when idle).
+err.log
 core/utils/PageStructorGenerator/node_modules/
 core/utils/PageStructorGenerator/outputFile
 logs_*.txt
 .mcp.json
 # Playwright MCP run output — created wherever the MCP runs (repo root or subdir)
 .playwright-mcp/
+# Playwright MCP browser profile when the MCP runs from the REPO ROOT (e.g. inside a git
+# worktree), which puts it at /tooling/ instead of testAutomation_v1.0/tooling/. It holds a
+# live logged-in Cambridge One session and must never be committed — this repo is public.
+# The leading slash matters: it pins this to the repo root only, so the TRACKED design-time
+# tooling at testAutomation_v1.0/tooling/ is unaffected.
+/tooling/

@@ -1,0 +1,298 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Class grade settings (Req #22) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_7",
+        "description": "Housekeeping — sweep any leftover AutoClass_CGST from the Active list",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_SCLS_TC_2",
+        "description": "Click 'Add class' and open the create form",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_23",
+        "description": "Housekeeping — reset the create form to a single empty row",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_1",
+        "description": "Enter the class name (AutoClass_CGST)",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_2",
+        "description": "Set the class start date",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_3",
+        "description": "Set the class end date",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_5",
+        "description": "Open the Add materials modal",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_6",
+        "description": "Search for the course material",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_7",
+        "description": "Add the selected course material to the class",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_4",
+        "description": "Click 'Create 1 class' and verify the success dialog",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CCLS_TC_8",
+        "description": "Click 'Back to dashboard' and return to the Classes tab",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_8",
+        "description": "Poll for the newly created class and launch it",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_1",
+        "description": "CGST_TC_1 (Pos) | Class grade settings launches from the class page",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_5",
+        "description": "CGST_TC_5 (Pos) | The teacher score-override setting can be toggled",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_4",
+        "description": "CGST_TC_4 (Pos) | The score calculation (Best / First score) can be changed",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_2",
+        "description": "CGST_TC_2 (Pos) | The grading scale can be changed for a class",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_3",
+        "description": "CGST_TC_3 (Pos) | A grading category can be added to a class",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_CGST_TC_6",
+        "description": "CGST_TC_6 (Edge) | The total grade weightage must equal 100%",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_GSCL_TC_7",
+        "description": "GSCL_TC_7 (Pos) | Class grade settings launches from the scale details page",
+        "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      },
+      {
+        "id": "TST_GCAT_TC_7",
+        "description": "GCAT_TC_7 (Pos) | Class grade settings launches from the category details page",
+        "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_CGST_TC_9",
+        "description": "Cleanup — return to the Classes tab and delete the class under test",
+        "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassGradeSettingsData.json",
+            "jsonPath": "C1.adminClassGradeSettings"
+          }
+        ]
+      }
+    ]
+  }
+}

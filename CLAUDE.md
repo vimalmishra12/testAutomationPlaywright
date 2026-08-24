@@ -11,7 +11,14 @@ At the start of **every** conversation or task, read all `.md` files under
   the per-app knowledge file under `testAutomation_v1.0/.architecture/product-knowledge/`
   matching the task's application (`ExperienceApp.md`, `Builder.md`, or
   `Integrations.md`); if the application is not yet clear, or the task spans
-  apps, read all per-app files (ADR-018)
+  apps, read all per-app files (ADR-018).
+  **Then read the feature-area files for the area the task touches (ADR-020)** —
+  the area's `*-shared.md` first, then the per-screen file(s). For any Admin App
+  (school-admin) task that means
+  `product-knowledge/ExperienceApp/admin-shared.md` — Part A when designing manual
+  test cases, Part A + Part B when authoring or debugging automation — plus the
+  screen's own file. The index's app→file map names them; `admin-shared.md` §A2
+  records which admin screens still have their knowledge inside `ExperienceApp.md`.
 - `testAutomation_v1.0/.architecture/PROMPTS.md`
 - `testAutomation_v1.0/.architecture/manual-test-standard.md`
 Walkthroughs (`testAutomation_v1.0/.architecture/walkthroughs/`) are **historical
@@ -30,6 +37,10 @@ For ALL test-automation work in this repo, the authoritative skills are the
 repo-tracked ones under `.agent/skills/` — they version with the code and are
 always the latest:
 
+- `c1-manual-test-authoring` — designing MANUAL functional test cases from
+  scenarios/requirements, and maintaining the `.md` + `.xlsx` registers under
+  `test/Manual/`. This is the FIRST step of the pipeline
+  (scenarios → manual TCs → automation); it hands off to `c1-test-authoring`.
 - `c1-test-authoring` — writing/editing tests, page objects, selectors,
   execution files, running/verifying tests, adding an appType.
 - `c1-environment-test-replicator` — porting/replicating a test to another

@@ -17,11 +17,29 @@
 | comproDLS Builder 2.0 | `Builder` | [`product-knowledge/Builder.md`](product-knowledge/Builder.md) |
 | LMS integrations (Blackboard + LTI; future: Moodle, …) | `Blackboard` | [`product-knowledge/Integrations.md`](product-knowledge/Integrations.md) |
 
+### Feature-area files (read *in addition to* the app file)
+
+| Feature area | appType | Knowledge file |
+|---|---|---|
+| **Admin App (school-admin)** — shared across every admin screen | `ExperienceApp` | [`product-knowledge/ExperienceApp/admin-shared.md`](product-knowledge/ExperienceApp/admin-shared.md) |
+| ↳ Create new classes (bulk form) — `BCCF` / `CCLS` | `ExperienceApp` | [`ExperienceApp/admin-create-classes-form.md`](product-knowledge/ExperienceApp/admin-create-classes-form.md) |
+| ↳ Manage grading categories — `GCAT` | `ExperienceApp` | [`ExperienceApp/admin-grading-categories.md`](product-knowledge/ExperienceApp/admin-grading-categories.md) |
+| ↳ Manage grading scales — `GSCL` | `ExperienceApp` | [`ExperienceApp/admin-grading-scales.md`](product-knowledge/ExperienceApp/admin-grading-scales.md) |
+
+> Read `admin-shared.md` **plus the per-screen file(s) your task touches** — its §A2 table maps
+> every admin screen to where its knowledge currently lives (some is still inside
+> `ExperienceApp.md`).
+
 ## Reading rule
 
 - **Always read this index** at session start (it is small by design).
 - **Read the per-app file matching the task's application** (by appType, ticket
   prefix, or the app named in the request).
+- **If the task touches an Admin App (school-admin) screen, also read
+  `ExperienceApp/admin-shared.md`** — Part A (product behaviour) when designing
+  manual test cases, Part A + Part B (automation traps) when authoring or
+  debugging automation. It carries what is true of *every* admin screen, so a new
+  admin tab does not re-derive it. `[2026-08-21]`
 - **If the application is not yet clear, or the task spans apps, read all
   per-app files.** Ambiguity defaults to reading more, never less.
 
