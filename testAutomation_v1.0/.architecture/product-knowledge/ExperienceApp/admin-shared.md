@@ -90,6 +90,9 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | Create new classes (bulk form) | `BCCF` | **`CCLS`** | [`admin-create-classes-form.md`](admin-create-classes-form.md) |
 | Manage grading categories | `GCAT` | `GCAT` | [`admin-grading-categories.md`](admin-grading-categories.md) |
 | Manage grading scales | `GSCL` | `GSCL` | [`admin-grading-scales.md`](admin-grading-scales.md) |
+| **Students tab** (list, search, sort, user guide, load more) | `SLST` | `SLST` | [`admin-students-tab.md`](admin-students-tab.md) |
+| **Student profile / manage account / individual activation** | `SPRF` | `SPRF` | [`admin-students-tab.md`](admin-students-tab.md) |
+| **Bulk student operations** (add new / add existing / bulk activate) | `SBLK` | `SBLK` | [`admin-students-tab.md`](admin-students-tab.md) |
 | Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | `../ExperienceApp.md` § *Feature: Classes tab — list, and the Filter panel* |
 | Class grade settings | `CGST` | `CGST` | `../ExperienceApp.md` § *Feature: Class grade settings (CGST, Req #22)* |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | `../ExperienceApp.md` § *Feature: The "classes using this" lists…* |
@@ -106,6 +109,11 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 > automation module codes come from the **page object** (AGENTS.md Rule 6). When these disagree the
 > mapping survives only as prose in Remarks cells. **Pick manual module codes that will survive** —
 > name them after the page object the screen will get. `[lesson, 2026-08-14]`
+>
+> **The Students batch applied that lesson** `[2026-08-22]`: `SLST` / `SPRF` / `SBLK` were named
+> after the page objects those screens will get (`schoolStudents`, `studentProfile`,
+> `bulkStudents`) **before a single case was written**, so no re-mapping is owed. First time the
+> manual and automation module codes will agree from the start.
 
 ## A3. Field constraints — read before writing any boundary case
 

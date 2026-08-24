@@ -1,0 +1,243 @@
+# Admin App — Students tab (school-admin)
+
+> Per-screen knowledge for the Cambridge One Admin App **Students** tab and everything reachable
+> from it: the student profile, Manage learner profile, individual code activation, and the bulk
+> student operations.
+>
+> Read **with** `admin-shared.md` — everything true of *every* admin screen lives there and is not
+> repeated here.
+>
+> **Living document.** Append, never overwrite. Mark anything not confirmed live `[ASSUMED]`.
+> Date significant updates `[YYYY-MM-DD]`.
+>
+> **Seeded [2026-08-22]** from the Students-tab manual-design grounding pass
+> (`test/Manual/C1App/AdminApp-Students/`), Thor · school `FCN-CHZ-PDA`.
+
+---
+
+## 1. Modules and routes
+
+| Module | Future page object | Screens |
+|---|---|---|
+| `SLST` | `schoolStudents` | Students tab list, search, sort, user guide, load more |
+| `SPRF` | `studentProfile` | View student profile, Manage learner profile, individual activation, removal |
+| `SBLK` | `bulkStudents` | Add new / add existing students, bulk course-material activation |
+
+```
+STUDENTS tab                         /admin/admin/org_<slug>/learner
+  ├─ Manage students ▾
+  │    ├─ Add new students to classes       /learner/select/new
+  │    │     └─ Adults → second chooser     /learner/adult-select/new
+  │    ├─ Add existing students to classes  /learner/select/existing
+  │    └─ Activate course materials         /bulk_activation
+  ├─ row action menu ▾  (exactly two items)
+  │    ├─ View student profile
+  │    │     /class/teacher/org_<slug>/profile/<orgUuid>/<userId>
+  │    └─ Activate course materials
+  │          /dashboard/teacher/org_<slug>/activateMaterial/<userId>/admin
+  └─ select rows → Remove from school account   (bulk, max 50 per request)
+
+student profile
+  ├─ Back → Students tab
+  ├─ Manage account ▾
+  │    ├─ Edit account details
+  │    │     /admin/admin/org_<slug>/edit-user-profile/<orgUuid>/<userId>
+  │    │     ├─ Personal info tab
+  │    │     └─ Password tab   (Gigya-hosted; appends ?pwrt=<token>&apiKey=<key>)
+  │    └─ Remove from school account
+  ├─ Course materials (N)  → grouped by umbrella; the umbrella name is NOT a link
+  └─ Classes (N)           → /class/teacher/org_<slug>/class/<uuid>/view/classdata
+```
+
+> **The Students tab spans three microfrontends** — `admin` (list, edit profile, bulk activation),
+> `class` (student profile) and `dashboard` (individual activation). Crossing between them is a full
+> page load, not an Angular route change. Budget for it. `[2026-08-22]`
+
+> **The profile URL IS deep-linkable** within a session whose school context is already set — unlike
+> `/admin/admin/org_<slug>/class`, which returns `/dashboard/error`. Whether it survives a cold
+> session with no prior school selection is `[ASSUMED]`. `[2026-08-22]`
+
+---
+
+## 2. Product behaviour (manual-design relevant)
+
+### Search
+- **Submit-driven, not live** — typing alone does not filter; the Search button is required.
+  Settles ~1–2 s. Same as the Classes tab.
+- **Case-insensitive** and **partial-matching**; special characters (`+ & % ^ $`) are matched
+  literally, not as wildcards.
+- Searches **all four** dimensions from one box: first name, last name, email, username.
+- The heading swaps from `Students (N)` to
+  `Students / Showing search results for <term>. / Clear` — the term is echoed **preserving its
+  case**, and the count disappears while a search is active.
+- A **whitespace-only** term is trimmed to nothing but still enters the banner state and returns
+  every student.
+- `Clear` restores the count heading, empties the box and restores `Load more ...`.
+
+### Sort
+- **Default sort is First name ascending** — even though Last name is the first column shown.
+- Last name and Email/Username toggle ascending ⇄ descending on repeat clicks; taking over a column
+  removes the indicator from the previous one.
+- **Collation is by CODE POINT, not locale** — `Garg, Learner, Perf Test, S, … budhiraja, kr,
+  learner, student, test, us`. A `localeCompare` expectation is wrong, exactly as on the Classes tab
+  (`admin-shared.md` §A4).
+- Whether the sort persists across a reload is `[ASSUMED]` — the Classes tab's sort does not.
+
+### List
+- **Page size 20**; `Load more ...` is **removed from the DOM** (not disabled) once exhausted, and
+  is absent entirely for a result set of ≤ 20.
+- Row columns: Last name · First name · Email address or Username. The Email/Username column holds
+  the **username** for username-based accounts.
+- **Account type (Adult / Child) is exposed only in the row's accessible name** —
+  `Row2 Adult Learner Last name … First name … Email address or Username …`. There is no visible
+  badge. This is the only way to tell the two apart from the list.
+- `N Selected` counter + `Remove from school account`, natively disabled at 0 selected.
+- **User guide**: the toggle label swaps `User guide` ⇄ `Hide`, and the panel is **genuinely removed
+  from the DOM** when collapsed (one of the few admin containers that is — see §4).
+
+### Student profile
+- Heading is **`Last name, First name`**; the line beneath holds the **email** for email accounts
+  and the **username** for username accounts — the only on-profile signal of account type.
+- `Last login <date>` sits under the identifier.
+- **`Course materials (N)` counts UMBRELLAS, not components.** Components are listed under their
+  umbrella with exactly one of three states:
+  `Code activated` (+ Activated / Expires dates) · `Code not activated` · `Code expired`
+  (+ Activated / Expires dates in the past).
+- **The umbrella name is a plain `<span class="bundle-title">` with no link or button anywhere in
+  its ancestry** — confirmed on both a child and an adult profile. There is **no route from the
+  profile to an umbrella details page**. A source scenario asking to "click on umbrella name" cannot
+  be performed as written; it needs a product decision. `[2026-08-22]`
+  > This is the same class of error as the historic *"click a listed class"* cases
+  > (`admin-shared.md` §A8.1) — caught here by grounding rather than assuming.
+- Classes are listed with date range, `Date joined:`, `Class key:` and their course-material state.
+
+### Manage learner profile
+- Two tabs: **Personal info** and **Password**.
+- Personal info: **First name** and **Last name** are required and editable; **Username** and
+  **Location** are present but **disabled**. **No `maxlength` on any of them** — any length limit is
+  server-side and unmeasured, so no boundary case can honestly be written yet.
+  - On the child fixture the disabled Location field held the literal string `undefined` rather than
+    a country or a blank. Worth raising as a display defect. `[2026-08-22]`
+- **Password** is a **Gigya / SAP CDC hosted screen-set**, headed `Change learner password`, with a
+  **single `New password` field** — no confirm field and no current-password field. Clicking the tab
+  appends a one-time `?pwrt=<token>&apiKey=<key>` to the URL. **Never record a captured token in
+  test data.**
+  - A weak password is rejected client-side with `Password does not meet complexity requirements`.
+    The message does not state what the rules are.
+
+### Removal
+- **Asynchronous and reported by EMAIL**, not in-app:
+  `We are currently removing N student accounts. You will receive an email report once the accounts
+  have been removed.`
+- **Capped at 50 students per request.**
+- Reachable two ways: bulk from the list (row checkboxes) and per-student from the profile's
+  `Manage account` menu.
+
+### Bulk operations
+- **`Add new students to classes` is a TWO-step chooser for adults**:
+  `Children | Adults` → and for Adults a second chooser
+  `Create adult student accounts` (username + password) | `Invite adult students by email`.
+  This is what separates the "adult with username" and "adult by email" scenarios.
+- **`Add existing students to classes`** offers `Add students by username` | `Invite students by
+  email` and **reuses the same element identifiers as the adult new-account chooser** — identify the
+  screen by URL or heading, never by control ids alone.
+- Both choosers carry the notice
+  `Important: Classes must be created before setting up student accounts` (wording varies slightly
+  per screen).
+- Downstream child/adult CSV pages are already documented from the NEMO-24306 work in
+  `product-knowledge/ExperienceApp.md` — reuse it rather than re-deriving.
+- **Bulk activation** (`/bulk_activation`): `Upload file`, `Get CSV template`, `How to use this
+  form`, a grid of `Email or Username | First name | Last name | Activation code`, and an
+  `Activate N code(s)` button whose label counts the rows.
+- Individual activation: `Activate an access code`, one field (placeholder
+  `Example: AB2C-DE3F-G4HJ-K5LM`), Activate **natively disabled** while empty.
+  Codes are single-use — *"You can only use each code once."*
+
+---
+
+## 3. Copy verified live `[2026-08-22]`
+
+| Where | Text |
+|---|---|
+| Search banner | `Showing search results for <term>.` |
+| Search, no results | *(nothing renders — see §5)* |
+| User guide | `On this page you can:` · `Search for a student who has joined your school in Cambridge One` · `View individual students’ profiles and manage their accounts` · `Add multiple students to classes` · `Activate course materials for students` |
+| Password too weak | `Password does not meet complexity requirements` |
+| Unsaved changes | `Save changes?` / `Changes will be lost if you don’t save them` / `Cancel` / `Yes` |
+| Activation failed | `Sorry, something went wrong at our end and we couldn’t activate your code. Please try again later` |
+| Remove confirm | `I confirm that I want to remove students from my school account` / `Cancel` / `Request to remove` |
+| Remove limit | `You can only remove 50 students at one time` / `Please uncheck some students to continue` |
+| Remove in progress | `Removing students may take some time` / `We are currently removing N student accounts. You will receive an email report once the accounts have been removed.` / `Go back to manage more students` |
+| Bulk upload failed | `Sorry, your file could not be uploaded` … `If that doesn’t work, email our Customer Services team at ptsupport@cambridge.org` |
+| Bulk, form not uploaded | `An unexpected error occured. Please try again.` — **note the typo, "occured"** |
+
+**Free-captured from the pre-rendered DOM** (`admin-shared.md` §A6), without reaching any of these
+states: all **3** removal dialogs on the Students tab, the unsaved-changes dialog on Manage learner
+profile, and all **11** bulk-activation dialogs. That last capture is how the untranslated
+success-dialog keys in §5 were found *before* anyone ran a bulk activation.
+
+---
+
+## 4. Automation traps (Part B material)
+
+- **Row menu items are pre-rendered once per row.** With 26 students the page holds **26** copies of
+  `View student profile` and 26 of `Activate course materials`, of which exactly one of each is
+  visible when a menu is open. A count or presence check is a guaranteed false green — filter on
+  visibility. Worse, **all 26 copies share the same `qid`**, so the identifier is not unique.
+- **Row identifiers are positional** (`aLearner-15-<index>`), so they shift as the list is sorted,
+  searched or extended by Load more. Resolve a row by its content, then act on it.
+- **The user guide toggle is a different element in each state** — the collapsed and expanded
+  toggles carry different identifiers. Binding a page object to one of them breaks the other half of
+  the toggle test.
+- **The Email/Username column's `sorted ascending` / `sorted descending` text is NOT inside the
+  header button** — unlike Last name and First name, where it is. Reading the button's own text
+  returns the bare label. Scope the assertion to the header row.
+  `[verify the exact node during Phase 1]`
+- **The adult new-account chooser and the existing-student chooser share identifiers**
+  (`adultCreateInvite-1..4`). Assert the URL or heading to know which screen you are on.
+- **The Password tab injects a full Gigya screen-set** into the page — dozens of extra pre-rendered
+  `profile.*`, `password`, `username` inputs appear, most of them hidden. Never select a password or
+  name field by `name=` alone on that page.
+- **Gigya validation messages are empty in the DOM until triggered** — unlike the Angular dialogs,
+  their copy cannot be free-captured. It must be provoked (a weak password is a safe, non-mutating
+  way to do it).
+- **A CustomerGauge NPS survey can overlay the dashboard.** `<cg-survey id="cg-survey-popup">`
+  appeared unprompted during this session and **intercepted the school-card click**, failing it with
+  "intercepts pointer events". Any admin suite that starts at `/dashboard` needs to dismiss or
+  tolerate it. `[2026-08-22]`
+
+---
+
+## 5. Known defects found during grounding `[2026-08-22]`
+
+All four were found while designing the manual cases, and each is written up as an
+expected-versus-actual case in `test/Manual/C1App/AdminApp-Students/`.
+
+| # | What | Where |
+|---|---|---|
+| 1 | **A search matching no student renders nothing at all** — the whole table including the sort header is removed and no empty-state message replaces it. The console throws `TypeError: Cannot read properties of undefined (reading 'length') at o.search` from the admin bundle, so the empty state appears to be failing rather than absent by design. The Classes tab shows `No classes that match your search <term>` in the same situation. | `TST_SLST_TC_12` |
+| 2 | **`View student profile` can hang forever on a spinner with no error.** For one student the URL collapses to `/class/` and `GET /class/apigateway/org_<slug>/getUserDetailWithClasses?…` returns **HTTP 500**. Student-specific — other profiles on the same school load fine. Two faults: the 500, and the missing client-side error handling for it. | `TST_SPRF_TC_7` |
+| 3 | **The bulk-activation success dialog renders three raw translation keys** — `ADMIN.LEARNER.BULK_ACTIVATION.SUCCESS_MODAL_INFO_1`, `_2`, `_3` — instead of text, above a `Back to dashboard` button. User-visible on the first successful bulk activation. | `TST_SBLK_TC_9` |
+| 4 | **Untranslated keys leak into accessible names.** The bulk-activation row checkbox's `sr-only` label is `ADMIN.LEARNER.BULK_ACTIVATION.SELECT_STUDENT`, and the individual activation page renders `SCREEN_READER.PROCESSING_MESSAGE` while a request is in flight. Invisible on screen, which is why they have gone unnoticed. | `TST_SBLK_TC_10`, `TST_SPRF_TC_16` |
+
+Smaller observations, raised but not written as defect cases: the disabled Location field showing
+the literal `undefined`; the whitespace-only search entering the banner state; `occured` in the
+bulk error dialog; and the invalid-activation-code error blaming the server rather than the code.
+
+---
+
+## 6. Fixtures on `FCN-CHZ-PDA` (3 July Test School 1) `[2026-08-22]`
+
+| Purpose | Student |
+|---|---|
+| Adult with email | `Marvin Jae student` · nonmqastudent5@mailsac.com |
+| Adult, email with special characters | `Learner Learner` · shivampilot04+Taylor&%^$wift@gmail.com |
+| Adult with umbrellas incl. **Code expired** | `Learner us` · testps27@mailsac.com |
+| Child with username, 2 umbrellas, 2 classes | `child1 test` · cqatestaichild1 |
+| Profile that returns HTTP 500 (defect fixture) | `Vandna Garg` · vandna.garg+11student@comprotechnologies.com |
+
+**26 students at capture: 25 adults with email addresses and exactly 1 child with a username.**
+
+**There is no adult-with-username account on this school**, which blocks any case needing one. The
+shared-school constraints in `admin-shared.md` §A5 apply in full — never assert an absolute count,
+and never remove a student this suite did not create.
