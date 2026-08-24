@@ -20,10 +20,13 @@ The framework is **multi-application**; this skill is **appType-aware** — STEP
 test belongs to and every `<App>` placeholder below is filled from it. Follow all steps below exactly.
 
 > **Always load:** `testAutomation_v1.0/AGENTS.md` + `.architecture/ARCHITECTURE-INVARIANTS.md` (the
-> invariants cheat-sheet / index). **Product knowledge (ADR-018):** read
+> invariants cheat-sheet / index). **Product knowledge (ADR-018, extended by ADR-020):** read
 > `.architecture/product-knowledge.md` (the index) + the per-app file under
 > `.architecture/product-knowledge/` for the app resolved in STEP 0 (`ExperienceApp.md`,
-> `Builder.md`, or `Integrations.md`) — env-specific error messages, validation rules, and known
+> `Builder.md`, or `Integrations.md`) — **then the feature-area files for the screen you are
+> porting**, under `product-knowledge/<App>/`. The app file is an INDEX; the knowledge lives in
+> those. For any Admin App screen that means `ExperienceApp/admin-shared.md` plus the screen's own
+> file. Env-specific error messages, validation rules, and known
 > quirks documented there explain many "failures" that are actually product behaviour.
 > **Consult on demand:** a specific ADR in `.architecture/decisions.md`
 > or a `system.md` section only when the task touches it — follow the cheat-sheet's *Depth →* pointers.
