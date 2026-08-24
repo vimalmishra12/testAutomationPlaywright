@@ -54,6 +54,9 @@ Read `admin-shared.md`, then the file(s) for the screen your task actually touch
 | **Students tab** — list, search, sort, user guide, load more | `SLST` | `SLST` | [`admin-students-tab.md`](ExperienceApp/admin-students-tab.md) |
 | **Student profile** / manage account / individual activation | `SPRF` | `SPRF` | [`admin-students-tab.md`](ExperienceApp/admin-students-tab.md) |
 | **Bulk student operations** — add new / add existing / bulk activate | `SBLK` | `SBLK` | [`admin-students-tab.md`](ExperienceApp/admin-students-tab.md) |
+| **Staff tab** — list, search, sort, user guide, load more | `STFL` | `STFL` | [`admin-staff-tab.md`](ExperienceApp/admin-staff-tab.md) |
+| **Staff profile** / grant & remove admin rights / remove from school | `STFP` | `STFP` | [`admin-staff-tab.md`](ExperienceApp/admin-staff-tab.md) |
+| **Bulk staff invitations** — Add new teachers to classes | `STFB` | `STFB` | [`admin-staff-tab.md`](ExperienceApp/admin-staff-tab.md) |
 | Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](ExperienceApp/admin-class-grade-settings.md) |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](ExperienceApp/admin-grading-details-pages.md) |
 | Class management (label / delete / count) | `CMGT` | — not automated | *(no knowledge file yet)* |

@@ -93,6 +93,9 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Students tab** (list, search, sort, user guide, load more) | `SLST` | `SLST` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Student profile / manage account / individual activation** | `SPRF` | `SPRF` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Bulk student operations** (add new / add existing / bulk activate) | `SBLK` | `SBLK` | [`admin-students-tab.md`](admin-students-tab.md) |
+| **Staff tab** (list, search, sort, user guide, load more) | `STFL` | `STFL` | [`admin-staff-tab.md`](admin-staff-tab.md) |
+| **Staff profile / admin rights / removal** | `STFP` | `STFP` | [`admin-staff-tab.md`](admin-staff-tab.md) |
+| **Bulk staff invitations** (Add new teachers to classes) | `STFB` | `STFB` | [`admin-staff-tab.md`](admin-staff-tab.md) |
 | Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
 | Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](admin-class-grade-settings.md) |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](admin-grading-details-pages.md) |
@@ -234,7 +237,7 @@ the product renders blank lines that a naive `\s+→' '` capture flattens `[2026
 **Sweepable prefixes** — anything automation creates uses one of these, so leftovers from a crashed
 run are recognisable and removable:
 
-`AutoClass_` · `AutoCat_` · `AutoScale_` · `BulkCSV_` · `Fixture_`
+`AutoClass_` · `AutoCat_` · `AutoScale_` · `BulkCSV_` · `Fixture_` · `AutoStudent_` · `AutoStaff_`
 
 **Which suites create real classes** `[verified against the exec files, 2026-08-21]`
 
