@@ -119,6 +119,11 @@ re-checks this table against the code that actually shipped.
       trap that applies. Carried into Phase 2 for re-checking.
 - [ ] Every new TC exists in BOTH the test file and the TC repository, all with `visualTest: false`.
 - [ ] Exec file references only registered TC ids; every `dataFile`/`jsonPath` resolves.
+      **Verify mechanically, do not eyeball it:** `node tooling/tcMap.js --findings` (exit 1 = a
+      blocking problem). It resolves `(testFile, id)` exactly the way `testrunner.js` does, so it
+      catches a TC registered under the wrong `testFile` — which throws at run time but survives a
+      grep for the id. It also lists ORPHAN TCs: defined and registered, but wired into no
+      execution file at all.
 - [ ] **The suite has been EXECUTED at least once against the target environment, and the real
       output is recorded in the walkthrough.** Failures here are expected and fine — making it
       pass is Phase 2's job. The point is that every selector, timeout and data value has met

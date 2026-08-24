@@ -17,8 +17,9 @@ At the start of **every** conversation or task, read all `.md` files under
   (school-admin) task that means
   `product-knowledge/ExperienceApp/admin-shared.md` — Part A when designing manual
   test cases, Part A + Part B when authoring or debugging automation — plus the
-  screen's own file. The index's app→file map names them; `admin-shared.md` §A2
-  records which admin screens still have their knowledge inside `ExperienceApp.md`.
+  screen's own file. **`ExperienceApp.md` is an INDEX** — app header, environment
+  URLs and the screen→file map; the knowledge itself lives in
+  `product-knowledge/ExperienceApp/`. Never append knowledge to the app file.
 - `testAutomation_v1.0/.architecture/PROMPTS.md`
 - `testAutomation_v1.0/.architecture/manual-test-standard.md`
 Walkthroughs (`testAutomation_v1.0/.architecture/walkthroughs/`) are **historical

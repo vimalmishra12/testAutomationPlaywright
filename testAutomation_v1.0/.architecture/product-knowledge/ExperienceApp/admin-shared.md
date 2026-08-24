@@ -93,17 +93,17 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Students tab** (list, search, sort, user guide, load more) | `SLST` | `SLST` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Student profile / manage account / individual activation** | `SPRF` | `SPRF` | [`admin-students-tab.md`](admin-students-tab.md) |
 | **Bulk student operations** (add new / add existing / bulk activate) | `SBLK` | `SBLK` | [`admin-students-tab.md`](admin-students-tab.md) |
-| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | `../ExperienceApp.md` § *Feature: Classes tab — list, and the Filter panel* |
-| Class grade settings | `CGST` | `CGST` | `../ExperienceApp.md` § *Feature: Class grade settings (CGST, Req #22)* |
-| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | `../ExperienceApp.md` § *Feature: The "classes using this" lists…* |
-| Class management (label / delete / count) | `CMGT` | — not automated | — |
-| Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | — |
-| Context class | `CTXC` | — **blocked**, no entry point found | — |
+| Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
+| Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](admin-class-grade-settings.md) |
+| Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](admin-grading-details-pages.md) |
+| Bulk new account creation via CSV upload | — | `NEMO24306` | [`admin-bulk-account-csv.md`](admin-bulk-account-csv.md) |
+| Class management (label / delete / count) | `CMGT` | — not automated | *(none yet)* |
+| Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | *(none yet)* |
+| Context class | `CTXC` | — **blocked**, no entry point found | *(none yet)* |
 
-> **Two homes today, deliberately.** The three screens above with their own file were written
-> during the Phase 1 review `[2026-08-21]`; the three still inside `ExperienceApp.md` were written
-> earlier and have **not been moved**, because moving them is the wider split (proposed ADR-020) and
-> is a separate decision. Look in both places until that lands.
+> **One home now.** `[2026-08-21]` The ADR-020 migration is complete — every admin screen's
+> knowledge lives in its own file in this folder, and `../ExperienceApp.md` is an index. The
+> earlier "look in both places" note is retired.
 
 > **Note the `BCCF` → `CCLS` mismatch.** Manual module codes are invented per manual batch;
 > automation module codes come from the **page object** (AGENTS.md Rule 6). When these disagree the
