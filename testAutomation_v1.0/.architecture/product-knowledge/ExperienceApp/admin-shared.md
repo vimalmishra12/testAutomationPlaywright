@@ -40,6 +40,7 @@
 | `FCN-CHZ-PDA` | 3 July Test School 1 | `org_perf_testschool_1` | **Primary.** Shared and mutated by other teams |
 | `ZPB-TWP-AEQ` | 3 July Test School 1 | — | **Same display name.** This is why selection is by key |
 | `MQA-ABC-DEF` | MQA Sierra School | — | The login account's own home school. Used for **capture only**, 2026-08-17/18 |
+| `ACJ-DXL-JKR` | Perf Test School 4 | `org_perf_testschool_4` | **Holds ZERO school licences** — the only known zero-licence school. Used by `TST_LIBR_TC_30` to verify the empty School licence state `[2026-08-26]` |
 
 > **No suite targets MQA today** — all four `schoolKey` values in
 > `schoolAdminAddClassData.json` read `FCN-CHZ-PDA` `[verified 2026-08-21]`. This corrects
@@ -96,6 +97,8 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Staff tab** (list, search, sort, user guide, load more) | `STFL` | `STFL` | [`admin-staff-tab.md`](admin-staff-tab.md) |
 | **Staff profile / admin rights / removal** | `STFP` | `STFP` | [`admin-staff-tab.md`](admin-staff-tab.md) |
 | **Bulk staff invitations** (Add new teachers to classes) | `STFB` | `STFB` | [`admin-staff-tab.md`](admin-staff-tab.md) |
+| **Library tab** (list, sort, search, School licence section) | `LIBR` | `LIBR` | [`admin-library-tab.md`](admin-library-tab.md) |
+| **Product materials view** ("See materials", components, Add to a class) | `UMBP` | `UMBP` | [`admin-library-tab.md`](admin-library-tab.md) |
 | Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
 | Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](admin-class-grade-settings.md) |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](admin-grading-details-pages.md) |
@@ -166,6 +169,13 @@ Login  →  My school accounts  (/admin/admin/dashboard)
   exhausted (not disabled). `[2026-08-17]`
 - **Bulk CSV upload POPULATES the form — it does not create classes.** Clicking "Create N classes"
   remains the only creation gate, so CSV-upload cases are side-effect free. `[2026-08-18]`
+- **The Library tab breaks three Classes-tab habits** `[2026-08-24]` — see
+  [`admin-library-tab.md`](admin-library-tab.md) §3. Its sort is **case-insensitive**, not by code
+  point; its search **does NOT persist** across reload (the Classes search does); and it has **no
+  lazy loading at all** — all 970 products render at once, with no "Load more". Its search is also
+  **fuzzy, not a substring match**, so "every result contains the term" is an assertion that fails
+  against the live product. **Do not inherit a Classes-tab expectation onto a new admin tab without
+  re-verifying it.**
 - **Class grade settings: Total and Save update on BLUR, not per keystroke.** Mid-edit the page can
   show `Total grade: 100%` with Save enabled while the real total is 600%. A case that types and
   immediately checks the total will report the validation as broken. `[2026-08-20]`
@@ -349,6 +359,7 @@ Ten minutes here replaces multiple debug rounds. Every item below caused a real 
 | Create-classes success dialog | Present and hidden **before any class is created** |
 | Students tab | Row menu items pre-rendered **once per row** — 26 students meant **26** hidden `View student profile` links, all sharing one identifier; plus 3 removal `.modal-content` `[2026-08-22]` |
 | Bulk activation | **11** `.modal-content`, all hidden `[2026-08-22]` |
+| Product materials view (Library) | **2330** class options in the Add-to-a-class dialog, all hidden until it opens — **and all sharing the single qid `t-prd-umb-dd-1`** `[2026-08-24]` |
 | Manage learner profile → Password | A whole **Gigya screen-set** injects dozens of extra hidden `profile.*` / `password` / `username` inputs `[2026-08-22]` |
 
 **Consequences**
@@ -381,6 +392,9 @@ A positional id is **not** a stable selector (Invariant 2). Found independently 
 | `dBulkClass-add-learning-material-modal-1-0` | Hardcoded positional index; stops resolving when the draft's row count changes | Still hardcoded — known live risk |
 | Grading-scale **band rows** | Re-index when a middle band is added: `0/1` becomes `0/1/2`, so "Lowest is index 1" silently writes into the wrong band | Address the lowest row as `count - 1`, never a literal |
 | `dBulkClass-<row>-<col>` | Fine, but row 2+ must be verified, not inferred | Verified live |
+| `aLibrary-4-<n>` (Library product rows) | Positional over ~970 rows; the row — not the inner "See materials" anchor — is the accessible control `[2026-08-24]` | Look the row up **by title on every use** |
+| `t-prd-cmp-cntr-1` (product components) | **NOT positional — every component tile carries the SAME qid** (12 on one product, 15 on another). It cannot address one component `[2026-08-24]` | Select structurally by index, or by the component's text |
+| `aClass-99` (Library "Clear" link) | A **Classes-tab** qid living on the **Library** tab. A selector sweep scoped to `aLibrary-*` misses it `[2026-08-24]` | Do not assume a screen's controls all share its qid family |
 
 > **Also:** an unscoped `a.dropdown-item` on the create form matched the **header profile menu** —
 > up to **885 elements**. Scope container-level selectors to their modal. Other page objects may
