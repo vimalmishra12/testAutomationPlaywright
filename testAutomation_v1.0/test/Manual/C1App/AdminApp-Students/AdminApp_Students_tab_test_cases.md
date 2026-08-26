@@ -10,7 +10,7 @@
 - Module **SPRF** (`TST_SPRF_TC_1–22`, 22 TCs) — scenarios #8–#15, #22.
 - Module **SBLK** (`TST_SBLK_TC_1–12`, 12 TCs) — scenarios #17–#21.
 
-**Three cases are BLOCKED at design time**, each for a different shared-school reason — see their Comments cells: `TST_SLST_TC_14` (the activation checkbox has no observable effect on this school), `TST_SPRF_TC_3` (no adult-with-username account exists here) and `TST_SPRF_TC_20` (the 50-student removal cap needs 51+ students; the school holds 26). All three are recorded **Blocked**, not Not Run, per `admin-shared.md` §A8.3.
+**Three cases are BLOCKED at design time**, each for a different shared-school reason — see their Comments cells: `TST_SLST_TC_14` (no activation code is available on the environment, and a known application issue blocks the activation-code search), `TST_SPRF_TC_3` (no adult-with-username account exists here) and `TST_SPRF_TC_20` (the 50-student removal cap needs 51+ students; the school holds 26). All three are recorded **Blocked**, not Not Run, per `admin-shared.md` §A8.3.
 
 **Four product defects were found during grounding** and are written as the expected-versus-actual cases named here, each with live evidence:
 
@@ -399,15 +399,15 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 |---|---|
 | **S.No.** | 13 |
 | **Test Case ID** | TST_SLST_TC_13 |
-| **Title** | Verify the "Who activated the code in my school?" checkbox can be toggled and re-queries the list |
+| **Title** | Verify the activation-code hint is shown when the "Who activated the code in my school?" checkbox is ticked |
 | **Linked Requirement** | #5 — Verify search with "who activated the code in my school?" checkbox |
 | **Type** | Positive |
 | **Priority** | Medium |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
-| **Test Steps** | 1. Tick the "Who activated the code in my school?" checkbox.<br>2. Wait for the list to settle.<br>3. Observe the heading and rows.<br>4. Untick the checkbox and observe again. |
+| **Test Steps** | 1. Observe the search box placeholder before ticking anything.<br>2. Tick the "Who activated the code in my school?" checkbox.<br>3. Observe the area directly below the checkbox, and the search box placeholder.<br>4. Untick the checkbox and observe both again. |
 | **Test Data** | - |
-| **Expected Result** | The checkbox toggles on and off cleanly and the list re-renders each time without error; "Load more ..." remains available.<br><br>[ASSUMED] that ticking the box restricts the list to students who activated a code in this school. On FCN-CHZ-PDA the result set was IDENTICAL with the box ticked and unticked (26 students, same first five rows, 2026-08-22), so the filtering effect could not be demonstrated here. |
-| **Remarks** | Needs <SCHOOL_WITH_MIXED_ACTIVATION> — a school holding both students who activated a code and students who did not. Confirm the differentiating behaviour during Phase 1. |
+| **Expected Result** | After step 2 a hint appears directly below the checkbox reading exactly: **"A user activation code usually has 16 characters, both letters and numbers."**<br><br>The search box placeholder changes from "Search by first name, last name, email or username" to empty, showing the search now takes an activation code rather than a name.<br><br>After step 4 the hint is removed from the page and the original placeholder is restored.<br><br>The student list is EXPECTED TO STAY THE SAME throughout — the checkbox changes what the search box searches by; it does not filter the list on its own. |
+| **Remarks** | **Corrected 2026-08-26, verified live.** This case previously expected the checkbox to FILTER the list to students who had activated a code, and recorded the identical 26-student result on FCN-CHZ-PDA as an unproven [ASSUMED] needing a <SCHOOL_WITH_MIXED_ACTIVATION>. That premise was wrong: the checkbox is a **search-mode switch**, not a filter, so an unchanged list with an empty search box is CORRECT behaviour, not a gap — and no special school is needed. Note the copy says "16 **characters**, both letters and numbers", **not** "16 digits"; assert it verbatim. The activation-code search itself is exercised by TST_SLST_TC_14 (Blocked). |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -416,18 +416,18 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 |---|---|
 | **S.No.** | 14 |
 | **Test Case ID** | TST_SLST_TC_14 |
-| **Title** | Verify the activation checkbox and a search term can be applied together |
+| **Title** | Verify a student can be found by activation code when the "Who activated the code in my school?" checkbox is ticked |
 | **Linked Requirement** | #5 — Verify search with "who activated the code in my school?" checkbox |
 | **Type** | Edge |
 | **Priority** | Low |
-| **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
-| **Test Steps** | 1. Tick "Who activated the code in my school?".<br>2. Type a first name that matches a student who has NOT activated a code.<br>3. Click Search. |
-| **Test Data** | <STUDENT_WITHOUT_ACTIVATED_CODE> |
-| **Expected Result** | [ASSUMED] The two conditions combine (AND): the named student is excluded because they have not activated a code, and the empty result is shown. |
-| **Remarks** | Blocked at design time on FCN-CHZ-PDA for the same reason as TST_SLST_TC_13 — the checkbox has no observable effect there, so the combination cannot be distinguished from search alone. |
+| **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. An activation code redeemed by a student in this school is known. |
+| **Test Steps** | 1. Tick "Who activated the code in my school?".<br>2. Type an **activation code** into the search box (with the checkbox ticked, the search box searches by activation code — **not** by name).<br>3. Click Search. |
+| **Test Data** | <VALID_ACTIVATION_CODE> — an activation code redeemed by a student in this school |
+| **Expected Result** | [ASSUMED] The list is restricted to the student(s) who activated the supplied code. |
+| **Remarks** | **Corrected 2026-08-26.** This case previously had step 2 as "type a first name" and expected the checkbox to AND with a name search. That was wrong: the checkbox does not filter a name search — it **changes what the search box searches by**, from student name to **activation code**. The step and expected result now reflect that. Still `[ASSUMED]` — the behaviour cannot be observed on the current environment (see Comments). |
 | **Actual Result** | |
 | **Status** | Blocked |
-| **Comments / Defect ID** | Blocked at design time. The activation checkbox has no observable effect on 3 July Test School 1 (FCN-CHZ-PDA), so its combination with a search term cannot be distinguished from search alone. Unblocked by a school holding both students who activated a code and students who did not. |
+| **Comments / Defect ID** | Blocked at design time. **No activation code is currently available** on the test environment, and a known application issue prevents this path being exercised, so the activation-code search cannot be validated. **Do not automate this case for now.** Unblocked by a school with a student who has redeemed a known activation code, once the application issue is resolved. |
 
 ### Requirement #6 — Verify sort by last name/first name/username
 
@@ -558,15 +558,15 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 |---|---|
 | **S.No.** | 22 |
 | **Test Case ID** | TST_SLST_TC_22 |
-| **Title** | Verify Load more appends the remaining students to the list |
+| **Title** | Verify Load more appends the next page of 20 students without replacing the rows already shown |
 | **Linked Requirement** | #16 — Verify load more feature |
 | **Type** | Positive |
 | **Priority** | High |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. The school has more than 20 students. |
-| **Test Steps** | 1. Count the rows on first load.<br>2. Click "Load more ...".<br>3. Count the rows again. |
+| **Test Steps** | 1. Count the rows on first load.<br>2. Note the first and last student shown.<br>3. Click "Load more ..." ONCE.<br>4. Count the rows again.<br>5. Confirm the students noted in step 2 are still present, in the same order. |
 | **Test Data** | - |
-| **Expected Result** | The first page holds exactly 20 rows. After Load more the list holds every student in the school (26 at the time of capture) and the previously loaded rows are retained, not replaced. |
-| **Remarks** | Verified live 2026-08-22. Page size 20 — the same as the Classes tab. Do not assert the absolute total on this shared school; assert "20 before, list length equals the heading count after". |
+| **Expected Result** | The first page holds exactly **20** rows. After ONE click the list holds **20 + min(20, remaining)** rows — i.e. 40 on a school with 40+ students, or fewer only when the school has fewer than 40 in total. The 20 rows already shown are **retained in place**, not replaced, and the sort order is preserved. |
+| **Remarks** | **Corrected 2026-08-26.** This previously read "after Load more the list holds every student in the school (26 at the time of capture)" and told automation to assert "list length equals the heading count". That is only true because FCN-CHZ-PDA held 26 students, so ONE click happened to exhaust it. **Load more appends the NEXT 20, not the remainder** — on an 85-student school one click gives 40, and the old assertion would fail against a healthy product. Assert the delta (+20, capped by what remains), never the heading total. Exhaustion is covered separately by TST_SLST_TC_23. Page size 20, verified live 2026-08-22 — same as the Classes tab. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -579,11 +579,11 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Linked Requirement** | #16 — Verify load more feature |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. Load more has been clicked until all students are listed. |
-| **Test Steps** | 1. Look for the "Load more ..." link. |
+| **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed with the first page of 20 rows and "Load more ..." present. |
+| **Test Steps** | 1. Note the count in the heading "Students (N)".<br>2. Click "Load more ...".<br>3. Wait for the new rows to render.<br>4. **REPEAT steps 2-3 while the "Load more ..." link is still present** — do not assume a fixed number of clicks.<br>5. When the link is gone, look for it on the page. |
 | **Test Data** | - |
-| **Expected Result** | The link is REMOVED from the page — it is not left visible in a disabled state. |
-| **Remarks** | Verified live 2026-08-22. Automation must assert absence, not disabled-ness. |
+| **Expected Result** | Each click appends the next page of 20 (the last click appending only what remains). Once the whole list is loaded, "Load more ..." is **REMOVED from the page** — it is not left visible in a disabled state.<br><br>The number of clicks required is **ceil(N / 20) - 1**, where N is the heading count: e.g. 26 students = 1 click, 80 = 3 clicks, 85 = 4 clicks. A school with exactly 20 or fewer never shows the link at all. |
+| **Remarks** | Verified live 2026-08-22. Automation must **assert absence, not disabled-ness**, and must **loop until the link disappears** rather than clicking a fixed number of times. **Note the trap:** FCN-CHZ-PDA held 26 students at capture, so ONE click exhausted the list — a single-click implementation would pass there and break as soon as the school exceeds 40. The exhaustion loop was previously buried in this case Preconditions; it is now an explicit step. Related: TST_SLST_TC_22 covers the single-click append. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -1236,8 +1236,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 
 | TC | What needs confirming live |
 |---|---|
-| TST_SLST_TC_13 | Verify the "Who activated the code in my school?" checkbox can be toggled and re-queries the list |
-| TST_SLST_TC_14 | Verify the activation checkbox and a search term can be applied together |
+| ~~TST_SLST_TC_13~~ | **RESOLVED 2026-08-26.** Verified live: the checkbox is a search-mode switch, not a filter. Ticking it shows the hint "A user activation code usually has 16 characters, both letters and numbers." below the checkbox and clears the search placeholder; the student list correctly does not change. No longer [ASSUMED]. |
+| TST_SLST_TC_14 | That searching a valid **activation code** (with the checkbox ticked) returns the student who redeemed it. Still [ASSUMED] and **Blocked** — no activation code is available and a known application issue blocks this path. Do not automate yet. |
 | TST_SLST_TC_19 | Verify the chosen sort is not retained across a page reload |
 | TST_SLST_TC_25 | Verify the Students heading count increases after a new student is added to the school |
 | TST_SPRF_TC_3 | Verify the profile of an ADULT account that logs in with a username shows the username as its identifier |
@@ -1252,7 +1252,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 ## Handoff to automation
 
 - **Module codes and their page objects:** `SLST` → `schoolStudents`, `SPRF` → `studentProfile`, `SBLK` → `bulkStudents`. Chosen from the page objects the screens will get, not from this batch (`admin-shared.md` §A8.4) — so no repeat of the `BCCF` → `CCLS` mismatch.
-- **Blocked:** `TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`. One dedicated, larger school with mixed code-activation states unblocks all three.
+- **Blocked:** `TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`. `TST_SPRF_TC_3` and `TST_SPRF_TC_20` are unblocked by one dedicated, larger school. `TST_SLST_TC_14` is different — it needs a known, redeemed **activation code** plus a fix to the application issue that currently blocks activation-code search; **do not automate it until then**.
 - **Side-effect free** (safe in a read-only suite): all of `SLST` except `TST_SLST_TC_25`; `SPRF` 1–7, 9, 11, 15, 16, 17, 18, 21; `SBLK` 7, 8, 10.
 - **Creates, mutates or destroys real data** (keep in a separate suite, per `c1-test-authoring`): `TST_SLST_TC_25`, `TST_SPRF_TC_8` (password), `TST_SPRF_TC_10`/`12`/`13` (personal info), `TST_SPRF_TC_14` (consumes an activation code), `TST_SPRF_TC_19`/`22` (removal), and all of `TST_SBLK_TC_1`–`5`, `11`, `12`.
 - **Sends real email:** `TST_SBLK_TC_3`, `TST_SBLK_TC_5`, and the removal report from `TST_SPRF_TC_19`.
