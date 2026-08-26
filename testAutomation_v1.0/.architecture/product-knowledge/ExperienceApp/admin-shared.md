@@ -100,6 +100,7 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Library tab** (list, sort, search, School licence section) | `LIBR` | `LIBR` | [`admin-library-tab.md`](admin-library-tab.md) |
 | **Product materials view** ("See materials", components, Add to a class) | `UMBP` | `UMBP` | [`admin-library-tab.md`](admin-library-tab.md) |
 | Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
+| **Reports tab** (list, Create report flow, report types) | `MRPT` | `MRPT` | [`admin-reports-tab.md`](admin-reports-tab.md) |
 | Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](admin-class-grade-settings.md) |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](admin-grading-details-pages.md) |
 | Bulk new account creation via CSV upload | — | `NEMO24306` | [`admin-bulk-account-csv.md`](admin-bulk-account-csv.md) |
