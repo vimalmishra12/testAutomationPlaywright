@@ -137,14 +137,14 @@ async function findOptionIndex(listSelector, name) {
 }
 
 /** Fills a numeric field the way an Angular form expects, then BLURS (trap 1). */
-async function setNumericField(selector, value) {
+async function setNumericField(selector, value, blurKey) {
   var res = { set: false, blurred: false, value: "" };
   res.cleared = await action.clearValue(selector);
   if (true != res.cleared) return res;
   res.typed = await action.addValue(selector, String(value));
   if (true != res.typed) return res;
   // Trap 1: the model, the total and the Save state only update on blur.
-  res.blurred = (await action.pressTab()) === true;
+  res.blurred = (await action.pressKeyboardKey(blurKey)) === true;
   res.value = await readValue(selector);
   res.set = res.value === String(value);
   return res;
@@ -529,10 +529,10 @@ module.exports = {
   },
 
   /** Sets a category row's weightage. Blurs before returning (trap 1). */
-  set_categoryWeightage: async function (rowIndex, value) {
+  set_categoryWeightage: async function (rowIndex, value, blurKey) {
     await logger.logInto(await stackTrace.get(), "row:" + rowIndex + " value:" + value);
     var sel = this.categoryWeightageByIndex.replace("{{n}}", String(rowIndex));
-    return await setNumericField(sel, value);
+    return await setNumericField(sel, value, blurKey);
   },
 
   /** Removes a category row (used to restore the form without a reload). */
@@ -725,11 +725,11 @@ module.exports = {
   },
 
   /** Sets a material weightage. Blurs before returning (trap 1). */
-  set_materialWeightage: async function (bundleIndex, itemIndex, value) {
+  set_materialWeightage: async function (bundleIndex, itemIndex, value, blurKey) {
     await logger.logInto(await stackTrace.get(), "b:" + bundleIndex + " i:" + itemIndex + " value:" + value);
     var sel = this.materialWeightageByIndex
       .replace("{{b}}", String(bundleIndex))
       .replace("{{i}}", String(itemIndex));
-    return await setNumericField(sel, value);
+    return await setNumericField(sel, value, blurKey);
   }
 };

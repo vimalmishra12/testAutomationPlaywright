@@ -297,10 +297,10 @@ module.exports = {
     );
 
     // Make room for the category so the total can reach exactly 100%.
-    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.materialWeightage);
+    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.materialWeightage, testdata.blurKey);
     await assertion.assertEqual(sts.set, true, "Material weightage was not set");
 
-    sts = await classGradeSettings.set_categoryWeightage(0, testdata.categoryWeightage);
+    sts = await classGradeSettings.set_categoryWeightage(0, testdata.categoryWeightage, testdata.blurKey);
     await assertion.assertEqual(sts.set, true, "Category weightage was not set");
 
     // Both fields are blurred by set_* (trap 1), so the total is now the real model value.
@@ -395,7 +395,7 @@ module.exports = {
    * Runs LAST because it deliberately leaves the form invalid; it reloads to discard.
    */
   TST_CGST_TC_6: async function (testdata) {
-    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.invalidMaterialWeightage);
+    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.invalidMaterialWeightage, testdata.blurKey);
     await assertion.assertEqual(sts.set, true, "The invalid material weightage was not entered");
 
     var totals = await classGradeSettings.getData_totals();
@@ -416,7 +416,7 @@ module.exports = {
     );
 
     // A single field outside 0-100 raises its own message alongside the total's.
-    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.outOfRangeWeightage);
+    sts = await classGradeSettings.set_materialWeightage(0, 0, testdata.outOfRangeWeightage, testdata.blurKey);
     await assertion.assertEqual(sts.set, true, "The out-of-range material weightage was not entered");
     totals = await classGradeSettings.getData_totals();
     await assertion.assertEqual(
