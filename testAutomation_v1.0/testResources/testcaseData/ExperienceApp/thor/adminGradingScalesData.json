@@ -5,6 +5,7 @@
       "namePrefix": "AutoScale_",
       "maxTitleLength": 20,
       "systemDefaultScale": "Cambridge One grading scale",
+      "blurKey": "Tab",
       "highestGrade": "A",
       "highestFrom": "50",
       "lowestGrade": "F",

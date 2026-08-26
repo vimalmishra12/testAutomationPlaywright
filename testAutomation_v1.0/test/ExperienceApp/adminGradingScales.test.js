@@ -100,7 +100,7 @@ async function fillTwoBandScale(testdata, title) {
   out.lowest = await manageGradingScales.set_band(rows.count - 1, { name: testdata.lowestGrade, to: testdata.lowestTo });
   // Commit the last field: set_band blurs each input by moving to the next, but the final
   // one is left focused, and a form using updateOn:'blur' would never see its value.
-  out.blurred = await manageGradingScales.blur_activeField();
+  out.blurred = await manageGradingScales.blur_activeField(testdata.blurKey);
   // Click the target explicitly. The Highest band's radio RENDERS checked on a fresh form,
   // but a DOM checked flag is not proof that the form model holds a target - and "Save" is
   // gated on a target being chosen. Clicking makes the intent real instead of assumed.

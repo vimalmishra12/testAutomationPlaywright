@@ -460,10 +460,10 @@ module.exports = {
    * disabled on a form that looks complete. Committing the final field explicitly removes
    * that whole class of doubt.
    */
-  blur_activeField: async function () {
+  blur_activeField: async function (blurKey) {
     var res = { pageStatus: false };
     await logger.logInto(await stackTrace.get());
-    res.pageStatus = (await action.pressTab()) === true;
+    res.pageStatus = (await action.pressKeyboardKey(blurKey)) === true;
     return res;
   },
 
