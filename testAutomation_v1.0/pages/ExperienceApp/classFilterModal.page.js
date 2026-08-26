@@ -218,9 +218,15 @@ module.exports = {
       // actionability, threw, and was swallowed by the catch below — so the Clear-link click
       // never ran and the filter survived the reset. That is why an applied filter persisted
       // across runs and even into a fresh browser login (diagnosed live 2026-08-15).
+      //
+      // Close via click_close(), NOT a raw click: click_close() gates on the X being
+      // clickable and carries the empirical settle pause the panel needs before its close
+      // handler is bound. TST_CLST_TC_2 is deliberately OPEN-ONLY (its report screenshot
+      // captures the open panel), so this reset is what actually closes it. A raw immediate
+      // click here was swallowed, the 15s hidden-wait timed out into the catch below, and the
+      // still-open modal's backdrop then intercepted TST_CLST_TC_23's Filter click.
       if (true === (await action.isDisplayed(this.modalRoot))) {
-        await action.click(this.closeBtn);
-        await action.waitForDisplayed(this.modalRoot, 15000, true);
+        await this.click_close();
       }
       // The page shows a "Clear" link (qid=aClass-19) only while a filter is applied —
       // one click resets every chip, which is why this is preferred over reopening the
