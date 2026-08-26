@@ -5,7 +5,9 @@
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Pages in scope:** Staff tab `/admin/admin/org_<slug>/staff` · staff profile `/admin/admin/org_<slug>/profile/<orgUuid>/<userId>` · invitation form `/admin/admin/org_<slug>/email/invite` · class page (from a profile) `/class/teacher/org_<slug>/class/<uuid>/view`
 **Generated:** 2026-08-24 | **Total TCs:** 55 (30 Positive · 19 Edge · 6 Negative) — **all 13 source scenarios covered**
-**Execution status (2026-08-24):** **0 of 55 TCs automated.** 54 are **Not Run**; **1 is Blocked** at design time (see below). This is a design-only batch — nothing has been automated yet, and no case is marked Pass.
+**Execution status (updated 2026-08-26):** **0 of 55 TCs automated.** 53 are **Not Run**; **1 is Blocked** at design time (see below); **1 is Fail** — `TST_STFL_TC_26`, executed manually on 2026-08-24 and found failing against a real product defect. No case is marked Pass.
+
+> **`TST_STFL_TC_26` is a DEFECT GUARD.** Its automated test is **expected to fail** until the product is fixed. Do not weaken the assertion, and do not skip or quarantine it to make the suite green — a red result on that case alone is the correct state.
 - Module **STFL** (`TST_STFL_TC_1–27`, **26 TCs** — `TST_STFL_TC_22` withdrawn, see below) — scenarios #1–#6, #13.
 - Module **STFP** (`TST_STFP_TC_1–18`, **17 TCs** — `TST_STFP_TC_5` withdrawn, see below) — scenarios #7–#11.
 - Module **STFB** (`TST_STFB_TC_1–12`, 12 TCs) — scenario #12.
@@ -602,8 +604,8 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Preconditions** | Logged in as school admin `testt1@mailsac.com` on thor. School `FCN-CHZ-PDA` ("3 July Test School 1") opened from "My school accounts" BY KEY. Staff tab open at `/admin/admin/org_perf_testschool_1/staff`. |
 | **Test Steps** | 1. Click `Load more ...` repeatedly until no further rows are appended.<br>2. Look for the `Load more ...` control. |
 | **Test Data** | — |
-| **Expected Result** | `Load more ...` is **removed from the page**, not merely disabled. An automated check must assert absence, not a disabled state. |
-| **Remarks** | Verified live 2026-08-24. Same behaviour as the Classes and Students tabs. |
+| **Expected Result** | Each click appends the next page of **20** (the last click appending only what remains). Once the whole list is loaded, `Load more ...` is **removed from the page**, not merely disabled. An automated check must assert absence, not a disabled state.<br><br>The number of clicks required is **ceil(N / 20) - 1**, where N is the heading count `Staff (N)`: e.g. 23 staff = 1 click, 80 = 3 clicks, 85 = 4 clicks. A list of exactly 20 or fewer never shows the link at all (covered by TST_STFL_TC_25). |
+| **Remarks** | Verified live 2026-08-24. Same behaviour as the Classes and Students tabs. **Click count added 2026-08-26** so the loop is predictable per school — the step already said "repeatedly", but gave no way to know how many clicks to expect. **Note:** FCN-CHZ-PDA held 23 staff at capture, so ONE click exhausted the list; a single-click implementation would pass there and break as soon as the school exceeds 40. Loop until the link disappears, never a fixed count. **See also TST_STFL_TC_26** — on this tab the rendered row count does NOT match the heading count (a known defect), so do NOT use the heading total as the loop-termination condition; terminate on the link being gone. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -640,11 +642,11 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Preconditions** | Logged in as school admin `testt1@mailsac.com` on thor. School `FCN-CHZ-PDA` ("3 July Test School 1") opened from "My school accounts" BY KEY. Staff tab open at `/admin/admin/org_perf_testschool_1/staff`. |
 | **Test Steps** | 1. Read the count in the heading `Staff (N)`.<br>2. Click `Load more ...` until it is removed from the page.<br>3. Count the rendered staff rows.<br>4. Compare the two numbers. |
 | **Test Data** | — |
-| **Expected Result** | **Expected:** the number of rendered rows equals the heading count. **Actual (verified live 2026-08-24):** the heading read `Staff (23)` but the exhausted list rendered only **21** unique rows — a shortfall of 2 with `Load more ...` already removed. |
+| **Expected Result** | The number of rendered rows **equals** the heading count `Staff (N)` once `Load more ...` has been removed.<br><br>**This is the correct expectation and it MUST NOT be relaxed.** The product currently fails it — see Actual Result. |
 | **Remarks** | Expected-versus-actual — **a real defect**, discussed with the team 2026-08-24. The shortfall is **not** explained by pending invitations: the team confirmed `Staff (N)` increments only when an invited teacher **accepts**, so invited-but-not-joined staff are not counted. The cause is therefore **unexplained**, and may be specific to this school's data. Because the school is shared, automate this as "heading count equals rendered row count", never as the literal numbers 23 and 21 — and expect this case to **fail on `FCN-CHZ-PDA`** until the data or the defect is fixed. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | **FAILS (verified live 2026-08-24).** The heading read `Staff (23)` but the exhausted list rendered only **21** unique rows — a shortfall of 2, with `Load more ...` already removed. |
+| **Status** | **Fail** |
+| **Comments / Defect ID** | <DEFECT_ID — to be raised>. **This case is a defect guard: the automated test is EXPECTED TO FAIL until the product is fixed.** Automate the assertion as "rendered row count === heading count" and leave it failing. Do NOT weaken it to the observed numbers (23/21), do NOT assert "rows <= heading", and do NOT skip, quarantine or `.skip()` it to get a green suite — that would delete the only signal that this defect exists. When the suite is red on this case alone, that is the correct state. Discussed with the team 2026-08-24; the cause is still unexplained. |
 
 ---
 
