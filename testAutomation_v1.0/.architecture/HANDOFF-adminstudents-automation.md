@@ -1,11 +1,13 @@
 # HANDOFF — Admin App Students tab, manual design → automation
 
 > Context primer for **starting automation** of the Students-tab manual cases.
-> Written 2026-08-22 at the end of the design session. **Read this INSTEAD of the session
-> transcript.** Deeper detail lives in
-> `.architecture/walkthroughs/walkthrough_adminStudentsTab.test.js_2026-08-22_20h-50m.md` and in
-> `product-knowledge/ExperienceApp/admin-students-tab.md`.
+> **SUPERSEDED — 2026-08-28.** This is the design-only handoff written at the end of the manual
+> design session on 2026-08-22. It is kept for history. For anything current, read
+> **`HANDOFF-adminstudents-automation-2026-08-28.md`** instead: the SLST block is now automated
+> and passing, and three of this file's conclusions (the activation checkbox, the no-results
+> defect, and "one mixed-activation school unblocks all three Blocked cases") have been corrected.
 
+> Context primer written 2026-08-22 at the end of the design session.
 ---
 
 ## 0. Start here on Monday
