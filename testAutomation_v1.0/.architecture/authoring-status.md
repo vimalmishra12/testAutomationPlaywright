@@ -378,3 +378,47 @@ stacking a 90 s wait and the click's own 30 s default.
   category can be applied to a class. They remain unwritten (deliberately out of this batch).
 - The manual register has NOT been updated to Pass yet — awaiting the user's call, given how much
   timing variance Thor showed today.
+
+---
+
+## adminStudentsTab (ExperienceApp, thor)
+Admin App **Students tab**, module **SLST** → `pages/ExperienceApp/schoolStudents.page.js`.
+Manual source: `test/Manual/C1App/AdminApp-Students/` (59 TCs across SLST/SPRF/SBLK).
+Scope of this entry: the **side-effect-free SLST block only** (23 of 25 SLST cases).
+
+- Phase 1 (build):   ✅ 2026-08-28 — TST_SLST_TC_1..24 (less TC_14/TC_25) registered, plus
+  TC_NAV and TC_RESET housekeeping. **Executed: 23 passing / 0 failing**, across two
+  consecutive clean runs of `npm run adminStudentsTabTest_thor`.
+  Selectors were captured LIVE (scripted recon against Thor / FCN-CHZ-PDA) rather than
+  inferred from documentation — see `product-knowledge/ExperienceApp/admin-students-tab.md` §7.
+  Visual candidates: **none identified so far** — every SLST case reads dynamic, shared-school
+  data (row content, counts, sort order) and this school is actively mutated by other teams.
+  Phase 3 must still confirm this rather than inherit it.
+- Phase 2 (run/fix): ✅ 2026-08-28 — folded into Phase 1 (the suite was run and fixed to green
+  in the same session). Four defects were found and fixed, all MINE, none in the product:
+    1. **Every assertion was missing `await`.** The framework convention is
+       `await assertion.assertEqual(...)` (see `adminClassesTab.test.js`); `assertEqual` is
+       async and throws, so unawaited calls left the rejection unhandled and **the suite
+       reported 23/23 green while asserting nothing**. All 163 assertions were corrected.
+       *This masked defects 2-4 completely.* Check this first on any new test file.
+    2. `rowLastNameByIndex` returned the AVATAR INITIALS as well as the surname —
+       `#learner-cell-last-name-{{n}}` wraps the checkbox, the `span.item-name` initials
+       badge and the name. Fixed to `… span.item-text`.
+    3. **Sort and user-guide state leak between TCs.** Sort persists within the session and
+       there is no reset control other than a reload; TC_RESET now collapses the user guide,
+       and TC_18/TC_19/TC_23 reload first so they do not inherit a predecessor's state
+       (ADR-011). TC_21 was costing **60.3s** — two stacked 30s Playwright timeouts clicking
+       a collapsed-state toggle that TC_20 had already replaced; now 0.3s.
+    4. `userGuidePanelBullets` matched the panel TITLE as well as the bullet list
+       (`.collapseUserGuide .mx-4` hits both a `<p>` and a `<div>`). Fixed to `div.mx-4`.
+- Phase 3 (visual):  ⬜ pending
+
+**NOT in this entry — still outstanding for the Students tab as a whole:**
+- `TST_SLST_TC_14` — **Blocked**: needs a 16-char activation code already redeemed by a known
+  student. The code-issuing environment is down. (Block reason CORRECTED this session — the
+  old "the checkbox has no observable effect" reason was wrong; see admin-students-tab.md §7.5.)
+- `TST_SLST_TC_25` — not written. Creates real data; agreed to target
+  **Cqa Test Ashish School 1 (VED-NEH-KVU)** via a new `schoolAdminAutomation` login entry
+  (`cqatestashish_admin@mailsac.com`), which is **not yet added to logindata.json**.
+- **SPRF (22 TCs) and SBLK (12 TCs) — not started.** SBLK additionally needs 7 CSV fixtures
+  that do not exist. `TST_SPRF_TC_18` needs a product decision before it can be automated.

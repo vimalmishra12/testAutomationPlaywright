@@ -1,0 +1,78 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Students tab — tab load + Req #1 (search by first name) + Req #5 (activation search mode) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_NAV", "description": "Navigate from the Classes tab to the Students tab", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_SLST_TC_RESET", "description": "Clear any active search and untick the activation checkbox so this TC starts from the full list", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] }
+    ],
+    "Test": [
+      { "id": "TST_SLST_TC_1", "description": "Verify the Students tab loads with all expected components", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_2", "description": "Verify a student is returned when searching by their exact first name", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_9", "description": "Verify the list does not filter until the Search button is clicked", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_10", "description": "Verify Clear restores the full student list and the count heading", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_3", "description": "Verify a partial, differently-cased first name still matches", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_11", "description": "Verify a whitespace-only search term is treated as an empty search", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_12", "description": "Verify a meaningful empty state is shown when a search matches no student", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_4", "description": "Verify a student is returned when searching by their last name", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_5", "description": "Verify a student is returned when searching by their full email address", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_6", "description": "Verify an email typed entirely in upper case still matches the lower-case account", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_7", "description": "Verify an email containing special characters is matched exactly", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_8", "description": "Verify a child account is returned when searching by its username", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_15", "description": "Verify the list is sorted by First name ascending when the tab first loads", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_16", "description": "Verify clicking Last name sorts ascending and clicking again sorts descending", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_17", "description": "Verify clicking Email address or Username sorts the list by that column", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_18", "description": "Verify sorting uses code-point order rather than locale-aware collation", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_19", "description": "Verify the chosen sort is not retained across a page reload", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_20", "description": "Verify the user guide expands and shows the four documented actions", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_21", "description": "Verify the user guide collapses and its panel is removed from the page", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_22", "description": "Verify Load more appends the remaining students to the list", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_23", "description": "Verify Load more disappears once every student has been loaded", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_24", "description": "Verify Load more is not offered when a result set fits on one page", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_13", "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_SLST_TC_RESET", "description": "Clear the search once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so clearing there would erase the very evidence the search TCs assert)", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] }
+    ]
+  }
+}

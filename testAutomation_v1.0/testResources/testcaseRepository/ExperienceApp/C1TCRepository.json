@@ -4591,6 +4591,38 @@
         { "id": "TST_EBTF_TC_15", "description": "Press Tab to move focus forward to Toolbar Status Container button", "tags": "P1", "visualTest": true },
         { "id": "TST_EBTF_TC_16", "description": "Navigate back to page 20 before completing suite", "tags": "P1", "visualTest": true }
       ]
+    },
+    {
+      "modulename": "Admin App | Students tab - load, search, clear, empty state & activation search mode",
+      "moduleId": "SLST",
+      "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+      "testcase": [
+        { "id": "TST_SLST_TC_NAV", "description": "Before-hook navigation - hop from the Classes tab to the Students tab (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_RESET", "description": "BeforeEach/After housekeeping - clear any search and untick the activation checkbox (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_1", "description": "Verify the Students tab loads with all expected components", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_2", "description": "Verify a student is returned when searching by their exact first name", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_9", "description": "Verify the list does not filter until the Search button is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_10", "description": "Verify Clear restores the full student list and the count heading", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_3", "description": "Verify a partial, differently-cased first name still matches", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_11", "description": "Verify a whitespace-only search term is treated as an empty search", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_12", "description": "Verify a meaningful empty state is shown when a search matches no student", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_4", "description": "Verify a student is returned when searching by their last name", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_5", "description": "Verify a student is returned when searching by their full email address", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_6", "description": "Verify an email typed entirely in upper case still matches the lower-case account", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_7", "description": "Verify an email containing special characters is matched exactly", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_8", "description": "Verify a child account is returned when searching by its username", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_15", "description": "Verify the list is sorted by First name ascending when the tab first loads", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_16", "description": "Verify clicking Last name sorts ascending and clicking again sorts descending", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_17", "description": "Verify clicking Email address or Username sorts the list by that column", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_18", "description": "Verify sorting uses code-point order rather than locale-aware collation", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_19", "description": "Verify the chosen sort is not retained across a page reload", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_20", "description": "Verify the user guide expands and shows the four documented actions", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_21", "description": "Verify the user guide collapses and its panel is removed from the page", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_22", "description": "Verify Load more appends the remaining students to the list", "tags": "P1", "visualTest": false },
+        { "id": "TST_SLST_TC_23", "description": "Verify Load more disappears once every student has been loaded", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_24", "description": "Verify Load more is not offered when a result set fits on one page", "tags": "P2", "visualTest": false },
+        { "id": "TST_SLST_TC_13", "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list", "tags": "P2", "visualTest": false }
+      ]
     }
   ]
 }

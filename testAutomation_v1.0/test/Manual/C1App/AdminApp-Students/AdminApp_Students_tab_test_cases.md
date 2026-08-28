@@ -4,19 +4,22 @@
 **Modules:** **SLST** (Students tab list) — *maps to the future `schoolStudents` page object* · **SPRF** (student profile & manage account) — *`studentProfile`* · **SBLK** (bulk student operations) — *`bulkStudents`*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Pages in scope:** Students tab `/admin/admin/org_<slug>/learner` · student profile `/class/teacher/org_<slug>/profile/<orgUuid>/<userId>` · manage learner profile `/admin/admin/org_<slug>/edit-user-profile/<orgUuid>/<userId>` · individual activation `/dashboard/teacher/org_<slug>/activateMaterial/<userId>/admin` · bulk activation `/admin/admin/org_<slug>/bulk_activation`
-**Generated:** 2026-08-22 | **Total TCs:** 59 (32 Positive · 17 Edge · 10 Negative) — **all 23 source scenarios covered**
-**Execution status (2026-08-22):** **0 of 59 TCs automated.** 56 are **Not Run**; **3 are Blocked** at design time (see below). This is a design-only batch — nothing has been automated yet, and no case is marked Pass.
+**Generated:** 2026-08-22 · **Revised:** 2026-08-28 (Phase 1 grounding — TC_12/13/14 expected results corrected) | **Total TCs:** 59 (33 Positive · 16 Edge · 10 Negative) — **all 23 source scenarios covered**
+**Execution status (2026-08-28):** **23 of 59 TCs automated and PASSING** — the whole side-effect-free SLST block, verified on Thor across two consecutive clean runs (`npm run adminStudentsTabTest_thor`). 33 are **Not Run** (SLST TC_25, all 22 SPRF, all 12 SBLK — less the 2 blocked); **3 are Blocked** (`TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`).
+- **SLST: 23 of 25 Pass.** Remaining: `TC_14` (Blocked - needs a redeemed activation code) and `TC_25` (creates real data; targets Cqa Test Ashish School 1 / VED-NEH-KVU).
+- **SPRF: 0 of 22 automated.** **SBLK: 0 of 12 automated** (7 CSV fixtures still unwritten).
+- Automation lives in `test/ExperienceApp/adminStudentsTab.test.js` + `pages/ExperienceApp/schoolStudents.page.js`.
 - Module **SLST** (`TST_SLST_TC_1–25`, 25 TCs) — scenarios #1–#7, #16, #23.
 - Module **SPRF** (`TST_SPRF_TC_1–22`, 22 TCs) — scenarios #8–#15, #22.
 - Module **SBLK** (`TST_SBLK_TC_1–12`, 12 TCs) — scenarios #17–#21.
 
-**Three cases are BLOCKED at design time**, each for a different shared-school reason — see their Comments cells: `TST_SLST_TC_14` (the activation checkbox has no observable effect on this school), `TST_SPRF_TC_3` (no adult-with-username account exists here) and `TST_SPRF_TC_20` (the 50-student removal cap needs 51+ students; the school holds 26). All three are recorded **Blocked**, not Not Run, per `admin-shared.md` §A8.3.
+**Three cases are BLOCKED at design time**, each for a different shared-school reason — see their Comments cells: `TST_SLST_TC_14` (needs a redeemed 16-character activation code; the code-issuing environment is down — reason CORRECTED 2026-08-28, see its Comments cell), `TST_SPRF_TC_3` (no adult-with-username account exists here) and `TST_SPRF_TC_20` (the 50-student removal cap needs 51+ students; the school holds 26). All three are recorded **Blocked**, not Not Run, per `admin-shared.md` §A8.3.
 
-**Four product defects were found during grounding** and are written as the expected-versus-actual cases named here, each with live evidence:
+**Four product defects were found during grounding** and were written as expected-versus-actual cases, each with live evidence. **Re-checked 2026-08-28: one of the four (`TST_SLST_TC_12`) has since been FIXED in the product** and is struck through below; the other three still stand.
 
 | TC | Defect |
 |---|---|
-| `TST_SLST_TC_12` | A search matching no student renders **nothing at all** — no empty-state message, the table removed — with a `TypeError` thrown from the admin bundle. The Classes tab shows a proper message in the same situation. |
+| ~~`TST_SLST_TC_12`~~ | **FIXED in the product — verified live 2026-08-28.** Was: a no-match search rendered nothing at all (table removed, no message) with a `TypeError` from the admin bundle. Now renders "This school has no students that match your search **<term>**. Please check the spelling or try a different search term" with zero console errors. `students-no-results.png` is historic evidence only. The case is no longer expected-versus-actual. |
 | `TST_SPRF_TC_7` | `View student profile` for one student hangs on an **infinite spinner** with no error; `getUserDetailWithClasses` returns **HTTP 500**. |
 | `TST_SBLK_TC_9` | The bulk-activation **success dialog renders three raw translation keys** (`ADMIN.LEARNER.BULK_ACTIVATION.SUCCESS_MODAL_INFO_1/2/3`) instead of text. |
 | `TST_SBLK_TC_10` | The bulk-activation row checkbox's screen-reader label is the raw key `ADMIN.LEARNER.BULK_ACTIVATION.SELECT_STUDENT`. |
@@ -47,7 +50,7 @@
 | #2 — Verify search by last name | TST_SLST_TC_4 |
 | #3 — Verify search by email | TST_SLST_TC_5, TST_SLST_TC_6 (E), TST_SLST_TC_7 (E) |
 | #4 — Verify search by username | TST_SLST_TC_8 |
-| #5 — Verify search with "who activated the code in my school?" checkbox | TST_SLST_TC_13, TST_SLST_TC_14 (E) |
+| #5 — Verify search with "who activated the code in my school?" checkbox | TST_SLST_TC_13, TST_SLST_TC_14 |
 | #6 — Verify sort by last name/first name/username | TST_SLST_TC_15, TST_SLST_TC_16, TST_SLST_TC_17, TST_SLST_TC_18 (E), TST_SLST_TC_19 (E) |
 | #7 — Verify user guide expand/collapse | TST_SLST_TC_20, TST_SLST_TC_21 |
 | #16 — Verify load more feature | TST_SLST_TC_22, TST_SLST_TC_23 (E), TST_SLST_TC_24 (E) |
@@ -132,7 +135,7 @@ The Students tab spans **three microfrontends** — `admin` (list, edit profile,
 | Where | Text |
 |---|---|
 | Search banner | `Showing search results for <term>.` — echoes the term, preserving its case |
-| Search, no results | *(nothing — see `TST_SLST_TC_12`)* |
+| Search, no results | `This school has no students that match your search <term>. Please check the spelling or try a different search term` — in `div.no-records > p.mb-0`, term bolded. Verified 2026-08-28 (was absent entirely on 2026-08-22 — defect since fixed). |
 | User guide | `On this page you can:` · `Search for a student who has joined your school in Cambridge One` · `View individual students’ profiles and manage their accounts` · `Add multiple students to classes` · `Activate course materials for students` |
 | Profile, course-material states | `Code activated` / `Code not activated` / `Code expired` |
 | Manage learner profile | `Manage learner profile`, tabs `Personal info` / `Password` |
@@ -195,7 +198,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | URL is /admin/admin/org_perf_testschool_1/learner. Heading reads "Students (N)". The page shows: search box with placeholder "Search by first name, last name, email or username", a Search button, the checkbox "Who activated the code in my school?", a "Manage students" dropdown, a select-all checkbox with "0 Selected", a disabled "Remove from school account" button, a "User guide" toggle, and a table with sort headers Last name / First name / Email address or Username. |
 | **Remarks** | Added by the designer — the source list has no explicit tab-load scenario, but every other case depends on this state. N moves on this shared school; never assert an absolute count. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #1 — Verify search by first name
@@ -214,7 +217,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Exactly one row is listed — Last name "student", First name "Marvin Jae", Email "nonmqastudent5@mailsac.com". The heading changes from "Students (N)" to "Students / Showing search results for Marvin. / Clear" — the count is replaced by the search banner. |
 | **Remarks** | The search term is echoed in the banner verbatim. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -231,7 +234,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | After step 3 the heading still reads "Students (N)" and the full first page of 20 rows is still listed — search is submit-driven, not live. Only after step 4 does the list narrow to one row. |
 | **Remarks** | Verified live 2026-08-22 (heading "Students (26)", 20 rows, unchanged after typing). Same behaviour as the Classes tab. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -248,7 +251,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The banner is replaced by the "Students (N)" count heading, the search box is emptied, the first page of 20 rows is listed again and "Load more ..." reappears. |
 | **Remarks** | Verified live 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -265,7 +268,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The same student "Marvin Jae student" is returned — search is partial-matching and case-insensitive. [ASSUMED for the partial-prefix case: full-term and case-insensitivity were verified live 2026-08-22; the 4-character prefix was not run separately.] |
 | **Remarks** | Case-insensitivity confirmed live on the email dimension (see TST_SLST_TC_6). |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -282,7 +285,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | All students are returned (first page of 20 rows). The search banner is shown but with no term between "Showing search results for" and the full stop — i.e. the term is trimmed away yet the banner state is still entered. |
 | **Remarks** | Verified live 2026-08-22. Arguably the banner should not appear at all for an empty term — raise as a minor UX observation, not a functional failure. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -294,12 +297,12 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Type** | Negative |
 | **Priority** | High |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
-| **Test Steps** | 1. Type "zzz_no_such_student" into the search box.<br>2. Click Search.<br>3. Observe the area below the toolbar.<br>4. Open the browser console. |
-| **Test Data** | Non-matching term: zzz_no_such_student |
-| **Expected Result** | An explicit empty-state message should be shown, echoing the term — the Classes tab's equivalent reads "No classes that match your search <term>".<br><br>ACTUAL (defect, observed 2026-08-22): NOTHING is rendered. The whole table, including the sort header row, is removed and no message replaces it — the user sees a blank area. The console logs "ERROR TypeError: Cannot read properties of undefined (reading 'length') at o.search" from the admin bundle, so the empty state appears to be failing to render rather than being absent by design. |
-| **Remarks** | DEFECT — raise. Evidence: screenshot students-no-results.png + console trace, Thor 2026-08-22. Expected copy is [ASSUMED] (no verified string exists because the state never renders). |
+| **Test Steps** | 1. Type "zzz-no-such-student-9999" into the search box.<br>2. Click Search.<br>3. Observe the area below the toolbar.<br>4. Open the browser console. |
+| **Test Data** | Non-matching term: zzz-no-such-student-9999 |
+| **Expected Result** | The table (including the sort header row) is removed and an explicit empty-state message replaces it, echoing the search term verbatim in bold:<br>"This school has no students that match your search **&lt;term&gt;**. Please check the spelling or try a different search term"<br>The search banner still reads "Students / Showing search results for &lt;term&gt;. / Clear", the Clear link remains available, and NO console error is logged. |
+| **Remarks** | DEFECT NOW FIXED — verified live on Thor 2026-08-28. Between 2026-08-22 and 2026-08-28 the product was corrected. Originally raised as a defect: nothing rendered at all (table removed, no message) and the console threw "TypeError: Cannot read properties of undefined (reading 'length') at o.search" — see students-no-results.png, which is now HISTORIC evidence and no longer reflects current behaviour. Re-verified 2026-08-28: message renders correctly, zero console errors. Automation asserts the FIXED behaviour; do not re-introduce the defect expectation. Empty-state node: div.no-records > p.mb-0. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #2 — Verify search by last name
@@ -318,7 +321,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Exactly one row is listed — Last name "budhiraja", First name "niharika", Email "learner34@mailsac.com". Banner reads "Showing search results for budhiraja." |
 | **Remarks** | Verified live 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #3 — Verify search by email
@@ -337,7 +340,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Exactly one row is listed — "niharika budhiraja" with email learner34@mailsac.com. |
 | **Remarks** | Verified live 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -354,7 +357,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The same single row is returned — matching is case-insensitive. The banner echoes the term exactly as typed, in upper case: "Showing search results for LEARNER34@MAILSAC.COM." |
 | **Remarks** | Verified live 2026-08-22. Note the banner does NOT normalise the term's case. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -371,7 +374,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Exactly one row is listed — "Learner Learner". The special characters are neither stripped nor treated as wildcards, and the banner echoes them verbatim. |
 | **Remarks** | Verified live 2026-08-22. This account is the special-character fixture on FCN-CHZ-PDA. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #4 — Verify search by username
@@ -390,7 +393,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Exactly one row is listed — Last name "test", First name "child1", Email address or Username "cqatestaichild1". The row's accessible name identifies it as a "Child Learner". |
 | **Remarks** | Verified live 2026-08-22. The Email/Username column holds the username for username-based accounts. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #5 — Verify search with "who activated the code in my school?" checkbox
@@ -404,30 +407,30 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Type** | Positive |
 | **Priority** | Medium |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
-| **Test Steps** | 1. Tick the "Who activated the code in my school?" checkbox.<br>2. Wait for the list to settle.<br>3. Observe the heading and rows.<br>4. Untick the checkbox and observe again. |
+| **Test Steps** | 1. Note the heading "Students (N)", the number of listed rows and the first row's name.<br>2. Tick the "Who activated the code in my school?" checkbox.<br>3. Wait for the list to settle.<br>4. Observe the area directly beneath the checkbox, and the heading and rows.<br>5. Untick the checkbox and observe again. |
 | **Test Data** | - |
-| **Expected Result** | The checkbox toggles on and off cleanly and the list re-renders each time without error; "Load more ..." remains available.<br><br>[ASSUMED] that ticking the box restricts the list to students who activated a code in this school. On FCN-CHZ-PDA the result set was IDENTICAL with the box ticked and unticked (26 students, same first five rows, 2026-08-22), so the filtering effect could not be demonstrated here. |
-| **Remarks** | Needs <SCHOOL_WITH_MIXED_ACTIVATION> — a school holding both students who activated a code and students who did not. Confirm the differentiating behaviour during Phase 1. |
+| **Expected Result** | The checkbox is a SEARCH-MODE SWITCH, not a list filter. On ticking, two helper lines appear directly beneath the checkbox, verbatim:<br>"This search can take up to 1 minute to complete, please be patient."<br>"A user activation code usually has 16 characters, both letters and numbers."<br>The search box now expects a 16-character activation code instead of a name/email/username. The list itself is UNCHANGED — the heading still reads "Students (N)" with the same N, the same rows are listed in the same order, and "Load more ..." remains available. On unticking, both helper lines are removed from the DOM and the search box reverts to name/email/username matching. |
+| **Remarks** | Expected result CORRECTED and verified live on Thor 2026-08-28. The original [ASSUMED] expectation — that ticking filters the list to students who activated a code — was WRONG; the checkbox does not filter at all. The DOM confirms it: the input carries name="activation-code-search" (id="activationCheckbox", qid="aLearner-17"). The identical 26-row result seen on 2026-08-22 was correct behaviour, not a missing filter, so <SCHOOL_WITH_MIXED_ACTIVATION> is NOT required — that note is withdrawn. Fully automatable on FCN-CHZ-PDA; needs no activation code. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
 |---|---|
 | **S.No.** | 14 |
 | **Test Case ID** | TST_SLST_TC_14 |
-| **Title** | Verify the activation checkbox and a search term can be applied together |
+| **Title** | Verify searching by a redeemed activation code returns the student who activated it |
 | **Linked Requirement** | #5 — Verify search with "who activated the code in my school?" checkbox |
-| **Type** | Edge |
-| **Priority** | Low |
+| **Type** | Positive |
+| **Priority** | Medium |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
-| **Test Steps** | 1. Tick "Who activated the code in my school?".<br>2. Type a first name that matches a student who has NOT activated a code.<br>3. Click Search. |
-| **Test Data** | <STUDENT_WITHOUT_ACTIVATED_CODE> |
-| **Expected Result** | [ASSUMED] The two conditions combine (AND): the named student is excluded because they have not activated a code, and the empty result is shown. |
-| **Remarks** | Blocked at design time on FCN-CHZ-PDA for the same reason as TST_SLST_TC_13 — the checkbox has no observable effect there, so the combination cannot be distinguished from search alone. |
+| **Test Steps** | 1. Tick "Who activated the code in my school?".<br>2. Type a 16-character activation code that has already been redeemed by a known student in this school.<br>3. Click Search (allow up to 1 minute — the helper text warns of this). |
+| **Test Data** | &lt;REDEEMED_ACTIVATION_CODE&gt; + the name/email of the student who redeemed it |
+| **Expected Result** | The list narrows to the single student who redeemed that code, matching the expected name and email/username. The search banner reads "Students / Showing search results for &lt;code&gt;. / Clear". |
+| **Remarks** | Rewritten 2026-08-28. The original scenario — "activation checkbox AND a search term combine as an AND filter" — was based on a misreading of the checkbox; it is a search-MODE switch, so there is no combination to test (see TST_SLST_TC_13). This case now covers the checkbox's actual purpose: searching BY activation code. Still Blocked, but for a different and narrower reason. |
 | **Actual Result** | |
 | **Status** | Blocked |
-| **Comments / Defect ID** | Blocked at design time. The activation checkbox has no observable effect on 3 July Test School 1 (FCN-CHZ-PDA), so its combination with a search term cannot be distinguished from search alone. Unblocked by a school holding both students who activated a code and students who did not. |
+| **Comments / Defect ID** | Blocked 2026-08-28 on TEST DATA, not on school fixtures. Needs a 16-character activation code already redeemed by a known student, plus that student's identity. The environment that issues activation codes is down, so no code can be obtained. The earlier block reason — "the checkbox has no observable effect on FCN-CHZ-PDA" — was incorrect and is withdrawn: the checkbox is not a filter, so identical ticked/unticked results were correct behaviour. <SCHOOL_WITH_MIXED_ACTIVATION> is NOT required. Unblocked by: one redeemed activation code + its student. |
 
 ### Requirement #6 — Verify sort by last name/first name/username
 
@@ -445,7 +448,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The First name header carries "sorted ascending"; Last name and Email address or Username carry no indicator. The First name values ascend — e.g. Learner, Learner, Marvin Jae, S_learner4, Vandna, child1, latel1, learner0704, niharika, std_… |
 | **Remarks** | Verified live 2026-08-22. Note the default sort column is First name even though Last name is the first column shown. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -462,7 +465,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | After step 1 the header reads "Last name sorted ascending" and the values ascend — Garg, Learner, Perf Test, Perf Test. After step 3 it reads "Last name sorted descending" and the values descend — us, test, student, learner. The indicator is removed from the First name header when Last name takes over. |
 | **Remarks** | Verified live 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -479,7 +482,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | After step 1 the column ascends — latel1@mailsac.com, learner0704@mailsac.com, learner34@mailsac.com. After step 3 it descends — vandna.garg+11student@comprotechnologies.com, testps27@mailsac.com, std_StdCat_thor1_1720695747388_1_2@yopmail.com. The column's "sorted ascending"/"sorted descending" state is announced. |
 | **Remarks** | Verified live 2026-08-22. AUTOMATION NOTE: unlike the other two columns, this column's "sorted …" text is NOT inside the header button element — reading the button's own text returns the bare label. Scope the assertion to the header row, not the button. [verify the exact node during Phase 1] |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -496,7 +499,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Upper-case names sort before lower-case ones — Garg, Learner, Perf Test, S, … then budhiraja, kr, learner, student, test, us. An A-Z expectation that ignores case (localeCompare) will NOT match this product. |
 | **Remarks** | Verified live 2026-08-22. Same collation rule already recorded for the Classes tab in admin-shared.md §A4. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -510,10 +513,10 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. The list has been sorted by Last name descending. |
 | **Test Steps** | 1. Reload the page.<br>2. Read the sort indicators. |
 | **Test Data** | - |
-| **Expected Result** | [ASSUMED] The list returns to the default First name ascending sort — sorting does not persist, unlike the Classes tab's search and filter which persist server-side per user. |
-| **Remarks** | Not run live 2026-08-22. The Classes tab behaves this way (admin-shared.md §A4); confirm for Students during Phase 1. |
+| **Expected Result** | The list returns to the default First name ascending sort — sorting does NOT persist across a reload. The sort-status indicator returns to `#sortStatus-learner-first_name` reading "sorted ascending". |
+| **Remarks** | CONFIRMED live on Thor 2026-08-28 — the [ASSUMED] tag is removed. Sorted by Last name descending, reloaded, and the list came back sorted by First name ascending with the original first row restored. Matches the Classes tab (admin-shared.md §A4). |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #7 — Verify user guide expand/collapse
@@ -532,7 +535,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The panel opens and reads, verbatim: "On this page you can:" followed by "Search for a student who has joined your school in Cambridge One", "View individual students’ profiles and manage their accounts", "Add multiple students to classes", "Activate course materials for students". The toggle’s label changes from "User guide" to "Hide". |
 | **Remarks** | Verified live 2026-08-22. Note the apostrophe in “students’” is a right single quotation mark (U+2019), not an ASCII apostrophe. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -549,7 +552,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The panel closes, the guide text "On this page you can:" is no longer present anywhere on the page, and the toggle label reverts to "User guide". |
 | **Remarks** | Verified live 2026-08-22 — the panel is GENUINELY removed from the DOM when collapsed, unlike most admin containers. AUTOMATION NOTE: the toggle also swaps its identifier between the two states (collapsed and expanded are different elements); do not bind a page object to one of them. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #16 — Verify load more feature
@@ -568,7 +571,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The first page holds exactly 20 rows. After Load more the list holds every student in the school (26 at the time of capture) and the previously loaded rows are retained, not replaced. |
 | **Remarks** | Verified live 2026-08-22. Page size 20 — the same as the Classes tab. Do not assert the absolute total on this shared school; assert "20 before, list length equals the heading count after". |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -585,7 +588,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The link is REMOVED from the page — it is not left visible in a disabled state. |
 | **Remarks** | Verified live 2026-08-22. Automation must assert absence, not disabled-ness. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -602,7 +605,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | No "Load more ..." link is present. |
 | **Remarks** | Verified live 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** |  |
 
 ### Requirement #23 — Verify count of students increase on adding a new student
@@ -1236,9 +1239,6 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 
 | TC | What needs confirming live |
 |---|---|
-| TST_SLST_TC_13 | Verify the "Who activated the code in my school?" checkbox can be toggled and re-queries the list |
-| TST_SLST_TC_14 | Verify the activation checkbox and a search term can be applied together |
-| TST_SLST_TC_19 | Verify the chosen sort is not retained across a page reload |
 | TST_SLST_TC_25 | Verify the Students heading count increases after a new student is added to the school |
 | TST_SPRF_TC_3 | Verify the profile of an ADULT account that logs in with a username shows the username as its identifier |
 | TST_SPRF_TC_12 | Verify a required name field cannot be saved empty |
@@ -1247,12 +1247,12 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | TST_SBLK_TC_11 | Verify uploading a CSV populates the bulk activation grid |
 | TST_SBLK_TC_8 | Verify the Activate button stays disabled until a row is complete |
 
-10 of 59 cases carry an `[ASSUMED]` expected result. Every one of them is a state that could not be reached without mutating a shared school, consuming a real activation code, sending real email, or a fixture the school does not have. All are listed above so Phase 1 resolves them deliberately rather than inheriting them.
+**7 of 59** cases still carry an `[ASSUMED]` expected result (was 10). Resolved during Phase 1 grounding on 2026-08-28 and removed from this table: **TST_SLST_TC_13** (the checkbox is a search-MODE switch, not a filter — expected result rewritten and verified live), **TST_SLST_TC_14** (rewritten to cover activation-code search; still Blocked, but on test data rather than on an unknown), and **TST_SLST_TC_19** (the sort does NOT survive a reload — confirmed live). The remaining seven are states that cannot be reached without mutating a shared school, consuming a real activation code, sending real email, or a fixture the school does not have.
 
 ## Handoff to automation
 
 - **Module codes and their page objects:** `SLST` → `schoolStudents`, `SPRF` → `studentProfile`, `SBLK` → `bulkStudents`. Chosen from the page objects the screens will get, not from this batch (`admin-shared.md` §A8.4) — so no repeat of the `BCCF` → `CCLS` mismatch.
-- **Blocked:** `TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`. One dedicated, larger school with mixed code-activation states unblocks all three.
+- **Blocked:** `TST_SLST_TC_14` (needs a redeemed 16-char activation code — the code-issuing environment is down), `TST_SPRF_TC_3` (no adult-with-username account here) and `TST_SPRF_TC_20` (needs 51+ students). Updated 2026-08-28: these are now THREE SEPARATE blockers — the earlier claim that one mixed-activation school unblocks all three was based on the misread checkbox and is withdrawn.
 - **Side-effect free** (safe in a read-only suite): all of `SLST` except `TST_SLST_TC_25`; `SPRF` 1–7, 9, 11, 15, 16, 17, 18, 21; `SBLK` 7, 8, 10.
 - **Creates, mutates or destroys real data** (keep in a separate suite, per `c1-test-authoring`): `TST_SLST_TC_25`, `TST_SPRF_TC_8` (password), `TST_SPRF_TC_10`/`12`/`13` (personal info), `TST_SPRF_TC_14` (consumes an activation code), `TST_SPRF_TC_19`/`22` (removal), and all of `TST_SBLK_TC_1`–`5`, `11`, `12`.
 - **Sends real email:** `TST_SBLK_TC_3`, `TST_SBLK_TC_5`, and the removal report from `TST_SPRF_TC_19`.

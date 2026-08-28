@@ -241,3 +241,110 @@ bulk error dialog; and the invalid-activation-code error blaming the server rath
 **There is no adult-with-username account on this school**, which blocks any case needing one. The
 shared-school constraints in `admin-shared.md` §A5 apply in full — never assert an absolute count,
 and never remove a student this suite did not create.
+
+---
+
+## 7. Phase 1 automation grounding `[2026-08-28]`
+
+Captured live on Thor · `FCN-CHZ-PDA` (**27** students at capture — was 26 on 2026-08-22, the
+school keeps moving) via a scripted recon pass. These are **verified**, not inferred.
+
+### 7.1 Verified selectors — Students tab list (`SLST` → `schoolStudents`)
+
+| Element | Selector | Note |
+|---|---|---|
+| Left-nav Students link | `a[qid='aDetail-2']` | **Not** `a:has-text("Students")` — see §7.4 |
+| Search input | `input[qid='aLearner-1']` | `name="search-text"`, **no `maxlength`** |
+| Search button | `button[qid='aLearner-2']` | |
+| Clear (search banner) | `a[qid='aLearner-16']` | present only while a search is active |
+| Activation checkbox | `input[qid='aLearner-17']` | `id="activationCheckbox"`, `name="activation-code-search"` |
+| Activation checkbox label | `label[for='activationCheckbox']` | click the LABEL — the input is a custom control |
+| Manage students dropdown | `a[qid='aLearner-8']` | `id="actionsLink"` |
+| └ Add new students to classes | `a[qid='aLearner-9']` | hidden until the dropdown opens |
+| └ Add existing students to classes | `a[qid='aLearner-10']` | |
+| └ Activate course materials | `a[qid='aLearner-14']` | |
+| User guide toggle (COLLAPSED) | `a[qid='aLearner-11']` | text `User guide` |
+| User guide toggle (EXPANDED) | `a[qid='aLearner-12']` | text `Hide` — **a different element**, see §4 |
+| Select-all checkbox | `input.selectAllCheckbox` | no id/qid/name |
+| Selected counter | `input.selectAllCheckbox + label` | text ` 0 Selected ` |
+| Remove from school account | `button[qid='rLearner-1']` | **natively** disabled at 0 selected |
+| Sort — Last name | `button[qid='aLearner-3']` | |
+| Sort — First name | `button[qid='aLearner-4']` | carries `active` when it owns the sort |
+| Sort — Email/Username | `button[qid='aLearner-5']` | |
+| Sort status — Last name | `#sortStatus-learner-last_name` | `span.sr-only` |
+| Sort status — First name | `#sortStatus-learner-first_name` | |
+| Sort status — Email/Username | `#sortStatus-learner-ext_email` | sits OUTSIDE its button (see §4) |
+| Student row | `.list-items` | `role="row"`; the sort header row is `div[role='row'].toggable-btn` |
+| Row action button (per row) | `button[qid='aLearner-15-{{n}}']` | also `id="learnerActionsLink-{{n}}"` |
+| └ View student profile | `a[qid='aLearner-83']` | **20 copies, one qid** — filter on visibility |
+| └ Activate course materials | `a[qid='aLearner-13']` | same, 20 copies |
+| Load more | `a[qid='aLearner-7']` | **removed** from the DOM when exhausted |
+| No-results empty state | `div.no-records > p.mb-0` | see §7.3 |
+
+> **Resolve a row by CONTENT, not index.** The row action button's `aria-label` carries everything:
+> `Row2 Adult Learner Last name <last> First name <first> Email address or Username <id> Action Menu`.
+> It is the only place **Adult / Child** is exposed. Row indices are positional and shift with
+> sort, search and Load more.
+
+### 7.2 Measured transitions (budget from these, do not invent)
+
+| Transition | Measured | Note |
+|---|---|---|
+| Classes tab → Students tab | **4.4 s** | full microfrontend load |
+| Search submit → list settled | ~1–2 s | |
+| Sort click → rows re-ordered | ~2–3.5 s | the status label flips far earlier — optimistic UI |
+| Load more → rows appended | ~2–4 s | 20 → 27 in one click |
+
+### 7.3 ⚠️ The no-results defect is FIXED `[2026-08-28]`
+
+`TST_SLST_TC_12`'s defect (§5 #1) **no longer reproduces.** A no-match search now renders, in
+`div.no-records > p.mb-0`:
+
+> `This school has no students that match your search ` **`<term>`** `. Please check the spelling or try a different search term`
+
+The table and sort header row are still removed, but a proper empty state replaces them, and the
+`TypeError` is **gone** — zero console errors. `students-no-results.png` is historic evidence only.
+The manual case has been rewritten to assert the fixed behaviour. **Do not re-introduce the defect
+expectation.** The other three defects in §5 were not re-checked and still stand.
+
+### 7.4 ⚠️ `leftNavStudents` in `C1Selectors.json` is ambiguous
+
+`css.ComproC1.schoolClasses.leftNavStudents` is `a:has-text("Students")`, which **also matches a
+hidden help link** (`a[qid='cHeader-hlp-6']`, "Adding students to a class") and resolves to it
+first — a click on it times out with *element is not visible*. The real nav link is
+`a[qid='aDetail-2']`. `schoolStudents` uses the qid. **The existing Classes suite still uses the
+ambiguous selector** — it survives only because Playwright's strictness is not engaged there.
+Worth fixing separately.
+
+### 7.5 The activation checkbox is a SEARCH-MODE SWITCH, not a filter `[2026-08-28]`
+
+The single most consequential correction from this pass. Ticking
+**"Who activated the code in my school?"** does **not** filter the list. It switches what the
+search box matches — from name/email/username to a **16-character activation code** — and injects
+two helper lines beneath the checkbox, verbatim:
+
+> `This search can take up to 1 minute to complete, please be patient.`
+> `A user activation code usually has 16 characters, both letters and numbers.`
+
+The list is untouched on tick: same heading count, same rows, same order, Load more still present.
+Unticking removes both lines from the DOM. The DOM names the feature — `name="activation-code-search"`.
+
+This invalidates the design-time conclusion that the checkbox "has no observable effect on this
+school" and the associated request for a `<SCHOOL_WITH_MIXED_ACTIVATION>` fixture: identical
+ticked/unticked results were **correct behaviour**. `TST_SLST_TC_13` is now fully automatable here
+with no activation code; `TST_SLST_TC_14` was rewritten to cover code search and remains Blocked
+only for want of a redeemed code.
+
+### 7.6 Other confirmations
+
+- **Default sort** is First name ascending. Confirmed.
+- **Sort does NOT survive a reload** — resolves `TST_SLST_TC_19`'s `[ASSUMED]`. Back to First name
+  ascending after F5.
+- **Whitespace-only search** enters the banner state with an *empty* term, returns the full list and
+  keeps Load more. The search box retains the spaces.
+- **Page size is 20**; Load more took 20 → 27 and then removed itself.
+- **4 pre-rendered modals** sit in the DOM with nothing open (`removeLearnerWarningModal`,
+  `maxLearnerSelectedModal`, `removeLearnerDelayModal`, `changeSchoolKey`) — a presence check is a
+  guaranteed false green. All three removal dialogs' copy is confirmed still verbatim as §3.
+- **Gigya login pre-renders ~5 hidden copies** of the username/password inputs on the login screen —
+  the same trap §4 records for the Password tab applies to LOGIN itself. Select the visible one.

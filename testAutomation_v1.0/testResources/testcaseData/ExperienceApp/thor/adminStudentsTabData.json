@@ -1,0 +1,50 @@
+{
+  "C1": {
+    "adminStudentsTab": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "studentsUrlFragment": "/learner",
+
+      "searchPlaceholder": "Search by first name, last name, email or username",
+
+      "searchByFirstName": "Marvin",
+      "searchByFirstNameExpectedFirst": "Marvin Jae",
+      "searchByFirstNameExpectedLast": "student",
+      "searchByFirstNameExpectedEmail": "nonmqastudent5@mailsac.com",
+
+      "searchPartialLowercase": "marv",
+
+      "searchByLastName": "budhiraja",
+      "searchByLastNameExpectedFirst": "niharika",
+      "searchByLastNameExpectedLast": "budhiraja",
+      "searchByLastNameExpectedEmail": "learner34@mailsac.com",
+
+      "searchByEmail": "learner34@mailsac.com",
+      "searchByEmailUpperCase": "LEARNER34@MAILSAC.COM",
+
+      "searchBySpecialCharEmail": "shivampilot04+Taylor&%^$wift@gmail.com",
+      "searchBySpecialCharExpectedFirst": "Learner",
+      "searchBySpecialCharExpectedLast": "Learner",
+
+      "searchByUsername": "cqatestaichild1",
+      "searchByUsernameExpectedFirst": "child1",
+      "searchByUsernameExpectedLast": "test",
+      "searchByUsernameExpectedAccountType": "Child",
+
+      "searchWhitespaceOnly": "   ",
+
+      "searchNoMatch": "zzz-no-such-student-9999",
+      "noMatchMessage": "This school has no students that match your search {{term}}. Please check the spelling or try a different search term",
+
+      "userGuideLines": [
+        "On this page you can:",
+        "- Search for a student who has joined your school in Cambridge One",
+        "- View individual students’ profiles and manage their accounts",
+        "- Add multiple students to classes",
+        "- Activate course materials for students"
+      ],
+
+      "activationHelperLine1": "This search can take up to 1 minute to complete, please be patient.",
+      "activationHelperLine2": "A user activation code usually has 16 characters, both letters and numbers."
+    }
+  }
+}

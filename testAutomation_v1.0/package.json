@@ -37,6 +37,7 @@
     "setUpSchoolAccountTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=NEMO-24388.json --browserCapability=desktop-chrome-1920",
     "visualAcceptance_setUpSchoolAccount_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=NEMO-24388.json --browserCapability=desktop-chrome-1920 --visual=novus --skipAssertion=true",
     "NEMO24306_csvUploadTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=NEMO-24306_csvUpload.json --browserCapability=desktop-chrome-1920",
+    "adminStudentsTabTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminStudentsTab.json --browserCapability=desktop-chrome-1920",
     "P1Adminclassworkflow_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassValidation_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassValidation.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassBulk_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassBulk.json --browserCapability=desktop-chrome-1920",
