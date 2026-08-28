@@ -1,5 +1,9 @@
 # HANDOFF — Admin App Students tab automation (2026-08-28)
 
+> ⚠️ **SUPERSEDED [2026-08-28 evening]** — the SPRF block has since been automated.
+> Use `HANDOFF-adminstudents-automation-2026-08-28-evening.md` instead. This file is kept as a
+> record of the state before that batch.
+
 > **Read this file alone and you can continue the work.**
 >
 > It **supersedes** `HANDOFF-adminstudents-automation.md` (the design-only handoff of
