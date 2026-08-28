@@ -420,5 +420,58 @@ Scope of this entry: the **side-effect-free SLST block only** (23 of 25 SLST cas
 - `TST_SLST_TC_25` — not written. Creates real data; agreed to target
   **Cqa Test Ashish School 1 (VED-NEH-KVU)** via a new `schoolAdminAutomation` login entry
   (`cqatestashish_admin@mailsac.com`), which is **not yet added to logindata.json**.
-- **SPRF (22 TCs) and SBLK (12 TCs) — not started.** SBLK additionally needs 7 CSV fixtures
-  that do not exist. `TST_SPRF_TC_18` needs a product decision before it can be automated.
+- **SPRF — 11 of 22 automated and passing [2026-08-28]**; see the `adminStudentProfile` entry
+  below for what is done, blocked and deliberately excluded. **SBLK (12 TCs) — not started**,
+  and additionally needs 7 CSV fixtures that do not exist. `TST_SPRF_TC_18` needs a product
+  decision before it can be automated.
+
+## adminStudentProfile (ExperienceApp, thor)
+Admin App **student profile / Manage learner profile / individual activation**, module **SPRF**
+→ `pages/ExperienceApp/studentProfile.page.js`.
+Manual source: `test/Manual/C1App/AdminApp-Students/` (59 TCs across SLST/SPRF/SBLK).
+Scope of this entry: the **side-effect-free SPRF block only** (11 of 22 SPRF cases, run).
+
+- Phase 1 (build):   ✅ 2026-08-28 — TST_SPRF_TC_1, 2, 4, 5, 6, 9, 11, 15, 16, 17, 21 registered
+  and run, plus TC_RESET housekeeping. **Executed: 11 passing / 0 failing**, across two
+  consecutive clean runs of `npm run adminStudentProfileTest_thor`. `npm run
+  adminStudentsTabTest_thor` re-run afterwards as a regression check on the shared
+  `schoolStudents` page object: **23 passing / 0 failing**.
+  Selectors were captured LIVE (seven scripted recon passes against Thor / FCN-CHZ-PDA) —
+  see `product-knowledge/ExperienceApp/admin-students-tab.md` §8.
+- Phase 2 (run/fix): ✅ 2026-08-28 — folded into Phase 1. **One defect, mine, none in the
+  product:** `activationStudentPanel` was pointed at `div.px-0.col-md-6.col-lg-4`, which is the
+  FORM column, not the block naming the target student; repointed to `div.user-details`.
+  First run was 10/11.
+  Two traps were caught during recon rather than during the run, which is why the first run was
+  as clean as it was (both are written up in §8.5 / §8.6):
+    1. The Gigya password form cannot be submitted by CLICKING its Update button — it renders at
+       `opacity: 0.5` and the click times out after the full 30 s default. It is submitted with
+       **Enter** instead.
+    2. The invalid-activation-code round trip takes **40.3 s**. A 30 s probe saw nothing and
+       looked exactly like "the product never shows an error".
+- Phase 3 (visual):  ✅ 2026-08-28 — assessed, **no candidates**. Every one of the 11 cases
+  frames live shared-school data (a real student's materials with activation dates, a moving
+  "Last login", opaque per-learner URLs, the mutable student list). Per AGENTS.md §8 Rule A
+  these are all ❌ rows, so `visualTest: false` stands with no promotion prompt owed
+  (Invariant 12). This is consistent with the settled admin-app precedent in
+  `admin-shared.md` §B10 — and confirmed here rather than inherited.
+
+**NOT in this entry — still outstanding for SPRF:**
+- `TST_SPRF_TC_7` — **written, registered, and deliberately NOT in the execution file**
+  (decision taken with the user, 2026-08-28). It asserts the REQUIREMENT (the profile loads or
+  a readable error is shown); the product currently hangs on an empty page because
+  `getUserDetailWithClasses` returns HTTP 500, so running it today would mean a permanently red
+  suite. It shows in `tooling/tcMap.js --findings` as an ORPHAN, which is the intended state.
+  **Add it to `adminStudentProfile.json` the day the defect is fixed.**
+- `TST_SPRF_TC_3` — **Blocked**: no adult-with-username account exists on FCN-CHZ-PDA.
+  Unblocked by `TST_SBLK_TC_2` creating one, or by a school that already has one.
+- `TST_SPRF_TC_20` — **Blocked**: the 50-student removal cap needs 51+ students; this school
+  holds 27. Modal copy is already verified verbatim, so it is short work once unblocked.
+- `TST_SPRF_TC_18` — needs a **product decision** before it can be automated: the umbrella name
+  is a plain span with no link anywhere in its ancestry, so the scenario as written cannot be
+  performed. Missing link (defect) or scenario error?
+- **Mutating cases NOT automated by design** — each changes a REAL account on a shared school
+  (ADR-021 rule 7): `TC_8` (set a learner password), `TC_10` (update names), `TC_12`/`TC_13`
+  (require typing into the name fields and leaving the form), `TC_14` (consumes a real
+  activation code), `TC_19`/`TC_22` (remove a student). These want the dedicated
+  **Cqa Test Ashish School 1 (VED-NEH-KVU)** account already agreed for `TST_SLST_TC_25`.

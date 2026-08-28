@@ -4593,6 +4593,26 @@
       ]
     },
     {
+      "modulename": "Admin App | Student profile, Manage learner profile & individual code activation",
+      "moduleId": "SPRF",
+      "testFile": "./test/ExperienceApp/studentProfile.test.js",
+      "testcase": [
+        { "id": "TST_SPRF_TC_RESET", "description": "BeforeEach/After housekeeping - return to the Students tab and clear any search (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_1", "description": "Verify the profile of an adult learner with an email address shows all expected sections", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_2", "description": "Verify the profile of a child account shows the username as its identifier", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_4", "description": "Verify each course-material component shows its correct activation state and dates", "tags": "P2", "visualTest": false },
+        { "id": "TST_SPRF_TC_5", "description": "Verify Back on the profile page returns the admin to the Students tab", "tags": "P2", "visualTest": false },
+        { "id": "TST_SPRF_TC_6", "description": "Verify a student profile URL can be opened directly as a deep link", "tags": "P2", "visualTest": false },
+        { "id": "TST_SPRF_TC_7", "description": "Verify an error is shown to the admin when a student profile cannot be loaded - EXPECTED TO FAIL, open product defect (HTTP 500 on getUserDetailWithClasses); deliberately not listed in any execution file", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_9", "description": "Verify a password that fails the complexity rules is rejected with a clear message", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_11", "description": "Verify Username and Location are shown but cannot be edited", "tags": "P2", "visualTest": false },
+        { "id": "TST_SPRF_TC_15", "description": "Verify Activate stays disabled until an activation code is entered", "tags": "P2", "visualTest": false },
+        { "id": "TST_SPRF_TC_16", "description": "Verify an unusable activation code is rejected with an on-screen error", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_17", "description": "Verify a class can be launched from the student's profile page", "tags": "P1", "visualTest": false },
+        { "id": "TST_SPRF_TC_21", "description": "Verify Remove from school account is disabled while no student is selected", "tags": "P2", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "Admin App | Students tab - load, search, clear, empty state & activation search mode",
       "moduleId": "SLST",
       "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",

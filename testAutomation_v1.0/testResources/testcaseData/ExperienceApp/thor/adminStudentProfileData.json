@@ -1,0 +1,34 @@
+{
+  "C1": {
+    "adminStudentProfile": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "studentsUrlFragment": "/learner",
+      "profileUrlFragment": "/profile/",
+      "editProfileUrlFragment": "/edit-user-profile/",
+      "activationUrlFragment": "/activateMaterial/",
+
+      "adultEmail": "testps27@mailsac.com",
+      "adultProfileHeading": "us, Learner",
+      "adultProfileInitials": "LU",
+      "expectedComponentState": "Code expired",
+
+      "childUsername": "cqatestaichild1",
+      "childProfileHeading": "test, child1",
+      "childProfileInitials": "CT",
+      "childClassName": "sample class",
+
+      "brokenProfileEmail": "vandna.garg+11student@comprotechnologies.com",
+
+      "editProfileHeading": "Manage learner profile",
+      "passwordHeading": "Change learner password",
+      "weakPassword": "abc",
+      "weakPasswordError": "Password does not meet complexity requirements",
+      "passwordRequirements": "Password must contain at least 8 characters, including at least one uppercase or lowercase letter and at least one number",
+
+      "activationHeading": "Activate an access code",
+      "activationPlaceholder": "Example: AB2C-DE3F-G4HJ-K5LM",
+      "invalidActivationCode": "ZZZZ-ZZZZ-ZZZZ-ZZZZ",
+      "invalidCodeError": "Sorry, something went wrong at our end and we couldn't activate your code. Please try again later"
+    }
+  }
+}

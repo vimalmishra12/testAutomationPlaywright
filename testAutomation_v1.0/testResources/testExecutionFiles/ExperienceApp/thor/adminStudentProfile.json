@@ -1,0 +1,54 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Student profile — Req #8/#9 (view profile), #11 (password), #12 (personal info), #13 (activation), #14 (launch class), #22 (removal guard) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SLST_TC_NAV", "description": "Navigate from the Classes tab to the Students tab", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_SPRF_TC_RESET", "description": "Return to the Students tab and clear any search so this TC starts from the full list", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] }
+    ],
+    "Test": [
+      { "id": "TST_SPRF_TC_1", "description": "Verify the profile of an adult learner with an email address shows all expected sections", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_2", "description": "Verify the profile of a child account shows the username as its identifier", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_4", "description": "Verify each course-material component shows its correct activation state and dates", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_5", "description": "Verify Back on the profile page returns the admin to the Students tab", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_6", "description": "Verify a student profile URL can be opened directly as a deep link", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_9", "description": "Verify a password that fails the complexity rules is rejected with a clear message", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_11", "description": "Verify Username and Location are shown but cannot be edited", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_15", "description": "Verify Activate stays disabled until an activation code is entered", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_16", "description": "Verify an unusable activation code is rejected with an on-screen error", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_17", "description": "Verify a class can be launched from the student's profile page", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_21", "description": "Verify Remove from school account is disabled while no student is selected", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_SPRF_TC_RESET", "description": "Return to the Students tab once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so navigating back there would replace every profile case's evidence with a picture of the student list)", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] }
+    ]
+  }
+}

@@ -465,6 +465,65 @@ module.exports = {
     };
   },
 
+  /**
+   * Row action menu → "View student profile", resolving the row BY CONTENT.
+   *
+   * [2026-08-28] Added for the SPRF batch: every profile case needs this hop and the
+   * Students tab owns it, so it belongs here rather than in studentProfile.page.js.
+   *
+   * The menu item is scoped to `#learnerActionsMenu-<index>` by click_rowActionMenu's
+   * template — the bare `a[qid='aLearner-83']` exists once per row (20 identical copies)
+   * and clicking it unscoped is ambiguous by construction.
+   *
+   * Crossing into the profile leaves the `admin` microfrontend for `class`, which is a
+   * FULL page load, so the destination's own initializer is what confirms arrival.
+   */
+  click_viewStudentProfile: async function (studentIdentifier) {
+    await logger.logInto(await stackTrace.get(), "student:" + studentIdentifier);
+    var menu = await this.click_rowActionMenu(studentIdentifier);
+    if (true !== menu.clickStatus) return menu;
+    var clickStatus = await action.click(this.rowMenuViewProfileByIndex.replace("{{n}}", String(menu.rowIndex)));
+    if (true !== clickStatus) return { clickStatus: clickStatus, rowIndex: menu.rowIndex };
+    var studentProfile = require("./studentProfile.page.js"); // lazy — avoids a require cycle
+    return {
+      clickStatus: clickStatus,
+      rowIndex: menu.rowIndex,
+      pageStatus: (await studentProfile.isInitialized()).pageStatus
+    };
+  },
+
+  /**
+   * Row action menu → "Activate course materials", resolving the row BY CONTENT.
+   * Lands in the `dashboard` microfrontend — a third full page load (§5 of the routes
+   * map), not an Angular route change.
+   */
+  click_activateCourseMaterials: async function (studentIdentifier) {
+    await logger.logInto(await stackTrace.get(), "student:" + studentIdentifier);
+    var menu = await this.click_rowActionMenu(studentIdentifier);
+    if (true !== menu.clickStatus) return menu;
+    var clickStatus = await action.click(this.rowMenuActivateMaterialsByIndex.replace("{{n}}", String(menu.rowIndex)));
+    if (true !== clickStatus) return { clickStatus: clickStatus, rowIndex: menu.rowIndex };
+    var studentProfile = require("./studentProfile.page.js"); // lazy — avoids a require cycle
+    return {
+      clickStatus: clickStatus,
+      rowIndex: menu.rowIndex,
+      pageStatus: (await studentProfile.isInitialized_activateCode()).pageStatus
+    };
+  },
+
+  /**
+   * True when the browser is currently on this school's Students tab.
+   *
+   * [2026-08-28] Added for the SPRF batch, whose BeforeEach has to come BACK from a
+   * profile / activation / Gigya screen. A blind `browser.url()` every time would cost a
+   * full microfrontend reload (~4.4s measured) on cases that never left the tab.
+   */
+  getData_isOnStudentsTab: async function () {
+    await logger.logInto(await stackTrace.get());
+    var url = await browser.getUrl();
+    return String(url).indexOf("/learner") >= 0 && (await action.isExisting(this.studentsHeading));
+  },
+
   // ── User guide ───────────────────────────────────────────────────────────────────
 
   /**

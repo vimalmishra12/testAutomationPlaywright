@@ -348,3 +348,145 @@ only for want of a redeemed code.
   guaranteed false green. All three removal dialogs' copy is confirmed still verbatim as §3.
 - **Gigya login pre-renders ~5 hidden copies** of the username/password inputs on the login screen —
   the same trap §4 records for the Password tab applies to LOGIN itself. Select the visible one.
+
+---
+
+## 8. Phase 1 automation grounding — SPRF `[2026-08-28]`
+
+Captured live on Thor · `FCN-CHZ-PDA` via scripted recon passes covering the **student
+profile**, **Manage learner profile** (Personal info + Password), the **individual activation**
+page and the **class launch**. Everything below is **verified**, not inferred.
+
+### 8.1 Verified selectors — student profile (`SPRF` → `studentProfile`)
+
+| Element | Selector | Note |
+|---|---|---|
+| Page scope | `div.view-profile` | the anchor `isInitialized()` uses; **absent entirely** in the HTTP-500 case |
+| Heading | `h1.user-name` | `Last name, First name` |
+| Avatar initials | `div.profile-item` | e.g. `LU`, `CT` |
+| Identifier | `div.user-info div.email` | **the class says `email` but it holds the USERNAME on a child account** |
+| Last login | `div.user-info div.last-login` | `Last login Apr, 2025` — a moving value |
+| Back | `a[qid='user-profile-1']` | returns to `…/learner` with school context intact |
+| Manage account ▾ | `#learnerProfileManage` | **no qid** — id only |
+| └ Edit account details | `a[qid='user-profile-4']` | pre-rendered, hidden until the menu opens |
+| └ Remove from school account | `a[qid='user-profile-5']` | same |
+| Course materials section | `div.course-material-section` | |
+| └ heading | `div.course-material-section div.course-material-info` | `Course materials (N)` |
+| └ umbrella title | `div.course-material-section span.bundle-title` | |
+| └ component row | `div.course-material-section div.row.mb-3` | |
+| └ component name | `div.course-material-section h4.bundle-name` | |
+| Classes section | `div.class-section` | **has no heading node of its own** — line 0 of its text IS `Classes (N)` |
+| Class entry | `a[qid='user-profile-2-{{n}}']` | **positional**; `aria-label` = `Class <name> <material state>` |
+
+### 8.2 Verified selectors — Manage learner profile
+
+| Element | Selector | Note |
+|---|---|---|
+| Heading | `h1.heading-1` | ⚠️ `Manage learner profile` on Personal info, **`Change learner password` on the Password tab** — NOT a stable page anchor |
+| Back | `a[qid='ed-user-prof-1']` | shares its qid with the First name INPUT — filter by tag |
+| Tabs | `a[qid='ed-user-prof-9']` (Personal info) · `a[qid='ed-user-prof-10']` (Password) | plain anchors, **no `role='tab'`** |
+| First name / Last name | `input[qid='ed-user-prof-1']` · `input[qid='ed-user-prof-2']` | editable, `required`, **no `maxlength`** |
+| Identifier | `input[qid='ed-user-prof-3']` | **disabled.** ⚠️ `#email` "Email address" on an ADULT, `#username` "Username" on a CHILD — one qid, two different fields |
+| Location | `input[qid='ed-user-prof-4']` | disabled; holds the literal `undefined` on the child fixture |
+| Cancel / Update | `a[qid='ed-user-prof-5']` · `button[qid='ed-user-prof-6']` | |
+| Unsaved-changes dialog | `#editUserConfirmationModal` + `a[qid='ed-user-prof-7']` / `a[qid='ed-user-prof-8']` | pre-rendered and hidden — copy free-capturable |
+| Gigya new-password field | `#gigya-password-newPassword` | **the id is the only unambiguous handle** — see §8.5 |
+| Gigya strength hint | `div.gigya-passwordStrength-text-requirements` | |
+| Gigya error | `#gigya-error-msg-gigya-reset-password-form-newPassword` | gains `gigya-error-msg-active` when triggered |
+
+### 8.3 Verified selectors — individual activation
+
+| Element | Selector | Note |
+|---|---|---|
+| Heading | `h1.heading-1` | `Activate an access code` |
+| Back | `a[qid='act-material-1']` | |
+| Code field | `input[qid='act-material-2']` | `#activationKeyInputForAdult`, `required`, **no `maxlength`** |
+| Activate | `button[qid='act-material-3']` | **NATIVELY disabled** while empty — the exception to `admin-shared.md` §B4 |
+| Inline error | `div.product-form p.error-message` | the message sits in a **bare `<span>`** inside this `<p>` |
+| Named student | `div.user-details` | the student name + email — the only confirmation the right student is targeted |
+
+> **The activation page pre-renders ZERO modals** — unusual for this app. The profile
+> pre-renders exactly **one** (`Remove from school account`).
+
+### 8.4 Measured transitions (budget from these, do not invent)
+
+| Transition | Measured | Note |
+|---|---|---|
+| Students tab → profile | ~3-9 s | crosses `admin` → `class` — a full page load |
+| Profile → Manage learner profile | ~9 s | crosses `class` → `admin` |
+| Password tab → Gigya screen-set injected | ~6-9 s | fetched from SAP CDC, not Thor |
+| Profile → class page | ~3-12 s | |
+| **Activate → invalid-code error** | **40.3 s** | see §8.6 — a 30 s probe sees nothing and looks like "no error is ever shown" |
+
+### 8.5 ⚠️ The Gigya form must be submitted with **Enter**, not a click
+
+`input.gigya-input-submit` ("Update") is the **only sized** submit among ~22 injected copies,
+but it renders at **`opacity: 0.5`** inside an animated container and `click()` on it times out
+after the full 30 s Playwright default — **reproduced twice on 2026-08-28**. Pressing **Enter**
+in `#gigya-password-newPassword` submits the same form immediately.
+
+The screen-set injects **80 inputs**, nearly all hidden clones (`password`, `newPassword`,
+`passwordRetype`, `username`, `email`, `profile.*`). **Never select by `name=` on this page** —
+the id is the only unambiguous handle. This confirms the trap §4 predicted.
+
+### 8.6 ⚠️ The invalid-activation-code round trip takes **40 seconds**
+
+`POST /dashboard/api/activate-accesscode` returns HTTP **200** with a failure body:
+
+```
+{"success":false,"errorCode":"PEAS_AUTHENTICATION_ERROR",
+ "errorDetails":{"type":"UNEXPECTED_FAILURE","subSystem":"INFRA_PEAS",
+ "description":"Something went wrong while authenticating the user. Please try again later"…}}
+```
+
+Only then does the inline error paint. Two consequences:
+
+1. **Any poll shorter than ~45 s concludes "no error is ever shown"** — a 30 s probe did exactly
+   that during this session before the budget was raised.
+2. The user-facing message blames Cambridge for what is a **user-input** problem, and the
+   error code confirms it: the back end itself reports an *authentication* failure for a
+   malformed code. Worth raising alongside the observation already in §5.
+
+While the request is in flight the button renders the untranslated key
+`SCREEN_READER.PROCESSING_MESSAGE` — **defect §5 #4 confirmed still live.**
+
+### 8.7 Corrections to earlier entries
+
+- **§2 said the umbrella name is `<span class="bundle-title">`. That is right, but the
+  COMPONENT name is `h4.bundle-name`** — and the two were easy to conflate. More importantly:
+  **the Classes section repeats every umbrella and component**, so an unscoped `.bundle-name`
+  read returns each component **twice** (28 nodes for 14 components on the adult fixture).
+  Scope every course-material read to `div.course-material-section`.
+- **§3 records the activation error with a CURLY apostrophe. The DOM uses a STRAIGHT one** —
+  char code 39, read off the live node. A verbatim-copy assertion must normalise the
+  apostrophe or it fails on a documentation artefact rather than on the product.
+- **The weak-password message DOES state the rules**, contradicting `TST_SPRF_TC_9`'s remark
+  that it does not. The error says `Password does not meet complexity requirements`, but the
+  strength hint above the field says, verbatim:
+  `Password must contain at least 8 characters, including at least one uppercase or lowercase letter and at least one number`
+- **`TST_SPRF_TC_6` is resolved** — the profile URL **is** deep-linkable within a session whose
+  school context is set. Re-confirmed live.
+
+### 8.8 Copy verified live `[2026-08-28]`
+
+| Where | Text |
+|---|---|
+| Password tab intro | `Give the student their new password because the old one will no longer work. The student will get an email that you have changed their password.` |
+| Password too weak | `Password does not meet complexity requirements` |
+| Password rules (strength hint) | `Password must contain at least 8 characters, including at least one uppercase or lowercase letter and at least one number` |
+| Activation intro | `Activating a code gives the student access to their learning materials.` |
+| Activation, invalid code | `Sorry, something went wrong at our end and we couldn't activate your code. Please try again later` (**straight apostrophe**) |
+| Profile removal dialog | `This student will no longer have access to your school account or any of its classes. This will not affect access to their personal account` / `I confirm that I want to remove this student from my school account` / `Cancel` / `Remove` |
+
+> ⚠️ **The profile's removal dialog is the SINGULAR variant** — "remove **this student** from my
+> school account" — and is a **different dialog** from the Students-list bulk one in §3
+> ("remove **students** from my school account"). Its Remove button is disabled until the
+> confirmation checkbox is ticked. Do not assert one against the other's copy.
+
+### 8.9 Defect status re-check `[2026-08-28]`
+
+| Defect | Status |
+|---|---|
+| §5 #2 — profile hangs on HTTP 500 (`Vandna Garg`) | **STILL OPEN.** Re-confirmed: URL collapses to `/class/`, the page renders **nothing at all** — zero headings, zero buttons, empty body — and `getUserDetailWithClasses` returns HTTP 500 |
+| §5 #4 — `SCREEN_READER.PROCESSING_MESSAGE` on the activation page | **STILL OPEN**, confirmed live |
+| Location field showing the literal `undefined` on the child fixture | **STILL PRESENT**, confirmed live |
