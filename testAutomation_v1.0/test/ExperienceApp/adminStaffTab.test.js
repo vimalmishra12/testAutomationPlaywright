@@ -458,6 +458,15 @@ module.exports = {
       "The Last name indicator should be removed once Role takes over the sort");
 
     var roles = pluck(await schoolStaff.getData_staffRows(), "role");
+    // Both groups MUST be present or the grouping assertion is vacuous: isGroupedBefore()
+    // returns true when only one group exists, so on a school that held only Teachers this
+    // case would pass while testing nothing (Invariant 13). Guard the fixture, loudly.
+    await assertion.assertEqual(roles.indexOf(testdata.roleAdmin) >= 0, true,
+      "Precondition: the school must hold at least one '" + testdata.roleAdmin +
+      "' row, or the grouping assertion proves nothing — got: " + roles.join(", "));
+    await assertion.assertEqual(roles.indexOf(testdata.roleTeacher) >= 0, true,
+      "Precondition: the school must hold at least one '" + testdata.roleTeacher +
+      "' row — got: " + roles.join(", "));
     await assertion.assertEqual(isGroupedBefore(roles, testdata.roleAdmin, testdata.roleTeacher), true,
       "Every '" + testdata.roleAdmin + "' row should sort before every '" + testdata.roleTeacher +
       "' row — got: " + roles.join(", "));
@@ -490,6 +499,14 @@ module.exports = {
       "A second click on Role should flip the sort to descending");
 
     var roles = pluck(await schoolStaff.getData_staffRows(), "role");
+    // Same vacuity guard as TC_17 — with only one role group present the reversal below
+    // could not fail (Invariant 13).
+    await assertion.assertEqual(roles.indexOf(testdata.roleAdmin) >= 0, true,
+      "Precondition: the school must hold at least one '" + testdata.roleAdmin +
+      "' row, or the reversal assertion proves nothing — got: " + roles.join(", "));
+    await assertion.assertEqual(roles.indexOf(testdata.roleTeacher) >= 0, true,
+      "Precondition: the school must hold at least one '" + testdata.roleTeacher +
+      "' row — got: " + roles.join(", "));
     await assertion.assertEqual(isGroupedBefore(roles, testdata.roleTeacher, testdata.roleAdmin), true,
       "Descending, every '" + testdata.roleTeacher + "' row should sort before every '" +
       testdata.roleAdmin + "' row — got: " + roles.join(", "));

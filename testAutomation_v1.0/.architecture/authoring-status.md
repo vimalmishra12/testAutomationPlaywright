@@ -502,10 +502,41 @@ here: `TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25`.
   content, counts, sort order, echoed search terms) and `FCN-CHZ-PDA` is actively mutated by
   other teams (the Staff heading moved 23 → 22 between 2026-08-24 and 2026-09-02).
   Phase 3 must still confirm this rather than inherit it.
-- Phase 2 (run/fix): ⬜ pending — nothing to fix yet; the suite was green on its first
-  execution. Phase 2 should still re-check the Step 0b traps table against the shipped code
-  and confirm stability across runs.
-- Phase 3 (visual):  ⬜ pending
+- Phase 2 (run/fix): ✅ 2026-09-02 — **all 19 passing, 4 runs total, the last 2 consecutive
+  and clean on the changed code.** No product-side failure ever occurred, so there was no
+  fix cycle; the phase's value here was the two audits.
+    - **Evidence audit done.** All 19 per-TC screenshots extracted from `report.json` and
+      walked. They show what the cases assert — TC_11 shows the banner, echoed term, Clear
+      and the empty-state copy; TC_12 shows the expanded guide's six lines; TC_17 shows
+      Administrator/Teacher grouped first; TC_24's capture is **scrolled to the bottom** of
+      the exhausted list, showing the last row and no `Load more ...` beneath it (which also
+      evidences TC_20's code-point tail). **No ADR-019 violation** — `AfterEach` is empty and
+      the reset lives in `BeforeEach` + suite-level `After`; TC_11 still showing its search
+      term is the proof.
+      *Noted, not a defect:* TC_13 photographs a collapsed guide, indistinguishable from one
+      that never opened. It is NOT split, because its assertions already stand without the
+      image — it asserts the panel was open BEFORE the click, that one click sufficed, and
+      that the panel was REMOVED.
+    - **Falsifiability audit found one real hole, fixed with the user's approval.**
+      `isGroupedBefore()` returns true when only one role group is present, so on a school
+      that ever held only `Teacher` rows, TC_17 and TC_18 would have passed while asserting
+      nothing (Invariant 13). Both cases now assert **both** role values are present before
+      asserting the ordering. The helper was left alone — it is a correct pure predicate; the
+      guard belongs in the cases. Re-run twice after the change: 19/19 both times, and the
+      guard passes on real data rather than being skipped.
+    - **Step 0b traps table re-checked against the shipped code** — every "applies here" row
+      has a real handler. No trap turned out to apply and to have been missed.
+    - ⚠️ **Runtime is drifting upward and should be watched.** The same 19 cases took 77 s,
+      76 s, 117 s and 229 s across the four runs. The slowdown is **uniform across every
+      case, including ones that do no network work** (the user-guide case went 198 ms →
+      3.7 s), so it is environmental — Thor and/or the local machine — not a suite
+      regression. But it has eaten the safety margin: the slowest case is now 12.9 s against
+      the page object's 20 s poll budget, ~1.5x headroom where the measurement gave ~5x. If
+      Thor degrades further the budget will start to bite, and it should be re-measured
+      rather than simply raised.
+- Phase 3 (visual):  ⬜ pending — **mandatory; the feature is NOT closed until it is done.**
+  Expectation is "no visual candidates" (every case reads shared-school data that drifts),
+  but Phase 3 must confirm that rather than inherit it.
 
 **Traps handled (Step 0b), for Phase 2 to re-check:** positional row ids resolved by content
 (`findRowIndexByText`); the aria row number's off-by-two never mapped onto an index; the
