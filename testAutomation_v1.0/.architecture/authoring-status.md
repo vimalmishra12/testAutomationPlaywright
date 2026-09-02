@@ -475,3 +475,70 @@ Scope of this entry: the **side-effect-free SPRF block only** (11 of 22 SPRF cas
   (require typing into the name fields and leaving the form), `TC_14` (consumes a real
   activation code), `TC_19`/`TC_22` (remove a student). These want the dedicated
   **Cqa Test Ashish School 1 (VED-NEH-KVU)** account already agreed for `TST_SLST_TC_25`.
+
+## adminStaffTab (ExperienceApp, thor)
+Admin App **Staff tab**, module **STFL** → `pages/ExperienceApp/schoolStaff.page.js`.
+Manual source: `test/Manual/C1App/AdminApp-Staff/` (57 TCs across STFL/STFP/STFB).
+Scope of this entry: the **side-effect-free STFL block, minus the Phase 1 exclusions** —
+19 of the 26 STFL cases.
+
+**Scope arithmetic, so the gaps are not mistaken for oversights.** STFL holds 26 live cases
+(`TC_1..27`, `TC_22` retired). Six are marked `[EXTRA — Phase 1 exclusion]` in the register
+because they are coverage the other team's reviewed sheet does not hold and the team decided
+not to automate them in Phase 1: `TC_1, 5, 7, 10, 21, 26`. One more, `TC_27`, needs an
+invited teacher to accept and therefore mutates real data. That leaves the **19** automated
+here: `TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25`.
+
+- Phase 1 (build):   ✅ 2026-09-02 — 19 STFL cases registered, plus `TC_NAV` and `TC_RESET`
+  housekeeping (21 entries in `C1TCRepository.json`, all `visualTest: false`).
+  **Executed: 19 passing / 0 failing**, green on the FIRST run and again on a second
+  consecutive run of `npm run adminStaffTabTest_thor` (77.1 s then 76.3 s, headed Chrome,
+  Thor / `FCN-CHZ-PDA`). No fix cycle was needed — the live selector capture is why.
+  Selectors were captured **LIVE** via Playwright MCP (the user signed in; Claude cannot type
+  passwords), not inferred from documentation — full capture, three newly-found traps and the
+  measured transitions are written up in
+  `product-knowledge/ExperienceApp/admin-staff-tab.md` §7.
+  Visual candidates: **none identified** — every case reads dynamic, shared-school data (row
+  content, counts, sort order, echoed search terms) and `FCN-CHZ-PDA` is actively mutated by
+  other teams (the Staff heading moved 23 → 22 between 2026-08-24 and 2026-09-02).
+  Phase 3 must still confirm this rather than inherit it.
+- Phase 2 (run/fix): ⬜ pending — nothing to fix yet; the suite was green on its first
+  execution. Phase 2 should still re-check the Step 0b traps table against the shipped code
+  and confirm stability across runs.
+- Phase 3 (visual):  ⬜ pending
+
+**Traps handled (Step 0b), for Phase 2 to re-check:** positional row ids resolved by content
+(`findRowIndexByText`); the aria row number's off-by-two never mapped onto an index; the
+user-guide toggle treated as two distinct elements with a removal wait; sort waits poll a row
+fingerprint, never the optimistic header label; code-point collation, with `TC_20` additionally
+asserting a `localeCompare` ordering would DIFFER so the case cannot pass on ambiguous data;
+`Load more ...` asserted ABSENT, never disabled; the school opened by KEY because two schools
+share the display name.
+
+**Three traps found in this sweep and now in product knowledge §7.2:** the sort qids are not
+in visual column order (First name `aAdmin-3`, Last name `aAdmin-4`); the sort-status id's
+`-a` suffix is NOT the direction (`sortStatus-staff-roles-a` reads "sorted descending" after
+a second click — read the text, and note the column key is `roles`, plural); and the Clear
+link carries a Classes-tab qid, `aClass-99`, so the selector uses `staff h2 small a.clear-search`.
+
+**NOT in this entry — still outstanding for the Staff tab:**
+- **STFP (staff profile, 17 cases)** — 5 marked `[EXTRA — Phase 1 exclusion]`. The read-only
+  half is the natural next batch: profile layout for both roles, Back, class launch, the
+  role-conditional menu, and both dialogs' CANCEL paths (non-mutating and already verified).
+  ⚠️ A staff profile URL is **not deep-linkable** — reach it through the list, always.
+- **STFB (invitation form, 12 cases)** — 6 marked `[EXTRA — Phase 1 exclusion]`. Leave until
+  last: it needs a data-owning suite, `TC_10` sends real email, and the form auto-restores a
+  shared draft so it is never empty on load.
+- **Mutating cases NOT automated by design** — `STFL_TC_27`, `STFP_TC_10` (grant),
+  `TC_13` (revoke), `TC_18` (removal), `STFB_TC_3/9/10`. Never revoke rights from or remove a
+  staff member the suite did not create, and never confirm either against
+  `testt1@mailsac.com` — it is the login for every admin suite.
+- **`TST_STFB_TC_11` remains Blocked** — the upload-error condition has still not been
+  reproduced; root cause (three missing `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_*`
+  translation keys) is known and needs no repro to fix.
+- **`TST_STFL_TC_26` (heading count vs rendered rows) is a live, unexplained product defect** —
+  22 vs 21 on 2026-09-02, down from 23 vs 21 but NOT closed. It is Phase-1-excluded, so no
+  automated case asserts the two match.
+- **Two open questions from the design handoff are still unanswered** and neither blocked this
+  batch: whether a different/larger school is coming for the Staff tab, and whether an admin
+  revoking their own rights is by design.

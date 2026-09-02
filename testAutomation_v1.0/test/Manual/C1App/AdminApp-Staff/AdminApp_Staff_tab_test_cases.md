@@ -9,7 +9,12 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **17** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_STFL_TC_1`, `TST_STFL_TC_5`, `TST_STFL_TC_7`, `TST_STFL_TC_10`, `TST_STFL_TC_21`, `TST_STFL_TC_26`, `TST_STFP_TC_3`, `TST_STFP_TC_4`, `TST_STFP_TC_6`, `TST_STFP_TC_8`, `TST_STFP_TC_14`, `TST_STFB_TC_5`, `TST_STFB_TC_6`, `TST_STFB_TC_7`, `TST_STFB_TC_8`, `TST_STFB_TC_11`, `TST_STFB_TC_12`.
 
-**Execution status (2026-09-01):** **0 of 57 TCs automated.** 55 are **Not Run**; **2 are Blocked** at design time (`TST_STFB_TC_11`, `TST_STFP_TC_20`). This is a design-only batch — nothing has been automated yet, and no case is marked Pass.
+**Execution status (2026-09-02):** **19 of 57 TCs automated and PASSING** — the whole Phase 1 `STFL` block, verified on Thor across two consecutive clean runs of `npm run adminStaffTabTest_thor` (19/19, 77.1 s then 76.3 s). **36 are Not Run**; **2 are Blocked** at design time (`TST_STFB_TC_11`, `TST_STFP_TC_20`).
+- Automated (`STFL`): `TST_STFL_TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25` — the side-effect-free list, search, user-guide, sort and Load-more cases. Nothing in the suite creates, edits or removes anything.
+- Deliberately NOT automated in Phase 1: the **6 STFL cases marked `[EXTRA — Phase 1 exclusion]`** above, and `TST_STFL_TC_27`, which needs an invited teacher to accept and so mutates real data.
+- `STFP` (17) and `STFB` (12) are **not started**. The read-only half of `STFP` is the natural next batch; `STFB` should be left until last — it needs a data-owning suite and `TST_STFB_TC_10` sends real email.
+
+> Automation artifacts: `test/ExperienceApp/adminStaffTab.test.js` · `pages/ExperienceApp/schoolStaff.page.js` · selectors under `css.ComproC1.schoolStaff` · exec file `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffTab.json`. Live capture, traps and measured transitions: `product-knowledge/ExperienceApp/admin-staff-tab.md` §7.
 - Module **STFL** (`TST_STFL_TC_1–27`, **26 TCs** — `TST_STFL_TC_22` withdrawn, see below) — scenarios #1–#6, #13.
 - Module **STFP** (`TST_STFP_TC_1–18`, **17 TCs** — `TST_STFP_TC_5` withdrawn, see below) — scenarios #7–#11.
 - Module **STFB** (`TST_STFB_TC_1–12`, 12 TCs) — scenario #12.
@@ -200,7 +205,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Only staff whose first name matches are listed — the row `gg | teacher19oct | teacher19oct@mailsac.com | Teacher`. The heading changes from `Staff (N)` to `Staff` followed by the banner `Showing search results for teacher19oct.` and a `Clear` control; the count disappears while a search is active. |
 | **Remarks** | Search covers first name, last name and email from the single box. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -219,7 +224,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Every staff member whose first name, last name or email contains `teacher` is listed. Search is partial-matching, not exact. |
 | **Remarks** | Do not assert an absolute row count — FCN-CHZ-PDA is shared and mutated by other teams (`admin-shared.md` §A5). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -238,7 +243,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Both searches return the identical row set — matching is case-insensitive. The banner echoes the term **preserving the case as typed**, i.e. `Showing search results for TEACHER19OCT.` |
 | **Remarks** | Case-preserving echo is confirmed behaviour on the sibling Students tab and re-observed here. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -278,7 +283,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Only staff with last name `gg` are listed — `gg | teacher19oct | teacher19oct@mailsac.com | Teacher` and `gg | testteacher18 | testteacher18oct@mailsac.com | Administrator/Teacher`. The banner reads `Showing search results for gg.` and `Load more ...` is absent because the result set is under one page. |
 | **Remarks** | Verified live 2026-08-24 — exactly these two rows returned. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -318,7 +323,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Exactly one row is listed — `gg | testteacher18 | testteacher18oct@mailsac.com | Administrator/Teacher` — and the banner echoes the full address. |
 | **Remarks** | — |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -337,7 +342,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Every staff member whose email ends in `@yopmail.com` is listed (the `Perf Test` accounts). The `@` is matched literally, not as an operator. |
 | **Remarks** | Nine `Perf Test` rows carried `@yopmail.com` at capture; do not assert the number. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -375,7 +380,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The staff table (including the sort header) is removed and replaced by the message, verbatim: `This school has no administrators that match your search zzzznomatchqa. Please check the spelling or try a different search term` — the term is echoed. `Clear` remains available and restores the list. |
 | **Remarks** | Verified live 2026-08-24. **Copy defect to raise:** the message says "administrators" although the Staff tab lists teachers and administrators and the search matches both — it should say staff. Assert the string verbatim as written here until the copy is fixed. Note this tab does NOT reproduce the Students-tab defect where nothing at all renders (`TST_SLST_TC_12`). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -396,7 +401,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The panel expands and reads, verbatim: `On this page you can:` · `Search for a teacher or administrator who has joined your school in Cambridge One` · `View profiles and manage their accounts` · `Remove staff members from your school account` · `Grant or remove administrator rights to teachers in your school` · `Tip: If the person you want to make an administrator has not yet joined your school, give them the school key you see above and ask them to sign up as a teacher and use the key. You can then give them admin rights`. The toggle label changes to `Hide`. |
 | **Remarks** | Captured verbatim live 2026-08-24. **Automation trap:** the collapsed and expanded toggles are DIFFERENT elements (`aAdmin-8` vs `aAdmin-9`); a page object bound to one breaks the other half of this test. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -415,7 +420,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The panel is removed from the page entirely (not merely hidden) and the toggle label reverts to `User guide`. |
 | **Remarks** | Verified live 2026-08-24 — the guide text is genuinely absent from the DOM once collapsed, so an automated assertion may check absence rather than visibility. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -436,7 +441,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The `Last name` header carries `sorted ascending` and the rows are ordered by last name ascending. No other column carries an indicator. |
 | **Remarks** | Note the Staff default differs from the Students tab, which defaults to **First name** ascending. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -455,7 +460,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The `First name` header reads `sorted ascending`, the rows are ordered by first name ascending, and the indicator is removed from `Last name`. |
 | **Remarks** | — |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -474,7 +479,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The `Email address` header reads `sorted ascending` and the rows are ordered by email ascending. |
 | **Remarks** | Unlike the Students tab, the `sorted ascending` / `sorted descending` text IS inside the header button on every Staff column — the Students-tab Email/Username trap does not apply here. Verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -493,7 +498,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The `Role` header reads `sorted ascending` and all `Administrator/Teacher` rows sort before all `Teacher` rows. |
 | **Remarks** | Verified live 2026-08-24 — three `Administrator/Teacher` rows led the list. Role sort exists only on the Staff tab. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -512,7 +517,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The header reads `sorted descending` and `Teacher` rows now sort before `Administrator/Teacher` rows. |
 | **Remarks** | Verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -531,7 +536,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Only `First name` carries a sort indicator; `Role` no longer carries one. Exactly one column is ever indicated. |
 | **Remarks** | — |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -550,7 +555,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Ordering is by code point, not locale — every capitalised last name precedes every lower-case one. Observed order: `21aug, Ln, Perf Test, T1, User, gg, ln, s, teacher, teacher9752`. A `localeCompare` expectation is wrong against this product. |
 | **Remarks** | Verified live 2026-08-24. Same collation rule as the Classes and Students tabs (`admin-shared.md` §A4). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -590,7 +595,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | Further staff rows are appended below the existing 20; the existing rows are not replaced and the sort order is preserved. |
 | **Remarks** | Page size is 20, verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -609,7 +614,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | `Load more ...` is **removed from the page**, not merely disabled. An automated check must assert absence, not a disabled state. |
 | **Remarks** | Verified live 2026-08-24. Same behaviour as the Classes and Students tabs. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -628,7 +633,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | `Load more ...` is absent while the two-row result set is shown, and reappears after `Clear` restores the full list. |
 | **Remarks** | Verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---

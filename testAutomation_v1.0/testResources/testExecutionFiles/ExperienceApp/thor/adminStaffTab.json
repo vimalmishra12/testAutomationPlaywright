@@ -1,0 +1,70 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Staff tab — STFL Phase 1 (search, user guide, sort, load more) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA (never by name — two schools share it)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_NAV", "description": "Navigate from the Classes tab to the Staff tab", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_STFL_TC_RESET", "description": "Clear any active search and collapse the user guide so this TC starts from the full list", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] }
+    ],
+    "Test": [
+      { "id": "TST_STFL_TC_2", "description": "Verify matching staff are returned when a full first name is searched", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_3", "description": "Verify all partial matches are returned when only part of a first name is searched", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_4", "description": "Verify the same results are returned when a first name is searched in a different case", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_6", "description": "Verify matching staff are returned when a last name is searched", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_8", "description": "Verify the correct staff member is returned when a full email address is searched", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_9", "description": "Verify all staff on a domain are returned when a partial email address is searched", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_11", "description": "Verify an empty-state message is shown when a search matches no staff member", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_12", "description": "Verify the user guide panel is shown when the User guide toggle is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_13", "description": "Verify the user guide panel is removed when the Hide toggle is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_14", "description": "Verify the list is sorted by Last name ascending when the Staff tab first loads", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_15", "description": "Verify the list is re-ordered by first name when the First name column header is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_16", "description": "Verify the list is re-ordered by email address when the Email address column header is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_17", "description": "Verify the list is grouped by role when the Role column header is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_18", "description": "Verify the Role sort reverses when the Role column header is clicked a second time", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_19", "description": "Verify the previous sort indicator is cleared when a different column takes over the sort", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_20", "description": "Verify sorting orders values by code point when last names mix upper and lower case", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_23", "description": "Verify the next page of staff is appended when Load more is clicked", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_24", "description": "Verify the Load more control is removed when the whole staff list has been loaded", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] },
+      { "id": "TST_STFL_TC_25", "description": "Verify the Load more control is absent when a search returns fewer results than one page", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_STFL_TC_RESET", "description": "Clear the search once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so clearing there would erase the very evidence the search TCs assert)", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffTabData.json", "jsonPath": "C1.adminStaffTab" }] }
+    ]
+  }
+}

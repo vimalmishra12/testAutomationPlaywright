@@ -278,3 +278,97 @@ create one, or accept that `TST_STFP_TC_7` exercises the admin's own profile.
 The shared-school constraints in `admin-shared.md` §A5 apply in full — never assert an absolute
 count, and never revoke rights from or remove a staff member this suite did not create. Anything the
 Staff suites create uses the sweepable prefix **`AutoStaff_`**.
+
+---
+
+## 7. Automation selector capture and Phase 1 traps `[2026-09-02]`
+
+Captured live on Thor / `FCN-CHZ-PDA` during the STFL Phase 1 build (module `STFL` →
+`pages/ExperienceApp/schoolStaff.page.js`, selectors under
+`css.ComproC1.schoolStaff`). Everything below was read from the running page, not inferred.
+
+### 7.1 The page-scoping anchor
+
+The Staff view renders inside a **`<staff>`** component tag — the exact sibling of the
+Students tab's `<learner>`. The heading's ancestor chain is
+`h2 › div › staff › … › dashboard › … › admin › app`. So `staff h2` is the unique anchor;
+a bare `h2` matches the wrong view, because every admin tab renders one.
+
+Custom tags present on the page: `admin`, `staff`, `router-outlet`, `teacher-admin-switch`,
+`service-announcement`, `nps-survey`, `cg-survey`. The NPS/CustomerGauge survey elements are
+present but **empty** (`innerHTML.length === 0`) and did not interfere.
+
+**No cookie banner was rendered in this session** — the interception noted in §4 did not
+reproduce. It is left unhandled in the page object rather than papered over; if it returns
+it will surface as an interception error rather than a silent workaround.
+
+### 7.2 Three traps not previously recorded
+
+1. **The sort qids are NOT in visual column order.** First name is `aAdmin-3` and Last name
+   is `aAdmin-4`, even though Last name is the leftmost column. Anyone binding "the first
+   sort button" to the first column gets the wrong one.
+
+2. **The sort-status id's `-a` suffix is NOT the direction.** After a second click
+   `sortStatus-staff-roles-a` reads **"sorted descending"** — the id never changes. Read the
+   **text** for direction; the id is stable per column and is the right thing to bind to.
+   The column key inside the id is the API field, not the label:
+   `last_name` · `first_name` · `ext_email` · **`roles`** (plural).
+
+3. **The Clear link's qid on this tab is `aClass-99`** — a CLASSES-tab id reused inside the
+   Staff heading. Binding to it would be confusing and fragile; scope the stable class
+   instead: `staff h2 small a.clear-search`.
+
+Also confirmed: **only the column that currently owns the sort has a status element at
+all** — the other three are absent from the DOM, not merely empty. That is what makes
+"the previous indicator is cleared" (`TST_STFL_TC_19`) an assertion that can actually fail.
+
+### 7.3 Measured transitions `[2026-09-02]`
+
+Never inherit these — they are measurements, not guesses (Invariant 1).
+
+| Transition | Measured |
+|---|---|
+| Search (2-row result) | ~1.5 s |
+| Search (no-match empty state) | ~3.4 s |
+| Sort re-order | 0.8 – 4.1 s |
+| `Load more ...` append | ~1.1 s |
+| `Clear` restore | ~3.1 s |
+| User guide expand / collapse | < 1 s |
+
+The suite polls a row **fingerprint** on a 20 s budget — ~5× the measured worst case.
+
+### 7.4 Selector inventory (module `schoolStaff`)
+
+`input[qid='aAdmin-1']` search · `button[qid='aAdmin-2']` Search ·
+`a[qid='aAdmin-18']` Manage staff · `a[qid='aAdmin-19']` Add new teachers to classes ·
+`a[qid='aAdmin-8']` / `a[qid='aAdmin-9']` user-guide toggles ·
+`button[qid='aAdmin-4' | 'aAdmin-3' | 'aAdmin-5' | 'aAdmin-6']` sort by Last name /
+First name / Email address / Role · `button[qid='aAdmin-16-<n>']` (`#adminActionsLink-<n>`)
+row toggle · `a[qid='aAdmin-17-<n>']` View profile · `a[qid='aAdmin-15']` Load more ·
+`staff .list-items` row · `#staff-cell-{last-name|first-name|email|role}-<n>` cells ·
+`staff div.no-records p.mb-0` empty state · `staff .list-header` sort header row.
+
+The **Role column is a real, visible cell** (`staff-cell-role-<n>`) — unlike the Students
+tab, where the account type is exposed only in the row's accessible name.
+
+### 7.5 Count drift and the heading defect, re-measured
+
+`Staff (22)` in the heading, **21 rows** rendered with `Load more ...` already removed
+(20 on first load, +1 on one click). The heading read **23** on 2026-08-24 and **22** on
+2026-09-02, so the school is being mutated as expected and the gap has narrowed from 2 to 1
+— but it has **not closed**. The defect recorded at §5 #2 (`TST_STFL_TC_26`) still stands
+and its cause is still unexplained.
+
+⚠️ Nothing in the automated suite asserts that the heading count equals the row count.
+`TST_STFL_TC_26` is marked `[EXTRA — Phase 1 exclusion]` in the register and is out of
+Phase 1 scope.
+
+### 7.6 What is automated
+
+`test/ExperienceApp/adminStaffTab.test.js`, run by `npm run adminStaffTabTest_thor`
+(exec file `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffTab.json`).
+
+**19 STFL cases** — `TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24,
+25` — the side-effect-free block minus the six marked `[EXTRA — Phase 1 exclusion]`
+(`TC_1, 5, 7, 10, 21, 26`) and minus `TC_27`, which needs an invited teacher to accept.
+Nothing in the suite creates, edits or removes anything.

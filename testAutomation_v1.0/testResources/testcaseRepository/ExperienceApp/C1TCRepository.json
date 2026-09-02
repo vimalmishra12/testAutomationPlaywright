@@ -4643,6 +4643,34 @@
         { "id": "TST_SLST_TC_24", "description": "Verify Load more is not offered when a result set fits on one page", "tags": "P2", "visualTest": false },
         { "id": "TST_SLST_TC_13", "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list", "tags": "P2", "visualTest": false }
       ]
+    },
+    {
+      "modulename": "Admin App | Staff tab - search, user guide, sort & load more (STFL Phase 1)",
+      "moduleId": "STFL",
+      "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+      "testcase": [
+        { "id": "TST_STFL_TC_NAV", "description": "Before-hook navigation - hop from the Classes tab to the Staff tab (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_RESET", "description": "BeforeEach/After housekeeping - clear any search and collapse the user guide (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_2", "description": "Verify matching staff are returned when a full first name is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_3", "description": "Verify all partial matches are returned when only part of a first name is searched", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_4", "description": "Verify the same results are returned when a first name is searched in a different case", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_6", "description": "Verify matching staff are returned when a last name is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_8", "description": "Verify the correct staff member is returned when a full email address is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_9", "description": "Verify all staff on a domain are returned when a partial email address is searched", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_11", "description": "Verify an empty-state message is shown when a search matches no staff member", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_12", "description": "Verify the user guide panel is shown when the User guide toggle is clicked", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_13", "description": "Verify the user guide panel is removed when the Hide toggle is clicked", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_14", "description": "Verify the list is sorted by Last name ascending when the Staff tab first loads", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_15", "description": "Verify the list is re-ordered by first name when the First name column header is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_16", "description": "Verify the list is re-ordered by email address when the Email address column header is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_17", "description": "Verify the list is grouped by role when the Role column header is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_18", "description": "Verify the Role sort reverses when the Role column header is clicked a second time", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_19", "description": "Verify the previous sort indicator is cleared when a different column takes over the sort", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_20", "description": "Verify sorting orders values by code point when last names mix upper and lower case", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_23", "description": "Verify the next page of staff is appended when Load more is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFL_TC_24", "description": "Verify the Load more control is removed when the whole staff list has been loaded", "tags": "P2", "visualTest": false },
+        { "id": "TST_STFL_TC_25", "description": "Verify the Load more control is absent when a search returns fewer results than one page", "tags": "P2", "visualTest": false }
+      ]
     }
   ]
 }

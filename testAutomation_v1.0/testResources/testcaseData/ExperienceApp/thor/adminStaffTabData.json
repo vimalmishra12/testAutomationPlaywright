@@ -1,0 +1,45 @@
+{
+  "C1": {
+    "adminStaffTab": {
+      "_comment": "Admin App > Staff tab (module STFL) on thor. Every fixture below was verified live on FCN-CHZ-PDA 2026-09-02. The school is SHARED and actively mutated by other teams - no value here may be turned into an absolute-count assertion (admin-shared.md A5).",
+
+      "schoolKey": "FCN-CHZ-PDA",
+      "staffUrlFragment": "/staff",
+
+      "searchPlaceholder": "Search by first name, last name or email",
+
+      "searchByFirstName": "teacher19oct",
+      "searchByFirstNameUpperCase": "TEACHER19OCT",
+      "searchByFirstNameExpectedFirst": "teacher19oct",
+      "searchByFirstNameExpectedLast": "gg",
+      "searchByFirstNameExpectedEmail": "teacher19oct@mailsac.com",
+      "searchByFirstNameExpectedRole": "Teacher",
+
+      "searchPartialName": "teacher",
+
+      "searchByLastName": "gg",
+
+      "searchByEmail": "testteacher18oct@mailsac.com",
+      "searchByEmailExpectedFirst": "testteacher18",
+      "searchByEmailExpectedLast": "gg",
+      "searchByEmailExpectedRole": "Administrator/Teacher",
+
+      "searchByEmailDomain": "@yopmail.com",
+
+      "searchNoMatch": "zzzznomatchqa",
+      "noMatchMessage": "This school has no administrators that match your search {{term}}. Please check the spelling or try a different search term",
+
+      "roleAdmin": "Administrator/Teacher",
+      "roleTeacher": "Teacher",
+
+      "userGuideLines": [
+        "On this page you can:",
+        "- Search for a teacher or administrator who has joined your school in Cambridge One",
+        "- View profiles and manage their accounts",
+        "- Remove staff members from your school account",
+        "- Grant or remove administrator rights to teachers in your school",
+        "Tip: If the person you want to make an administrator has not yet joined your school, give them the school key you see above and ask them to sign up as a teacher and use the key. You can then give them admin rights"
+      ]
+    }
+  }
+}
