@@ -534,9 +534,21 @@ here: `TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25`.
       the page object's 20 s poll budget, ~1.5x headroom where the measurement gave ~5x. If
       Thor degrades further the budget will start to bite, and it should be re-measured
       rather than simply raised.
-- Phase 3 (visual):  ⬜ pending — **mandatory; the feature is NOT closed until it is done.**
-  Expectation is "no visual candidates" (every case reads shared-school data that drifts),
-  but Phase 3 must confirm that rather than inherit it.
+- Phase 3 (visual):  ⏭️ **DEFERRED by user decision, 2026-09-02** — deliberately skipped for
+  this batch, not overlooked and not done. Recorded here rather than marked ✅ so nobody
+  later reads it as completed work.
+    - **What this means in practice:** all 19 TCs remain `visualTest: false`, which is the
+      required default for new TCs anyway (Invariant 12). Phase 3 only ever *promotes* cases
+      to `true`, so skipping it changes nothing about how the suite runs and adds no risk of
+      a wrong visual baseline. There is no `visualAcceptance_adminStaffTab_thor` script and
+      none should be added until the assessment happens.
+    - **What is genuinely lost:** nobody has run the AGENTS.md §8 Rule A static-vs-dynamic
+      assessment over these cases, so "no visual candidates here" is an *expectation*, not a
+      finding. The expectation is well-founded — every case reads shared-school data that
+      drifts (row content, counts, sort order, echoed search terms) and `FCN-CHZ-PDA` is
+      actively mutated by other teams — but it has not been tested.
+    - **To pick it up later:** read `.agent/skills/c1-test-authoring/phases/3-visual.md` and
+      run the assessment over the 19 registered TCs. Nothing needs undoing first.
 
 **Traps handled (Step 0b), for Phase 2 to re-check:** positional row ids resolved by content
 (`findRowIndexByText`); the aria row number's off-by-two never mapped onto an index; the

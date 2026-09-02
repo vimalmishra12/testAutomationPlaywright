@@ -395,3 +395,50 @@ budget to chase a slowdown without measuring is how an inherited guess gets born
 - Phase 3 (visual): ⬜ **still pending and mandatory — the feature is NOT closed.** The expectation
   is "no visual candidates", since every case reads shared-school data that drifts, but Phase 3 must
   confirm that rather than inherit it. Recommended in a fresh session.
+
+---
+
+# Session 2, closing — Phase 3 deferred by user decision
+
+**Date:** 2026-09-02
+
+**Decision:** Phase 3 (visual assessment) is **deliberately skipped for this batch** `[user, 2026-09-02]`.
+The skill treats Phase 3 as mandatory and a feature as unclosed while any phase is ⬜; that concern was
+raised and the user decided to proceed without it. Recorded as **deferred**, never as ✅ — a skipped
+phase marked complete is worse than an obviously open one.
+
+**Why this is a safe skip, and where it is not.**
+
+Safe: every one of the 19 TCs is registered `visualTest: false`, which is the required default for
+new TCs (Invariant 12). Phase 3 only ever *promotes* cases to `true`. So skipping it changes nothing
+about how the suite runs today and creates no risk of a wrong or stale visual baseline. No
+`visualAcceptance_adminStaffTab_thor` script exists, and none should be added until the assessment
+is actually done.
+
+Not safe to forget: nobody has run the AGENTS.md §8 Rule A static-vs-dynamic assessment over these
+cases. "No visual candidates here" is an **expectation, not a finding**. It is a well-founded
+expectation — every case reads shared-school data that drifts (row content, counts, sort order,
+echoed search terms) on a school other teams actively mutate — but it has not been tested, and the
+distinction should survive into whatever session picks this up.
+
+**To resume:** read `.agent/skills/c1-test-authoring/phases/3-visual.md` and run the assessment over
+the 19 registered TCs. Nothing needs undoing first.
+
+## Final state of this feature
+
+| Phase | State |
+|---|---|
+| 1 — Build | ✅ 2026-09-02 — 19 TCs, live selector capture, green on first execution |
+| 2 — Run & fix | ✅ 2026-09-02 — 19 passing, 2 consecutive clean runs on the changed code; both audits done, one vacuous assertion fixed |
+| 3 — Visual | ⏭️ Deferred by user decision |
+
+Shipped to `main`: `6e698e9` (Phase 1) and `05ba477` (Phase 2).
+
+**Carried forward, unchanged by this decision:**
+- `STFP` read-only (12 cases after the Phase 1 exclusions) is the next batch; `STFB` last.
+- Runtime drift is worth watching — 77 s → 229 s across four runs, environmental rather than a
+  suite regression, but the slowest case is now 12.9 s against a 20 s poll budget. Re-measure
+  before raising it.
+- Two product items still open and unraised in Jira as far as this session knows: the heading /
+  row-count disagreement (`Staff (22)` over 21 rows) and the "no administrators" copy on a tab that
+  lists teachers too.
