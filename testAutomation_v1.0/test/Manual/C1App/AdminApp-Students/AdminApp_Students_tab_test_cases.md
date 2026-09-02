@@ -4,8 +4,12 @@
 **Modules:** **SLST** (Students tab list) — *maps to the future `schoolStudents` page object* · **SPRF** (student profile & manage account) — *`studentProfile`* · **SBLK** (bulk student operations) — *`bulkStudents`*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Pages in scope:** Students tab `/admin/admin/org_<slug>/learner` · student profile `/class/teacher/org_<slug>/profile/<orgUuid>/<userId>` · manage learner profile `/admin/admin/org_<slug>/edit-user-profile/<orgUuid>/<userId>` · individual activation `/dashboard/teacher/org_<slug>/activateMaterial/<userId>/admin` · bulk activation `/admin/admin/org_<slug>/bulk_activation`
-**Generated:** 2026-08-22 · **Revised:** 2026-08-28 (Phase 1 grounding — TC_12/13/14 expected results corrected) | **Total TCs:** 59 (33 Positive · 16 Edge · 10 Negative) — **all 23 source scenarios covered**
-**Execution status (2026-08-28):** **23 of 59 TCs automated and PASSING** — the whole side-effect-free SLST block, verified on Thor across two consecutive clean runs (`npm run adminStudentsTabTest_thor`). 33 are **Not Run** (SLST TC_25, all 22 SPRF, all 12 SBLK — less the 2 blocked); **3 are Blocked** (`TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`).
+**Generated:** 2026-08-22 · **Revised:** 2026-08-28 (Phase 1 grounding — TC_12/13/14 expected results corrected) | **Total TCs:** 68 (35 Positive · 19 Edge · 14 Negative)
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **17** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_SLST_TC_1`, `TST_SLST_TC_9`, `TST_SLST_TC_10`, `TST_SLST_TC_11`, `TST_SLST_TC_18`, `TST_SLST_TC_19`, `TST_SLST_TC_24`, `TST_SPRF_TC_4`, `TST_SPRF_TC_5`, `TST_SPRF_TC_6`, `TST_SPRF_TC_7`, `TST_SPRF_TC_13`, `TST_SPRF_TC_20`, `TST_SPRF_TC_21`, `TST_SBLK_TC_9`, `TST_SBLK_TC_10`, `TST_SBLK_TC_12`.
+ — **all 23 source scenarios covered**
+**Execution status (2026-09-01):** **23 of 68 TCs automated and PASSING** (41 Not Run · 4 Blocked) — the whole side-effect-free SLST block, verified on Thor across two consecutive clean runs (`npm run adminStudentsTabTest_thor`). 33 are **Not Run** (SLST TC_25, all 22 SPRF, all 12 SBLK — less the 2 blocked); **3 are Blocked** (`TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`).
 - **SLST: 23 of 25 Pass.** Remaining: `TC_14` (Blocked - needs a redeemed activation code) and `TC_25` (creates real data; targets Cqa Test Ashish School 1 / VED-NEH-KVU).
 - **SPRF: 0 of 22 automated.** **SBLK: 0 of 12 automated** (7 CSV fixtures still unwritten).
 - Automation lives in `test/ExperienceApp/adminStudentsTab.test.js` + `pages/ExperienceApp/schoolStudents.page.js`.
@@ -46,11 +50,11 @@
 | Linked Requirement (scenario) | Mapped TC IDs (P → E → N) |
 |---|---|
 | — Students tab load *(added, not in source)* | TST_SLST_TC_1 |
-| #1 — Verify search by first name | TST_SLST_TC_2, TST_SLST_TC_9, TST_SLST_TC_10, TST_SLST_TC_3 (E), TST_SLST_TC_11 (E), TST_SLST_TC_12 (N) |
+| #1 — Verify search by first name | TST_SLST_TC_2, TST_SLST_TC_9, TST_SLST_TC_10, TST_SLST_TC_3 (E), TST_SLST_TC_11 (E), TST_SLST_TC_12 (N), TST_SLST_TC_26 (E) |
 | #2 — Verify search by last name | TST_SLST_TC_4 |
 | #3 — Verify search by email | TST_SLST_TC_5, TST_SLST_TC_6 (E), TST_SLST_TC_7 (E) |
-| #4 — Verify search by username | TST_SLST_TC_8 |
-| #5 — Verify search with "who activated the code in my school?" checkbox | TST_SLST_TC_13, TST_SLST_TC_14 |
+| #4 — Verify search by username | TST_SLST_TC_8, TST_SLST_TC_27 (E) |
+| #5 — Verify search with "who activated the code in my school?" checkbox | TST_SLST_TC_13, TST_SLST_TC_14, TST_SLST_TC_28 (N) |
 | #6 — Verify sort by last name/first name/username | TST_SLST_TC_15, TST_SLST_TC_16, TST_SLST_TC_17, TST_SLST_TC_18 (E), TST_SLST_TC_19 (E) |
 | #7 — Verify user guide expand/collapse | TST_SLST_TC_20, TST_SLST_TC_21 |
 | #16 — Verify load more feature | TST_SLST_TC_22, TST_SLST_TC_23 (E), TST_SLST_TC_24 (E) |
@@ -58,17 +62,17 @@
 | #8 — Verify view profile for a adult learner | TST_SPRF_TC_1, TST_SPRF_TC_4, TST_SPRF_TC_5, TST_SPRF_TC_6 (E), TST_SPRF_TC_7 (N) |
 | #9 — Verify view profile for a child/adult with username | TST_SPRF_TC_2 |
 | #10 — Verify view profile for a adult with username | TST_SPRF_TC_3 |
-| #11 — Verify Change password: View Profile > Manage account > Edit Account details | TST_SPRF_TC_8, TST_SPRF_TC_9 (N) |
+| #11 — Verify Change password: View Profile > Manage account > Edit Account details | TST_SPRF_TC_8, TST_SPRF_TC_9 (N), TST_SPRF_TC_23 |
 | #12 — Verify update personal info of user: View Profile > Manage account > Edit account details | TST_SPRF_TC_10, TST_SPRF_TC_11 (E), TST_SPRF_TC_13 (E), TST_SPRF_TC_12 (N) |
 | #13 — Verify Activate course material for individual learner | TST_SPRF_TC_14, TST_SPRF_TC_15 (E), TST_SPRF_TC_16 (N) |
 | #14 — Verify launch class from view profile page | TST_SPRF_TC_17 |
 | #15 — Verify umbrella details page launch from view profile page (click on umbrella name) - clicking Back should return to previous page | TST_SPRF_TC_18 (N) |
 | #22 — Verify remove from school account: View Profile > Manage account | TST_SPRF_TC_19, TST_SPRF_TC_20 (E), TST_SPRF_TC_21 (E), TST_SPRF_TC_22 (N) |
-| #17 — Verify Bulk feature > Add new students to classes children | TST_SBLK_TC_1, TST_SBLK_TC_6 (E) |
-| #18 — Verify Bulk feature > Add new students to classes adult with username | TST_SBLK_TC_2 |
+| #17 — Verify Bulk feature > Add new students to classes children | TST_SBLK_TC_1, TST_SBLK_TC_6 (E), TST_SBLK_TC_13 (N), TST_SBLK_TC_16 |
+| #18 — Verify Bulk feature > Add new students to classes adult with username | TST_SBLK_TC_2, TST_SBLK_TC_14 (N), TST_SBLK_TC_17 (E) |
 | #19 — Verify Bulk feature > Add new students to classes adult/teacher (email) | TST_SBLK_TC_3 |
 | #20 — Verify Bulk feature > Add existing students to classes adult/teacher (email) | TST_SBLK_TC_4, TST_SBLK_TC_5 |
-| #21 — Verify Bulk feature > Activate course material | TST_SBLK_TC_7, TST_SBLK_TC_11, TST_SBLK_TC_8 (E), TST_SBLK_TC_9 (N), TST_SBLK_TC_10 (N), TST_SBLK_TC_12 (N) |
+| #21 — Verify Bulk feature > Activate course material | TST_SBLK_TC_7, TST_SBLK_TC_11, TST_SBLK_TC_8 (E), TST_SBLK_TC_9 (N), TST_SBLK_TC_10 (N), TST_SBLK_TC_12 (N), TST_SBLK_TC_15 (N) |
 
 Every one of the 23 source scenarios has at least one test case.
 
@@ -196,7 +200,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Open school "3 July Test School 1" (FCN-CHZ-PDA) from My school accounts.<br>2. Click the STUDENTS tab in the left nav.<br>3. Observe the page. |
 | **Test Data** | - |
 | **Expected Result** | URL is /admin/admin/org_perf_testschool_1/learner. Heading reads "Students (N)". The page shows: search box with placeholder "Search by first name, last name, email or username", a Search button, the checkbox "Who activated the code in my school?", a "Manage students" dropdown, a select-all checkbox with "0 Selected", a disabled "Remove from school account" button, a "User guide" toggle, and a table with sort headers Last name / First name / Email address or Username. |
-| **Remarks** | Added by the designer — the source list has no explicit tab-load scenario, but every other case depends on this state. N moves on this shared school; never assert an absolute count. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Added by the designer — the source list has no explicit tab-load scenario, but every other case depends on this state. N moves on this shared school; never assert an absolute count. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -232,7 +236,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Type "Marvin" into the search box.<br>2. Do NOT click Search. Wait 3 seconds.<br>3. Observe the heading and the row count.<br>4. Click Search. |
 | **Test Data** | Search term: Marvin |
 | **Expected Result** | After step 3 the heading still reads "Students (N)" and the full first page of 20 rows is still listed — search is submit-driven, not live. Only after step 4 does the list narrow to one row. |
-| **Remarks** | Verified live 2026-08-22 (heading "Students (26)", 20 rows, unchanged after typing). Same behaviour as the Classes tab. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22 (heading "Students (26)", 20 rows, unchanged after typing). Same behaviour as the Classes tab. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -249,7 +253,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Click the "Clear" link in the search banner.<br>2. Observe the heading, the search box and the row count. |
 | **Test Data** | - |
 | **Expected Result** | The banner is replaced by the "Students (N)" count heading, the search box is emptied, the first page of 20 rows is listed again and "Load more ..." reappears. |
-| **Remarks** | Verified live 2026-08-22. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -283,7 +287,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Type two space characters into the search box.<br>2. Click Search. |
 | **Test Data** | Search term: "  " (two spaces) |
 | **Expected Result** | All students are returned (first page of 20 rows). The search banner is shown but with no term between "Showing search results for" and the full stop — i.e. the term is trimmed away yet the banner state is still entered. |
-| **Remarks** | Verified live 2026-08-22. Arguably the banner should not appear at all for an empty term — raise as a minor UX observation, not a functional failure. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. Arguably the banner should not appear at all for an empty term — raise as a minor UX observation, not a functional failure. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -497,7 +501,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Sort by Last name ascending.<br>2. Read the full ordered column. |
 | **Test Data** | - |
 | **Expected Result** | Upper-case names sort before lower-case ones — Garg, Learner, Perf Test, S, … then budhiraja, kr, learner, student, test, us. An A-Z expectation that ignores case (localeCompare) will NOT match this product. |
-| **Remarks** | Verified live 2026-08-22. Same collation rule already recorded for the Classes tab in admin-shared.md §A4. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. Same collation rule already recorded for the Classes tab in admin-shared.md §A4. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -514,7 +518,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Reload the page.<br>2. Read the sort indicators. |
 | **Test Data** | - |
 | **Expected Result** | The list returns to the default First name ascending sort — sorting does NOT persist across a reload. The sort-status indicator returns to `#sortStatus-learner-first_name` reading "sorted ascending". |
-| **Remarks** | CONFIRMED live on Thor 2026-08-28 — the [ASSUMED] tag is removed. Sorted by Last name descending, reloaded, and the list came back sorted by First name ascending with the original first row restored. Matches the Classes tab (admin-shared.md §A4). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. CONFIRMED live on Thor 2026-08-28 — the [ASSUMED] tag is removed. Sorted by Last name descending, reloaded, and the list came back sorted by First name ascending with the original first row restored. Matches the Classes tab (admin-shared.md §A4). |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -603,7 +607,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Search for "budhiraja" so that a single row is returned.<br>2. Look for the "Load more ..." link. |
 | **Test Data** | Search term: budhiraja |
 | **Expected Result** | No "Load more ..." link is present. |
-| **Remarks** | Verified live 2026-08-22. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. |
 | **Actual Result** | |
 | **Status** | Pass |
 | **Comments / Defect ID** |  |
@@ -658,7 +662,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Read the Course materials section for a student whose umbrellas mix activated, unactivated and expired components. |
 | **Test Data** | Adult learner "Learner us" (testps27@mailsac.com) — umbrella "testumbrellabundle" holds all three states |
 | **Expected Result** | Components are grouped under their umbrella name and each shows exactly one of three states: "Code activated" with "Activated: <date>" and "Expires: <date>"; "Code not activated" with no dates; or "Code expired" with "Activated: <date>" and "Expires: <date>" in the past. |
-| **Remarks** | Verified live 2026-08-22. “Code expired” was seen only on this account — a fixture worth keeping. The “(N)” in “Course materials (N)” counts UMBRELLAS, not components. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. “Code expired” was seen only on this account — a fixture worth keeping. The “(N)” in “Course materials (N)” counts UMBRELLAS, not components. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -675,7 +679,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Click "Back". |
 | **Test Data** | - |
 | **Expected Result** | The admin returns to /admin/admin/org_perf_testschool_1/learner with the school context intact. |
-| **Remarks** | Verified live 2026-08-22. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -692,7 +696,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Paste the profile URL into the address bar and load it. |
 | **Test Data** | /class/teacher/org_perf_testschool_1/profile/<orgUuid>/<userId> |
 | **Expected Result** | The profile page loads normally. This differs from the Classes tab, where deep-linking to /admin/admin/org_<slug>/class returns /dashboard/error unless the school card was clicked first. |
-| **Remarks** | Verified live 2026-08-22, within a session where the school context had already been set. [ASSUMED] for a cold session with no prior school selection — worth confirming, since the Classes-tab rule suggests it may fail. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22, within a session where the school context had already been set. [ASSUMED] for a cold session with no prior school selection — worth confirming, since the Classes-tab rule suggests it may fail. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -709,7 +713,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Search for "vandna.garg+11student@comprotechnologies.com".<br>2. Open the row’s action menu and click "View student profile".<br>3. Wait 60 seconds.<br>4. Open the browser console and the network tab. |
 | **Test Data** | Adult learner "Vandna Garg", vandna.garg+11student@comprotechnologies.com |
 | **Expected Result** | A readable error should be shown and the admin should be able to recover.<br><br>ACTUAL (defect, observed 2026-08-22): the URL collapses to /class/ and the page shows an INFINITE SPINNER forever with no message and no way back other than the browser. The network log shows GET /class/apigateway/org_perf_testschool_1/getUserDetailWithClasses?...&uuid=<uuid>&extUserId=<id> returning HTTP 500. |
-| **Remarks** | DEFECT — raise. Two faults in one: the 500 itself (student-specific: other profiles on the same school load fine) and the missing client-side error handling for it. Evidence: screenshot profile-blank.png + console/network trace, Thor 2026-08-22. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. DEFECT — raise. Two faults in one: the 500 itself (student-specific: other profiles on the same school load fine) and the missing client-side error handling for it. Evidence: screenshot profile-blank.png + console/network trace, Thor 2026-08-22. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -836,7 +840,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Change the First name value.<br>2. Click "Cancel" (or navigate away). |
 | **Test Data** | Any changed value |
 | **Expected Result** | A confirmation dialog is raised reading, verbatim: "Save changes?" / "Changes will be lost if you don’t save them" with "Cancel" and "Yes" buttons. |
-| **Remarks** | Copy captured free from the pre-rendered DOM 2026-08-22 (admin-shared.md §A6 trick) — the dialog was never triggered, but its text is verified. Which of Cancel/Yes discards versus saves is [ASSUMED] and must be confirmed. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Copy captured free from the pre-rendered DOM 2026-08-22 (admin-shared.md §A6 trick) — the dialog was never triggered, but its text is verified. Which of Cancel/Yes discards versus saves is [ASSUMED] and must be confirmed. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -980,7 +984,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Select 51 or more students.<br>2. Click "Remove from school account". |
 | **Test Data** | 51+ selected students |
 | **Expected Result** | The removal is refused and a dialog reads, verbatim: "You can only remove 50 students at one time" / "Please uncheck some students to continue", with a single "Close" action. |
-| **Remarks** | BLOCKED at design time on FCN-CHZ-PDA — the school holds 26 students, so 51 cannot be selected. The modal copy is nevertheless verified word for word from the pre-rendered DOM (2026-08-22), so this case is short work once a school with 51+ students exists. Unblocked by <SCHOOL_WITH_51_PLUS_STUDENTS>. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. BLOCKED at design time on FCN-CHZ-PDA — the school holds 26 students, so 51 cannot be selected. The modal copy is nevertheless verified word for word from the pre-rendered DOM (2026-08-22), so this case is short work once a school with 51+ students exists. Unblocked by <SCHOOL_WITH_51_PLUS_STUDENTS>. |
 | **Actual Result** | |
 | **Status** | Blocked |
 | **Comments / Defect ID** | Blocked at design time. The 50-student removal cap needs 51+ students selected; FCN-CHZ-PDA holds 26. Modal copy is already verified word for word from the pre-rendered DOM, so this is short work once a larger school exists. |
@@ -997,7 +1001,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. With no rows ticked, read the "0 Selected" label and the Remove button. |
 | **Test Data** | - |
 | **Expected Result** | The counter reads "0 Selected" and the "Remove from school account" button is disabled. |
-| **Remarks** | Verified live 2026-08-22 — natively disabled. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22 — natively disabled. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -1194,7 +1198,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Complete at least one valid row on the bulk activation page.<br>2. Click "Activate N codes".<br>3. Read the success dialog. |
 | **Test Data** | <VALID_UNUSED_ACTIVATION_CODE> |
 | **Expected Result** | The dialog should explain what happened in plain English.<br><br>ACTUAL (defect, observed 2026-08-22): the dialog body renders three RAW UNTRANSLATED KEYS instead of text — "ADMIN.LEARNER.BULK_ACTIVATION.SUCCESS_MODAL_INFO_1", "...SUCCESS_MODAL_INFO_2" and "...SUCCESS_MODAL_INFO_3" — above a "Back to dashboard" button. |
-| **Remarks** | DEFECT — raise. Captured WITHOUT running a bulk activation, by reading the pre-rendered dialog in the DOM (admin-shared.md §A6). This is a user-visible failure waiting for the first successful bulk activation. The same page also holds "An unexpected error occured." (sic — “occured”) in its Form-not-uploaded dialog. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. DEFECT — raise. Captured WITHOUT running a bulk activation, by reading the pre-rendered dialog in the DOM (admin-shared.md §A6). This is a user-visible failure waiting for the first successful bulk activation. The same page also holds "An unexpected error occured." (sic — “occured”) in its Form-not-uploaded dialog. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -1211,7 +1215,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Inspect the accessible name of the entry row's select checkbox (screen reader, or the sr-only label in the markup). |
 | **Test Data** | - |
 | **Expected Result** | The checkbox should announce something meaningful such as “Select student row”.<br><br>ACTUAL (defect, observed 2026-08-22): the screen-reader-only label contains the raw key "ADMIN.LEARNER.BULK_ACTIVATION.SELECT_STUDENT", so a screen-reader user hears the translation key. The key is not visible on screen, which is why it has gone unnoticed. |
-| **Remarks** | DEFECT (accessibility) — raise alongside TST_SBLK_TC_9; same missing translation bundle. A third instance, "SCREEN_READER.PROCESSING_MESSAGE", appears on the individual activation page (TST_SPRF_TC_16), so this looks like one systemic gap rather than three separate typos. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. DEFECT (accessibility) — raise alongside TST_SBLK_TC_9; same missing translation bundle. A third instance, "SCREEN_READER.PROCESSING_MESSAGE", appears on the individual activation page (TST_SPRF_TC_16), so this looks like one systemic gap rather than three separate typos. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
@@ -1228,13 +1232,183 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Steps** | 1. Click "Upload file" and choose a malformed or oversized CSV.<br>2. Read the dialog. |
 | **Test Data** | TST_SBLK_TC_12_malformed.csv |
 | **Expected Result** | The upload is refused and a dialog headed "Sorry, your file could not be uploaded" is shown, ending "If that doesn’t work, email our Customer Services team at ptsupport@cambridge.org". [ASSUMED for the specific reason line, which is populated per failure type.] |
-| **Remarks** | Dialog shell captured from the pre-rendered DOM 2026-08-22. The equivalent dialog on the adult CSV page enforces a 200-record maximum with its own wording (see product-knowledge/ExperienceApp.md); whether bulk activation shares that limit is unknown. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Dialog shell captured from the pre-rendered DOM 2026-08-22. The equivalent dialog on the adult CSV page enforces a 200-record maximum with its own wording (see product-knowledge/ExperienceApp.md); whether bulk activation shares that limit is unknown. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** |  |
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 60 |
+| **Test Case ID** | TST_SLST_TC_26 |
+| **Title** | Verify a student whose name contains special characters is returned by a name search |
+| **Linked Requirement** | #1 — Verify search by first name |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | On the Students tab of a school containing a student whose first or last name contains special characters. |
+| **Test Steps** | 1. Enter the name containing special characters in the search box. 2. Click **Search**. 3. Read the returned row(s) and the rendered name. |
+| **Test Data** | First name `!^(+)s95` or `&FName` — names present on the shared school per the other team's sheet. Confirm live before running. |
+| **Expected Result** | The matching student is returned. The term is treated as literal text rather than interpreted, and the name is rendered correctly in the result row — not HTML-escaped, truncated or corrupted. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_001, which lists special-character names as fixtures. We already cover special characters in the **email** field (`TST_SLST_TC_7`) but never in a **name** field. SLST is already automated, so this is cheap to add. **Read-only** — no data created. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 61 |
+| **Test Case ID** | TST_SLST_TC_27 |
+| **Title** | Verify a partial username returns every account whose username contains the term |
+| **Linked Requirement** | #4 — Verify search by username |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | On the Students tab, with two or more accounts whose usernames share a common substring. |
+| **Test Steps** | 1. Enter a substring shared by several usernames (not a whole username). 2. Click **Search**. 3. Read the returned rows. |
+| **Test Data** | Username fragment `<SHARED_USERNAME_SUBSTRING>` — e.g. the common prefix of `s95child0001`-style accounts. |
+| **Expected Result** | Every account whose username contains the term is returned, not only an exact match. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_004, whose step 2 searches a partial username. Our `TST_SLST_TC_8` searches a **full** child username only. We already prove partial matching for first name (`TST_SLST_TC_3`), so username was the one identifier left unverified. **Read-only.** |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 62 |
+| **Test Case ID** | TST_SLST_TC_28 |
+| **Title** | Verify a never-activated code returns a clear no-result state in the activation-code search |
+| **Linked Requirement** | #5 — Verify search using who activated the code in my school checkbox |
+| **Type** | Negative |
+| **Priority** | Medium |
+| **Preconditions** | On the Students tab with the "Who activated the code in my school?" checkbox ticked. |
+| **Test Steps** | 1. Tick **Who activated the code in my school?**. 2. Enter a well-formed 16-character code that has never been activated in this school. 3. Click **Search**. 4. Wait for the query to settle (the code search can take up to ~1 minute). |
+| **Test Data** | A syntactically valid but unredeemed 16-character code, e.g. `AAAA-BBBB-CCCC-DDDD`. |
+| **Expected Result** | A clear no-result / empty state is shown, with no error and no stale results left from the previous query. `[ASSUMED]` — exact copy not captured. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_005, step 2. Our `TST_SLST_TC_13` only toggles the checkbox and `TST_SLST_TC_14` (**Blocked**, needs a known redeemed code) covers the success path, so the failure path was entirely unverified. **This case is cheaper than TC_14 and can run today** — it needs no seeded redemption. **Read-only.** |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 63 |
+| **Test Case ID** | TST_SPRF_TC_23 |
+| **Title** | Verify a learner can sign in with the password an administrator has just set |
+| **Linked Requirement** | #11 — Verify Change password: View Profile > Manage account > Edit Account details |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A disposable learner account exists whose credentials the tester controls and whose current password is known. |
+| **Test Steps** | 1. As admin, open the learner's profile > **Manage learner profile** > **Password**. 2. Set a new policy-compliant password and click **Update**. 3. Sign out. 4. Sign in as the learner with the **new** password. 5. Sign out and attempt to sign in with the **old** password. |
+| **Test Data** | Disposable learner `<DISPOSABLE_STUDENT_ACCOUNT>`; new password meeting the policy (min 8 characters, at least one letter and one number/special). |
+| **Expected Result** | Sign-in with the new password succeeds and the learner reaches their dashboard. Sign-in with the old password is rejected. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_010, whose expected result is "login with the new password succeeds". Our `TST_SPRF_TC_8` stops at the form accepting the update — which a change that was acknowledged but never persisted would also satisfy. **Mutates a real account**: use a disposable learner, never a shared fixture, and place it in a data-mutating suite. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 64 |
+| **Test Case ID** | TST_SBLK_TC_13 |
+| **Title** | Verify a duplicate username is flagged on its own row during bulk account creation |
+| **Linked Requirement** | #17 — Verify Bulk feature > Add new students to classes children |
+| **Type** | Negative |
+| **Priority** | High |
+| **Preconditions** | On "Create new accounts for children" via Manage students > Add new students to classes > Children. |
+| **Test Steps** | 1. Fill one valid child row. 2. Fill a second row re-using the **same** username. 3. Read both rows and the submit button. 4. Repeat via the CSV path with the same duplicate pair. |
+| **Test Data** | Two child rows sharing one username; the rest of the fields valid. |
+| **Expected Result** | The offending row is flagged (no green tick) with an error naming the username field, the valid row is unaffected, and **Create N account(s)** stays unavailable while any row is invalid. Behaviour is the same for the manual grid and the CSV upload. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_016_N1. Our SBLK negatives cover only the CSV-level rejection (`TST_SBLK_TC_12`) and two UI defects (`TC_9` raw i18n keys, `TC_10` checkbox label) — row-level validation was untested. **This is the guard that stops bad accounts being created in bulk.** **Side-effect free** provided the form is never submitted. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 65 |
+| **Test Case ID** | TST_SBLK_TC_14 |
+| **Title** | Verify a rule-violating username or password is flagged on its own row during bulk account creation |
+| **Linked Requirement** | #18 — Verify Bulk feature > Add new students to classes adult with username |
+| **Type** | Negative |
+| **Priority** | High |
+| **Preconditions** | On "Create adult student accounts" via Manage students > Add new students to classes > Adults. |
+| **Test Steps** | 1. Fill one valid adult row. 2. Fill a second row with a username and a password that violate the documented rules. 3. Read both rows, the per-field messages and the submit button. 4. Repeat via the CSV path. |
+| **Test Data** | One valid adult row; one row with a rule-violating username and a rule-violating password. |
+| **Expected Result** | The offending row is flagged (no green tick), the message identifies **which** field is wrong, the valid row is unaffected, and the submit control stays unavailable while any row is invalid. `[ASSUMED]` — the username and password rules must be read from the form's own help text before this case is finalised. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_017_N1. Companion to `TST_SBLK_TC_13` on the adult path. **Capture the stated rules verbatim** on the first live pass — inventing them would breach golden rule 2. **Side-effect free** provided the form is never submitted. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 66 |
+| **Test Case ID** | TST_SBLK_TC_15 |
+| **Title** | Verify an invalid code in a bulk activation is reported without blocking the valid rows |
+| **Linked Requirement** | #21 — Verify Bulk feature > Activate course material |
+| **Type** | Negative |
+| **Priority** | High |
+| **Preconditions** | On "Activate codes for students in your school" via Manage students > Activate course materials. |
+| **Test Steps** | 1. Fill a batch mixing rows with valid unused codes and at least one already-used or invalid code. 2. Submit **Activate N code(s)**. 3. Read the job outcome and, once processed, the affected learner profiles. |
+| **Test Data** | Valid unused 16-character codes plus one already-used/invalid code. |
+| **Expected Result** | Only the bad row is flagged or reported in the job outcome; the valid rows still activate and their learners show "Code activated". A single bad row does not fail the whole batch. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_020_N1. Our `TST_SBLK_TC_12` rejects an unprocessable CSV outright — the all-or-nothing path; this is the **partial-failure** path, which is where async bulk jobs typically break. **Creates real data** (consumes activation codes) — data-mutating suite only, and the codes cannot be reused. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 67 |
+| **Test Case ID** | TST_SBLK_TC_16 |
+| **Title** | Verify the administrator receives an email report for an asynchronous bulk job |
+| **Linked Requirement** | #17 — Verify Bulk feature > Add new students to classes children |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | An administrator account whose mailbox the tester can read (e.g. a mailsac-style address). A bulk job has been submitted and its Request ID noted. |
+| **Test Steps** | 1. Submit a bulk job and record the **Request ID** and row count from the confirmation screen. 2. Wait for processing (the product states up to ~3 hours for account creation, and 24–48 hours for code activation). 3. Open the admin mailbox and locate the report email. 4. Compare its contents against the submitted job. |
+| **Test Data** | Admin mailbox `<MAIL_READABLE_ADMIN_ACCOUNT>`; the Request ID from step 1. |
+| **Expected Result** | A report email reaches the admin mailbox naming the same Request ID and row count as the confirmation screen, and reporting the per-row outcomes. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01: the other team repeat this step in five separate bulk cases (TC_STU_016, 017, 018, 019, 020) — "check if corresponding email is appearing in admin inbox and shows all the required details" — and we verify the email report nowhere. **Fixture required before this can be automated:** a mail-readable admin account. Scope that first; the case is written so it can be executed manually in the meantime. Written against the children path but applies to every async bulk job. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): no mail-readable admin fixture exists on thor. Unblock by provisioning an admin whose mailbox is programmatically readable, then re-scope the case across the five bulk flows. |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 68 |
+| **Test Case ID** | TST_SBLK_TC_17 |
+| **Title** | Verify the bulk CSV upload accepts 200 records and rejects 201 |
+| **Linked Requirement** | #18 — Verify Bulk feature > Add new students to classes adult with username |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | On the adult bulk-creation form with the CSV template downloaded. |
+| **Test Steps** | 1. Build a CSV of exactly **200** valid rows and upload it. 2. Note whether the grid populates and the submit count. 3. Build a CSV of **201** valid rows and upload it. 4. Read the resulting message. |
+| **Test Data** | Two generated CSVs in the real template format — 200 rows and 201 rows. |
+| **Expected Result** | The 200-row file is accepted and the grid reports 200 rows. The 201-row file is rejected with a message naming the limit. `[ASSUMED]` — the exact rejection copy is not captured. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STU_016/017, whose expected results state the cap twice ("<=200 records"). `TST_SBLK_TC_12`'s Remarks already record that the adult CSV page enforces a 200-record maximum with its own wording — **so the limit is known and the boundary case was simply missing**. Boundary cases at a documented cap are the pattern that repeatedly caught real defects in the Classes work. **Side-effect free** if the 200-row file is never submitted. Generate the CSVs to the exact template headers. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
 ## Open items — expected results still `[ASSUMED]`
 
 | TC | What needs confirming live |

@@ -4,8 +4,12 @@
 **Module:** CLST (Classes Tab) — *maps to the future `schoolClasses` page object when automated*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
-**Generated:** 2026-08-14 | **Total TCs:** 82 (60 Positive · 14 Edge · 8 Negative) — **all 30 scenarios covered**
-**Execution status (2026-08-21):** **64 of 82 TCs automated and passing.**
+**Generated:** 2026-08-14 | **Total TCs:** 92 (68 Positive · 14 Edge · 10 Negative) — **all 30 scenarios covered**
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
+
+**Execution status (2026-09-01):** **64 of 92 TCs automated and passing.** 25 Not Run · 3 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`, `TST_CLST_TC_24`).
 - Module **CLST** (`TST_CLST_TC_1–23`, 23 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
@@ -41,7 +45,7 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | Linked Requirement (scenario) | Mapped TC IDs (P → E → N) |
 |---|---|
 | #1 — Verify class tab is loading | TST_CLST_TC_1 |
-| #2 — Verify filter functionality is working fine | TST_CLST_TC_2, TC_3, TC_4, TC_19 (E), TC_22 (N), TC_23 |
+| #2 — Verify filter functionality is working fine | TST_CLST_TC_2, TC_3, TC_4, TC_19 (E), TC_22 (N), TC_23, TST_CLST_TC_24 |
 | #9 — Verify search for class key and class name working fine | TST_CLST_TC_5, TC_6, TC_18 (E), TC_21 (N) |
 | #27 — Verify Sort by class name/start date/end date | TST_CLST_TC_7, TC_8 |
 | #18 — Verify expanding a class row | TST_CLST_TC_9, TC_10 |
@@ -51,22 +55,22 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | #29 — Verify class launch from ended classes section | TST_CLST_TC_16 |
 | #20 — Verify load more classes in classes tab | TST_CLST_TC_17, TC_20 (E) |
 | **#4 — Verify manage grading category page** | TST_GCAT_TC_1 |
-| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N) |
+| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_10 (N) |
 | **#6 — Verify see details page of a grading category** | TST_GCAT_TC_6 |
 | **#7 — Launch class grade setting page from see details page of grading category** | TST_GCAT_TC_7 |
 | **#8 — Verify delete grading category** | TST_GCAT_TC_8, TC_9 (E) |
-| **#3 — Verify bulk class creation form is working fine** | TST_BCCF_TC_1..12, TC_13–14 (E), TC_15–16 (N) |
+| **#3 — Verify bulk class creation form is working fine** | TST_BCCF_TC_1..12, TC_13–14 (E), TC_15–16 (N), TST_BCCF_TC_17, TST_BCCF_TC_18, TST_BCCF_TC_19, TST_BCCF_TC_20, TST_BCCF_TC_21 |
 | **#10 — Verify manage grading scales page** | TST_GSCL_TC_1 |
 | **#11 — Verify Create grading scale** | TST_GSCL_TC_2, TC_3, TC_4 (E), TC_5 (N) |
-| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6 |
+| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_13 |
 | **#13 — Launch class grade setting page from view details page of grading scale** | TST_GSCL_TC_7 |
 | **#14 — Verify set as default for a grading scale** | TST_GSCL_TC_8 |
-| **#15 — Verify deleting a grading scale** | TST_GSCL_TC_9, TC_10 (E), TC_11 (N) |
+| **#15 — Verify deleting a grading scale** | TST_GSCL_TC_9, TC_10 (E), TC_11 (N), TST_GSCL_TC_14 (N) |
 | **#16 — Verify expanding grading scale bands** | TST_GSCL_TC_12 |
 | **#21 — Add label in class** | TST_CMGT_TC_1, TC_2 |
 | **#23 — Verify delete classes (soft / hard / bulk up to 50)** | TST_CMGT_TC_3, TC_4, TC_5, TC_6 (E), TC_7 (E), TC_8 (N) |
 | **#30 — Verify count of classes increase on adding a new class** | TST_CMGT_TC_9 |
-| **#22 — Launch class grade setting page from a class page** | TST_CGST_TC_1..5, TC_6 (E) |
+| **#22 — Launch class grade setting page from a class page** | TST_CGST_TC_1..5, TC_6 (E), TST_CGST_TC_7 |
 | **#31 — Verify class clone functionality (Copy an Existing Class)** | TST_CLON_TC_1, TC_2, TC_3 (E) |
 | **#32 — Verify Context class creation and view in teacher/admin/student login** | TST_CTXC_TC_1..4 |
 
@@ -315,7 +319,7 @@ for the label TCs).
 | **Test Steps** | 1. Select a Class status and/or a label. 2. Click **Clear all**. |
 | **Test Data** | — |
 | **Expected Result** | All filter selections are cleared back to the default (unfiltered) state within the modal. |
-| **Remarks** | — |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. |
 | **Actual Result** | PASS. Clear all cleared the selections and closed the panel, and the page-level 'Clear' link disappeared, confirming the applied filter was reset. NOTE: during the panel's ~3.6s close it still holds its pre-clear markup, so the reset must be verified at page level, not from the panel's own chips. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
@@ -334,7 +338,7 @@ for the label TCs).
 | **Test Steps** | 1. Open **Filter**. 2. Select a Class status + a label combination that no class satisfies. 3. Click **Apply**. |
 | **Test Data** | Status: `Deleted` + Label: `A11y test` (a combination confirmed to match zero classes) |
 | **Expected Result** | The list shows the empty/no-matching-classes state with no error, reading **No classes that are &lt;status&gt;, &lt;label&gt;** (e.g. "No classes that are Deleted, A11y test"). CONFIRMED live 2026-08-15. |
-| **Remarks** | — |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. |
 | **Actual Result** | PASS. Filtering Class status = Deleted together with label 'A11y test' matched no classes and showed the empty state, with no error. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
@@ -654,7 +658,7 @@ for the label TCs).
 | **Test Steps** | 1. Click **Load more …** repeatedly until all classes are displayed. |
 | **Test Data** | — |
 | **Expected Result** | Once the last batch is loaded, the "Load more …" link is **removed from the DOM** — it hides rather than becoming disabled. CONFIRMED live 2026-08-17. |
-| **Remarks** | — |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. |
 | **Actual Result** | PASS. After clicking 'Load more ...' until every ended class was listed, the link was REMOVED from the DOM (it hides rather than disabling) and the visible row count equalled the 'Ended classes (N)' heading. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
@@ -715,7 +719,7 @@ for the label TCs).
 | **Test Steps** | 1. Enter a 50-character name. 2. Click **Save**. |
 | **Test Data** | 50-char name (e.g. `AAAAAAAAAA...` × 50) |
 | **Expected Result** | The name is accepted (input enforces maxlength 50) and the category is created. **Confirmed live 2026-08-18** — `#gradingCategoryNameInput` carries `maxlength="50"`, so input longer than 50 cannot be entered. `[ASSUMED]` removed. |
-| **Remarks** | Automated as `TST_GCAT_TC_3`. The test asserts the generated name is exactly 50 characters *before* using it, so a helper bug cannot quietly turn this into a short-name test that never exercises the boundary. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Automated as `TST_GCAT_TC_3`. The test asserts the generated name is exactly 50 characters *before* using it, so a helper bug cannot quietly turn this into a short-name test that never exercises the boundary. |
 | **Actual Result** | As expected. A 50-character name was accepted and the category appeared in the list. |
 | **Status** | Pass |
 | **Comments / Defect ID** | — |
@@ -734,7 +738,7 @@ for the label TCs).
 | **Test Steps** | 1. Attempt to create another grading category. |
 | **Test Data** | — |
 | **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. **Copy confirmed live 2026-08-18** — this modal is pre-rendered in the DOM at all times, so its exact wording is verified; only the *triggering* of it is blocked. The exact maximum count is still `[ASSUMED]`. |
-| **Remarks** | **NOT AUTOMATED — BLOCKED.** Deliberately absent from the test file, the TC repository and the execution file (not merely skipped), so it cannot run by accident. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. **NOT AUTOMATED — BLOCKED.** Deliberately absent from the test file, the TC repository and the execution file (not merely skipped), so it cannot run by accident. |
 | **Actual Result** | — (not executed) |
 | **Status** | Not Run — **Blocked** |
 | **Comments / Defect ID** | **Why blocked (2026-08-18):** the precondition is "the school is already at its maximum", so the test must first *fill* the school with grading categories. Three problems: **(1)** the maximum is unknown, so the only way to find it is to keep creating until the app refuses; **(2)** `3 July Test School 1` (FCN-CHZ-PDA) is **shared** — while it sits at the cap, *nobody else* can create a grading category, and other suites would fail with a misleading error (the same class of cross-suite interference that broke two `TST_CLST_TC_7` assertions on 2026-08-17); **(3)** if a run crashes before cleanup, the school stays full until someone clears it by hand. **To unblock — any one of:** (a) a **dedicated school** used only by this test *(recommended — cheapest and fully safe)*; (b) product/dev supply the exact maximum, plus agreement to accept the shared-school impact; (c) an environment where no other suite is running. Once a dedicated school exists this is a short TC, since the expected copy is already verified. |
@@ -753,7 +757,7 @@ for the label TCs).
 | **Test Steps** | 1. Leave the **Grading category name** empty. 2. Observe the **Save** button. |
 | **Test Data** | Name: (empty) |
 | **Expected Result** | The **Save** button is disabled while the name is empty, so an empty-named category cannot be created. |
-| **Remarks** | Automated as `TST_GCAT_TC_5`. Checked **both ways** — disabled when empty, enabled once a character is typed, disabled again when cleared. A one-way check would still pass against a permanently disabled Save, which is itself a defect worth catching. The test deliberately ends with the modal open so the end-of-test screenshot shows the disabled Save; nothing is saved. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Automated as `TST_GCAT_TC_5`. Checked **both ways** — disabled when empty, enabled once a character is typed, disabled again when cleared. A one-way check would still pass against a permanently disabled Save, which is itself a defect worth catching. The test deliberately ends with the modal open so the end-of-test screenshot shows the disabled Save; nothing is saved. |
 | **Actual Result** | As expected. Save was disabled with an empty name, became enabled on input, and returned to disabled when the field was cleared. |
 | **Status** | Pass |
 | **Comments / Defect ID** | — |
@@ -856,7 +860,7 @@ for the label TCs).
 | **Test Steps** | 1. Click **Add class**. |
 | **Test Data** | — |
 | **Expected Result** | The "Create new classes" form opens (`/class/create`) with subtitle "in <school>", an **Upload file** button, **Get CSV template** link, "How to use this form" info, the bulk-action toolbar (Start date, End date, Add teacher, Add labels, Add Material, Copy an Existing Class, Duplicate, Show student progress, Remove), and at least one class row (Class name, Start date, End date, Add teachers, Add materials, Add class label). **Create N class** is disabled. |
-| **Remarks** | Form auto-saves a draft ("Saved …") **and restores it on reopen — including across sessions** — so the form is NOT guaranteed empty on load. Automated: `TST_CCLS_TC_14`. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Form auto-saves a draft ("Saved …") **and restores it on reopen — including across sessions** — so the form is NOT guaranteed empty on load. Automated: `TST_CCLS_TC_14`. |
 | **Actual Result** | Form opened at /class/create with all components present: Upload file, Get CSV template, How to use this form, all 9 bulk-toolbar actions, and row 1 (name, dates, teachers, materials, label). Create button disabled on an empty row. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_14 (bulk suite, 11/11). |
@@ -970,7 +974,7 @@ for the label TCs).
 | **Test Steps** | 1. Select a row (checkbox). 2. Click **Duplicate** in the toolbar. 3. Confirm if prompted. |
 | **Test Data** | — |
 | **Expected Result** | Duplicate is immediate (no confirmation of its own) and the copy is **appended after the last filled row** carrying the same class name (no "Copy of" prefix), start/end dates, teachers and materials. **Labels are the exception:** if the source row has a label, an "Apply the labels to new classes too?" dialog appears — tick "Include labels in these classes" then **Continue** to copy the label (or Continue without ticking to duplicate without it). |
-| **Remarks** | `[ASSUMED]` resolved — behaviour confirmed live 2026-08-18. Automated: `TST_CCLS_TC_18` (resets the form, builds a source row with name + dates + teacher, duplicates, asserts the Create count +1 and that the copy matches the source field-by-field). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. `[ASSUMED]` resolved — behaviour confirmed live 2026-08-18. Automated: `TST_CCLS_TC_18` (resets the form, builds a source row with name + dates + teacher, duplicates, asserts the Create count +1 and that the copy matches the source field-by-field). |
 | **Actual Result** | Duplicate appended a copy AFTER the last filled row carrying the same name, dates, teacher and material. Label copied only after confirming the "Apply the labels to new classes too?" dialog. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_18 (bulk suite). [ASSUMED] resolved. |
@@ -1065,7 +1069,7 @@ for the label TCs).
 | **Test Steps** | 1. Click **Back to dashboard**. 2. (Separately) create again and click **Create more classes**. |
 | **Test Data** | — |
 | **Expected Result** | **Back to dashboard** returns to the school Classes page; **Create more classes** returns to a **completely empty** Create new classes form (class name and both dates blank). Either button dismisses the dialog, so only one leg can be exercised per created class. |
-| **Remarks** | `[ASSUMED]` resolved — confirmed live 2026-08-18: "Create more classes" **does** reset the form. Notable because the form otherwise auto-restores a saved draft; this is the one path that returns a genuinely pristine row. Automated: "Back to dashboard" = `TST_CCLS_TC_8`; "Create more classes" = `TST_CCLS_TC_20` (⚠️ creates a real class — lives in the workflow suite, not the side-effect-free bulk suite). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. `[ASSUMED]` resolved — confirmed live 2026-08-18: "Create more classes" **does** reset the form. Notable because the form otherwise auto-restores a saved draft; this is the one path that returns a genuinely pristine row. Automated: "Back to dashboard" = `TST_CCLS_TC_8`; "Create more classes" = `TST_CCLS_TC_20` (⚠️ creates a real class — lives in the workflow suite, not the side-effect-free bulk suite). |
 | **Actual Result** | "Back to dashboard" returned to the school Classes page. "Create more classes" returned a COMPLETELY EMPTY create form (name and both dates blank). |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_8 (Back to dashboard) + TST_CCLS_TC_20 (Create more classes), workflow suite. [ASSUMED] resolved — it does reset the form; the only path that does not restore the draft. |
@@ -1084,7 +1088,7 @@ for the label TCs).
 | **Test Steps** | 1. Enter a 50-character class name. |
 | **Test Data** | 50-char name |
 | **Expected Result** | The name is accepted (input enforces maxlength 50); no more than 50 characters can be entered. |
-| **Remarks** | Automated: `TST_CCLS_TC_11` (asserts class-name input maxlength = 50). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Automated: `TST_CCLS_TC_11` (asserts class-name input maxlength = 50). |
 | **Actual Result** | Class-name input enforces maxlength=50. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_11 (validation suite, 6/6). |
@@ -1122,7 +1126,7 @@ for the label TCs).
 | **Test Steps** | 1. Fill only some of {name, start date, end date} on a row. 2. Observe the **Create** button. |
 | **Test Data** | Incomplete row |
 | **Expected Result** | The "Create N class" button stays disabled until the row has a class name AND start date AND end date. |
-| **Remarks** | Automated: `TST_CCLS_TC_9` (asserts Create is disabled on an empty row). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Automated: `TST_CCLS_TC_9` (asserts Create is disabled on an empty row). |
 | **Actual Result** | "Create N class" stayed disabled while the row was missing a required field. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_9 (validation suite). |
@@ -1141,7 +1145,7 @@ for the label TCs).
 | **Test Steps** | 1. Leave the class name empty, or enter only non-alphanumeric characters (e.g. `---`). 2. Attempt to create. |
 | **Test Data** | Name: (empty) / `---` |
 | **Expected Result** | The row is invalid — the name requires at least one alphanumeric character (pattern `.*[A-Za-z0-9]+.*`) — so the class cannot be created. `[ASSUMED]` — capture any inline error text shown. |
-| **Remarks** | Automated: `TST_CCLS_TC_10` (enters `---`, asserts Create stays disabled). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Automated: `TST_CCLS_TC_10` (enters `---`, asserts Create stays disabled). |
 | **Actual Result** | A non-alphanumeric-only name ("---") left "Create N class" disabled. |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated: TST_CCLS_TC_10 (validation suite). |
@@ -1221,7 +1225,7 @@ for the label TCs).
 | **Test Steps** | 1. Attempt to create another grading scale. |
 | **Test Data** | — |
 | **Expected Result** | A modal is shown: "You have reached the maximum number of grading scales for this school. Please remove at least one grading scale to add a new one"; no new scale is created. `[ASSUMED]` — confirm the exact maximum. |
-| **Remarks** | The expected modal copy is now VERIFIED word for word - the modal is pre-rendered in the DOM, so it was captured without filling the school to its cap. Only triggering it is blocked (shared school). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. The expected modal copy is now VERIFIED word for word - the modal is pre-rendered in the DOM, so it was captured without filling the school to its cap. Only triggering it is blocked (shared school). |
 | **Actual Result** | |
 | **Status** | Not Run — **Blocked** |
 | **Comments / Defect ID** | |
@@ -1463,7 +1467,7 @@ for the label TCs).
 | **Test Steps** | 1. Select multiple class checkboxes (or use select-all). 2. Click **Delete class**. 3. Confirm **Yes, delete N classes**. |
 | **Test Data** | Multiple classes |
 | **Expected Result** | The selected classes are soft-deleted together; the confirmation reflects the count ("Yes, delete N classes"). |
-| **Remarks** | — |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1501,7 +1505,7 @@ for the label TCs).
 | **Test Steps** | 1. Select up to 50 classes. 2. Click **Delete class** and confirm. |
 | **Test Data** | 50 classes |
 | **Expected Result** | Up to 50 classes can be selected and deleted in a single action. `[ASSUMED]` — confirm the 50-class maximum. |
-| **Remarks** | Scenario title references "50 classes". |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Scenario title references "50 classes". |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1735,7 +1739,7 @@ for the label TCs).
 | **Test Steps** | 1. Copy an Existing Class → select a source with empty components → Continue. |
 | **Test Data** | Source: `SarthakTestClass1` (0 teachers/materials/assignments/rules) |
 | **Expected Result** | Components with a count of 0 are **disabled/unselectable** (e.g. "Teachers [0]" disabled; "Class grade settings — Not available"). |
-| **Remarks** | Observed live. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Observed live. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1778,8 +1782,8 @@ for the label TCs).
 | **Preconditions** | A context class exists; logged in as school **admin**. |
 | **Test Steps** | 1. Open the school's Classes tab. 2. Locate the context class. |
 | **Test Data** | The created context class |
-| **Expected Result** | The context class is listed and behaves as expected in the admin view. `[ASSUMED]` — confirm any admin-specific context-class behaviour. |
-| **Remarks** | — |
+| **Expected Result** | The context class is listed on the Classes tab and its **Student progress** column reads **"Progress reset"**. `[ASSUMED]` — the string is corroborated by the bulk-create CSV template, whose sample row carries `Progress reset` in its `Student progress data` column (see `TST_BCCF_TC_10`), but has not been read off a live class row. |
+| **Remarks** | Expected result strengthened 2026-09-01 from the other team's TC_CLS_030, which gives the concrete assertion this case previously lacked — ours read only "behaves as expected", which nothing could fail. Allow a few minutes after creation: class creation is asynchronous. Depends on `TST_BCCF_TC_20` (the bulk **Show student progress** toolbar action) for the class that produces this state. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1798,7 +1802,7 @@ for the label TCs).
 | **Test Steps** | 1. Log in as the teacher. 2. Locate/open the context class. |
 | **Test Data** | Teacher account `[ASSUMED]` |
 | **Expected Result** | The context class is visible and behaves correctly for the teacher role. `[ASSUMED]` — needs a teacher test account. |
-| **Remarks** | Cross-role verification. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Cross-role verification. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1817,7 +1821,7 @@ for the label TCs).
 | **Test Steps** | 1. Log in as the student. 2. Locate/open the context class. |
 | **Test Data** | Student account `[ASSUMED]` |
 | **Expected Result** | The context class is visible and behaves correctly for the student role. `[ASSUMED]` — needs a student test account. |
-| **Remarks** | Cross-role verification. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Cross-role verification. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Comments / Defect ID** | |
@@ -1843,6 +1847,195 @@ for the label TCs).
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 83 |
+| **Test Case ID** | TST_CLST_TC_24 |
+| **Title** | Verify a Class status and Class label filter applied together return only classes matching both |
+| **Linked Requirement** | #2 — Verify filter functionality is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the Classes tab. At least one **Active** class carries a known label, and at least one class carrying that same label is **not** Active. |
+| **Test Steps** | 1. Open **Filter**. 2. Select Class status `Active`. 3. In **Class labels**, type the label into "Find a label" and select it. 4. Click **Apply**. 5. Expand each returned row and read its label and status. |
+| **Test Data** | Status: `Active` + Label: `<LABEL_ON_AN_ACTIVE_CLASS>` — must be a label confirmed to sit on at least one Active class. |
+| **Expected Result** | Only classes that are **both** Active **and** carry the selected label are listed. Every returned row satisfies both conditions, and classes carrying the label but not Active are **absent**. The **Active classes (n)** heading updates to the filtered total and the page-level **Clear** link appears. `[ASSUMED]` — not yet run against a populated combination. |
+| **Remarks** | Positive counterpart to `TST_CLST_TC_22`, which pairs a status and a label that match **zero** classes. TC_22 cannot distinguish AND from OR: if the filters were ORed, a zero-match pair would still return zero and TC_22 would still pass. This case is the only one that proves the AND. Added 2026-09-01 from the other team's TC_CLS_002, whose expected result states "Combined filters apply as an AND condition". |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4). `TST_CLST_TC_4`'s Actual Result records that label `VM1` matches no ACTIVE class on `3 July Test School 1`. Unblock by applying an existing label to a known Active class on the target school, or by identifying a label/Active-class pair live; then ground the expected result and clear the `[ASSUMED]`. |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 84 |
+| **Test Case ID** | TST_GCAT_TC_10 |
+| **Title** | Verify a grading category cannot be created with a name that already exists |
+| **Linked Requirement** | #5 — Verify create grading category |
+| **Type** | Negative |
+| **Priority** | Medium |
+| **Preconditions** | On the Manage grading categories page, with at least one existing category whose name is known. |
+| **Test Steps** | 1. Note an existing category name and the current category count. 2. Click **Create a grading category**. 3. Enter the **exact** existing name. 4. Click **Save**. 5. Return to the list and re-count. |
+| **Test Data** | The name of a category already present in the school. |
+| **Expected Result** | The duplicate name is not accepted: creation is blocked or warned per business rule, and the category count is unchanged. `[ASSUMED]` — the rule itself is unconfirmed; the other team's sheet also leaves it open ("handled per business rule"). |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_005. We cover the empty name (`TST_GCAT_TC_5`) and the 50-character boundary (`TST_GCAT_TC_3`) but never re-use an existing name. **Automation note:** the GCAT suite deliberately generates names as `AutoCat_create_<epoch-ms>` to avoid collisions, so this case needs a fixed name plus a housekeeping step to remove it. **Confirm the rule with the product owner before finalising the expected result** — "blocked" and "warned but allowed" are different products. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 85 |
+| **Test Case ID** | TST_GSCL_TC_13 |
+| **Title** | Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section |
+| **Linked Requirement** | #12 — Verify view details page of grading scale |
+| **Type** | Positive |
+| **Priority** | Low |
+| **Preconditions** | On the Grading scales page. The system scale "Cambridge One grading scale" carries the **default** badge. |
+| **Test Steps** | 1. Open the **Open drop down** menu on "Cambridge One grading scale". 2. Click **View details**. 3. Read the page: heading, classes list, any notice, and whether a bands section is present. |
+| **Test Data** | The system scale "Cambridge One grading scale". |
+| **Expected Result** | The details page shows the scale name, the linked **Classes (n)** list (or "No classes yet") and the pre-27-July-2023 notice. **No "Grading scale bands" section is rendered**, because the default scale's target varies by material. `[ASSUMED]` — the notice wording is not captured verbatim. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_012, which opens both a custom scale and the default scale for comparison. Our `TST_GSCL_TC_6` opens a **custom** scale only, and the default scale renders differently. The asymmetry is already recorded in this document's product reference and in `TST_GSCL_TC_12`'s note — the case simply did not exist. Capture the notice text verbatim on the first live pass and clear the `[ASSUMED]`. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 86 |
+| **Test Case ID** | TST_GSCL_TC_14 |
+| **Title** | Verify a grading scale that is applied to a class cannot be deleted without warning |
+| **Linked Requirement** | #15 — Verify deleting a grading scale |
+| **Type** | Negative |
+| **Priority** | Medium |
+| **Preconditions** | A **non-default** grading scale exists and is currently applied to at least one live class. |
+| **Test Steps** | 1. Apply a non-default scale to a class via Class grade settings. 2. Open the Grading scales page and that scale's **Open drop down** menu. 3. Click **Delete**. 4. Read the resulting dialog. 5. Cancel and confirm the scale is still listed and still applied to the class. |
+| **Test Data** | A non-default scale applied to `<CLASS_WITH_CUSTOM_SCALE>`. |
+| **Expected Result** | Deletion of an in-use scale is prevented, or warns about the impact on the classes using it before proceeding, per business rule. The affected class(es) are identified to the admin. Cancelling leaves both the scale and the class assignment untouched. `[ASSUMED]` — behaviour and copy unconfirmed. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_015_N1, which bundles two rules: the default scale and a scale in active use. Our `TST_GSCL_TC_11` implements only the first. **Suite placement:** the precondition is a scale applied to a live class — the state the CGST suite already builds — so this case should run inside the CGST suite rather than the GSCL suite, exactly as `TST_GSCL_TC_7` does. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 87 |
+| **Test Case ID** | TST_CGST_TC_7 |
+| **Title** | Verify a grading category can be removed from the class weighting with the delete icon |
+| **Linked Requirement** | #22 — Launch class grade setting page from a class page |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the Class grade settings page of a class that already has at least one grading category carrying a weightage. |
+| **Test Steps** | 1. Note the categories listed under grade weighting and the current **Total grade %**. 2. Click the delete (bin) icon against one grading category. 3. Observe the live total. 4. Click **Save changes**. 5. Refresh the page and re-read the weighting. |
+| **Test Data** | A class with a weighted grading category (the CGST suite creates one via `TST_CGST_TC_3`). |
+| **Expected Result** | The category is removed from the class weighting, the live **Total grade %** recalculates immediately, and the removal persists after Save changes and a refresh. `[ASSUMED]` — the removal control has not been exercised live. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_034, which covers weights, **add and remove**, and the 100% rule. Our `TST_CGST_TC_3` only adds a category and `TST_CGST_TC_6` only checks the 100% total, so removal was untested. Fits the existing CGST suite, which already creates and tears down its own class — no new fixture needed. **Creates and mutates real data** on that throwaway class. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 88 |
+| **Test Case ID** | TST_BCCF_TC_17 |
+| **Title** | Verify the bulk Add teacher toolbar action applies the teacher to every selected class row |
+| **Linked Requirement** | #3 — Verify bulk class creation form is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the "Create new classes" form (`/class/create`) with at least 2 class rows filled. |
+| **Test Steps** | 1. Fill 2+ class rows. 2. Tick the checkbox on each row. 3. Click **Add teacher** in the bulk toolbar. 4. Enter a valid teacher email in the "Edit teachers" modal and click **Apply changes**. 5. Read every selected row and the row checkboxes. |
+| **Test Data** | Teacher email `<EXISTING_THOR_TEACHER_EMAIL>`; 2+ draft class rows. |
+| **Expected Result** | The teacher is added to **every** selected row, not only the first. The rows **deselect** after the action is applied, and the **Saved** auto-save indicator updates. `[ASSUMED]` — the deselect-after-apply behaviour is recorded in `TST_BCCF_TC_9`'s Remarks but has not been asserted by a case of its own. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_036, which exercises the whole bulk toolbar. `TST_BCCF_TC_9` covers bulk Start/End date only; its Remarks claim "the same pattern applies to bulk Add teacher / Add labels / Add Material" — a prose claim, not coverage. This case and TC_18–TC_21 turn that sentence into tests. **Side-effect free** — the form is not submitted. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 89 |
+| **Test Case ID** | TST_BCCF_TC_18 |
+| **Title** | Verify the bulk Add Material toolbar action applies the material to every selected class row |
+| **Linked Requirement** | #3 — Verify bulk class creation form is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the "Create new classes" form with at least 2 class rows filled. |
+| **Test Steps** | 1. Fill 2+ class rows. 2. Tick the checkbox on each row. 3. Click **Add Material** in the bulk toolbar. 4. Select a course material and apply. 5. Read every selected row and the row checkboxes. |
+| **Test Data** | Material/component `<VALID_THOR_MATERIAL>`; 2+ draft class rows. |
+| **Expected Result** | The material is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. **Side-effect free.** |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 90 |
+| **Test Case ID** | TST_BCCF_TC_19 |
+| **Title** | Verify the bulk Add labels toolbar action applies the label to every selected class row |
+| **Linked Requirement** | #3 — Verify bulk class creation form is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the "Create new classes" form with at least 2 class rows filled. |
+| **Test Steps** | 1. Fill 2+ class rows. 2. Tick the checkbox on each row. 3. Click **Add labels** in the bulk toolbar. 4. Select or create a label and apply. 5. Read every selected row and the row checkboxes. |
+| **Test Data** | Label `<EXISTING_THOR_CLASS_LABEL>`; 2+ draft class rows. |
+| **Expected Result** | The label is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. Note `TST_BCCF_TC_7` records that labels behave specially on **Duplicate** (an "Apply the labels to new classes too?" dialog); check whether the bulk label action raises anything similar. **Side-effect free.** |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 91 |
+| **Test Case ID** | TST_BCCF_TC_20 |
+| **Title** | Verify the bulk Show student progress toolbar action applies to every selected class row |
+| **Linked Requirement** | #3 — Verify bulk class creation form is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the "Create new classes" form with at least 2 class rows filled. |
+| **Test Steps** | 1. Fill 2+ class rows. 2. Tick the checkbox on each row. 3. Click **Show student progress** in the bulk toolbar. 4. Apply the setting. 5. Read every selected row. |
+| **Test Data** | 2+ draft class rows. |
+| **Expected Result** | The "show student progress" setting is applied to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from TC_CLS_036. This is the toolbar control that produces a **context class** — the classes created this way are the subject of `TST_CTXC_TC_1` and `TST_CTXC_TC_2`, so the two areas should be grounded in the same live pass. **Side-effect free** while the form is not submitted. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 92 |
+| **Test Case ID** | TST_BCCF_TC_21 |
+| **Title** | Verify the bulk Remove toolbar action deletes exactly the selected class rows |
+| **Linked Requirement** | #3 — Verify bulk class creation form is working fine |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | On the "Create new classes" form with at least 3 class rows filled and distinguishable by name. |
+| **Test Steps** | 1. Fill 3+ distinguishable class rows. 2. Tick the checkbox on 2 of them, leaving one unticked. 3. Click **Remove** in the bulk toolbar. 4. Confirm if prompted. 5. Read the remaining rows. |
+| **Test Data** | 3+ draft class rows with distinct names. |
+| **Expected Result** | Exactly the selected rows are removed and the unselected row survives, unchanged. The **Create N class(es)** button count drops to match the remaining valid rows, and the **Saved** indicator updates. `[ASSUMED]` — whether Remove raises its own confirmation is unconfirmed. |
+| **Remarks** | Added 2026-09-01 from TC_CLS_036. Deliberately leaves one row unselected: an action that removed **all** rows would still pass a case that only counted deletions. **Side-effect free** — the form is not submitted. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
 1. **Search behaviour** (TST_CLST_TC_18): whether search is partial + case-insensitive or exact-match.

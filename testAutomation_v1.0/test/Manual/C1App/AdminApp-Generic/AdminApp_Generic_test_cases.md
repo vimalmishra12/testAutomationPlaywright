@@ -5,8 +5,12 @@
 · **extended** — INVI · FOOT · SADB · LIBR · SRQS (`schoolRequestSummary.page.js`)
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Pages in scope:** the header and footer chrome · `My school accounts` · `Manage profile` · the school tab strip · School settings
-**Generated:** 2026-08-27 | **Total TCs:** 37 (21 Positive · 7 Edge · 9 Negative) — **all 14 source scenarios covered**; work already automated elsewhere is mapped, not re-written
-**Execution status (2026-08-27):** **0 of 37 TCs automated.** All 34 are Not Run. 3 Blocked at design time.
+**Generated:** 2026-08-27 | **Total TCs:** 41 (24 Positive · 7 Edge · 10 Negative) — **all 14 source scenarios covered**
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **13** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_MYPR_TC_5`, `TST_MYPR_TC_6`, `TST_MYPR_TC_7`, `TST_MYPR_TC_8`, `TST_ASHL_TC_5`, `TST_ASHL_TC_6`, `TST_ASHL_TC_7`, `TST_SADB_TC_2`, `TST_SADB_TC_4`, `TST_ASHL_TC_8`, `TST_ASHL_TC_9`, `TST_ASHL_TC_10`, `TST_SADB_TC_6`.
+; work already automated elsewhere is mapped, not re-written
+**Execution status (2026-09-01):** **0 of 41 TCs automated.** 36 are Not Run. **5 Blocked** at design time (`TST_SKEY_TC_3`, `TST_LIBR_TC_32`, `TST_SRQS_TC_2`, `TST_LIBR_TC_34`, `TST_SADB_TC_8`).
 
 **Batches:** Batch A — shell chrome (#1, #2, #3, #7, #8, #11) · Batch B — school context (#4, #5, #10, #12) · Batch C — cross-app (#6, #9, #13, #14). **All three complete.**
 
@@ -31,8 +35,8 @@ re-written:**
 
 | Scenario | Already covered by | What this batch adds |
 |---|---|---|
-| #8 — footer link | **`TST_FOOT_TC_1..9`** (`footer.test.js`) — one case per footer page, plus a footer-data case | Only `TST_FOOT_TC_10`, pinning that the **admin** footer renders 7 links and omits Site Feedback |
-| #3 — notifications | **`TST_INVI_TC_1..6`** (`invitationNotification.page.js`) — the invitation-accept flow through this same bell | `TST_INVI_TC_7` (badge/accessible-name agreement) and `TST_INVI_TC_8` (the general admin panel) |
+| #8 — footer link | **`TST_FOOT_TC_1..9`** (`footer.test.js`) — one case per footer page, plus a footer-data case | Only `TST_FOOT_TC_10`, pinning that the **admin** footer renders 7 links and omits Site Feedback, TST_FOOT_TC_11 |
+| #3 — notifications | **`TST_INVI_TC_1..6`** (`invitationNotification.page.js`) — the invitation-accept flow through this same bell | `TST_INVI_TC_7` (badge/accessible-name agreement) and `TST_INVI_TC_8` (the general admin panel), TST_INVI_TC_12 |
 | #1 — Spanish view | **`TST_LAND_TC_4`** — the language dropdown on the **landing** page; plus `appLangEN.json` / `appLangES.json` | The **admin-app** instance of the control, and admin-app Spanish rendering |
 | #2 — My Profile | **`appShell.page.js`** carries `userDrop_down` / `logout_btn` | Nothing yet — not grounded, see below |
 
@@ -111,9 +115,9 @@ account's language and must switch it back (step 5). This decides suite placemen
 | #3 — Verify notifications | TST_INVI_TC_7, TST_INVI_TC_8, TST_INVI_TC_9 (E), TST_INVI_TC_10 (E), TST_INVI_TC_11 (N) |
 | #7 — Verify Help | TST_ASHL_TC_3, TST_ASHL_TC_4 |
 | #8 — Verify footer link | TST_FOOT_TC_10 (E) |
-| #11 — Verify different tab navigation | TST_ASHL_TC_5, TST_ASHL_TC_6, TST_ASHL_TC_7 (N) |
+| #11 — Verify different tab navigation | TST_ASHL_TC_5, TST_ASHL_TC_6, TST_ASHL_TC_7 (N), TST_SADB_TC_8 (N) |
 | #4 — Verify Change school key for normal school | TST_SKEY_TC_1, TST_SKEY_TC_2, TST_SKEY_TC_3, TST_SKEY_TC_4 (N) |
-| #5 — Verify non mqa admin should not see cqa/mqa product | TST_LIBR_TC_32 (N) |
+| #5 — Verify non mqa admin should not see cqa/mqa product | TST_LIBR_TC_32 (N), TST_LIBR_TC_34 |
 | #10 — Admin part of multiple org | TST_SADB_TC_2, TST_SADB_TC_3 |
 | #12 — Verify viewing multiple schools | TST_SADB_TC_4 (E) |
 | #6 — Verify launch of Cambridge one for schools and create institution request | TST_SRQS_TC_2, TST_SRQS_TC_3 (N) |
@@ -637,7 +641,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Clear "First name".<br>2. Type a 300-character value.<br>3. Observe whether the field truncates the input as it is typed.<br>4. Click "Update". |
 | **Test Data** | First name: 300 repetitions of "a" |
 | **Expected Result** | After step 3 the field accepts all 300 characters — there is NO client-side truncation.<br>[ASSUMED] After step 4 the server rejects the value with a validation message, or accepts and truncates it. Capture which, and the exact message. |
-| **Remarks** | GROUNDED PARTIALLY 2026-08-27: the ABSENCE of a limit is verified — ALL SEVEN fields across both tabs have maxlength=null and none is marked required. What the SERVER does is [ASSUMED]. This is a deliberate departure from the rest of the admin app, where limits are declared and enforced client-side (class name 50, grading scale title 20 — admin-shared.md §A3). Because nothing is declared here, boundary cases CANNOT be derived from the markup and must be found by submitting. ⚠️ DO NOT RUN ON <ADMIN_USER> — that account is the login for the whole admin suite. Blocked until a disposable account exists. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED PARTIALLY 2026-08-27: the ABSENCE of a limit is verified — ALL SEVEN fields across both tabs have maxlength=null and none is marked required. What the SERVER does is [ASSUMED]. This is a deliberate departure from the rest of the admin app, where limits are declared and enforced client-side (class name 50, grading scale title 20 — admin-shared.md §A3). Because nothing is declared here, boundary cases CANNOT be derived from the markup and must be found by submitting. ⚠️ DO NOT RUN ON <ADMIN_USER> — that account is the login for the whole admin suite. Blocked until a disposable account exists. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -656,7 +660,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Enter the correct current password in "Old password".<br>2. Enter a valid new password in "New password".<br>3. Enter a DIFFERENT value in "Confirm new password".<br>4. Click "Update". |
 | **Test Data** | Old: <VALID_PASSWORD> · New: "Compro@2026" · Confirm: "Compro@2027" |
 | **Expected Result** | [ASSUMED] The password is NOT changed and a mismatch validation message is shown against the confirmation field. |
-| **Remarks** | ⚠️ ERROR COPY NOT CAPTURED — nothing was submitted, by agreement, because <ADMIN_USER> is the admin suite's login account. The message text must be captured on a disposable account. For reference the equivalent page in the other app exposes a dedicated error element ("confirmPasswordError_text" in the SETT selector set), so a field-level message is expected here too — but that is the OTHER app and must not be assumed identical. DESTRUCTIVE IF IT SUCCEEDS: a mistyped variant of this case would change a real password. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ⚠️ ERROR COPY NOT CAPTURED — nothing was submitted, by agreement, because <ADMIN_USER> is the admin suite's login account. The message text must be captured on a disposable account. For reference the equivalent page in the other app exposes a dedicated error element ("confirmPasswordError_text" in the SETT selector set), so a field-level message is expected here too — but that is the OTHER app and must not be assumed identical. DESTRUCTIVE IF IT SUCCEEDS: a mistyped variant of this case would change a real password. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -675,7 +679,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Enter an INCORRECT value in "Old password".<br>2. Enter a valid new password in both "New password" and "Confirm new password".<br>3. Click "Update". |
 | **Test Data** | Old: "WrongPassword123" · New / Confirm: "Compro@2026" |
 | **Expected Result** | [ASSUMED] The password is NOT changed and an error identifies the old password as incorrect. |
-| **Remarks** | ⚠️ ERROR COPY NOT CAPTURED — see TST_MYPR_TC_6. The SETT selector set has a matching "currentPasswordError_text" element in the other app. Worth checking whether repeated failures lock the account, which would affect suite design. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ⚠️ ERROR COPY NOT CAPTURED — see TST_MYPR_TC_6. The SETT selector set has a matching "currentPasswordError_text" element in the other app. Worth checking whether repeated failures lock the account, which would affect suite design. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -694,7 +698,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Inspect the "Personal info" and "Password" tab controls.<br>2. Check for a tab role and a selected-state attribute.<br>3. Switch tabs and re-check. |
 | **Test Data** | — |
 | **Expected Result** | Each tab exposes an appropriate role and a selected state, so assistive technology can announce which tab is active.<br>ACTUAL (2026-08-27): this FAILS. Both are plain <a> elements with NO role="tab" and NO aria-selected. Nothing in the markup or the URL identifies the active tab. |
-| **Remarks** | GROUNDED LIVE 2026-08-27. Raised as a case because it is both an accessibility gap and an automation blocker: with no aria-selected AND no URL change between tabs (TST_MYPR_TC_3), there is no attribute to assert the active tab on — automation must fall back to checking which fields are visible. Confirm with the product team whether this should be raised as a defect. Tab qids "c-mp-tab-1" (Personal info) and "c-mp-tab-2" (Password). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Raised as a case because it is both an accessibility gap and an automation blocker: with no aria-selected AND no URL change between tabs (TST_MYPR_TC_3), there is no attribute to assert the active tab on — automation must fall back to checking which fields are visible. Confirm with the product team whether this should be raised as a defect. Tab qids "c-mp-tab-1" (Personal info) and "c-mp-tab-2" (Password). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -873,7 +877,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Click a school card on "My school accounts".<br>2. Observe the tab strip and which tab is active.<br>3. Observe the page heading and the browser tab title. |
 | **Test Data** | School: "3 July Test School 1" (<SCHOOL_KEY>) |
 | **Expected Result** | Exactly FIVE tabs are shown, in this order and in upper case:<br>CLASSES · STUDENTS · STAFF · LIBRARY · REPORTS<br>"CLASSES" is the active tab by default, the page heading shows the school name, and the browser tab reads "Classes \| Cambridge One". |
-| **Remarks** | GROUNDED LIVE 2026-08-27. Tab qids "aDetail-1" (Classes), "aDetail-2" (Students), "aDetail-4" (Staff), "aDetail-5" (Library), "aDetail-6" (Reports). ⚠️ "aDetail-3" IS SKIPPED — the sequence is 1,2,4,5,6. Do not iterate 1..5 assuming contiguity. ⚠️ THE ACTIVE MARKER IS ON THE PARENT <li>, not the anchor: "li.nav-item.active > a". The anchor className is identical on every tab whether active or not, so asserting on the link class is a guaranteed false green. Labels render UPPER CASE — confirm whether that is CSS text-transform or the actual text before asserting case-sensitively. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Tab qids "aDetail-1" (Classes), "aDetail-2" (Students), "aDetail-4" (Staff), "aDetail-5" (Library), "aDetail-6" (Reports). ⚠️ "aDetail-3" IS SKIPPED — the sequence is 1,2,4,5,6. Do not iterate 1..5 assuming contiguity. ⚠️ THE ACTIVE MARKER IS ON THE PARENT <li>, not the anchor: "li.nav-item.active > a". The anchor className is identical on every tab whether active or not, so asserting on the link class is a guaranteed false green. Labels render UPPER CASE — confirm whether that is CSS text-transform or the actual text before asserting case-sensitively. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -892,7 +896,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Click "STUDENTS" and note the URL, title and active tab.<br>2. Repeat for "STAFF", "LIBRARY", "REPORTS", then "CLASSES". |
 | **Test Data** | School slug: org_<SCHOOL_SLUG> |
 | **Expected Result** | Each tab navigates to its own URL, sets its own browser-tab title, and becomes the active tab:<br>\| Tab \| URL suffix \| Title \|<br>\| CLASSES \| /class \| "Classes \\| Cambridge One" \|<br>\| STUDENTS \| /learner \| "Students \\| Cambridge One" \|<br>\| STAFF \| /staff \| "Staff \\| Cambridge One" \|<br>\| LIBRARY \| /library \| "Library \\| Cambridge One" \|<br>\| REPORTS \| /reports \| "Reports \\| Cambridge One" \|<br>The school heading stays unchanged throughout. |
-| **Remarks** | GROUNDED LIVE 2026-08-27 — all five walked and every URL and title confirmed. ⚠️ NOTE the STUDENTS tab routes to "/learner", NOT "/student". A URL assertion built from the tab label will fail on this one. Tabs carry REAL hrefs (unlike the footer, whose logged-in hrefs collapse to javascript:void(0) — TST_FOOT_TC_10 remarks), so tab navigation is genuinely href-driven. TIMING measured this session: Reports took ~4.3 s to become active, Classes ~1.2 s. Poll for "li.nav-item.active > a" carrying the expected qid rather than using a fixed pause (admin-shared.md §B8). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — all five walked and every URL and title confirmed. ⚠️ NOTE the STUDENTS tab routes to "/learner", NOT "/student". A URL assertion built from the tab label will fail on this one. Tabs carry REAL hrefs (unlike the footer, whose logged-in hrefs collapse to javascript:void(0) — TST_FOOT_TC_10 remarks), so tab navigation is genuinely href-driven. TIMING measured this session: Reports took ~4.3 s to become active, Classes ~1.2 s. Poll for "li.nav-item.active > a" carrying the expected qid rather than using a fixed pause (admin-shared.md §B8). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -911,7 +915,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Inspect each tab link for an aria-current or selected-state attribute.<br>2. Switch tabs and re-inspect. |
 | **Test Data** | — |
 | **Expected Result** | The active tab exposes an accessible current/selected state, so assistive technology can announce which section the user is in.<br>ACTUAL (2026-08-27): this FAILS. No tab link carries aria-current or aria-selected; the only indicator is the "active" CSS class on the parent <li>, which is presentational. |
-| **Remarks** | GROUNDED LIVE 2026-08-27. This is the SECOND instance of the same gap in this batch — the My Profile tabs have it too (TST_MYPR_TC_8). Worth raising as one combined accessibility ticket rather than two. The school tabs are at least recoverable for automation via "li.nav-item.active"; the profile tabs have no indicator at all, which makes them the more severe of the two. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. This is the SECOND instance of the same gap in this batch — the My Profile tabs have it too (TST_MYPR_TC_8). Worth raising as one combined accessibility ticket rather than two. The school tabs are at least recoverable for automation via "li.nav-item.active"; the profile tabs have no indicator at all, which makes them the more severe of the two. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1031,7 +1035,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Observe the "My school accounts" page.<br>2. Inspect each school card. |
 | **Test Data** | — |
 | **Expected Result** | Every school the administrator manages is listed, one card each, numbered sequentially from "01" with zero padding.<br>Each card shows: index, school name, address, the label "School key", the key itself in XXX-XXX-XXX format, a "Copy" control, and a chevron opening the school.<br>Observed 2026-08-27 for <ADMIN_USER>: 7 schools, numbered 01–07. |
-| **Remarks** | GROUNDED LIVE 2026-08-27. Card qid "aDashboard-N" (a.inst-link); chevron is a SEPARATE "aDashboard1-N". Both are POSITIONAL. The school key is carried in the card's aria-label, which is what makes key-based selection possible (schoolAdminDashboard.schoolLinkByKey uses a.inst-link[aria-label*="{{key}}"]).<br>⚠️ NEVER assert the literal count 7 — this is a shared account and the list changes (admin-shared.md §A5). Assert the card STRUCTURE and that the expected key is present.<br>Extends the existing SADB module (TST_SADB_TC_1 opens a school by key) — that case already covers opening; this one covers the LISTING, which nothing did.<br>⚠️ EXTENDS admin-shared.md §0, which documents 4 schools. This account sees 7 — KNF-XRD-QVE, HQC-ZWM-ZVF and GYB-JMU-KYA were undocumented. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Card qid "aDashboard-N" (a.inst-link); chevron is a SEPARATE "aDashboard1-N". Both are POSITIONAL. The school key is carried in the card's aria-label, which is what makes key-based selection possible (schoolAdminDashboard.schoolLinkByKey uses a.inst-link[aria-label*="{{key}}"]).<br>⚠️ NEVER assert the literal count 7 — this is a shared account and the list changes (admin-shared.md §A5). Assert the card STRUCTURE and that the expected key is present.<br>Extends the existing SADB module (TST_SADB_TC_1 opens a school by key) — that case already covers opening; this one covers the LISTING, which nothing did.<br>⚠️ EXTENDS admin-shared.md §0, which documents 4 schools. This account sees 7 — KNF-XRD-QVE, HQC-ZWM-ZVF and GYB-JMU-KYA were undocumented. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1071,7 +1075,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Locate the two cards sharing the same display name.<br>2. Compare their school keys.<br>3. Open the one matching a specific key and confirm which school loaded. |
 | **Test Data** | Duplicate display name "3 July Test School 1" — keys FCN-CHZ-PDA and ZPB-TWP-AEQ |
 | **Expected Result** | Both cards show the SAME display name but DIFFERENT school keys, and the card selected by key opens that specific school. |
-| **Remarks** | GROUNDED LIVE 2026-08-27 — cards 01 and 02 both read "3 July Test School 1" with keys FCN-CHZ-PDA and ZPB-TWP-AEQ, and identical addresses too.<br>⚠️ THIS IS THE CASE THAT JUSTIFIES admin-shared.md §0's standing rule: ALWAYS select a school by KEY, never by name or card position. Selecting by name is ambiguous here, and card qids (aDashboard-N) are positional so they re-issue when the list changes.<br>Confirming WHICH school loaded (step 3) needs a distinguishing feature — the org slug in the URL is the reliable one, since the heading shows the shared name. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — cards 01 and 02 both read "3 July Test School 1" with keys FCN-CHZ-PDA and ZPB-TWP-AEQ, and identical addresses too.<br>⚠️ THIS IS THE CASE THAT JUSTIFIES admin-shared.md §0's standing rule: ALWAYS select a school by KEY, never by name or card position. Selecting by name is ambiguous here, and card qids (aDashboard-N) are positional so they re-issue when the list changes.<br>Confirming WHICH school loaded (step 3) needs a distinguishing feature — the org slug in the URL is the reliable one, since the heading shows the shared name. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1132,7 +1136,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Load the Classes tab and observe the screen without interacting.<br>2. Repeat for Students, Staff, Library and Reports. |
 | **Test Data** | — |
 | **Expected Result** | On every tab, no dialog, warning or error is visible on load. The screen shows only its own content. |
-| **Remarks** | GROUNDED LIVE 2026-08-27 — verified that every dialog present in the DOM was hidden on load (Classes 5, Students 4, Staff 1; all offsetParent === null). ⚠️ THIS IS THE HEADLINE AUTOMATION TRAP FOR THIS SCENARIO. Admin dialogs are PRE-RENDERED, so they exist in the DOM before anything triggers them. Any check of the form "getElementCount(dialog) > 0" therefore passes ALWAYS and proves nothing — admin-shared.md §B2 records this silently breaking reset_filters for weeks. Assert VISIBILITY, never presence. Note also that opacity:0 still counts as visible to Playwright; only display:none is hidden. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — verified that every dialog present in the DOM was hidden on load (Classes 5, Students 4, Staff 1; all offsetParent === null). ⚠️ THIS IS THE HEADLINE AUTOMATION TRAP FOR THIS SCENARIO. Admin dialogs are PRE-RENDERED, so they exist in the DOM before anything triggers them. Any check of the form "getElementCount(dialog) > 0" therefore passes ALWAYS and proves nothing — admin-shared.md §B2 records this silently breaking reset_filters for weeks. Assert VISIBILITY, never presence. Note also that opacity:0 still counts as visible to Playwright; only display:none is hidden. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1151,7 +1155,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Read the bulk-limit warning offered on the Classes tab.<br>2. Read the equivalent warning on the Students tab.<br>3. Compare their wording. |
 | **Test Data** | — |
 | **Expected Result** | Both follow the same two-line pattern, differing only in the noun:<br>Classes: "You can only delete 50 classes at one time" / "Please uncheck some classes to continue"<br>Students: "You can only remove 50 students at one time" / "Please uncheck some students to continue"<br>Both offer a "Close" control. |
-| **Remarks** | COPY GROUNDED LIVE 2026-08-27 — both captured VERBATIM from the pre-rendered DOM (§A6) without reaching the capped state, which would otherwise require 51+ rows. Note the VERB differs with the domain — "delete" for classes, "remove" for students — so a single shared assertion string is wrong. The LIMIT (50) and the sentence shape are the consistent parts. Reaching these states for real is Blocked on the shared school (admin-shared.md §A5: it holds 26 students, so the 50-student cap cannot be hit). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. COPY GROUNDED LIVE 2026-08-27 — both captured VERBATIM from the pre-rendered DOM (§A6) without reaching the capped state, which would otherwise require 51+ rows. Note the VERB differs with the domain — "delete" for classes, "remove" for students — so a single shared assertion string is wrong. The LIMIT (50) and the sentence shape are the consistent parts. Reaching these states for real is Blocked on the shared school (admin-shared.md §A5: it holds 26 students, so the 50-student cap cannot be hit). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1170,7 +1174,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. Read the class-deletion confirmation.<br>2. Read the student-removal confirmation.<br>3. Read the change-school-key confirmation.<br>4. Check each offers a way to back out. |
 | **Test Data** | — |
 | **Expected Result** | Each destructive confirmation names its consequence and offers a non-destructive exit:<br>Class delete — "WARNING!" / "There might be students, teachers and course materials in the selected classes" / "Are you sure you want to delete?" / "No, cancel"<br>Student removal — "I confirm that I want to remove students from my school account" / "Cancel" / "Request to remove"<br>Change school key — "CAREFUL!" / "Changing the school key cannot be undone" / "Cancel" |
-| **Remarks** | ALL THREE CAPTURED VERBATIM 2026-08-27 from the pre-rendered DOM, without triggering any of them — which is the only safe way, since all three are destructive on a shared school. ⚠️ The change-school-key dialog is present on EVERY admin tab (Classes, Students, Staff all carry it) because School settings lives in the shared page chrome — scope any modal selector with :has(...) to the specific dialog, or it will match this one everywhere. Async follow-ups are also pre-rendered and worth checking in the same pass: "This will take a few minutes" (classes) and "Removing students may take some time" (students). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ALL THREE CAPTURED VERBATIM 2026-08-27 from the pre-rendered DOM, without triggering any of them — which is the only safe way, since all three are destructive on a shared school. ⚠️ The change-school-key dialog is present on EVERY admin tab (Classes, Students, Staff all carry it) because School settings lives in the shared page chrome — scope any modal selector with :has(...) to the specific dialog, or it will match this one everywhere. Async follow-ups are also pre-rendered and worth checking in the same pass: "This will take a few minutes" (classes) and "Removing students may take some time" (students). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1210,7 +1214,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Test Steps** | 1. On "My school accounts", list the schools shown.<br>2. Switch to the teacher view.<br>3. List the school groups shown there.<br>4. Compare the two lists. |
 | **Test Data** | — |
 | **Expected Result** | The two lists are NOT the same. The administrator view shows schools the user administers; the teacher view groups classes under schools where the user teaches, which may include schools absent from the administrator view.<br>Observed 2026-08-27: administrator view 7 schools; teacher view 8 school groups, including "ABERYSTWYTH COLLEGE : THOR" and "LTI INTEGRATIONS TEST2", neither of which appears in the administrator list. |
-| **Remarks** | GROUNDED LIVE 2026-08-27. This matters because it is easy to assume the two views show the same estate — they do not, and a test asserting equal school counts across the toggle will fail. ⚠️ The teacher view groups by school DISPLAY NAME, so the two distinct schools both called "3 July Test School 1" (FCN-CHZ-PDA and ZPB-TWP-AEQ) collapse into a SINGLE group there. The admin view keeps them separate via their keys. Do not match schools across the two views by name. ⚠️ NEVER assert the literal counts 7 and 8 — shared account (§A5). Assert the RELATIONSHIP: the teacher list contains at least one school the admin list does not. ⚠️ Every "Create class" button in the teacher view shares qid "tDashboard-ncls-btn-1" — 7 elements, one per school group. See TST_SADB_TC_7. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. This matters because it is easy to assume the two views show the same estate — they do not, and a test asserting equal school counts across the toggle will fail. ⚠️ The teacher view groups by school DISPLAY NAME, so the two distinct schools both called "3 July Test School 1" (FCN-CHZ-PDA and ZPB-TWP-AEQ) collapse into a SINGLE group there. The admin view keeps them separate via their keys. Do not match schools across the two views by name. ⚠️ NEVER assert the literal counts 7 and 8 — shared account (§A5). Assert the RELATIONSHIP: the teacher list contains at least one school the admin list does not. ⚠️ Every "Create class" button in the teacher view shares qid "tDashboard-ncls-btn-1" — 7 elements, one per school group. See TST_SADB_TC_7. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1240,6 +1244,81 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 38 |
+| **Test Case ID** | TST_INVI_TC_12 |
+| **Title** | Verify clicking a notification opens its target and clears it from the unread count |
+| **Linked Requirement** | #3 — Verify notifications |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | Signed in as an administrator with at least one unread notification, the bell showing a count. |
+| **Test Steps** | 1. Record the unread badge count. 2. Open the notifications panel. 3. Click a notification whose target is known (e.g. a report-ready notification). 4. Confirm where it lands. 5. Re-open the panel and re-read the badge count and the item's read state. |
+| **Test Data** | An account with unread notifications; a report-ready notification if available. |
+| **Expected Result** | The click navigates to the notification's target (a report-ready notification lands on the Reports tab), the item is marked read, and the unread badge count decreases by one. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_GEN_003, whose steps click a notification and mark it read. All five of our notification cases (`TST_INVI_TC_7`–`TC_11`) are about **rendering** — badge, grouping, dates, wording — and none clicks a row. `TST_INVI_TC_7` already pairs the badge with its accessible name, so this closes the loop by proving the count actually changes. **Mutates state** (read status is not reversible) — keep out of side-effect-free suites. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 39 |
+| **Test Case ID** | TST_LIBR_TC_34 |
+| **Title** | Verify an MQA administrator does see the MQA/CQA restricted products |
+| **Linked Requirement** | #5 — Verify non mqa admin should not see cqa/mqa product |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | An MQA-provisioned administrator account with access to a school holding MQA/CQA products. |
+| **Test Steps** | 1. Sign in as the MQA-provisioned administrator. 2. Open the school's Library tab. 3. Search for the restricted product by title and confirm it is listed. |
+| **Test Data** | MQA admin `<MQA_ADMIN_ACCOUNT>`; restricted product `<MQA_RESTRICTED_PRODUCT>`. |
+| **Expected Result** | The MQA/CQA product **is** listed for the MQA administrator. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_GEN_005, whose step 3 is an explicit control check. `TST_LIBR_TC_32` proves only the negative half — that restricted products are hidden from a non-MQA admin — which a defect hiding the product from **everyone** would also satisfy. The pair is what makes either half meaningful. This is the same structural point as `TST_CLST_TC_24` on the Classes tab: a negative-only assertion cannot distinguish correct behaviour from over-blocking. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): needs an MQA-provisioned administrator account, the counterpart to the non-MQA account `TST_LIBR_TC_32` is already waiting on. Unblock both together — one fixture request covers the pair. |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 40 |
+| **Test Case ID** | TST_FOOT_TC_11 |
+| **Title** | Verify every admin footer link opens its intended destination |
+| **Linked Requirement** | #8 — Verify footer link |
+| **Type** | Positive |
+| **Priority** | Low |
+| **Preconditions** | On any admin page with the footer visible. |
+| **Test Steps** | 1. Scroll to the footer and record every link it renders. 2. Click each link in turn. 3. Confirm the destination that opens and return. 4. Reconcile the set of links found against `TST_FOOT_TC_10`. |
+| **Test Data** | The footer links — the other team name Terms of use, Privacy notice, Accessibility, Our approach and FAQs. |
+| **Expected Result** | Each footer link opens its intended destination and none is broken (no 404, no dead anchor). `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_GEN_008, which clicks each link and checks the destination. `TST_FOOT_TC_10` asserts the footer **renders seven links and omits Site Feedback** — a presence check, not a navigation check. **Reconcile the count while grounding:** our register says seven links, theirs names five. One of the two is wrong; correct whichever it is and note the outcome here. **Read-only**, but links may open new tabs or external sites — handle that in automation. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 41 |
+| **Test Case ID** | TST_SADB_TC_8 |
+| **Title** | Verify data stays scoped to the active organisation when an admin manages several schools |
+| **Linked Requirement** | #11 — Verify different tab navigation |
+| **Type** | Negative |
+| **Priority** | High |
+| **Preconditions** | An administrator with access to two or more schools, where each school holds at least one record (class, student, staff member, library product) that exists **only** in that school. |
+| **Test Steps** | 1. Sign in as the multi-org administrator and open school A. 2. On each tab — Classes, Students, Staff, Library — confirm every listed record belongs to school A, and specifically that school B's unique records are **absent**. 3. Switch to school B and repeat in the opposite direction. 4. Apply a search or filter in school A, then switch to school B, and confirm no results carry across. |
+| **Test Data** | Multi-org admin `<MULTI_ORG_ADMIN>`; unique records `<A_ONLY_RECORD>` and `<B_ONLY_RECORD>`. |
+| **Expected Result** | Every tab shows only the active organisation's data. No record unique to the other school appears anywhere, and switching organisations does not carry search or filter results across. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_ORG_001, whose expected result ends "with no cross-org data leakage". `TST_SADB_TC_3` proves each organisation **loads** independently; it does not prove one cannot see the other's data. **Highest-severity gap of the entire comparison** — a leak here is a data-privacy incident, not a UI defect, which is why this is High priority despite sitting in a thinly covered area. Step 4 exists because carried-over query state is the most likely mechanism for a leak. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): needs a multi-organisation admin fixture with records unique to each school, so that absence is provable rather than assumed. Unblock by provisioning two small schools under one admin with deliberately distinct data. NOTE: the multi-organisation area has no register of its own — if it grows beyond the SADB cases it should get one (see the 2026-09-01 handoff). |
+
+---
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
 1. **Admin-app Spanish rendering** (`TST_ASHL_TC_2`): **no admin Spanish copy has been verified.**

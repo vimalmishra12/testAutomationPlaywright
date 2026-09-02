@@ -4,8 +4,12 @@
 **Module:** MRPT (Manage Reports) — *maps to the future `manageReports.page.js` page object when automated*
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
-**Generated:** 2026-08-26 | **Total TCs:** 39 (21 Positive · 11 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-08-26):** **0 of 39 TCs automated.** 36 are Not Run and 3 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39).
+**Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative)
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **10** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_MRPT_TC_1`, `TST_MRPT_TC_3`, `TST_MRPT_TC_17`, `TST_MRPT_TC_29`, `TST_MRPT_TC_30`, `TST_MRPT_TC_32`, `TST_MRPT_TC_33`, `TST_MRPT_TC_36`, `TST_MRPT_TC_38`, `TST_MRPT_TC_39`.
+ — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
+**Execution status (2026-09-01):** **0 of 42 TCs automated.** 37 are Not Run and **5 are Blocked** at design time (`TST_MRPT_TC_17`, `TC_38`, `TC_39`, plus `TC_41` and `TC_42`, which both wait on a seeded, frozen-activity fixture class).
 
 **Batches:** Batch 1 — Reports tab and Create report flow (`TST_MRPT_*`, module MRPT, 39 TCs).
 
@@ -61,17 +65,17 @@ these are automated — they must not sit in a side-effect-free suite.
 |---|---|
 | #1 — Verify Create Report is launching | TC_1, TC_2, TC_3 (E) |
 | #2 — Verify search using class name or class key | TC_4, TC_5, TC_6 (E), TC_7 (N) |
-| #3 — Verify filter | TC_8, TC_9, TC_10 (E), TC_11 (E), TC_12 (N) |
+| #3 — Verify filter | TC_8, TC_9, TC_10 (E), TC_11 (E), TC_12 (N), TC_40 |
 | #4 — Verify class selection checkbox | TC_13, TC_14, TC_15 (E), TC_16 (E), TC_17 (E) |
 | #5 — Verify Cancel button functionality | TC_18, TC_19, TC_20 (E) |
-| #6 — Verify Class summary report from beginning | TC_21 |
+| #6 — Verify Class summary report from beginning | TC_21, TC_41 |
 | #7 — Verify Class detailed data report from beginning | TC_22 |
 | #8 — Verify Class daily data report from beginning | TC_23 |
 | #9 — Verify Aggregated data report from beginning | TC_24 |
 | #10 — Verify Assignments summary report from beginning | TC_25 |
 | #11 — Verify Assignments detailed data report from beginning | TC_26 |
 | #12 — Verify Custom date range reports | TC_27, TC_28, TC_29 (E), TC_30 (E), TC_31 (E), TC_32 (N), TC_33 (N) |
-| #13 — Verify reports with custom grade settings applied | TC_34, TC_35, TC_36 (N) |
+| #13 — Verify reports with custom grade settings applied | TC_34, TC_35, TC_36 (N), TC_42 (E) |
 | #14 — Verify Estimated CEFR level report from beginning | TC_37 |
 | #15 — Added coverage: report generation error paths | TC_38 (N), TC_39 (N) |
 
@@ -222,7 +226,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Open the school from "My school accounts".<br>2. Click "REPORTS" in the school navigation.<br>3. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | URL is /admin/admin/org_<slug>/reports. The heading reads "Reports (0)". A "Create report" button is present. The informational line reads "Reports are available to download for up to 60 days". The empty state reads "No new reports available" above "Your reports will appear here after you create them", with a second "Create report" button. |
-| **Remarks** | All copy captured verbatim live 2026-08-26. The (0) count is school-specific — on a school that already holds reports this case cannot show the empty state. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. All copy captured verbatim live 2026-08-26. The (0) count is school-specific — on a school that already holds reports this case cannot show the empty state. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -260,7 +264,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Click the "Go back" link at the top of the class-selection step.<br>2. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | The app returns to /admin/admin/org_<slug>/reports, the Reports tab renders, and no new report has been created (the heading count is unchanged). |
-| **Remarks** | Distinct from the footer "Cancel" (TST_MRPT_TC_18) — both exit paths need covering. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Distinct from the footer "Cancel" (TST_MRPT_TC_18) — both exit paths need covering. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -532,7 +536,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Select classes until the count exceeds 1500.<br>2. Observe the heading, the footer bar and the "Continue" button. |
 | **Test Data** | >1500 classes |
 | **Expected Result** | [ASSUMED] Selection is capped at 1500 and the product surfaces the limit it states on screen ("You can include up to 1500 classes"). |
-| **Remarks** | BLOCKED at design time. The cap text is captured verbatim live, but VED-NEH-KVU holds only 6 classes so the cap cannot be reached. UNBLOCK: a dedicated school seeded with >1500 classes, or a product/API confirmation. Whether the cap blocks further ticks or raises a message is unknown. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. BLOCKED at design time. The cap text is captured verbatim live, but VED-NEH-KVU holds only 6 classes so the cap cannot be reached. UNBLOCK: a dedicated school seeded with >1500 classes, or a product/API confirmation. Whether the cap blocks further ticks or raises a message is unknown. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
 | **Comments / Defect ID** | Blocked at design time — no school available with >1500 classes. |
@@ -776,7 +780,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Open the "From" date picker.<br>3. Navigate back past January 2022. |
 | **Test Data** | Boundary: 2022-01-01 |
 | **Expected Result** | Dates before 1 January 2022 are not selectable; 1 January 2022 itself is selectable. |
-| **Remarks** | Verified live 2026-08-26 from the field attributes: the "From" input carries min="2021-12-31T18:30:00.000Z", i.e. 2022-01-01 in IST. Exactly the kind of field constraint admin-shared.md §A3 requires be read before writing boundary cases. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-26 from the field attributes: the "From" input carries min="2021-12-31T18:30:00.000Z", i.e. 2022-01-01 in IST. Exactly the kind of field constraint admin-shared.md §A3 requires be read before writing boundary cases. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -795,7 +799,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Open the "From" picker and attempt to select tomorrow.<br>3. Repeat for the "To" picker. |
 | **Test Data** | Boundary: today |
 | **Expected Result** | All dates after today are disabled in both pickers; today is selectable in both. |
-| **Remarks** | Verified live 2026-08-26: both inputs carry max="2026-08-26T18:29:59.999Z" (end of the current day). Reports cover past activity only. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-26: both inputs carry max="2026-08-26T18:29:59.999Z" (end of the current day). Reports cover past activity only. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -833,7 +837,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Click into the "From" field and type "01/01/2020".<br>3. Repeat for the "To" field. |
 | **Test Data** | Typed input: 01/01/2020 |
 | **Expected Result** | Neither field accepts typed input; both retain their picker-set values. Dates can be set only through the calendar pickers. |
-| **Remarks** | Verified live 2026-08-26: both "From" and "To" inputs are readOnly. This rules out the whole family of "type an invalid date" negative cases — the pickers are the only input path. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-26: both "From" and "To" inputs are readOnly. This rules out the whole family of "type an invalid date" negative cases — the pickers are the only input path. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -852,7 +856,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Assignments summary" and observe the "Date range" radios.<br>3. Repeat for "Assignments detailed data".<br>4. Repeat for "Estimated CEFR level". |
 | **Test Data** | Report types: Assignments summary, Assignments detailed data, Estimated CEFR level |
 | **Expected Result** | For all three types the "Custom date range" radio remains DISABLED and "From the beginning" stays selected — no "From"/"To" fields can be produced. |
-| **Remarks** | Verified live 2026-08-26 across all seven types. Date range is supported by exactly four (Class summary, Class detailed data, Class daily data, Aggregated data), which matches the four named in scenario #12 — the scenario list is correct, and this case pins the negative half of it. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-26 across all seven types. Date range is supported by exactly four (Class summary, Class detailed data, Class daily data, Aggregated data), which matches the four named in scenario #12 — the scenario list is correct, and this case pins the negative half of it. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -911,7 +915,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Estimated CEFR level".<br>3. Observe the "Only include items that contribute to grade calculation" checkbox. |
 | **Test Data** | Report type: Estimated CEFR level |
 | **Expected Result** | The checkbox is DISABLED and cannot be ticked. |
-| **Remarks** | Verified live 2026-08-26. Estimated CEFR level is the only one of the seven types supporting neither a custom date range nor custom grade settings — which is why it appears in neither scenario #12 nor #13. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-26. Estimated CEFR level is the only one of the seven types supporting neither a custom date range nor custom grade settings — which is why it appears in neither scenario #12 nor #13. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -953,7 +957,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose any report type.<br>3. Click "Submit" while report generation is failing.<br>4. Observe the dialog. |
 | **Test Data** | — |
 | **Expected Result** | A dialog is shown headed "Sorry, something went wrong. The report you requested was not generated." offering "Try again" and "Back to Reports". |
-| **Remarks** | BLOCKED at design time. The copy above was captured verbatim from the PRE-RENDERED DOM on 2026-08-26 (admin-shared.md §A6 free-capture), so the expected result is verified even though the state was never reached. UNBLOCK: backend fault injection or a stubbed failure response. A second, separate failure surface exists on the Reports tab itself — see TST_MRPT_TC_39. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. BLOCKED at design time. The copy above was captured verbatim from the PRE-RENDERED DOM on 2026-08-26 (admin-shared.md §A6 free-capture), so the expected result is verified even though the state was never reached. UNBLOCK: backend fault injection or a stubbed failure response. A second, separate failure surface exists on the Reports tab itself — see TST_MRPT_TC_39. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
 | **Comments / Defect ID** | Blocked at design time — report generation failure cannot be forced on Thor. |
@@ -972,13 +976,69 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Test Steps** | 1. Open the Reports tab.<br>2. Open the error detail for a report created with errors.<br>3. Observe the modal. |
 | **Test Data** | — |
 | **Expected Result** | A modal headed "Report created with errors" states "<N> out of <TOTAL> classes were not included in your report due to the errors shown below" above a table with the columns "Class name", "Class key" and "Error message", and offers "Download report". |
-| **Remarks** | BLOCKED at design time. Copy captured from the pre-rendered DOM on the Reports tab 2026-08-26. Requires a multi-class report in which some classes fail — cannot be produced on demand. UNBLOCK: fault injection, or a class deliberately placed in a state that fails report generation. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. BLOCKED at design time. Copy captured from the pre-rendered DOM on the Reports tab 2026-08-26. Requires a multi-class report in which some classes fail — cannot be produced on demand. UNBLOCK: fault injection, or a class deliberately placed in a state that fails report generation. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
 | **Comments / Defect ID** | Blocked at design time — a partially-failing report cannot be produced on Thor. |
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 40 |
+| **Test Case ID** | TST_MRPT_TC_40 |
+| **Title** | Verify the report class-selection filter narrows the list by class label |
+| **Linked Requirement** | #3 — Verify filter |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | In the report creation flow at the class-selection step, on a school with at least one labelled class. |
+| **Test Steps** | 1. Click **Create report** to reach class selection. 2. Open **Filter**. 3. Record which filter groups the panel offers. 4. If class labels are offered, select one and Apply. 5. Read the resulting class list. |
+| **Test Data** | Label `<EXISTING_THOR_CLASS_LABEL>`. |
+| **Expected Result** | The class list is narrowed to classes carrying the selected label, and a label combined with a status behaves as an AND. `[ASSUMED]` — **and the premise itself is unconfirmed.** |
+| **Remarks** | Added 2026-09-01 from the other team's TC_REP_003, which says "status/label filter". All five of our filter cases (`TST_MRPT_TC_8`–`TC_12`) are class-STATUS only, and `TST_MRPT_TC_8` asserts the panel opens with **five class statuses** — with no mention of labels. **GROUND FIRST:** if the report-flow panel offers statuses only, their sheet is wrong and this becomes a correction rather than a new case. The label filter definitely exists on the Classes tab (`TST_CLST_TC_4`); whether the report flow reuses that panel is the open question. **Read-only.** |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 41 |
+| **Test Case ID** | TST_MRPT_TC_41 |
+| **Title** | Verify a generated report contains data that reconciles with the class it was run against |
+| **Linked Requirement** | #6 — Verify Class summary report from beginning |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A fixture class whose activity data is known and stable, with a report generated over it. |
+| **Test Steps** | 1. Record the fixture class's known activity — enrolled students and their completed activities/scores. 2. Generate a **Class summary** report "From the beginning" and download it. 3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly. 4. Repeat for **Aggregated data** and confirm its figures sum/average the underlying class-level data. |
+| **Test Data** | Fixture class `<FROZEN_ACTIVITY_CLASS>` with known, unchanging activity. |
+| **Expected Result** | The downloaded report reflects the class's actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 — **the most significant gap found in the whole comparison.** Our seven generation cases (`TST_MRPT_TC_21`–`TC_26`, `TC_37`) all stop at "the report is created and listed for download"; every one of the other team's equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with **wrong content** passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. `3 July Test School 1` is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog. |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 42 |
+| **Test Case ID** | TST_MRPT_TC_42 |
+| **Title** | Verify a custom grade exclusion is respected consistently across every report type that supports it |
+| **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | A class whose grade settings exclude one component or category from the grade, with known activity on the excluded item. |
+| **Test Steps** | 1. Configure the class grade settings to exclude one component/category. 2. Generate each supported type with the custom grade option ticked: Class summary, Class detailed data, Class daily data, Aggregated data, Assignments summary, Assignments detailed data. 3. In each output, confirm the excluded item is absent and the totals recompute without it. |
+| **Test Data** | Class `<FROZEN_ACTIVITY_CLASS>` with one component excluded from the grade. |
+| **Expected Result** | All six report types consistently omit the excluded component and recompute their totals/averages without it. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_REP_014, which sweeps the exclusion across all six types. Our `TST_MRPT_TC_35` proves the option takes effect on **one** report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as `TST_MRPT_TC_41`. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time: depends on the seeded, frozen-activity fixture class described in `TST_MRPT_TC_41`. Unblock together. |
+
+---
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
 1. **Search semantics** (`TST_MRPT_TC_4`, `TC_6`, `TC_7`): whether the class-picker search is

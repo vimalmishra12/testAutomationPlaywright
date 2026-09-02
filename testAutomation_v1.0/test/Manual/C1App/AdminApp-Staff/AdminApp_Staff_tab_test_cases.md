@@ -4,8 +4,12 @@
 **Modules:** **STFL** (Staff tab list) — *maps to the future `schoolStaff` page object* · **STFP** (staff profile & manage account) — *`staffProfile`* · **STFB** (bulk staff invitations) — *`bulkStaff`*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Pages in scope:** Staff tab `/admin/admin/org_<slug>/staff` · staff profile `/admin/admin/org_<slug>/profile/<orgUuid>/<userId>` · invitation form `/admin/admin/org_<slug>/email/invite` · class page (from a profile) `/class/teacher/org_<slug>/class/<uuid>/view`
-**Generated:** 2026-08-24 | **Total TCs:** 55 (30 Positive · 19 Edge · 6 Negative) — **all 13 source scenarios covered**
-**Execution status (2026-08-24):** **0 of 55 TCs automated.** 54 are **Not Run**; **1 is Blocked** at design time (see below). This is a design-only batch — nothing has been automated yet, and no case is marked Pass.
+**Generated:** 2026-08-24 | **Total TCs:** 57 (31 Positive · 19 Edge · 7 Negative) — **all 13 source scenarios covered**
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **17** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_STFL_TC_1`, `TST_STFL_TC_5`, `TST_STFL_TC_7`, `TST_STFL_TC_10`, `TST_STFL_TC_21`, `TST_STFL_TC_26`, `TST_STFP_TC_3`, `TST_STFP_TC_4`, `TST_STFP_TC_6`, `TST_STFP_TC_8`, `TST_STFP_TC_14`, `TST_STFB_TC_5`, `TST_STFB_TC_6`, `TST_STFB_TC_7`, `TST_STFB_TC_8`, `TST_STFB_TC_11`, `TST_STFB_TC_12`.
+
+**Execution status (2026-09-01):** **0 of 57 TCs automated.** 55 are **Not Run**; **2 are Blocked** at design time (`TST_STFB_TC_11`, `TST_STFP_TC_20`). This is a design-only batch — nothing has been automated yet, and no case is marked Pass.
 - Module **STFL** (`TST_STFL_TC_1–27`, **26 TCs** — `TST_STFL_TC_22` withdrawn, see below) — scenarios #1–#6, #13.
 - Module **STFP** (`TST_STFP_TC_1–18`, **17 TCs** — `TST_STFP_TC_5` withdrawn, see below) — scenarios #7–#11.
 - Module **STFB** (`TST_STFB_TC_1–12`, 12 TCs) — scenario #12.
@@ -56,8 +60,8 @@
 | #13 — Verify count of teachers increase on adding a new teacher | TST_STFL_TC_27 |
 | #7 — Verify View Profile launch | TST_STFP_TC_1, TST_STFP_TC_2, TST_STFP_TC_3, TST_STFP_TC_4 (E), TST_STFP_TC_6 (N) |
 | #8 — Verify class launch from view profile page | TST_STFP_TC_7, TST_STFP_TC_8 (E) |
-| #9 — Verify Grant admin rights | TST_STFP_TC_9, TST_STFP_TC_10 |
-| #11 — Verify revoke admin rights | TST_STFP_TC_11, TST_STFP_TC_12, TST_STFP_TC_13, TST_STFP_TC_14 (E) |
+| #9 — Verify Grant admin rights | TST_STFP_TC_9, TST_STFP_TC_10, TST_STFP_TC_19 |
+| #11 — Verify revoke admin rights | TST_STFP_TC_11, TST_STFP_TC_12, TST_STFP_TC_13, TST_STFP_TC_14 (E), TST_STFP_TC_20 (N) |
 | #10 — Verify remove from school account | TST_STFP_TC_15, TST_STFP_TC_17, TST_STFP_TC_18, TST_STFP_TC_16 (E) |
 | #12 — Verify Bulk feature > Add new teachers to classes form | TST_STFB_TC_1, TST_STFB_TC_2, TST_STFB_TC_3, TST_STFB_TC_4, TST_STFB_TC_10, TST_STFB_TC_5 (E), TST_STFB_TC_6 (E), TST_STFB_TC_7 (E), TST_STFB_TC_9 (E), TST_STFB_TC_8 (N), TST_STFB_TC_11 (N), TST_STFB_TC_12 (N) |
 
@@ -173,7 +177,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Open school "3 July Test School 1" by key FCN-CHZ-PDA from "My school accounts".<br>2. Click "Staff" in the left navigation.<br>3. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | The URL is `/admin/admin/org_<slug>/staff` and the browser tab reads "Staff | Cambridge One". The page shows: heading `Staff (N)`; a search box placeholder `Search by first name, last name or email` with a `Search` button; a `Manage staff` menu; a collapsed `User guide` toggle; a sortable table headed `Last name | First name | Email address | Role`, sorted by Last name ascending; up to 20 staff rows; and `Load more ...` when more than 20 staff exist. |
-| **Remarks** | Column set differs from the Students tab — there is a **Role** column and there is NO row-selection checkbox, no `N Selected` counter and no bulk "Remove from school account" on the list. Role values seen: `Teacher`, `Administrator/Teacher`. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Column set differs from the Students tab — there is a **Role** column and there is NO row-selection checkbox, no `N Selected` counter and no bulk "Remove from school account" on the list. Role values seen: `Teacher`, `Administrator/Teacher`. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -251,7 +255,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Type `gg` in the search box.<br>2. Do NOT click `Search`. Wait 3 s.<br>3. Observe the heading and rows. |
 | **Test Data** | `gg` |
 | **Expected Result** | The list is not filtered — the heading still reads `Staff (N)` and the same rows are shown. Search is submit-driven, not live. |
-| **Remarks** | Verified live 2026-08-24: typing alone left the heading at `Staff (23)`. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24: typing alone left the heading at `Staff (23)`. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -291,7 +295,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Click `Clear` in the search banner.<br>2. Observe the heading, the search box and the rows. |
 | **Test Data** | — |
 | **Expected Result** | The banner is replaced by the `Staff (N)` count heading, the search box is emptied, the first page of 20 staff is shown again and `Load more ...` reappears. |
-| **Remarks** | Verified live 2026-08-24: heading returned to `Staff (23)`, box empty, 20 rows, Load more present. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24: heading returned to `Staff (23)`, box empty, 20 rows, Load more present. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -350,7 +354,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Type three spaces in the search box.<br>2. Click `Search`. |
 | **Test Data** | Three space characters |
 | **Expected Result** | The term is trimmed to nothing, but the page still enters the search banner state — the count heading is replaced by `Showing search results for .` with `Clear` — and every staff member is returned. [ASSUMED] — not exercised live on the Staff tab; this is the confirmed Students-tab behaviour. |
-| **Remarks** | [ASSUMED]. Entering the banner state on an empty term is arguably wrong; it is recorded as an observation, not a defect case. Confirm during Phase 1. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. [ASSUMED]. Entering the banner state on an empty term is arguably wrong; it is recorded as an observation, not a defect case. Confirm during Phase 1. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -563,7 +567,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Click any column header to change the sort.<br>2. Count the rendered rows and look for `Load more ...`. |
 | **Test Data** | — |
 | **Expected Result** | The list is truncated back to the first 20 rows in the new order and `Load more ...` is present again. |
-| **Remarks** | Verified live 2026-08-24 — sorting resets pagination. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24 — sorting resets pagination. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -641,7 +645,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Read the count in the heading `Staff (N)`.<br>2. Click `Load more ...` until it is removed from the page.<br>3. Count the rendered staff rows.<br>4. Compare the two numbers. |
 | **Test Data** | — |
 | **Expected Result** | **Expected:** the number of rendered rows equals the heading count. **Actual (verified live 2026-08-24):** the heading read `Staff (23)` but the exhausted list rendered only **21** unique rows — a shortfall of 2 with `Load more ...` already removed. |
-| **Remarks** | Expected-versus-actual — **a real defect**, discussed with the team 2026-08-24. The shortfall is **not** explained by pending invitations: the team confirmed `Staff (N)` increments only when an invited teacher **accepts**, so invited-but-not-joined staff are not counted. The cause is therefore **unexplained**, and may be specific to this school's data. Because the school is shared, automate this as "heading count equals rendered row count", never as the literal numbers 23 and 21 — and expect this case to **fail on `FCN-CHZ-PDA`** until the data or the defect is fixed. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Expected-versus-actual — **a real defect**, discussed with the team 2026-08-24. The shortfall is **not** explained by pending invitations: the team confirmed `Staff (N)` increments only when an invited teacher **accepts**, so invited-but-not-joined staff are not counted. The cause is therefore **unexplained**, and may be specific to this school's data. Because the school is shared, automate this as "heading count equals rendered row count", never as the literal numbers 23 and 21 — and expect this case to **fail on `FCN-CHZ-PDA`** until the data or the defect is fixed. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -721,7 +725,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Click `Back`.<br>2. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | The Staff tab is shown again at `/admin/admin/org_<slug>/staff`, in its default state — heading `Staff (N)`, sorted by Last name ascending, first page of 20 rows. |
-| **Remarks** | Verified live 2026-08-24. Any search or sort applied before opening the profile is NOT preserved on return — check this explicitly during Phase 1 if a test depends on it. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24. Any search or sort applied before opening the profile is NOT preserved on return — check this explicitly during Phase 1 if a test depends on it. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -740,7 +744,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Open the profile of `teacher17aug2026@mailsac.com`, who teaches no classes.<br>2. Read the classes section. |
 | **Test Data** | Teacher with no classes: `teacher17aug2026@mailsac.com` |
 | **Expected Result** | The classes section shows `No class` with `Your classes will appear here` and an `Add classes` control, instead of a `Classes (N)` list. |
-| **Remarks** | Verified live 2026-08-24 on two separate profiles. `[ASSUMED]` that `teacher17aug2026@mailsac.com` also has no classes — confirm on the first run and swap the fixture if it does. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24 on two separate profiles. `[ASSUMED]` that `teacher17aug2026@mailsac.com` also has no classes — confirm on the first run and swap the fixture if it does. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -759,7 +763,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Locate the row `Perf Test | tch_L_20240705-095330_1_FCN-CHZ-PDA | ...@yopmail.com | Teacher`.<br>2. Open its action menu and click `View profile`.<br>3. Observe the page for any error message.<br>4. Without reloading, try to click a different staff row.<br>5. Check the network panel for the `getUserDetailWithClasses` response. |
 | **Test Data** | Known-bad data fixture: `tch_L_20240705-095330_1_FCN-CHZ-PDA@yopmail.com` |
 | **Expected Result** | **Expected:** the user sees an error explaining that the profile could not be loaded, and the Staff list remains usable — a different row can still be opened. **Actual (verified live 2026-08-24):** nothing is shown at all, the app silently stays on the list, and the `#loader-container` overlay is left visible so every subsequent row click is intercepted until the page is reloaded. |
-| **Remarks** | Expected-versus-actual, scoped to **client-side error handling only**. The underlying **HTTP 500** from `getUserDetailWithClasses` is a **known DATA issue** on this one account — *confirmed with the team 2026-08-24* — and is **not** part of this case; do not raise it as a product defect. What remains product-side is that any 500 produces no message and a stuck overlay. The bad account is retained deliberately as the trigger fixture. Compare the Students-tab case `TST_SPRF_TC_7`, where the same class of failure shows an infinite spinner instead of a silent no-op. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Expected-versus-actual, scoped to **client-side error handling only**. The underlying **HTTP 500** from `getUserDetailWithClasses` is a **known DATA issue** on this one account — *confirmed with the team 2026-08-24* — and is **not** part of this case; do not raise it as a product defect. What remains product-side is that any 500 produces no message and a stuck overlay. The bad account is retained deliberately as the trigger fixture. Compare the Students-tab case `TST_SPRF_TC_7`, where the same class of failure shows an infinite spinner instead of a silent no-op. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -799,7 +803,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Open the profile of `testt1@mailsac.com`.<br>2. Read the `Classes (3)` section. |
 | **Test Data** | Staff with classes: `testt1@mailsac.com` |
 | **Expected Result** | The heading reads `Classes (N)` and each entry shows the class name, its date range, `Date joined: <date>`, `Class key: <key>` and the course material name — e.g. `A11y test` / `Jul 11, 2025 - Jul 10, 2026` / `Date joined: Jul 11, 2025` / `Class key: iCmL-9Y8J` / `Collaborate 3 (NLP)`. |
-| **Remarks** | Verified live 2026-08-24. Launching an **ended** class shows the class page with the banner `As this class ended over a month ago, you can no longer reactivate it.` and a `Class ended` status. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24. Launching an **ended** class shows the class page with the banner `As this class ended over a month ago, you can no longer reactivate it.` and a `Class ended` status. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -917,7 +921,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Click `Manage account`.<br>2. Read the menu items.<br>3. Do NOT confirm. |
 | **Test Data** | Own account: `testt1@mailsac.com` |
 | **Expected Result** | `Remove admin rights` and `Remove from school account` are both offered on the administrator's own profile — the product does not exclude the signed-in user from either action. |
-| **Remarks** | Verified live 2026-08-24 (menu inspected only). **Never confirm either action on this account** — it is the login used by every admin suite, and self-revoking would lock the whole programme out. Worth raising: should self-revocation and self-removal be prevented, or at least warned about? |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24 (menu inspected only). **Never confirm either action on this account** — it is the login used by every admin suite, and self-revoking would lock the whole programme out. Worth raising: should self-revocation and self-removal be prevented, or at least warned about? |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1111,7 +1115,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Confirm the counter reads `0 Selected`.<br>2. Observe `Add role`, `+ Add class key` and `Remove`. |
 | **Test Data** | — |
 | **Expected Result** | All three bulk actions are presented as unavailable while `0 Selected` is shown. |
-| **Remarks** | Verified live 2026-08-24. **Automation trap:** these three controls carry **no `qid`** and are disabled by the CSS class `disable` (not `disabled`, and with no native disabled property). Resolve them by their text and assert on the class. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24. **Automation trap:** these three controls carry **no `qid`** and are disabled by the CSS class `disable` (not `disabled`, and with no native disabled property). Resolve them by their text and assert on the class. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1130,7 +1134,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Open `Manage staff` > `Add new teachers to classes`.<br>2. Observe the grid rows and the area above it. |
 | **Test Data** | — |
 | **Expected Result** | The form is **not empty** — the previously entered rows are restored, a `Saved <age>` indicator is shown (e.g. `Saved 30+ days ago`), the submit button counts the restored rows, and any validation messages on those rows are already displayed. |
-| **Remarks** | Verified live 2026-08-24 — the form opened showing `Saved 30+ days ago`, four restored rows and live validation messages. Same auto-save/restore behaviour as the Create new classes form (`admin-shared.md` §A4). **A test that assumes an empty form will fail**, and the draft is shared state on a shared school — do not assume your own suite wrote it. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24 — the form opened showing `Saved 30+ days ago`, four restored rows and live validation messages. Same auto-save/restore behaviour as the Create new classes form (`admin-shared.md` §A4). **A test that assumes an empty form will fail**, and the draft is shared state on a shared school — do not assume your own suite wrote it. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1149,7 +1153,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Leave a row without a role or without a valid class key.<br>2. Observe the `Send N invites` button. |
 | **Test Data** | — |
 | **Expected Result** | The `Send N invites` button is unavailable while any row fails validation. |
-| **Remarks** | Verified live 2026-08-24 — the button was both natively disabled and carried the `disabled` class in this state. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-24 — the button was both natively disabled and carried the `disabled` class in this state. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1187,7 +1191,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Leave the Role cell of a populated row empty.<br>2. Enter an invalid class key in another row.<br>3. Leave the Email cell of a row that has a role empty.<br>4. Read the messages under each cell. |
 | **Test Data** | Invalid class key: `notakey` |
 | **Expected Result** | The messages are shown verbatim: `Select student or teacher` under an empty Role, `Enter a valid class key` under an invalid Class key, and `Add a teacher’s email` under an empty Email on a teacher row. |
-| **Remarks** | All three captured verbatim live 2026-08-24 from a restored draft. `Add a teacher’s email` confirms the form does distinguish the teacher case even though its help copy does not. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. All three captured verbatim live 2026-08-24 from a restored draft. `Add a teacher’s email` confirms the form does distinguish the teacher case even though its help copy does not. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -1206,7 +1210,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Trigger the form upload error state.<br>2. Read the dialog heading, body and close control. |
 | **Test Data** | — |
 | **Expected Result** | **Expected:** the dialog reads `Form not uploaded` / `An unexpected error occured. Please try again.` / `Close` — the strings the product already ships. **Actual (verified in the pre-rendered DOM, 2026-08-24):** it renders three raw translation keys — `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_HEADING` as the heading, `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_INFO` as the body and `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_CLOSE` as the close control. |
-| **Remarks** | Expected-versus-actual. **Root cause established from the admin bundle, 2026-08-24:** the modal is `#existingChildFormUploadErrorModal`, a component reused from the add-existing-children CSV flow, but on this page it looks its copy up under `ADMIN.LEARNER.ADULT_INVITE`. The `FORM_UPLOAD_ERROR_*` strings are defined **only** under `ADMIN.LEARNER.EXISTING_CHILD` and `ADMIN.LEARNER.BULK_ACTIVATION` (in both `en` and `es`) — the `ADULT_INVITE` block exists but does not define them, so ngx-translate falls back to printing the key. Changing site language does not help; Spanish has the same gap. **Control test:** the same dialog on the add-existing-children CSV screen renders correctly, which is why this has gone unnoticed. Note the correct string carries the known `occured` typo already recorded in `admin-students-tab.md`. Found by free-capture of the pre-rendered DOM (`admin-shared.md` §A6) before the state was ever reached. **Raise with the product owner.** |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Expected-versus-actual. **Root cause established from the admin bundle, 2026-08-24:** the modal is `#existingChildFormUploadErrorModal`, a component reused from the add-existing-children CSV flow, but on this page it looks its copy up under `ADMIN.LEARNER.ADULT_INVITE`. The `FORM_UPLOAD_ERROR_*` strings are defined **only** under `ADMIN.LEARNER.EXISTING_CHILD` and `ADMIN.LEARNER.BULK_ACTIVATION` (in both `en` and `es`) — the `ADULT_INVITE` block exists but does not define them, so ngx-translate falls back to printing the key. Changing site language does not help; Spanish has the same gap. **Control test:** the same dialog on the add-existing-children CSV screen renders correctly, which is why this has gone unnoticed. Note the correct string carries the known `occured` typo already recorded in `admin-students-tab.md`. Found by free-capture of the pre-rendered DOM (`admin-shared.md` §A6) before the state was ever reached. **Raise with the product owner.** |
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
 | **Comments / Defect ID** | **Blocked** at design time — the dialog is present in the pre-rendered DOM but the condition that raises it has not been reproduced, so the case cannot be executed end to end. The **root cause is known** (missing `ADULT_INVITE` translation keys — see Remarks). **Unblock:** force the invitation form upload to fail — DevTools → Network → block the upload request, or go offline mid-upload — and confirm which of the three error modals is raised; if it is `#existingChildFormUploadErrorModal` rather than `#errorFileUploadModal` or `#somethingWentWrongModal`, the case is runnable. |
@@ -1225,13 +1229,50 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Steps** | 1. Click `Manage staff` > `Add new teachers to classes`.<br>2. Read the browser tab title. |
 | **Test Data** | — |
 | **Expected Result** | **Expected:** a title naming staff or the invitation form. **Actual (verified live 2026-08-24):** the tab reads `Students | Cambridge One`, even though the page was reached from the Staff tab and is headed `Invite students and teachers`. |
-| **Remarks** | Expected-versus-actual, low severity. Consistent with `TST_STFB_TC_4` — the shared invite form is presented as a students screen throughout. Group both with the product owner as one copy/labelling issue rather than two. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Expected-versus-actual, low severity. Consistent with `TST_STFB_TC_4` — the shared invite form is presented as a students screen throughout. Group both with the product owner as one copy/labelling issue rather than two. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | *(blank in design — Not Run)* |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 56 |
+| **Test Case ID** | TST_STFP_TC_19 |
+| **Title** | Verify a newly promoted administrator can actually open the admin console |
+| **Linked Requirement** | #9 — Verify Grant admin rights |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A disposable teacher account exists whose password the tester controls, currently without admin rights. |
+| **Test Steps** | 1. As an administrator, open the teacher's staff profile > **Manage account** > **Grant admin rights** and confirm. 2. Verify the role now reads Administrator/Teacher. 3. Sign out. 4. Sign in as that user. 5. Open the school and confirm the admin console and its tabs are reachable. |
+| **Test Data** | Disposable teacher `<DISPOSABLE_STAFF_ACCOUNT>` on the target school. |
+| **Expected Result** | After the grant, the user can sign in and reach the admin console for that school, seeing the administrator tabs. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STF_009, whose step 3 is "log in as that user and confirm admin console access". Our `TST_STFP_TC_10` stops at the role **label** changing in the UI — which a grant that updated the display but not the permission would also satisfy. This is the same shape as the Students password gap (`TST_SPRF_TC_23`): we verify the UI acknowledged the change, not that the change took effect. **Mutates a real account** — data-mutating suite, and revoke the rights afterwards as housekeeping. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Comments / Defect ID** |  |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 57 |
+| **Test Case ID** | TST_STFP_TC_20 |
+| **Title** | Verify admin rights cannot be revoked from the only remaining administrator |
+| **Linked Requirement** | #11 — Verify revoke admin rights |
+| **Type** | Negative |
+| **Priority** | High |
+| **Preconditions** | A school whose staff list contains **exactly one** administrator. |
+| **Test Steps** | 1. Open the sole administrator's staff profile > **Manage account**. 2. Attempt **Remove admin rights**. 3. Read whether the control is unavailable or the action is blocked, and the message shown. 4. Re-read the role afterwards. |
+| **Test Data** | A school with a single administrator. |
+| **Expected Result** | The action is prevented — the control is unavailable, or it is blocked with a message explaining the school must retain at least one administrator — and the role is unchanged afterwards. `[ASSUMED]` |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STF_011_N1. No counterpart existed anywhere in our register. Related but distinct from `TST_STFP_TC_14`, which checks an administrator can **reach** Remove admin rights on their own profile — this one checks what happens when doing so would leave the school with none. |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): the precondition is a school with exactly one administrator. `3 July Test School 1` is shared and has several, and reducing it to one would break other suites. Unblock with a dedicated single-admin school. |
+
+---
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
 1. **Grant admin rights confirmation** (`TST_STFP_TC_10`): no "Grant admin rights?" dialog is pre-rendered on the profile, unlike the revoke dialog. Either the action is immediate or its dialog is injected on demand. Confirm on a suite-created account — **do not** click Grant on a shared account to find out.
