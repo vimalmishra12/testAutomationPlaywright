@@ -320,6 +320,13 @@ async function createMail(logData, reportUrl, mailTitle) {
     tc_status = "error";
     mailingList = errorMailingList;
   } else {
+    let reportRowLabel = isLambdaTestRun ? "Lambdatest Report" : "Detailed Report";
+    let detailedArtifactRow = githubActionsRunUrl
+      ? '<tr><td><strong>Detailed Report</strong></td><td style="white-space: nowrap;"><a href="' +
+        githubActionsRunUrl +
+        '#artifacts"><span>See report files</span></a></td></tr>'
+      : "";
+
     output =
       '<!DOCTYPE html><html> <head><style> table, td { padding: 5px; border: 1.5px solid #D3D3D3; border-collapse: collapse; font-size: 14px; font-family: Arial; } </style> </head> <body><h2 style="font-family: Arial;"><strong>' +
       mailTitle +
@@ -347,19 +354,15 @@ async function createMail(logData, reportUrl, mailTitle) {
       appUrl +
       "</span></a></td></tr><tr><td><strong>Application Version&nbsp;</strong></td><td>" +
       appVersion +
-      '</td></tr><tr><td><strong>Detailed Report</strong></td><td style="white-space: nowrap;"><a href="' +
+      "</td></tr><tr><td><strong>" +
+      reportRowLabel +
+      '</strong></td><td style="white-space: nowrap;"><a href="' +
       reportUrl +
       '"><span>' +
       reportUrl +
-      '</span></a>' +
-      (githubActionsRunUrl
-        ? '<br>See Details: <a href="' +
-          githubActionsRunUrl +
-          '"><span>' +
-          githubActionsRunUrl +
-          '</span></a>'
-        : "") +
-      '</td></tr></tbody></table>';
+      "</span></a></td></tr>" +
+      detailedArtifactRow +
+      "</tbody></table>";
     if (tc_status == "passed")
       subject =
         "✔️ " +
