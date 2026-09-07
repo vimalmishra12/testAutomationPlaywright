@@ -5,6 +5,86 @@ const path = require("path");
 const zlib = require("zlib");
 var argv = require("yargs").argv;
 
+// Fast CRC-32 table for pure Node.js ZIP creation
+const crcTable = new Uint32Array(256);
+for (let n = 0; n < 256; n++) {
+  let c = n;
+  for (let k = 0; k < 8; k++) {
+    c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+  }
+  crcTable[n] = c;
+}
+
+function crc32(buf) {
+  let crc = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) {
+    crc = crcTable[(crc ^ buf[i]) & 0xff] ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+/**
+ * Creates a standard, 100% compliant .zip file in pure Node.js (built-in zlib).
+ * Packaging the HTML report in a ZIP container prevents browser Safe Browsing / Antivirus
+ * from flagging inline base64 scripts as "Virus detected" / phishing.
+ */
+function createZipFromBuffer(fileNameInZip, fileBuffer) {
+  const nameBuf = Buffer.from(fileNameInZip, "utf8");
+  const compressedData = zlib.deflateRawSync(fileBuffer);
+  const crc = crc32(fileBuffer);
+  const uncompressedSize = fileBuffer.length;
+  const compressedSize = compressedData.length;
+
+  // Local File Header (30 bytes + filename)
+  const localHeader = Buffer.alloc(30 + nameBuf.length);
+  localHeader.writeUInt32LE(0x04034b50, 0); // Local header signature
+  localHeader.writeUInt16LE(20, 4);         // Version needed (2.0)
+  localHeader.writeUInt16LE(0x0800, 6);     // General purpose bit flag (UTF-8)
+  localHeader.writeUInt16LE(8, 8);          // Compression method (8 = Deflate)
+  localHeader.writeUInt16LE(0, 10);         // Last mod file time
+  localHeader.writeUInt16LE(0, 12);         // Last mod file date
+  localHeader.writeUInt32LE(crc, 14);       // CRC-32
+  localHeader.writeUInt32LE(compressedSize, 18);   // Compressed size
+  localHeader.writeUInt32LE(uncompressedSize, 22); // Uncompressed size
+  localHeader.writeUInt16LE(nameBuf.length, 26);   // Filename length
+  localHeader.writeUInt16LE(0, 28);         // Extra field length
+  nameBuf.copy(localHeader, 30);
+
+  // Central Directory File Header (46 bytes + filename)
+  const centralHeader = Buffer.alloc(46 + nameBuf.length);
+  centralHeader.writeUInt32LE(0x02014b50, 0); // Central dir signature
+  centralHeader.writeUInt16LE(20, 4);          // Version made by
+  centralHeader.writeUInt16LE(20, 6);          // Version needed
+  centralHeader.writeUInt16LE(0x0800, 8);      // UTF-8 flag
+  centralHeader.writeUInt16LE(8, 10);          // Deflate
+  centralHeader.writeUInt16LE(0, 12);          // Last mod time
+  centralHeader.writeUInt16LE(0, 14);          // Last mod date
+  centralHeader.writeUInt32LE(crc, 16);        // CRC-32
+  centralHeader.writeUInt32LE(compressedSize, 20);
+  centralHeader.writeUInt32LE(uncompressedSize, 24);
+  centralHeader.writeUInt16LE(nameBuf.length, 28);
+  centralHeader.writeUInt16LE(0, 30);          // Extra field length
+  centralHeader.writeUInt16LE(0, 32);          // Comment length
+  centralHeader.writeUInt16LE(0, 34);          // Disk number start
+  centralHeader.writeUInt16LE(0, 36);          // Internal file attributes
+  centralHeader.writeUInt32LE(0, 38);          // External file attributes
+  centralHeader.writeUInt32LE(0, 42);          // Relative offset of local header
+  nameBuf.copy(centralHeader, 46);
+
+  // End of Central Directory Record (22 bytes)
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);          // EOCD signature
+  eocd.writeUInt16LE(0, 4);                   // Disk number
+  eocd.writeUInt16LE(0, 6);                   // Start disk
+  eocd.writeUInt16LE(1, 8);                   // Entries on this disk
+  eocd.writeUInt16LE(1, 10);                  // Total entries
+  eocd.writeUInt32LE(centralHeader.length, 12); // Central dir size
+  eocd.writeUInt32LE(localHeader.length + compressedData.length, 16); // Central dir offset
+  eocd.writeUInt16LE(0, 20);                  // Comment length
+
+  return Buffer.concat([localHeader, compressedData, centralHeader, eocd]);
+}
+
 // Check if output/reports directory exists and has subdirectories
 var folder = [];
 try {
@@ -32,20 +112,19 @@ var githubActionsRunUrl =
   "https://github.com/" + argv.projectName + "/actions/runs/" + argv.jobID;
 
 // lambdatest shareable link detection
-const isLambdaTestRun = Boolean(process.env.LT_SHARE_URL);
 const ltShareUrl = process.env.LT_SHARE_URL || "";
 
 var reportFolderName = folder.length > 0 ? folder[0] : "TestReports";
 var funcReportDir = "../../output/reports/" + reportFolderName;
 var visReportDir = funcReportDir + "/visual";
-var mailingList, mailOutput, mailSubject, appUrl, baseurl;
+var mailingList, mailOutput, mailSubject, appUrl;
 
-// Option D Attachment Thresholds
-const DIRECT_ATTACH_LIMIT = 8 * 1024 * 1024; // 8 MB (attach raw HTML)
-const COMPRESS_ATTACH_LIMIT = 18 * 1024 * 1024; // 18 MB (compress to .html.gz and attach)
+// Maximum email attachment size limit (18 MB to stay safely under Gmail's 25 MB payload limit)
+const MAX_ZIP_ATTACH_LIMIT = 18 * 1024 * 1024;
 
 /**
- * Prepares report attachment with size guardrails and compression (Option D).
+ * Packages report into a clean ZIP archive and prepares attachment.
+ * Packaging inside a ZIP avoids antivirus / Chrome Safe Browsing flagging raw .html files.
  * Returns { attachment: object | null, statusText: string, tempFilePath: string | null }
  */
 function prepareReportAttachment(reportPath, reportLabel, buildNumber) {
@@ -58,54 +137,41 @@ function prepareReportAttachment(reportPath, reportLabel, buildNumber) {
   }
 
   try {
-    const stats = fs.statSync(reportPath);
-    const sizeInBytes = stats.size;
-    const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
+    const rawFileBuffer = fs.readFileSync(reportPath);
+    const innerFileName = path.basename(reportPath) || "report.html";
+    const zipBuffer = createZipFromBuffer(innerFileName, rawFileBuffer);
+    const zipSizeInMB = (zipBuffer.length / (1024 * 1024)).toFixed(2);
+    const rawSizeInMB = (rawFileBuffer.length / (1024 * 1024)).toFixed(2);
 
-    if (sizeInBytes <= DIRECT_ATTACH_LIMIT) {
-      const filename = `${reportLabel}_Report_Build_${buildNumber}.html`;
-      console.log(`📎 [MAILER] Attaching direct HTML report: ${filename} (${sizeInMB} MB)`);
-      return {
-        attachment: {
-          filename: filename,
-          path: reportPath,
-          contentType: "text/html",
-        },
-        statusText: `📎 Attached (${filename}, ${sizeInMB} MB)`,
-        tempFilePath: null,
-      };
-    } else if (sizeInBytes <= COMPRESS_ATTACH_LIMIT) {
-      const filename = `${reportLabel}_Report_Build_${buildNumber}.html.gz`;
-      const tempGzPath = path.join(path.dirname(reportPath), filename);
-      const fileBuffer = fs.readFileSync(reportPath);
-      const compressedBuffer = zlib.gzipSync(fileBuffer);
-      fs.writeFileSync(tempGzPath, compressedBuffer);
-      const compSizeMB = (compressedBuffer.length / (1024 * 1024)).toFixed(2);
+    if (zipBuffer.length <= MAX_ZIP_ATTACH_LIMIT) {
+      const zipFileName = `${reportLabel}_Report_Build_${buildNumber}.zip`;
+      const tempZipPath = path.join(path.dirname(reportPath), zipFileName);
+      fs.writeFileSync(tempZipPath, zipBuffer);
 
       console.log(
-        `🗜️ [MAILER] Report (${sizeInMB} MB) compressed to ${filename} (${compSizeMB} MB)`
+        `📦 [MAILER] Packaged report (${rawSizeInMB} MB) into ZIP: ${zipFileName} (${zipSizeInMB} MB)`
       );
       return {
         attachment: {
-          filename: filename,
-          path: tempGzPath,
-          contentType: "application/gzip",
+          filename: zipFileName,
+          path: tempZipPath,
+          contentType: "application/zip",
         },
-        statusText: `🗜️ Attached Compressed (${filename}, ${compSizeMB} MB)`,
-        tempFilePath: tempGzPath,
+        statusText: `📎 Attached (${zipFileName}, ${zipSizeInMB} MB)`,
+        tempFilePath: tempZipPath,
       };
     } else {
       console.warn(
-        `⚠️ [MAILER] Report (${sizeInMB} MB) exceeds maximum email attachment limit (18 MB).`
+        `⚠️ [MAILER] Report ZIP (${zipSizeInMB} MB) exceeds maximum email attachment limit (18 MB).`
       );
       return {
         attachment: null,
-        statusText: `⚠️ Omitted (${sizeInMB} MB > 18 MB email limit — download via CI Artifacts)`,
+        statusText: `⚠️ Omitted (${zipSizeInMB} MB > 18 MB email limit — download via CI Artifacts)`,
         tempFilePath: null,
       };
     }
   } catch (err) {
-    console.error("Error preparing attachment for " + reportPath + ":", err.message);
+    console.error("Error preparing ZIP attachment for " + reportPath + ":", err.message);
     return {
       attachment: null,
       statusText: "Error preparing attachment",
@@ -173,12 +239,6 @@ async function main() {
         envData[argv.appType].environments[argv.testEnv]
           ? envData[argv.appType].environments[argv.testEnv].url
           : "";
-      baseurl =
-        envData[argv.appType] &&
-        envData[argv.appType].environments &&
-        envData[argv.appType].environments[argv.testEnv]
-          ? envData[argv.appType].environments[argv.testEnv].reportDirRepo
-          : "";
 
       logData = updateLogDataObj(funcReportDir);
 
@@ -202,21 +262,9 @@ async function main() {
           ? legacyReportFile
           : "";
 
-        const funcHtmlUrl = baseurl
-          ? baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            reportFolderName +
-            (fs.existsSync(mochaReportFile) ? "/mochawesome/report.html" : "/index.html")
-          : "";
-
-        console.log("🔗 [MAILER] HTML Report URL:", funcHtmlUrl || "N/A");
         if (ltShareUrl) console.log("🔗 [MAILER] LambdaTest Shareable URL:", ltShareUrl);
 
-        // Prepare Attachment (Option D)
+        // Prepare ZIP Attachment (Safe against Antivirus/Chrome Safe Browsing)
         const funcAttachInfo = prepareReportAttachment(
           funcHtmlPath,
           "Functional",
@@ -230,7 +278,6 @@ async function main() {
         }
 
         const funcLinks = {
-          htmlReportUrl: funcHtmlUrl,
           ltShareUrl: ltShareUrl,
           attachmentStatus: funcAttachInfo.statusText,
         };
@@ -245,16 +292,6 @@ async function main() {
       // 2. Visual Report (if present)
       if (fs.existsSync(visReportDir)) {
         const visHtmlPath = path.join(visReportDir, "index.html");
-        const visHtmlUrl = baseurl
-          ? baseurl +
-            "/" +
-            argv.appType +
-            "/" +
-            argv.testEnv +
-            "/" +
-            reportFolderName +
-            "/visual/index.html"
-          : "";
 
         const visAttachInfo = prepareReportAttachment(
           visHtmlPath,
@@ -269,7 +306,6 @@ async function main() {
         }
 
         const visLinks = {
-          htmlReportUrl: visHtmlUrl,
           ltShareUrl: ltShareUrl,
           attachmentStatus: visAttachInfo.statusText,
         };
@@ -343,7 +379,7 @@ async function main() {
       " | Error in sending Mail";
     await sendMail(errorMailingList, mailSubject, mailOutput, "text", []);
   } finally {
-    // Cleanup temporary compressed files
+    // Cleanup temporary zip files
     if (tempFilesToClean.length > 0) {
       tempFilesToClean.forEach((f) => {
         try {
@@ -406,7 +442,6 @@ async function createMail(logData, linksObj, mailTitle) {
       browserHeight;
   }
 
-  const htmlUrl = linksObj && linksObj.htmlReportUrl ? linksObj.htmlReportUrl : "";
   const ltUrl = linksObj && linksObj.ltShareUrl ? linksObj.ltShareUrl : "";
   const attachStatus = linksObj && linksObj.attachmentStatus ? linksObj.attachmentStatus : "";
 
@@ -415,7 +450,7 @@ async function createMail(logData, linksObj, mailTitle) {
     null == tc_failed ||
     !envDetail ||
     !appUrl ||
-    /*reportStatus != 200 ||*/ tc_total == 0
+    tc_total == 0
   ) {
     console.log(mailTitle);
     console.log(
@@ -428,7 +463,6 @@ async function createMail(logData, linksObj, mailTitle) {
     console.log("appUrl = " + appUrl);
     console.log("appVersion = " + appVersion);
     console.log("envDetail = " + envDetail);
-    console.log("detailedReport url = " + (htmlUrl || ltUrl || "N/A"));
     console.log("testExecFile = " + testExecFile);
     output =
       "<p><strong>" +
@@ -459,8 +493,6 @@ async function createMail(logData, linksObj, mailTitle) {
       appUrl +
       "</p><p>Environment = " +
       envDetail +
-      "</p><p>detailedReport = " +
-      (htmlUrl || ltUrl || "N/A") +
       (ltUrl ? "</p><p>lambdaTestReport = " + ltUrl : "") +
       '</p>';
     jobDetails =
@@ -506,15 +538,6 @@ async function createMail(logData, linksObj, mailTitle) {
       "</span></a></td></tr><tr><td><strong>Application Version&nbsp;</strong></td><td>" +
       appVersion +
       "</td></tr>";
-
-    if (htmlUrl) {
-      tableRows +=
-        '<tr><td><strong>Detailed HTML Report</strong></td><td style="white-space: nowrap;"><a href=' +
-        htmlUrl +
-        "><span>" +
-        htmlUrl +
-        "</span></a></td></tr>";
-    }
 
     if (ltUrl) {
       tableRows +=
@@ -638,7 +661,6 @@ function updateLogDataObj(dir) {
         .split("\n")
         .filter((line) => line !== "");
 
-      //console.log(functionalLogFiles)
       Array.from(new Set(functionalLogFiles))
         .filter((line) => line !== "")
         .forEach((file) => {
