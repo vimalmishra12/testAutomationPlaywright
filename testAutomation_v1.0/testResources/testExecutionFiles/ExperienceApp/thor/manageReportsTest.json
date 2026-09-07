@@ -66,13 +66,13 @@
     "BeforeEach": [],
     "Test": [
       {
-        "id": "TST_MRPT_TC_1",
+        "id": "TST_MRAC_TC_1",
         "description": "Click Manage Reports from Actions dropdown",
         "testFile": "./test/ExperienceApp/manageReports.test.js",
         "testData": []
       },
       {
-        "id": "TST_MRPT_TC_2",
+        "id": "TST_MRAC_TC_2",
         "description": "Verify Download button has correct button role for accessibility",
         "testFile": "./test/ExperienceApp/manageReports.test.js",
         "testData": []

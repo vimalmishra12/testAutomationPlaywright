@@ -4189,18 +4189,18 @@
       ]
     },
     {
-      "modulename": "Manage Reports Accessibility",
-      "moduleId": "",
+      "modulename": "Manage Reports Accessibility (teacher class page - NOT the Admin Reports tab)",
+      "moduleId": "MRAC",
       "testFile": "./test/ExperienceApp/manageReports.test.js",
       "testcase": [
         {
-          "id": "TST_MRPT_TC_1",
+          "id": "TST_MRAC_TC_1",
           "description": "Click Manage Reports from Actions dropdown",
           "tags": "P1",
           "visualTest": false
         },
         {
-          "id": "TST_MRPT_TC_2",
+          "id": "TST_MRAC_TC_2",
           "description": "Verify Download button has correct button role for accessibility",
           "tags": "P1",
           "visualTest": false
