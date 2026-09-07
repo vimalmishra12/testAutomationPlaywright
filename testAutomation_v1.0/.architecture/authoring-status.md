@@ -585,3 +585,101 @@ link carries a Classes-tab qid, `aClass-99`, so the selector uses `staff h2 smal
 - **Two open questions from the design handoff are still unanswered** and neither blocked this
   batch: whether a different/larger school is coming for the Staff tab, and whether an admin
   revoking their own rights is by design.
+
+## adminStaffProfile (ExperienceApp, thor)
+Admin App **staff profile**, module **STFP** → `pages/ExperienceApp/staffProfile.page.js`.
+Manual source: `test/Manual/C1App/AdminApp-Staff/` (57 TCs across STFL/STFP/STFB).
+Scope of this entry: the **read-only STFP block** — 9 of the 19 live STFP cases.
+
+**Scope arithmetic, so the gaps are not mistaken for oversights.** STFP holds 19 live cases
+(`TC_1..TC_20`, `TC_5` retired). Five are marked `[EXTRA — Phase 1 exclusion]` in the
+register (`TC_3, 4, 6, 8, 14`), leaving 14. Of those 14, four **mutate real data** and are
+deferred to a data-owning suite (`TC_10` grant, `TC_13` revoke-confirmed, `TC_18`
+removal-confirmed, `TC_19` which depends on `TC_10`), and `TC_20` is **Blocked** (it needs a
+school with exactly one administrator; `FCN-CHZ-PDA` cannot be reduced to one without
+breaking every other admin suite mid-run). That leaves the **9** automated here:
+`TC_1, 2, 7, 9, 11, 12, 15, 16, 17`.
+
+- Phase 1 (build):   ✅ 2026-09-07 — 9 STFP cases registered plus `TC_RESET` housekeeping
+  (10 entries in `C1TCRepository.json`, all `visualTest: false`).
+  **Executed: 9 passing / 0 failing**, green on the FIRST run and again on two further
+  consecutive runs of `npm run adminStaffProfileTest_thor` (2m, 3m, 2m; headed Chrome,
+  Thor / `FCN-CHZ-PDA`). No fix cycle was needed — the live selector capture is why, for
+  the second batch running.
+  Selectors were captured **LIVE** via the Chrome MCP (the user signed in; Claude cannot
+  type passwords), not inferred from documentation. Full capture, the corrections to §2/§4
+  and the measured transitions are written up in
+  `product-knowledge/ExperienceApp/admin-staff-tab.md` §8.
+  Visual candidates: **none identified** — every case frames the shared school's data
+  (class lists, counts, last-login dates, row content) and `FCN-CHZ-PDA` is actively
+  mutated by other teams. Phase 3 must still confirm this rather than inherit it.
+- Phase 2 (run/fix): ⬜ pending
+- Phase 3 (visual):  ⬜ pending
+
+**⚠️ SAFETY — the defining constraint of this suite.** Six of the nine cases OPEN a mutating
+dialog and then leave it (`TC_9`, `TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_17`). They are
+side-effect free **only** because they never confirm. "Never click the confirm button" is a
+hard rule here, not a preference. Nothing in the suite creates, changes or removes anything,
+and the fixtures are shared accounts this suite did not create.
+
+**Traps handled (Step 0b), for Phase 2 to re-check:** pre-rendered dialogs checked with
+`isDisplayed`, never a count; `Yes, remove` asserted on its **CSS class**, with the native
+`disabled` pinned as unchanged so the trap itself is documented; positional row ids resolved
+by content via `schoolStaff.findRowIndexByText`; the whole row treated as the menu toggle;
+the profile reached only through the list because its URL is not deep-linkable; the
+`admin` → `class` crossing waited on with `waitForUrl` + `waitForDocumentLoad`; the
+checkbox clicked via its `<label>`; no absolute school-wide count asserted; reset in
+`BeforeEach` + suite-level `After`, never `AfterEach` (ADR-019).
+
+**Five findings new to this sweep, now in product knowledge §8:** the class NAME anchor has
+no qid (`user-profile-6-<n>` is the chevron); `a.class-details` matches ~2 elements per row
+(129 for 43 classes); class rows reuse the Staff tab's `.list-items` class; `h6.class-count`
+is absent entirely when a staff member has no classes; and the Manage account items are
+**absent from the DOM**, not hidden, when they do not apply — which is what makes the
+"not offered" assertions falsifiable.
+
+**Fixture correction:** `admin-staff-tab.md` §6's claim that the login account is the only
+staff member with classes is out of date — `teacher17aug2026@mailsac.com` held `Classes (43)`
+on 2026-09-07, so `TC_7` runs against a real teacher. Only `testClass1 17aug` is uniquely
+named among those 43, so the case **asserts uniqueness** before launching it.
+
+**⚠️ Open item for Phase 2 — a same-term search can burn the full 20 s poll.**
+`search_staff` waits for the row fingerprint to CHANGE. When a case searches a term the list
+is already filtered to, the fingerprint cannot change and the wait runs its full 20 s budget
+before continuing anyway. Nothing fails; it is a pure time cost.
+
+- **Fixed in `TST_STFP_TC_17`** `[2026-09-07, user-approved]` — its second search (after
+  `click_back`, for the same term) now passes `{ expectListChange: false }`, which waits on
+  the search **banner** instead. Measured effect: **39.3 s → 6.7 s**.
+- ⚠️ **But the slowness MOVED, not vanished** — in the same run `TST_STFP_TC_16` went
+  5.2 s → 37.1 s. So the root cause is **not** `click_back`: it is that
+  `TST_STFP_TC_RESET` returns to the tab and clears the search without waiting for the
+  UNFILTERED list to finish rendering, so the next case's first search can fingerprint the
+  stale filtered list. `TC_15`, `TC_16` and `TC_17` all search the same teacher, so
+  whichever case follows another same-term case pays the 20 s.
+- **The durable fix is in the reset, not in the cases**: have `TST_STFP_TC_RESET` wait until
+  the list is genuinely unfiltered (row count back to the page size / the Clear link gone)
+  before returning. That removes the race for every case instead of patching them one at a
+  time. **Not applied — proposed, awaiting confirmation** (Golden Rule 6).
+
+**⚠️ Pre-existing, unrelated: the `MRAC` suite is failing 0/2.** `npm run manageReportsTest_thor`
+(teacher class page → Manage Reports → Download button accessibility) fails both cases with
+`locator.waitFor: Timeout 30000ms exceeded` waiting for `button[qid^="aReport-2-"]`.
+**Confirmed failing BEFORE this session's rename** — a baseline run was taken first precisely
+so the rename could not be blamed, and the failures are identical after it. Not investigated
+by user decision `[2026-09-07]`; recorded here so it is not lost. Likely a moved or renamed
+qid on the teacher class page, but that is a hypothesis, not a finding.
+
+**NOT in this entry — still outstanding for the Staff tab:**
+- **STFP mutating** (`TC_10`, `TC_13`, `TC_18`, `TC_19`) — needs a data-owning suite that
+  creates its own staff member under the `AutoStaff_` prefix. Never run against shared
+  accounts, and never confirm either action against `testt1@mailsac.com`.
+- **`TST_STFP_TC_20` remains Blocked** — needs a school with exactly one administrator.
+- **STFB (invitation form, 12 cases)** — leave until last: 6 are Phase-1-excluded, `TC_3`
+  downloads a file, `TC_9` uploads one, `TC_10` sends real email, and the form auto-restores
+  a shared draft so it is never empty on load.
+- **`TST_STFB_TC_11` remains Blocked** — the upload-error condition is still not reproduced;
+  root cause (three missing `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_*` keys) is known.
+- **`TST_STFL_TC_26`** (heading count vs rendered rows) is still a live, unexplained product
+  defect — `Staff (22)` over 21 rows on 2026-09-07, unchanged from 2026-09-02. Phase-1-
+  excluded, so no automated case asserts the two match.

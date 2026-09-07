@@ -1,0 +1,50 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Staff profile — STFP Phase 1 read-only (view profile, class launch, admin rights, removal dialogs) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA (never by name — two schools share it)", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFL_TC_NAV", "description": "Navigate from the Classes tab to the Staff tab", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_STFP_TC_RESET", "description": "Return to the Staff tab and clear any search so this TC starts from the full list", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ],
+    "Test": [
+      { "id": "TST_STFP_TC_1", "description": "Verify the staff profile opens with all expected details when View profile is used on a teacher", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_2", "description": "Verify the role is shown as Administrator/Teacher when the profile of an administrator is opened", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_7", "description": "Verify the class page opens when a class is clicked on a staff profile", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_9", "description": "Verify Grant admin rights is offered when Manage account is opened on a teacher", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_11", "description": "Verify Remove admin rights is offered when Manage account is opened on an administrator", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_12", "description": "Verify admin rights are retained when the Remove admin rights confirmation is cancelled", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_15", "description": "Verify the removal confirmation explains the consequence when Remove from school account is opened", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_16", "description": "Verify the Yes, remove button is unavailable until the confirmation checkbox is ticked", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFP_TC_17", "description": "Verify the staff member is retained when the removal confirmation is cancelled", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_STFP_TC_RESET", "description": "Return to the Staff tab once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so navigating back there would replace every profile case's evidence with a picture of the staff list)", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ]
+  }
+}
