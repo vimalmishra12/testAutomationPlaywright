@@ -4189,18 +4189,18 @@
       ]
     },
     {
-      "modulename": "Manage Reports Accessibility",
-      "moduleId": "",
+      "modulename": "Manage Reports Accessibility (teacher class page - NOT the Admin Reports tab)",
+      "moduleId": "MRAC",
       "testFile": "./test/ExperienceApp/manageReports.test.js",
       "testcase": [
         {
-          "id": "TST_MRPT_TC_1",
+          "id": "TST_MRAC_TC_1",
           "description": "Click Manage Reports from Actions dropdown",
           "tags": "P1",
           "visualTest": false
         },
         {
-          "id": "TST_MRPT_TC_2",
+          "id": "TST_MRAC_TC_2",
           "description": "Verify Download button has correct button role for accessibility",
           "tags": "P1",
           "visualTest": false
@@ -4670,6 +4670,23 @@
         { "id": "TST_STFL_TC_23", "description": "Verify the next page of staff is appended when Load more is clicked", "tags": "P1", "visualTest": false },
         { "id": "TST_STFL_TC_24", "description": "Verify the Load more control is removed when the whole staff list has been loaded", "tags": "P2", "visualTest": false },
         { "id": "TST_STFL_TC_25", "description": "Verify the Load more control is absent when a search returns fewer results than one page", "tags": "P2", "visualTest": false }
+      ]
+    },
+    {
+      "modulename": "Admin App | Staff profile - view profile, admin rights & removal, read-only half (STFP Phase 1)",
+      "moduleId": "STFP",
+      "testFile": "./test/ExperienceApp/staffProfile.test.js",
+      "testcase": [
+        { "id": "TST_STFP_TC_RESET", "description": "BeforeEach + suite-After housekeeping - return to the Staff tab and clear any search (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_1", "description": "Verify the staff profile opens with all expected details when View profile is used on a teacher", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_2", "description": "Verify the role is shown as Administrator/Teacher when the profile of an administrator is opened", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_7", "description": "Verify the class page opens when a class is clicked on a staff profile", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_9", "description": "Verify Grant admin rights is offered when Manage account is opened on a teacher", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_11", "description": "Verify Remove admin rights is offered when Manage account is opened on an administrator", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_12", "description": "Verify admin rights are retained when the Remove admin rights confirmation is cancelled", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_15", "description": "Verify the removal confirmation explains the consequence when Remove from school account is opened", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_16", "description": "Verify the Yes, remove button is unavailable until the confirmation checkbox is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_17", "description": "Verify the staff member is retained when the removal confirmation is cancelled", "tags": "P1", "visualTest": false }
       ]
     }
   ]

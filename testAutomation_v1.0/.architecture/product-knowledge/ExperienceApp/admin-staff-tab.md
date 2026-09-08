@@ -372,3 +372,152 @@ Phase 1 scope.
 25` — the side-effect-free block minus the six marked `[EXTRA — Phase 1 exclusion]`
 (`TC_1, 5, 7, 10, 21, 26`) and minus `TC_27`, which needs an invited teacher to accept.
 Nothing in the suite creates, edits or removes anything.
+
+---
+
+## 8. Staff profile — selector capture and Phase 1 traps (STFP) `[2026-09-07]`
+
+Captured live on Thor / `FCN-CHZ-PDA` during the STFP Phase 1 build (module `STFP` →
+`pages/ExperienceApp/staffProfile.page.js`, selectors under `css.ComproC1.staffProfile`).
+Everything below was read from the running page, not inferred.
+
+### 8.1 The page-scoping anchor
+
+The profile renders inside **`div.view-profile`** — and there is **no `<staff>` component tag
+on this view**; that tag scopes the Staff *list* only. `div.view-profile` is also the
+**student** profile's wrapper, so the wrapper alone does not tell the two screens apart.
+They differ below it.
+
+Header selectors, all inside `div.view-profile`:
+`h1.user-name` (heading, `Last, First`) · `div.profile-item` (avatar initials) ·
+`div.user-info div.role` · `div.user-info div.email` · `div.user-info div.last-login`.
+
+### 8.2 Corrections to §2 and §4
+
+1. ⚠️ **§2 is imprecise about the class link.** It says the class name is a link with
+   `qid="user-profile-6-<index>"`. In fact each class row carries **two** anchors:
+   **`a.class-details > span.class-name`** holds the name and has **no qid**, while
+   `a[qid='user-profile-6-<n>']` is the **chevron icon** with empty text. A selector bound
+   to the qid clicks the arrow, not the name.
+2. ⚠️ **`a.class-details` matches roughly TWO elements per row** — the name anchor and the
+   course-material anchor beneath it. The fixture teacher's 43 classes produced **129**
+   matches and the target class sat at index **84**. An index over that collection is
+   meaningless; resolve by `span.class-name` text.
+3. ⚠️ **Class rows use the class `.list-items` — the SAME class as Staff-tab rows.** Any
+   unscoped `.list-items` selector matches both. Scope every class selector with
+   `div.class-section`.
+4. **`h6.class-count` ("Classes (N)") is ABSENT ENTIRELY when the staff member has no
+   classes** — it does not render `Classes (0)`. Verified on an administrator with none.
+   The empty state reads `No class` / `Your classes will appear here` / `Add classes`.
+5. **The modal element IDs are not the qid family.** §4 lists the roots as
+   `removeAdminModal-*` / `removeTeacherFromSchoolModal-*` — those are the **qid** families.
+   The element ids are **`#removeAdminRightModal`** (note `Right`) and
+   `#removeTeacherFromSchoolModal`. Stable classes also exist:
+   `.admin-right-confirmation-modal` and `.remove-teacher-confirmation-modal`.
+
+### 8.3 The Manage account menu is role-conditional by ABSENCE
+
+`a[qid='user-profile-2']`, id **`#mangeUser`** (the product's own typo — not `manageUser`).
+
+| Role | Items present in the DOM |
+|---|---|
+| `Teacher` | `user-profile-4` Grant admin rights · `user-profile-5` Remove from school account |
+| `Administrator/Teacher` | `user-profile-3` Remove admin rights · `user-profile-5` Remove from school account |
+
+⚠️ **The item that does not apply is ABSENT FROM THE DOM, not merely hidden.** This is a
+welcome exception to §B2's pre-rendered norm: it makes "the other item is NOT offered" an
+assertion that can genuinely fail (`TST_STFP_TC_9`, `TST_STFP_TC_11`). The menu itself
+toggles in **~1 ms** — it is a class toggle on pre-rendered markup.
+
+The items carry **`data-toggle="modal"` with NO `data-target`**, so the dialog is opened by
+the app's own handler, not by Bootstrap's data API.
+
+### 8.4 The CSS-only-disabled trap, re-verified across all three states
+
+`Yes, remove` (`removeTeacherFromSchoolModal-5`):
+
+| State | `class` | native `disabled` |
+|---|---|---|
+| unticked | `btn btn-lg btn-main-1 btn-block `**`disabled`** | `false` |
+| ticked | `btn btn-lg btn-main-1 btn-block` | `false` |
+| unticked again | `btn ... `**`disabled`** | `false` |
+
+**The native property never changes**, so `toBeDisabled()` / `isEnabled()` is a false green —
+it would report `TST_STFP_TC_16` as passing while proving nothing. Assert the class.
+The checkbox is `#removeTeacher-checkbox`; click it via
+`label[for='removeTeacher-checkbox']` (`label.custom-control-label` overlays the input and
+intercepts pointer events — §B5).
+
+⚠️ **The revoke dialog has NO such gate** — `Yes, remove admin rights`
+(`removeAdminModal-4`) carries no `disabled` class and is live the moment the dialog opens.
+Do not assume the two destructive dialogs behave alike.
+
+### 8.5 Dialog copy, and the name-order inversion
+
+Both dialogs are **pre-rendered** and were captured free (§A6), then confirmed by opening
+them. Copy matches §3 verbatim. One detail worth pinning:
+
+⚠️ **The revoke dialog personalises in `<First> <Last>` order** — "teacher17aug2026 ln",
+"testteacher18 gg" — which is the **opposite** of the profile heading's `Last, First`. Both
+orders are asserted in the suite so a swap would be caught.
+
+### 8.6 Measured transitions `[2026-09-07]`
+
+Never inherit these — they are measurements, not guesses (Invariant 1).
+
+| Transition | Measured |
+|---|---|
+| Row menu → View profile → profile rendered | 5.0 – 5.5 s |
+| `Back` → Staff tab | ~2.4 s |
+| Manage account menu open | ~1 ms |
+| Class launch (`admin` → `class`, full page load) | 3.44 s document (domContentLoaded 1.60 s) |
+| Search settle (1-row result) | ~0.5 s |
+
+⚠️ **`Back` also CLEARS an active search** — the list returns to `Staff (N)` with the full
+first page. But `click_back` resolves as soon as the heading renders, **before the list has
+repopulated**, so a search issued immediately afterwards can fingerprint the stale filtered
+list. See §8.8.
+
+### 8.7 Fixture correction — the TC_7 gap has closed
+
+⚠️ **§6's claim that "the only staff member on this school with classes is the login
+account" is OUT OF DATE.** On 2026-09-07 `teacher17aug2026@mailsac.com` held **`Classes
+(43)`**, so `TST_STFP_TC_7` no longer needs the admin's own profile.
+
+But only **one** of those 43 names is unique — **`testClass1 17aug`**. The rest are
+accumulation from the class-creating suites (§A7): `BulkCSV_Class2` ×17, `BulkCSV_Class1`
+×17, `AutoClass_CreateOnly` ×8. The automated case therefore **asserts the name is unique**
+before launching it, so a further data shift fails loudly rather than opening an arbitrary
+class.
+
+Administrator fixture used by the suite: **`cqa_teacher17oct3@mailsac.com`** (`Ln,
+cqa_teacher17oct3`). Never `testt1@mailsac.com`.
+
+### 8.8 Two capture-technique notes (not product behaviour)
+
+1. **`offsetParent` is null for Bootstrap's `position:fixed` modals**, so it reports a
+   plainly visible dialog as hidden. Probe with `getBoundingClientRect` + computed
+   `display` instead. Playwright's own visibility check handles this correctly.
+2. ⚠️ **A degraded browser session can look exactly like a product defect.** During capture,
+   clicking `Remove admin rights` twice produced a `.modal-backdrop fade show` and
+   `body.modal-open` while the dialog stayed `display:none` / `aria-hidden="true"` — a
+   full-screen click-blocking overlay with no dialog. It was written up as a candidate
+   defect and then **disproved**: on a fresh browser tab the same dialog opened correctly
+   every time. The tell was that it arrived together with 45 s CDP timeouts, failed
+   screenshot injection, and Angular handlers silently not firing. **Remedy: close the tab
+   and open a new one** — a full Claude Code restart was not needed. This is the §B11
+   "MCP input goes dead" family; add "a modal that half-opens" to its symptom list.
+
+### 8.9 What is automated
+
+`test/ExperienceApp/staffProfile.test.js`, run by `npm run adminStaffProfileTest_thor`
+(exec `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffProfile.json`,
+data `adminStaffProfileData.json`).
+
+**9 STFP cases** — `TC_1, 2, 7, 9, 11, 12, 15, 16, 17` — the read-only block. Five STFP
+cases are `[EXTRA — Phase 1 exclusion]` (`TC_3, 4, 6, 8, 14`); four mutate real data and are
+deferred to a data-owning suite (`TC_10, 13, 18, 19`); `TC_20` is Blocked.
+
+⚠️ Six of the nine **open a mutating dialog and then leave it**. They are safe **only**
+because they never confirm. Treat "never click the confirm button" as a hard rule of this
+suite, not a preference.

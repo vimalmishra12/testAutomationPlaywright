@@ -362,6 +362,64 @@ module.exports = {
     return await findRowIndexByText(needle);
   },
 
+  /**
+   * Opens a staff row's action menu, resolving the row BY CONTENT.
+   *
+   * ⚠️ THE WHOLE ROW IS THE TOGGLE — `button[qid='aAdmin-16-<n>']` (`#adminActionsLink-<n>`),
+   * carrying `data-toggle="dropdown"`. The single menu item, `View profile`
+   * (`aAdmin-17-<n>`), is PRE-RENDERED HIDDEN once per row, so its presence never proves
+   * the menu is open and clicking it before opening the toggle fails with
+   * "element is not visible" (admin-staff-tab.md §4).
+   *
+   * Unlike the Students tab — where 26 rows shared ONE qid — the identifiers here are
+   * unique per row, so the item can be addressed directly once the row index is known.
+   *
+   * [2026-09-07] Added for the STFP batch. It lives HERE, not in staffProfile.page.js,
+   * because the Staff tab owns the row menu — the precedent `schoolStudents.page.js` set
+   * with `click_viewStudentProfile`.
+   */
+  click_rowActionMenu: async function (staffIdentifier) {
+    await logger.logInto(await stackTrace.get(), "staff:" + staffIdentifier);
+    var idx = await findRowIndexByText(staffIdentifier);
+    if (idx < 0) return { clickStatus: "STAFF_NOT_FOUND:" + staffIdentifier, rowIndex: -1 };
+    var clickStatus = await action.click(this.rowActionMenuByIndex.replace("{{n}}", String(idx)));
+    if (true !== clickStatus) return { clickStatus: clickStatus, rowIndex: idx };
+    var item = this.rowMenuViewProfileByIndex.replace("{{n}}", String(idx));
+    return {
+      clickStatus: clickStatus,
+      rowIndex: idx,
+      // isDisplayed, never a count — the item exists for every row whether open or not.
+      menuDisplayed: await action.waitForDisplayed(item, 10000),
+      viewProfileDisplayed: await action.isDisplayed(item)
+    };
+  },
+
+  /**
+   * Row action menu → "View profile", resolving the row BY CONTENT.
+   *
+   * ⚠️ This is the ONLY supported way to reach a staff profile. The profile URL is NOT
+   * deep-linkable: opened cold it collapses to `/admin/` and renders a blank page with no
+   * error. That is accepted behaviour, not a defect (admin-staff-tab.md §1) — and note the
+   * STUDENT profile URL *is* deep-linkable, so a suite ported from `studentProfile` will
+   * break here.
+   *
+   * Crossing into the profile is a full page load; the destination's own initializer is
+   * what confirms arrival. Measured 2026-09-07: 5.0-5.5s.
+   */
+  click_viewProfile: async function (staffIdentifier) {
+    await logger.logInto(await stackTrace.get(), "staff:" + staffIdentifier);
+    var menu = await this.click_rowActionMenu(staffIdentifier);
+    if (true !== menu.clickStatus) return menu;
+    var clickStatus = await action.click(this.rowMenuViewProfileByIndex.replace("{{n}}", String(menu.rowIndex)));
+    if (true !== clickStatus) return { clickStatus: clickStatus, rowIndex: menu.rowIndex };
+    var staffProfile = require("./staffProfile.page.js"); // lazy — avoids a require cycle
+    return {
+      clickStatus: clickStatus,
+      rowIndex: menu.rowIndex,
+      pageStatus: (await staffProfile.isInitialized()).pageStatus
+    };
+  },
+
   // ── User guide ───────────────────────────────────────────────────────────────────
 
   /**
