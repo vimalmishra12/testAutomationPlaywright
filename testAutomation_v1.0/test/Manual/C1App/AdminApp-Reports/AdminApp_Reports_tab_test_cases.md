@@ -4,14 +4,34 @@
 **Module:** MRPT (Manage Reports) — *maps to the future `manageReports.page.js` page object when automated*
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
-**Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative)
-> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
+**Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
+**Execution status (2026-08-26):** **0 of 42 TCs automated.** 37 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
 
-> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **10** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_MRPT_TC_1`, `TST_MRPT_TC_3`, `TST_MRPT_TC_17`, `TST_MRPT_TC_29`, `TST_MRPT_TC_30`, `TST_MRPT_TC_32`, `TST_MRPT_TC_33`, `TST_MRPT_TC_36`, `TST_MRPT_TC_38`, `TST_MRPT_TC_39`.
- — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-09-01):** **0 of 42 TCs automated.** 37 are Not Run and **5 are Blocked** at design time (`TST_MRPT_TC_17`, `TC_38`, `TC_39`, plus `TC_41` and `TC_42`, which both wait on a seeded, frozen-activity fixture class).
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
 
-**Batches:** Batch 1 — Reports tab and Create report flow (`TST_MRPT_*`, module MRPT, 39 TCs).
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **10** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_MRPT_TC_1`, `TST_MRPT_TC_3`, `TST_MRPT_TC_17`, `TST_MRPT_TC_29`, `TST_MRPT_TC_30`, `TST_MRPT_TC_32`, `TST_MRPT_TC_33`, `TST_MRPT_TC_36`, `TST_MRPT_TC_38`, `TST_MRPT_TC_39`.
+
+> **[2026-09-08] Re-grounded on a different school, and six expected results corrected.**
+> The original grounding school — *Cqa Test Ashish School 1* (`VED-NEH-KVU`) via
+> `cqatestashish_admin@mailsac.com` — **has no credentials in the repo** and is invisible to the
+> suite's login account (`testt1@mailsac.com`). Every Precondition now names
+> **`3 July Test School 1` (`FCN-CHZ-PDA`, org `org_perf_testschool_1`)**, which is also the
+> better fixture: **110 classes across several statuses**, where VED-NEH-KVU held 6 all-Active
+> classes and so could not demonstrate filter exclusion at all.
+>
+> **Six expected results were WRONG and are corrected** — `TC_4` (the search is live, not
+> submit-driven), `TC_8` (all five status boxes start **ticked**, not unticked), `TC_9` (summary
+> label resolved to `1 class status`), `TC_10` (`Clear all` is a **reset**: it re-ticks all five,
+> applies immediately and closes the panel), `TC_14` (`Select all classes` selects every
+> **matching** class — 110 — not the 20 rendered), and `TC_18` (the class-step **Cancel clears the
+> selection and stays on the page**; `Go back` is the control that exits). `TC_19` is now verified
+> rather than `[ASSUMED]`, and `TC_40` is **rewritten** — its class-label premise was disproved
+> live, so it now pins the *absence* of a label filter.
+>
+> TC_18's change was reviewed and **confirmed as accepted product behaviour, not a defect**.
+> Full evidence in `product-knowledge/ExperienceApp/admin-reports-tab.md` §10.
+
+**Batches:** Batch 1 — Reports tab and Create report flow (`TST_MRPT_*`, module MRPT, 42 TCs).
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
 > TCs sit together; within each group they run **Positive → Edge → Negative**. (This intentionally
@@ -47,7 +67,7 @@ covered: one positive creation case plus both negative capability cases.
 14th — *"Verify Estimated CEFR level report from beginning"* — so the scenario register and this
 document agree.
 
-**Blocked cases (2026-08-26).** 3 cases are **Blocked on the day they were written**, not Not Run:
+**Blocked cases (2026-08-26).** 5 cases are **Blocked on the day they were written**, not Not Run:
 `TST_MRPT_TC_17` needs a school holding more than 1500 classes; `TST_MRPT_TC_38` and
 `TST_MRPT_TC_39` need report generation to fail, which cannot be forced on Thor. Their **expected
 results are nonetheless verified**, because the dialog copy was captured from the pre-rendered DOM
@@ -65,7 +85,7 @@ these are automated — they must not sit in a side-effect-free suite.
 |---|---|
 | #1 — Verify Create Report is launching | TC_1, TC_2, TC_3 (E) |
 | #2 — Verify search using class name or class key | TC_4, TC_5, TC_6 (E), TC_7 (N) |
-| #3 — Verify filter | TC_8, TC_9, TC_10 (E), TC_11 (E), TC_12 (N), TC_40 |
+| #3 — Verify filter | TC_8, TC_9, TC_40, TC_10 (E), TC_11 (E), TC_12 (N) |
 | #4 — Verify class selection checkbox | TC_13, TC_14, TC_15 (E), TC_16 (E), TC_17 (E) |
 | #5 — Verify Cancel button functionality | TC_18, TC_19, TC_20 (E) |
 | #6 — Verify Class summary report from beginning | TC_21, TC_41 |
@@ -75,7 +95,7 @@ these are automated — they must not sit in a side-effect-free suite.
 | #10 — Verify Assignments summary report from beginning | TC_25 |
 | #11 — Verify Assignments detailed data report from beginning | TC_26 |
 | #12 — Verify Custom date range reports | TC_27, TC_28, TC_29 (E), TC_30 (E), TC_31 (E), TC_32 (N), TC_33 (N) |
-| #13 — Verify reports with custom grade settings applied | TC_34, TC_35, TC_36 (N), TC_42 (E) |
+| #13 — Verify reports with custom grade settings applied | TC_34, TC_35, TC_42 (E), TC_36 (N) |
 | #14 — Verify Estimated CEFR level report from beginning | TC_37 |
 | #15 — Added coverage: report generation error paths | TC_38 (N), TC_39 (N) |
 
@@ -84,6 +104,13 @@ Every scenario in the source has at least one test case.
 ---
 
 ## Product reference (captured live 2026-08-26, Thor · Cqa Test Ashish School 1 / VED-NEH-KVU · cqatestashish_admin@mailsac.com)
+
+> ⚠️ **This section is the ORIGINAL 2026-08-26 capture and is kept as a historical record.** The
+> register was re-grounded on **`FCN-CHZ-PDA`** on 2026-09-08 (see the note at the top), and six
+> expected results below the fold were corrected. Where this section and a case's Expected Result
+> disagree, **the case wins** — and the current, verified reference for this screen is
+> `product-knowledge/ExperienceApp/admin-reports-tab.md` §10, not the block below. In particular
+> the org slug, the class names and keys, and the class counts here all belong to the old school.
 
 ### Entry path and URLs
 
@@ -222,7 +249,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #1 — Verify Create Report is launching |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened from "My school accounts"; Reports tab open. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened from "My school accounts"; Reports tab open. |
 | **Test Steps** | 1. Open the school from "My school accounts".<br>2. Click "REPORTS" in the school navigation.<br>3. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | URL is /admin/admin/org_<slug>/reports. The heading reads "Reports (0)". A "Create report" button is present. The informational line reads "Reports are available to download for up to 60 days". The empty state reads "No new reports available" above "Your reports will appear here after you create them", with a second "Create report" button. |
@@ -241,7 +268,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #1 — Verify Create Report is launching |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened from "My school accounts"; Reports tab open. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened from "My school accounts"; Reports tab open. |
 | **Test Steps** | 1. Click "Create report".<br>2. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | The app navigates to /admin/admin/org_<slug>/reports/create. The page shows a "Go back" link, the heading "Create report", the sub-heading "Choose classes you want to include in your report", a section heading "Select classes" with the note "You can include up to 1500 classes", a search box placeholdered "Search for class name or class key", a "Filter" control showing "All class statuses", a "Select all classes" checkbox, sortable column headers (Class name, Class key, Start date, End date, Students, Class status) and one selectable row per class. |
@@ -260,7 +287,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #1 — Verify Create Report is launching |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Click the "Go back" link at the top of the class-selection step.<br>2. Observe the page. |
 | **Test Data** | — |
 | **Expected Result** | The app returns to /admin/admin/org_<slug>/reports, the Reports tab renders, and no new report has been created (the heading count is unchanged). |
@@ -281,11 +308,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #2 — Verify search using class name or class key |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Type "Gated LP Class" into the "Search for class name or class key" box.<br>2. Click "Search".<br>3. Observe the class list. |
-| **Test Data** | Search term: Gated LP Class |
-| **Expected Result** | The list narrows to the class "Gated LP Class" with key 4mG6-9Jkf, and the row remains selectable. |
-| **Remarks** | The search control is a text box plus an explicit "Search" button (captured live 2026-08-26). [ASSUMED] that, as on the Classes tab, typing alone does not filter and the button click is required. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Type "Fixture_GradeSettings_DO_NOT_DELETE" into the "Search for class name or class key" box.<br>2. Do NOT click "Search".<br>3. Observe the class list. |
+| **Test Data** | Search term: Fixture_GradeSettings_DO_NOT_DELETE |
+| **Expected Result** | The list narrows to the single class "Fixture_GradeSettings_DO_NOT_DELETE" with key 62k3-AXm6, WITHOUT the "Search" button being clicked, and the row remains selectable. |
+| **Remarks** | CORRECTED 2026-09-08 — the previous expected result was [ASSUMED] and WRONG. The search is LIVE / debounced, not submit-driven: the list narrowed to one row before the "Search" button was clicked. The earlier assumption was inherited from the Classes tab, which IS submit-driven — exactly the trap admin-shared.md §A4 warns about. A "Search" control (a[qid="createReport-10"]) does exist but is not required to filter. Test data also changed: the original "Gated LP Class" (4mG6-9Jkf) lives on VED-NEH-KVU, which the suite account cannot see. Fixture_GradeSettings_DO_NOT_DELETE is documented never-delete in admin-shared.md §A7, so it is unique and stable on this shared school. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -300,11 +327,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #2 — Verify search using class name or class key |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Type "4mG6-9Jkf" into the search box.<br>2. Click "Search".<br>3. Observe the class list. |
-| **Test Data** | Search term: 4mG6-9Jkf |
-| **Expected Result** | The list narrows to the single class whose Class key column reads "4mG6-9Jkf" ("Gated LP Class"). |
-| **Remarks** | The placeholder offers both paths — "Search for class name or class key" — so the key path is covered separately from the name path. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Type "62k3-AXm6" into the search box.<br>2. Do NOT click "Search".<br>3. Observe the class list. |
+| **Test Data** | Search term: 62k3-AXm6 |
+| **Expected Result** | The list narrows to the single class whose Class key column reads "62k3-AXm6" ("Fixture_GradeSettings_DO_NOT_DELETE"). |
+| **Remarks** | Verified live 2026-09-08. The placeholder offers both paths — "Search for class name or class key" — so the key path is covered separately from the name path. Key changed from 4mG6-9Jkf (VED-NEH-KVU) to 62k3-AXm6 (FCN-CHZ-PDA) with the re-grounding. As with TC_4 the search is live — no "Search" click is required. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -319,7 +346,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #2 — Verify search using class name or class key |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Type "school license" into the search box.<br>2. Click "Search".<br>3. Observe the class list. |
 | **Test Data** | Search term: school license |
 | **Expected Result** | [ASSUMED] All four "School License Test Class 1–4" rows are returned, proving the search is partial-matching and case-insensitive. |
@@ -338,7 +365,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #2 — Verify search using class name or class key |
 | **Type** | Negative |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Type "zzzznotaclass" into the search box.<br>2. Click "Search".<br>3. Observe the class list area. |
 | **Test Data** | Search term: zzzznotaclass |
 | **Expected Result** | [ASSUMED] No class rows are rendered and a no-results message is shown that echoes the search term (the Classes tab renders "No classes that match your search <term>"). |
@@ -359,11 +386,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #3 — Verify filter |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Click the "Filter" control.<br>2. Observe the panel. |
 | **Test Data** | — |
-| **Expected Result** | A panel headed "Filter by" opens containing exactly five unticked checkboxes labelled "Not started", "Active", "Ended", "Expired" and "Deleted", plus a "Clear all" link, an "Apply" button and a "Close" control. |
-| **Remarks** | All strings captured verbatim live 2026-08-26. Note the status set includes "Not started", which the existing Classes-tab knowledge did not record (it listed Ended / Expired / Deleted). |
+| **Expected Result** | A panel headed "Filter by" opens containing exactly five checkboxes labelled "Not started", "Active", "Ended", "Expired" and "Deleted", ALL FIVE TICKED by default, plus a "Clear all" link, an "Apply" button and a "Close" control. The filter summary label reads "All class statuses". |
+| **Remarks** | CORRECTED 2026-09-08 — the previous expected result said the five checkboxes were UNTICKED. They are all TICKED by default, which is what makes the unfiltered summary read "All class statuses". Strings otherwise captured verbatim live 2026-08-26 and re-verified 2026-09-08. Note the status set includes "Not started", which the existing Classes-tab knowledge did not record (it listed Ended / Expired / Deleted). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -378,11 +405,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #3 — Verify filter |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Click "Filter".<br>2. Tick "Active".<br>3. Click "Apply".<br>4. Observe the class list and the filter summary label. |
-| **Test Data** | Filter: Active |
-| **Expected Result** | The panel closes and every rendered row shows "Active" in its Class status column. The summary label that read "All class statuses" now reflects the applied filter instead. |
-| **Remarks** | [ASSUMED] for the exact summary-label text after applying — only the unfiltered "All class statuses" value was captured live. All six classes on VED-NEH-KVU were Active on 2026-08-26, so this school cannot prove exclusion; use a status with both a matching and a non-matching set. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Click "Filter".<br>2. Untick "Not started", "Ended", "Expired" and "Deleted", leaving only "Active" ticked.<br>3. Click "Apply".<br>4. Observe the class list and the filter summary label. |
+| **Test Data** | Filter: Active only |
+| **Expected Result** | The panel closes and every rendered row shows "Active" in its Class status column. The summary label changes from "All class statuses" to "1 class status". |
+| **Remarks** | VERIFIED live 2026-09-08 on FCN-CHZ-PDA; the [ASSUMED] on the summary label is resolved. The label is "<N> class status(es)" where N is the number of TICKED statuses — so leaving one ticked reads "1 class status" (singular). Steps corrected: because all five start ticked (TC_8), a single-status filter is reached by UNTICKING the other four, not by ticking one. This school proves exclusion properly — 21 of its 110 classes are Active, and the pre-filter list contained Deleted rows. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -393,15 +420,15 @@ Because every class shares one status, this school **cannot** demonstrate filter
 |---|---|
 | **S.No.** | 10 |
 | **Test Case ID** | TST_MRPT_TC_10 |
-| **Title** | Verify all status selections are cleared when "Clear all" is used |
+| **Title** | Verify the unfiltered class list is restored when "Clear all" is used |
 | **Linked Requirement** | #3 — Verify filter |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Click "Filter".<br>2. Tick "Active" and "Ended".<br>3. Click "Clear all".<br>4. Observe the checkboxes and the class list. |
-| **Test Data** | Filter: Active + Ended, then Clear all |
-| **Expected Result** | All five status checkboxes return to unticked. [ASSUMED] the class list returns to the unfiltered set and the summary label returns to "All class statuses". |
-| **Remarks** | [ASSUMED] — whether "Clear all" applies immediately or still requires a subsequent "Apply" was NOT determined live. This is the most likely place in this group for a wrong expected result; resolve it first. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Apply a filter of a single status (see TST_MRPT_TC_9) so the summary reads "1 class status".<br>2. Click "Filter" to reopen the panel.<br>3. Click "Clear all".<br>4. Observe the checkboxes, the panel, the class list and the summary label. |
+| **Test Data** | A single applied status, then Clear all |
+| **Expected Result** | All five status checkboxes return to TICKED, the panel closes immediately WITHOUT "Apply" being clicked, the class list returns to the unfiltered set and the summary label returns to "All class statuses". |
+| **Remarks** | CORRECTED 2026-09-08 — both [ASSUMED]s resolved, and the previous expected result was WRONG. "Clear all" is a RESET TO UNFILTERED, not an "untick everything": it re-checks all five statuses, applies immediately with no "Apply" click, and closes the panel. This was flagged in the original Remarks as the most likely place for a wrong expected result, and it was. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -416,7 +443,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #3 — Verify filter |
 | **Type** | Edge |
 | **Priority** | Low |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Click "Filter".<br>2. Tick "Active" and "Not started".<br>3. Click "Apply".<br>4. Observe the class list. |
 | **Test Data** | Filter: Active + Not started |
 | **Expected Result** | The list contains classes of BOTH statuses (an OR combination), not their intersection. |
@@ -435,11 +462,30 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #3 — Verify filter |
 | **Type** | Negative |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Click "Filter".<br>2. Tick "Deleted" only.<br>3. Click "Apply".<br>4. Observe the class list area. |
 | **Test Data** | Filter: Deleted |
 | **Expected Result** | [ASSUMED] No class rows are rendered and a no-results message naming the applied status is shown (the Classes tab renders "No classes that are <status>, <label>"). |
 | **Remarks** | [ASSUMED] copy — not captured live. Depends on the school holding no soft-deleted class; on a school that does, pick a status that is genuinely absent. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Not Run |
+| **Comments / Defect ID** | *(blank in design)* |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 40 |
+| **Test Case ID** | TST_MRPT_TC_40 |
+| **Title** | Verify the class-selection filter offers class statuses only and no class-label filter |
+| **Linked Requirement** | #3 — Verify filter |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Click "Create report" to reach the class-selection step.<br>2. Open "Filter".<br>3. Record every filter group the panel offers.<br>4. Confirm no class-label group is present. |
+| **Test Data** | — |
+| **Expected Result** | The filter panel offers EXACTLY ONE group — the five class statuses ("Not started", "Active", "Ended", "Expired", "Deleted") — and no class-label filter of any kind. The panel contains exactly five checkboxes in total. |
+| **Remarks** | REWRITTEN 2026-09-08 by user decision. Originally added 2026-09-01 from the other team's TC_REP_003, which describes a "status/label filter", and the case asked whether the filter narrows the list by class LABEL. Its own Remarks flagged the premise as unconfirmed and said GROUND FIRST. Grounded live 2026-09-08: the premise is FALSE — the report-flow panel offers five status checkboxes and no other group, so the other team's sheet is wrong on this point. The case is therefore inverted into an expected-versus-actual assertion that PINS the absence of a label filter. A class-label filter does exist on the Classes tab (TST_CLST_TC_4); the report flow does not reuse that panel. Read-only. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -456,11 +502,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #4 — Verify class selection checkbox |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Tick the "Select class" checkbox on the "Gated LP Class" row.<br>2. Observe the section heading and the bottom of the page. |
-| **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf), 1 student |
-| **Expected Result** | The section heading becomes "Select classes(1)". A footer bar appears reading "You have selected 1 class with a total of 1 student" and carrying a "Cancel" link and a "Continue" button. |
-| **Remarks** | Captured live 2026-08-26. Both the "(1)" suffix and the whole footer bar are absent at zero selection — see TST_MRPT_TC_15. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Search for "Fixture_GradeSettings_DO_NOT_DELETE" so the list holds a single known row.<br>2. Tick that row's "Select class" checkbox.<br>3. Observe the section heading and the bottom of the page. |
+| **Test Data** | Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6), 0 students |
+| **Expected Result** | The section heading becomes "Select classes(1)". A footer bar appears reading "You have selected 1 class with a total of 0 students" and carrying a "Cancel" link and a "Continue" button. |
+| **Remarks** | Re-verified live 2026-09-08 on FCN-CHZ-PDA. Both the "(1)" suffix and the whole footer bar are absent at zero selection — see TST_MRPT_TC_15. NOTE the summary says "0 studentS" — plural with a zero count; the singular "1 student" form recorded on 2026-08-26 came from a different class. Do not assert a singular/plural rule. The footer appears on the SAME TICK as the click (measured 0 ms). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -471,15 +517,15 @@ Because every class shares one status, this school **cannot** demonstrate filter
 |---|---|
 | **S.No.** | 14 |
 | **Test Case ID** | TST_MRPT_TC_14 |
-| **Title** | Verify every listed class is selected when "Select all classes" is ticked |
+| **Title** | Verify every matching class is selected when "Select all classes" is ticked |
 | **Linked Requirement** | #4 — Verify class selection checkbox |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Tick the "Select all classes" checkbox.<br>2. Observe the row checkboxes, the section heading and the footer bar. |
-| **Test Data** | 6 classes on VED-NEH-KVU, 1 student each |
-| **Expected Result** | Every class row checkbox becomes ticked, the heading reads "Select classes(<N>)" where <N> is the number of listed classes, and the footer bar summarises the same totals (e.g. "You have selected 6 classes with a total of 6 students"). |
-| **Remarks** | [ASSUMED] plural wording ("classes" / "students") — only the singular "1 class" / "1 student" form was captured live. Also confirm whether "Select all" covers only the currently searched/filtered rows or every class on the school. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. With no search or filter applied, note how many class rows are rendered (the list lazy-loads 20 at a time and offers "Load more...").<br>2. Tick the "Select all classes" checkbox.<br>3. Observe the row checkboxes, the section heading and the footer bar. |
+| **Test Data** | FCN-CHZ-PDA: 110 classes in total, 20 rendered per page, 30 students across the school |
+| **Expected Result** | Every RENDERED row checkbox becomes ticked. The heading reads "Select classes(<TOTAL>)" where <TOTAL> is the number of classes MATCHING the current query — the full 110, not the 20 rendered — and the footer bar summarises the same totals ("You have selected 110 classes with a total of 30 students"). |
+| **Remarks** | RESOLVED live 2026-09-08 — the open question in the original Remarks is answered: "Select all" covers EVERY MATCHING class on the school, not just the loaded page. With 20 of 110 rows rendered the heading read "Select classes(110)". So an expected result of the form "<N> = the number of listed classes" is WRONG and would fail. Plural wording confirmed ("classes" / "students"). When automating, do not hardcode 110 — this school churns; assert the heading count against the createReport-11-N anchor count, which tracks the matching total. Also: clicking select-all while a PARTIAL selection exists clears it instead of completing it, so reaching "all selected" from one ticked row takes two clicks. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -494,7 +540,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #4 — Verify class selection checkbox |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Ensure no class checkbox is ticked.<br>2. Observe the section heading and the bottom of the page. |
 | **Test Data** | — |
 | **Expected Result** | The section heading reads "Select classes" with no "(N)" suffix, and no footer bar is present — there is no "Continue" control by which the report-configuration step could be reached. |
@@ -513,7 +559,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #4 — Verify class selection checkbox |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick two class checkboxes and confirm the heading reads "Select classes(2)".<br>2. Untick one of them.<br>3. Observe the heading and the footer bar. |
 | **Test Data** | Two classes from VED-NEH-KVU |
 | **Expected Result** | The heading returns to "Select classes(1)" and the footer summary returns to "You have selected 1 class with a total of 1 student". |
@@ -549,15 +595,15 @@ Because every class shares one status, this school **cannot** demonstrate filter
 |---|---|
 | **S.No.** | 18 |
 | **Test Case ID** | TST_MRPT_TC_18 |
-| **Title** | Verify the Reports tab is restored and no report is created when "Cancel" is used on the class-selection step |
+| **Title** | Verify the class selection is cleared and no report is created when "Cancel" is used on the class-selection step |
 | **Linked Requirement** | #5 — Verify Cancel button functionality |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Tick one class checkbox so the footer bar appears.<br>2. Click "Cancel" in the footer bar.<br>3. Observe the page and the Reports list. |
-| **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) |
-| **Expected Result** | The app returns to /admin/admin/org_<slug>/reports and the Reports heading count is unchanged — no report has been created. |
-| **Remarks** | This is the step-1 Cancel. A SECOND, separate Cancel exists inside the "Create report" dialog (TST_MRPT_TC_19) — the two must not be conflated. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Tick one class checkbox so the footer bar appears.<br>2. Click "Cancel" in the footer bar.<br>3. Observe the row checkbox, the section heading, the footer bar and the URL. |
+| **Test Data** | Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6) |
+| **Expected Result** | The class is deselected, the section heading returns to a bare "Select classes" with no "(N)" suffix and the footer bar is removed from the page. The app REMAINS on /admin/admin/org_<slug>/reports/create. No report is created. |
+| **Remarks** | CORRECTED 2026-09-08 — the previous expected result ("the app returns to the Reports tab") was WRONG and had never been verified live. Reproduced twice, the second time on a freshly reloaded page, with no dialog, no backdrop and 0 visible modals: the footer "Cancel" (createReport-13) CLEARS THE SELECTION and stays on the class-selection step. The control that leaves the flow is "Go back" (createReport-1), covered by TST_MRPT_TC_3, which was verified returning to /reports with "Reports (0)" unchanged. Confirmed as accepted product behaviour by the user 2026-09-08 — NOT raised as a defect. There are now THREE distinct Cancel-like controls on this flow: createReport-1 leaves, createReport-13 clears the selection, createReport-15 closes the config dialog (TST_MRPT_TC_19). They must not be conflated. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -572,11 +618,11 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #5 — Verify Cancel button functionality |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
-| **Test Steps** | 1. Tick one class checkbox.<br>2. Click "Continue" to open the "Create report" dialog.<br>3. Choose a report type.<br>4. Click "Cancel" in the dialog.<br>5. Observe the page and the Reports list. |
-| **Test Data** | Class: "Gated LP Class" · Report type: "Class summary" |
-| **Expected Result** | [ASSUMED] The dialog closes and the class-selection step is shown again with the class still selected; no report is created. |
-| **Remarks** | [ASSUMED] — whether the dialog Cancel preserves the class selection, clears it, or returns all the way to the Reports tab was NOT verified live. Confirm before automating. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Tick one class checkbox.<br>2. Click "Continue" to open the "Create report" dialog.<br>3. Choose report type "Class summary".<br>4. Click "Cancel" in the dialog.<br>5. Observe the dialog, the class selection and the URL. |
+| **Test Data** | Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6) · Report type: "Class summary" |
+| **Expected Result** | The dialog closes and the class-selection step is shown again with the class STILL SELECTED — heading still "Select classes(1)", footer bar still present. The report type resets to "Select a report type". The app remains on /admin/admin/org_<slug>/reports/create and no report is created. |
+| **Remarks** | VERIFIED live 2026-09-08 — the [ASSUMED] is resolved and the guess was right: the dialog Cancel PRESERVES the class selection. It does not clear it and does not return to the Reports tab. The dialog (#schoolReportModal) stays in the DOM at display:none, so assert visibility, never presence. The report type resetting to "Select a report type" is an additional confirmed detail. This case could not be confirmed on 2026-09-07 because the browser session was degraded, not because the product misbehaved. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -591,7 +637,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #5 — Verify Cancel button functionality |
 | **Type** | Edge |
 | **Priority** | Low |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class checkbox.<br>2. Click "Continue" to open the "Create report" dialog.<br>3. Click the dialog's "Close" (X) control.<br>4. Observe the page and the Reports list. |
 | **Test Data** | Class: "Gated LP Class" |
 | **Expected Result** | [ASSUMED] The dialog closes with the same outcome as its "Cancel" button, and no report is created. |
@@ -612,7 +658,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #6 — Verify Class summary report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Class summary".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Class summary" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class summary report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class summary"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -620,6 +666,25 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 41 |
+| **Test Case ID** | TST_MRPT_TC_41 |
+| **Title** | Verify a generated report contains data that reconciles with the class it was run against |
+| **Linked Requirement** | #6 — Verify Class summary report from beginning |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | A fixture class whose activity data is known and stable, with a report generated over it. |
+| **Test Steps** | 1. Record the fixture class's known activity — enrolled students and their completed activities/scores.<br>2. Generate a "Class summary" report "From the beginning" and download it.<br>3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly.<br>4. Repeat for "Aggregated data" and confirm its figures sum/average the underlying class-level data. |
+| **Test Data** | Fixture class <FROZEN_ACTIVITY_CLASS> with known, unchanging activity. |
+| **Expected Result** | The downloaded report reflects the class's actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. [ASSUMED] |
+| **Remarks** | Added 2026-09-01 — the most significant gap found in the whole comparison. Our seven generation cases (TST_MRPT_TC_21–TC_26, TC_37) all stop at "the report is created and listed for download"; every one of the other team's equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with WRONG CONTENT passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | **Blocked** |
+| **Comments / Defect ID** | Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. "3 July Test School 1" is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog. |
 
 ---
 
@@ -633,7 +698,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #7 — Verify Class detailed data report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Class detailed data".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Class detailed data" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class detailed data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class detailed data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -654,7 +719,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #8 — Verify Class daily data report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Class daily data".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Class daily data" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class daily data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class daily data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -675,7 +740,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #9 — Verify Aggregated data report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Aggregated data".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Aggregated data" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Aggregated data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Aggregated data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -696,7 +761,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #10 — Verify Assignments summary report from beginning |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Assignments summary".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Assignments summary" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Assignments summary report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Assignments summary"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -717,7 +782,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #11 — Verify Assignments detailed data report from beginning |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Assignments detailed data".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Assignments detailed data" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Assignments detailed data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Assignments detailed data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -738,7 +803,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Observe the "Date range" radios BEFORE choosing a report type.<br>3. Choose report type "Class summary".<br>4. Observe the "Date range" radios again.<br>5. Select "Custom date range".<br>6. Observe the fields that appear. |
 | **Test Data** | Report type: Class summary |
 | **Expected Result** | At step 2 both date-range radios are DISABLED, "From the beginning" is pre-selected and "Submit" is disabled. After step 3 both radios and "Submit" become enabled. The radios read "From the beginning" / "Export all student data" and "Custom date range" / "Export data based on specific dates". After step 5 a "From" and a "To" field appear, pre-filled with the last seven days (start = today minus 6 days, end = today). |
@@ -757,7 +822,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Class summary".<br>3. Select "Custom date range".<br>4. Set "From" and "To" to a window inside the allowed range using the pickers.<br>5. Click "Submit".<br>6. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" · Report type: Class summary · From/To: a valid past window |
 | **Expected Result** | The confirmation dialog appears as in TST_MRPT_TC_21, and the new Reports row shows a "Date range" value reflecting the chosen window rather than "All student data (up to - <TODAY>)". |
@@ -776,7 +841,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Open the "From" date picker.<br>3. Navigate back past January 2022. |
 | **Test Data** | Boundary: 2022-01-01 |
 | **Expected Result** | Dates before 1 January 2022 are not selectable; 1 January 2022 itself is selectable. |
@@ -795,7 +860,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Open the "From" picker and attempt to select tomorrow.<br>3. Repeat for the "To" picker. |
 | **Test Data** | Boundary: today |
 | **Expected Result** | All dates after today are disabled in both pickers; today is selectable in both. |
@@ -814,7 +879,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Edge |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Note the "From" value.<br>3. Open the "To" picker and attempt to select a date before it.<br>4. Change "From" to a different date and re-open the "To" picker. |
 | **Test Data** | Boundary: start date |
 | **Expected Result** | Dates before the current "From" value are disabled in the "To" picker; the start date itself is selectable (a single-day range). The floor moves when "From" is changed. |
@@ -833,7 +898,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Negative |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".<br>2. Click into the "From" field and type "01/01/2020".<br>3. Repeat for the "To" field. |
 | **Test Data** | Typed input: 01/01/2020 |
 | **Expected Result** | Neither field accepts typed input; both retain their picker-set values. Dates can be set only through the calendar pickers. |
@@ -852,7 +917,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #12 — Verify Custom date range reports |
 | **Type** | Negative |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Assignments summary" and observe the "Date range" radios.<br>3. Repeat for "Assignments detailed data".<br>4. Repeat for "Estimated CEFR level". |
 | **Test Data** | Report types: Assignments summary, Assignments detailed data, Estimated CEFR level |
 | **Expected Result** | For all three types the "Custom date range" radio remains DISABLED and "From the beginning" stays selected — no "From"/"To" fields can be produced. |
@@ -873,7 +938,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Class summary".<br>3. Observe the checkbox labelled "Only include items that contribute to grade calculation".<br>4. Repeat for Class detailed data, Class daily data, Aggregated data, Assignments summary and Assignments detailed data. |
 | **Test Data** | The six grade-capable report types |
 | **Expected Result** | For all six types the checkbox "Only include items that contribute to grade calculation" is present, ENABLED and unticked by default. |
@@ -892,7 +957,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. The chosen class has Class grade settings configured so that at least one component is excluded from grade calculation. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. The chosen class has Class grade settings configured so that at least one component is excluded from grade calculation. |
 | **Test Steps** | 1. Tick a class whose grade settings exclude a component, and click "Continue".<br>2. Choose report type "Class summary".<br>3. Tick "Only include items that contribute to grade calculation".<br>4. Click "Submit".<br>5. Click "Back to Reports".<br>6. Observe the new row's "Items" column.<br>7. Download the report and compare its contents with the same report created without the option. |
 | **Test Data** | Class with an excluded component · Report type: Class summary · Custom grade option: ticked |
 | **Expected Result** | [ASSUMED] The new Reports row shows an "Items" value other than "All items", reflecting the restriction, and the downloaded report omits the excluded component. |
@@ -911,7 +976,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
 | **Type** | Negative |
 | **Priority** | Medium |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Tick one class and click "Continue".<br>2. Choose report type "Estimated CEFR level".<br>3. Observe the "Only include items that contribute to grade calculation" checkbox. |
 | **Test Data** | Report type: Estimated CEFR level |
 | **Expected Result** | The checkbox is DISABLED and cannot be ticked. |
@@ -919,6 +984,25 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 42 |
+| **Test Case ID** | TST_MRPT_TC_42 |
+| **Title** | Verify a custom grade exclusion is respected consistently across every report type that supports it |
+| **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | A class whose grade settings exclude one component or category from the grade, with known activity on the excluded item. |
+| **Test Steps** | 1. Configure the class grade settings to exclude one component/category.<br>2. Generate each supported type with the custom grade option ticked: Class summary, Class detailed data, Class daily data, Aggregated data, Assignments summary, Assignments detailed data.<br>3. In each output, confirm the excluded item is absent and the totals recompute without it. |
+| **Test Data** | Class <FROZEN_ACTIVITY_CLASS> with one component excluded from the grade. |
+| **Expected Result** | All six report types consistently omit the excluded component and recompute their totals/averages without it. [ASSUMED] |
+| **Remarks** | Added 2026-09-01 from the other team's TC_REP_014, which sweeps the exclusion across all six types. Our TST_MRPT_TC_35 proves the option takes effect on ONE report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as TST_MRPT_TC_41. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | **Blocked** |
+| **Comments / Defect ID** | Blocked at design time: depends on the seeded, frozen-activity fixture class described in TST_MRPT_TC_41. Unblock together. |
 
 ---
 
@@ -932,7 +1016,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #14 — Verify Estimated CEFR level report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "Cqa Test Ashish School 1 (key VED-NEH-KVU)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
 | **Test Steps** | 1. Select one class (e.g. "Gated LP Class", key 4mG6-9Jkf) using its row checkbox.<br>2. Click "Continue" in the footer bar.<br>3. In the "Create report" dialog open the "Report type" dropdown and choose "Estimated CEFR level".<br>4. Leave "Date range" on the default "From the beginning".<br>5. Leave "Only include items that contribute to grade calculation" unchecked.<br>6. Click "Submit".<br>7. Click "Back to Reports". |
 | **Test Data** | Class: "Gated LP Class" (4mG6-9Jkf) · Report type: "Estimated CEFR level" · Date range: From the beginning |
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Estimated CEFR level report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Estimated CEFR level"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
@@ -983,76 +1067,32 @@ Because every class shares one status, this school **cannot** demonstrate filter
 
 ---
 
-| Field | Value |
-|---|---|
-| **S.No.** | 40 |
-| **Test Case ID** | TST_MRPT_TC_40 |
-| **Title** | Verify the report class-selection filter narrows the list by class label |
-| **Linked Requirement** | #3 — Verify filter |
-| **Type** | Positive |
-| **Priority** | Medium |
-| **Preconditions** | In the report creation flow at the class-selection step, on a school with at least one labelled class. |
-| **Test Steps** | 1. Click **Create report** to reach class selection. 2. Open **Filter**. 3. Record which filter groups the panel offers. 4. If class labels are offered, select one and Apply. 5. Read the resulting class list. |
-| **Test Data** | Label `<EXISTING_THOR_CLASS_LABEL>`. |
-| **Expected Result** | The class list is narrowed to classes carrying the selected label, and a label combined with a status behaves as an AND. `[ASSUMED]` — **and the premise itself is unconfirmed.** |
-| **Remarks** | Added 2026-09-01 from the other team's TC_REP_003, which says "status/label filter". All five of our filter cases (`TST_MRPT_TC_8`–`TC_12`) are class-STATUS only, and `TST_MRPT_TC_8` asserts the panel opens with **five class statuses** — with no mention of labels. **GROUND FIRST:** if the report-flow panel offers statuses only, their sheet is wrong and this becomes a correction rather than a new case. The label filter definitely exists on the Classes tab (`TST_CLST_TC_4`); whether the report flow reuses that panel is the open question. **Read-only.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
-
----
-
-| Field | Value |
-|---|---|
-| **S.No.** | 41 |
-| **Test Case ID** | TST_MRPT_TC_41 |
-| **Title** | Verify a generated report contains data that reconciles with the class it was run against |
-| **Linked Requirement** | #6 — Verify Class summary report from beginning |
-| **Type** | Positive |
-| **Priority** | High |
-| **Preconditions** | A fixture class whose activity data is known and stable, with a report generated over it. |
-| **Test Steps** | 1. Record the fixture class's known activity — enrolled students and their completed activities/scores. 2. Generate a **Class summary** report "From the beginning" and download it. 3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly. 4. Repeat for **Aggregated data** and confirm its figures sum/average the underlying class-level data. |
-| **Test Data** | Fixture class `<FROZEN_ACTIVITY_CLASS>` with known, unchanging activity. |
-| **Expected Result** | The downloaded report reflects the class's actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. `[ASSUMED]` |
-| **Remarks** | Added 2026-09-01 — **the most significant gap found in the whole comparison.** Our seven generation cases (`TST_MRPT_TC_21`–`TC_26`, `TC_37`) all stop at "the report is created and listed for download"; every one of the other team's equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with **wrong content** passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists. |
-| **Actual Result** | |
-| **Status** | Blocked |
-| **Comments / Defect ID** | Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. `3 July Test School 1` is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog. |
-
----
-
-| Field | Value |
-|---|---|
-| **S.No.** | 42 |
-| **Test Case ID** | TST_MRPT_TC_42 |
-| **Title** | Verify a custom grade exclusion is respected consistently across every report type that supports it |
-| **Linked Requirement** | #13 — Verify reports with custom grade settings applied |
-| **Type** | Edge |
-| **Priority** | Medium |
-| **Preconditions** | A class whose grade settings exclude one component or category from the grade, with known activity on the excluded item. |
-| **Test Steps** | 1. Configure the class grade settings to exclude one component/category. 2. Generate each supported type with the custom grade option ticked: Class summary, Class detailed data, Class daily data, Aggregated data, Assignments summary, Assignments detailed data. 3. In each output, confirm the excluded item is absent and the totals recompute without it. |
-| **Test Data** | Class `<FROZEN_ACTIVITY_CLASS>` with one component excluded from the grade. |
-| **Expected Result** | All six report types consistently omit the excluded component and recompute their totals/averages without it. `[ASSUMED]` |
-| **Remarks** | Added 2026-09-01 from the other team's TC_REP_014, which sweeps the exclusion across all six types. Our `TST_MRPT_TC_35` proves the option takes effect on **one** report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as `TST_MRPT_TC_41`. |
-| **Actual Result** | |
-| **Status** | Blocked |
-| **Comments / Defect ID** | Blocked at design time: depends on the seeded, frozen-activity fixture class described in `TST_MRPT_TC_41`. Unblock together. |
-
----
 ## Open items / `[ASSUMED]` to confirm on the next live pass
 
-1. **Search semantics** (`TST_MRPT_TC_4`, `TC_6`, `TC_7`): whether the class-picker search is
-   submit-driven, and whether it is a **substring** match (like the Classes tab) or **fuzzy** (like
-   the Library tab). `admin-shared.md` §A4 warns these differ per tab. The no-results copy was not
-   captured.
-2. **"Clear all" behaviour** (`TST_MRPT_TC_10`): whether it applies immediately or still requires
-   `Apply`. The highest-risk assumption in the filter group.
-3. **Filter summary label after applying** (`TST_MRPT_TC_9`): only the unfiltered
-   `All class statuses` value was captured.
-4. **Plural footer wording** (`TST_MRPT_TC_14`): only the singular `1 class` / `1 student` form was
-   seen. Also whether "Select all classes" spans the whole school or only the filtered/searched rows.
-5. **Dialog Cancel and Close semantics** (`TST_MRPT_TC_19`, `TC_20`): whether either preserves the
-   class selection, and whether the two behave identically.
+> **Items 1–5 were RESOLVED on the 2026-09-08 live pass** and are struck through below. The
+> answers, with evidence, are in `product-knowledge/ExperienceApp/admin-reports-tab.md` §10.
+
+1. ~~**Search semantics**~~ **RESOLVED (partly)** `[2026-09-08]` — the search is **live /
+   debounced, NOT submit-driven** (`TST_MRPT_TC_4` corrected). ⚠️ **Still open:** whether it is a
+   **substring** match (like the Classes tab) or **fuzzy** (like the Library tab) —
+   `TST_MRPT_TC_6` — and the no-results copy, `TST_MRPT_TC_7`. Both need a deliberate
+   partial-term and no-match pass.
+2. ~~**"Clear all" behaviour**~~ **RESOLVED** `[2026-09-08]` — it is a **reset to unfiltered**:
+   it re-ticks all five statuses, **applies immediately with no `Apply` click**, and closes the
+   panel. `TST_MRPT_TC_10` corrected; the previous expected result was wrong.
+3. ~~**Filter summary label after applying**~~ **RESOLVED** `[2026-09-08]` — the label is
+   `<N> class status(es)`, where N is the number of **ticked** statuses. One ticked reads
+   `1 class status` (singular). `TST_MRPT_TC_9` corrected.
+4. ~~**Plural footer wording / Select-all scope**~~ **RESOLVED** `[2026-09-08]` — plural confirmed
+   (`110 classes`, `30 students`), and **"Select all classes" spans every MATCHING class on the
+   school, not the rendered page** (110 selected with 20 rows rendered). `TST_MRPT_TC_14`
+   corrected. Note the footer also says `0 students` — **plural with a zero count** — so there is
+   no singular/plural rule to assert.
+5. ~~**Dialog Cancel semantics**~~ **RESOLVED for `TST_MRPT_TC_19`** `[2026-09-08]` — the config
+   dialog's Cancel **preserves the class selection** and resets the report type. ⚠️ **Still open:**
+   `TST_MRPT_TC_20`, whether the dialog's **Close (X)** behaves identically to its Cancel.
+   ⚠️ **Also newly settled and worth noting here:** the class-step **Cancel does NOT exit** — it
+   clears the selection and stays on the page (`TST_MRPT_TC_18` corrected; `Go back` is the exit).
 6. **The "Date range" cell for a custom window** (`TST_MRPT_TC_28`): only the
    `All student data (up to - <date>)` form was captured.
 7. **The "Items" cell when the grade option is ticked** (`TST_MRPT_TC_35`): reads `All items` when

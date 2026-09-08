@@ -10,7 +10,7 @@
 const fs = require("fs");
 const path = require("path");
 const ExcelJS = require("D:/testAutomation/QATestAutomation/testAutomation_v1.0/node_modules/exceljs");
-const { TCS, REQS } = require("./_tcdata.js");
+const { TCS, REQS, PHASE1_EXCLUSIONS } = require("./_tcdata.js");
 
 const BASE = "AdminApp_Reports_tab_test_cases";
 const DATE = "2026-08-26";
@@ -94,6 +94,30 @@ const md = `# Manual Functional Test Cases — Cambridge One Admin App: Reports 
 **Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive} Positive · ${counts.Edge} Edge · ${counts.Negative} Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
 **Execution status (${DATE}):** **0 of ${rows.length} TCs automated.** ${notRun.length} are Not Run and ${blocked.length} are Blocked at design time (${blocked.map((b) => b.id).join(", ")}).
 
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's \`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx\`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), and the design-time blockers are marked \`Blocked\` with their unblock route in Comments. See \`HANDOFF_adminGapAnalysis_2026-09-01.md\`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **${PHASE1_EXCLUSIONS.length}** of this register's cases are marked **\`[EXTRA — Phase 1 exclusion]\`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in \`Admin_Gap_Analysis.xlsx\` — coverage we hold that the other team's reviewed sheet does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: ${PHASE1_EXCLUSIONS.map((i) => "\`" + i + "\`").join(", ")}.
+
+> **[2026-09-08] Re-grounded on a different school, and six expected results corrected.**
+> The original grounding school — *Cqa Test Ashish School 1* (\`VED-NEH-KVU\`) via
+> \`cqatestashish_admin@mailsac.com\` — **has no credentials in the repo** and is invisible to the
+> suite's login account (\`testt1@mailsac.com\`). Every Precondition now names
+> **\`3 July Test School 1\` (\`FCN-CHZ-PDA\`, org \`org_perf_testschool_1\`)**, which is also the
+> better fixture: **110 classes across several statuses**, where VED-NEH-KVU held 6 all-Active
+> classes and so could not demonstrate filter exclusion at all.
+>
+> **Six expected results were WRONG and are corrected** — \`TC_4\` (the search is live, not
+> submit-driven), \`TC_8\` (all five status boxes start **ticked**, not unticked), \`TC_9\` (summary
+> label resolved to \`1 class status\`), \`TC_10\` (\`Clear all\` is a **reset**: it re-ticks all five,
+> applies immediately and closes the panel), \`TC_14\` (\`Select all classes\` selects every
+> **matching** class — 110 — not the 20 rendered), and \`TC_18\` (the class-step **Cancel clears the
+> selection and stays on the page**; \`Go back\` is the control that exits). \`TC_19\` is now verified
+> rather than \`[ASSUMED]\`, and \`TC_40\` is **rewritten** — its class-label premise was disproved
+> live, so it now pins the *absence* of a label filter.
+>
+> TC_18's change was reviewed and **confirmed as accepted product behaviour, not a defect**.
+> Full evidence in \`product-knowledge/ExperienceApp/admin-reports-tab.md\` §10.
+
 **Batches:** Batch 1 — Reports tab and Create report flow (\`TST_MRPT_*\`, module MRPT, ${rows.length} TCs).
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
@@ -153,6 +177,13 @@ Every scenario in the source has at least one test case.
 ---
 
 ## Product reference (captured live ${DATE}, Thor · Cqa Test Ashish School 1 / VED-NEH-KVU · cqatestashish_admin@mailsac.com)
+
+> ⚠️ **This section is the ORIGINAL ${DATE} capture and is kept as a historical record.** The
+> register was re-grounded on **\`FCN-CHZ-PDA\`** on 2026-09-08 (see the note at the top), and six
+> expected results below the fold were corrected. Where this section and a case's Expected Result
+> disagree, **the case wins** — and the current, verified reference for this screen is
+> \`product-knowledge/ExperienceApp/admin-reports-tab.md\` §10, not the block below. In particular
+> the org slug, the class names and keys, and the class counts here all belong to the old school.
 
 ### Entry path and URLs
 
@@ -283,18 +314,30 @@ Because every class shares one status, this school **cannot** demonstrate filter
 ${testCaseSections()}
 ## Open items / \`[ASSUMED]\` to confirm on the next live pass
 
-1. **Search semantics** (\`TST_MRPT_TC_4\`, \`TC_6\`, \`TC_7\`): whether the class-picker search is
-   submit-driven, and whether it is a **substring** match (like the Classes tab) or **fuzzy** (like
-   the Library tab). \`admin-shared.md\` §A4 warns these differ per tab. The no-results copy was not
-   captured.
-2. **"Clear all" behaviour** (\`TST_MRPT_TC_10\`): whether it applies immediately or still requires
-   \`Apply\`. The highest-risk assumption in the filter group.
-3. **Filter summary label after applying** (\`TST_MRPT_TC_9\`): only the unfiltered
-   \`All class statuses\` value was captured.
-4. **Plural footer wording** (\`TST_MRPT_TC_14\`): only the singular \`1 class\` / \`1 student\` form was
-   seen. Also whether "Select all classes" spans the whole school or only the filtered/searched rows.
-5. **Dialog Cancel and Close semantics** (\`TST_MRPT_TC_19\`, \`TC_20\`): whether either preserves the
-   class selection, and whether the two behave identically.
+> **Items 1–5 were RESOLVED on the 2026-09-08 live pass** and are struck through below. The
+> answers, with evidence, are in \`product-knowledge/ExperienceApp/admin-reports-tab.md\` §10.
+
+1. ~~**Search semantics**~~ **RESOLVED (partly)** \`[2026-09-08]\` — the search is **live /
+   debounced, NOT submit-driven** (\`TST_MRPT_TC_4\` corrected). ⚠️ **Still open:** whether it is a
+   **substring** match (like the Classes tab) or **fuzzy** (like the Library tab) —
+   \`TST_MRPT_TC_6\` — and the no-results copy, \`TST_MRPT_TC_7\`. Both need a deliberate
+   partial-term and no-match pass.
+2. ~~**"Clear all" behaviour**~~ **RESOLVED** \`[2026-09-08]\` — it is a **reset to unfiltered**:
+   it re-ticks all five statuses, **applies immediately with no \`Apply\` click**, and closes the
+   panel. \`TST_MRPT_TC_10\` corrected; the previous expected result was wrong.
+3. ~~**Filter summary label after applying**~~ **RESOLVED** \`[2026-09-08]\` — the label is
+   \`<N> class status(es)\`, where N is the number of **ticked** statuses. One ticked reads
+   \`1 class status\` (singular). \`TST_MRPT_TC_9\` corrected.
+4. ~~**Plural footer wording / Select-all scope**~~ **RESOLVED** \`[2026-09-08]\` — plural confirmed
+   (\`110 classes\`, \`30 students\`), and **"Select all classes" spans every MATCHING class on the
+   school, not the rendered page** (110 selected with 20 rows rendered). \`TST_MRPT_TC_14\`
+   corrected. Note the footer also says \`0 students\` — **plural with a zero count** — so there is
+   no singular/plural rule to assert.
+5. ~~**Dialog Cancel semantics**~~ **RESOLVED for \`TST_MRPT_TC_19\`** \`[2026-09-08]\` — the config
+   dialog's Cancel **preserves the class selection** and resets the report type. ⚠️ **Still open:**
+   \`TST_MRPT_TC_20\`, whether the dialog's **Close (X)** behaves identically to its Cancel.
+   ⚠️ **Also newly settled and worth noting here:** the class-step **Cancel does NOT exit** — it
+   clears the selection and stays on the page (\`TST_MRPT_TC_18\` corrected; \`Go back\` is the exit).
 6. **The "Date range" cell for a custom window** (\`TST_MRPT_TC_28\`): only the
    \`All student data (up to - <date>)\` form was captured.
 7. **The "Items" cell when the grade option is ticked** (\`TST_MRPT_TC_35\`): reads \`All items\` when

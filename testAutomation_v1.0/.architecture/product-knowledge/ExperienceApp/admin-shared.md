@@ -452,6 +452,14 @@ second click while the first is still processing risks double-applying the actio
 - **Bootstrap custom-control checkboxes must be clicked via their `<label>`** — the
   `label.custom-control-label` overlays the input and intercepts pointer events, so clicking the
   input times out. `[2026-08-18]`
+  > ⚠️ **Qualified `[2026-09-08]` — this is a per-control rule, not a per-screen one, and the
+  > Reports class picker carries BOTH conventions at once.** Its row checkboxes follow the rule
+  > above (click the label). Its **`Select all classes`** checkbox does the opposite: the label
+  > renders no text and has a **zero-size rect**, so Playwright refuses to click it
+  > (*"element is not visible"*) even though `checkVisibility()` is true — and the **input** must
+  > be clicked instead, since it is `opacity:0` but has a real 17×17 box (Invariant 1: opacity-0 is
+  > still visible to Playwright). **Measure the label's rect before deciding which to click.**
+  > See [`admin-reports-tab.md`](admin-reports-tab.md) §10.7.
 
 ## B6. Optimistic UI — the app signals ready before it is
 

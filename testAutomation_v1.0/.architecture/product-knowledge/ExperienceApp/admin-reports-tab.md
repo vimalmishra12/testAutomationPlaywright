@@ -227,3 +227,225 @@ suites (`admin-shared.md` §A7).
 - Live capture, Thor, 2026-08-26 — `Cqa Test Ashish School 1` (`VED-NEH-KVU`).
 - Scenario source: `AdminApp_Report tab.xlsx` (13 scenarios).
 - Manual set: `test/Manual/C1App/AdminApp-Reports/`.
+
+---
+
+## 10. Live re-capture on `FCN-CHZ-PDA` `[2026-09-08]` — corrections and new traps
+
+*Captured on Thor, school **`FCN-CHZ-PDA`** ("3 July Test School 1", org `org_perf_testschool_1`)
+via `testt1@mailsac.com`. **This is a DIFFERENT school from the one that seeded this file** — the
+original `VED-NEH-KVU` / `cqatestashish_admin@mailsac.com` has no credentials in the repo and is
+invisible to the suite's login account. The user approved re-grounding here on 2026-09-07.
+Its 110 classes across several statuses are strictly better for the filter cases than the original
+school's 6 all-Active classes, which could not demonstrate filter exclusion at all.*
+
+School state at capture: `Reports (0)` · **110** classes · **21** Active · 30 students in total.
+
+> Thor was healthy this day. School selection and `Create report` both worked first time — both
+> were broken or inert on 2026-09-07 (`admin-staff-tab.md` §8.8). Nothing recorded below is a
+> product defect; those were environment faults.
+
+### 10.1 Correction to §5 — the row checkbox `name` is NOT the class UUID
+
+§5 says *"Each checkbox's `name` is the class UUID — stable, and far better to key on than its
+`qid`"*. **That is false on `FCN-CHZ-PDA`:** `name` is **empty on all 20 rows**. The only per-row
+handles are `id="checkbox-N"` and `qid="createReport-7-N"`, and **both are positional** — literally
+Invariant 2's canonical `#checkbox-1` example.
+
+**Resolve rows by CONTENT.** The `label[for="checkbox-N"]` carries the whole row:
+`"Select class<name> <key><start><end><studentCount><status>"`.
+
+- The ids are **0-BASED** — `checkbox-0` / `createReport-7-0`, not `-1`.
+- Many classes on this school **share a name** (`AutoClass_CreateOnly`, `BulkCSV_Class1` x3+).
+  Never resolve a row by name alone unless it is the permanent fixture.
+
+### 10.2 Correction to §6 — all five statuses are CHECKED by default, and `Clear all` is a RESET
+
+| Claim | Live on 2026-09-08 |
+|---|---|
+| §6 `[ASSUMED]`: what the summary label becomes after a filter | Applying **1** status gives **`1 class status`** (singular). N = the number of **checked** statuses |
+| §6 `[ASSUMED]`: whether `Clear all` applies immediately | **It applies immediately** — no `Apply` needed |
+| The manual register's assumption that the five boxes start **unticked** | **All five start CHECKED**, summary `All class statuses` |
+| What `Clear all` does | Not "untick everything" — it **re-checks all five**, applies, **closes the panel**, and restores `All class statuses` |
+
+`Clear all` is therefore a **reset to unfiltered**, not a clear. `Apply` also closes the panel.
+
+### 10.3 `Select all classes` selects EVERY MATCHING class, not the loaded page
+
+**The class list lazy-loads, page size 20, with `Load more...` (`a[qid="createReport-8"]`)** — not
+previously recorded for this screen. With 20 of 110 rows rendered, ticking select-all gives:
+
+- heading **`Select classes(110)`**
+- summary **`You have selected 110 classes with a total of 30 students`**
+- all **20 loaded** row checkboxes ticked
+
+**So `headingCount == renderedRowCount` is a FAILING assertion**, and hardcoding `110` rots on a
+shared school. Assert: select-all checked AND every loaded row checked AND heading count equals the
+`createReport-11-N` anchor count AND heading count is greater than the loaded row count.
+
+> Clicking select-all while a *partial* selection exists **clears it** rather than completing it.
+> Reaching "all selected" from one ticked row takes **two** clicks.
+
+### 10.4 Refines the `createReport-11-N` trap — it tracks the FILTERED total
+
+The class-name anchors are **0 visible** in every state (so any count over them is a false green,
+per `admin-shared.md` §B2). But their *count* is not the constant 110: it is **the number of
+classes matching the current query**. Measured: unfiltered **110**, Active-only filter **21**,
+single-hit search **1**.
+
+That makes the collection a useful **total-count oracle** — the one number that stays correct as
+the shared school churns — while remaining useless as a "rows rendered" count.
+
+### 10.5 The search is LIVE / debounced — NOT submit-driven
+
+Typing `Fixture_GradeSettings_DO_NOT_DELETE` narrowed the list to one row **before the Search
+button was clicked**. A `Search` control exists (`a[qid="createReport-10"]`, `aria-label="Search"`)
+but is **not required to filter**.
+
+> This is the `admin-shared.md` §A4 warning landing again: the Classes tab's search **is**
+> submit-driven, and that expectation was inherited into this register's `TST_MRPT_TC_4` as an
+> `[ASSUMED]`. **Wrong here.** Wait on the list changing after typing; do not click Search, and do
+> not assume typing alone is inert.
+
+### 10.6 NEITHER the filter NOR the search persists — the opposite of the Classes tab
+
+After a reload: all five statuses checked again, summary back to `All class statuses`, anchors back
+to 110, **and the search box empty**. The Classes tab persists both **server-side per user**
+(`admin-shared.md` §A4) — this screen persists neither.
+
+**So filter and search tests owe NO cleanup here.** Do not inherit the Classes-tab reset
+discipline (§B7) onto this screen.
+
+### 10.7 NEW TRAP — the select-all label is 0x0. Two click conventions on ONE screen
+
+`label[for="checkbox-selectallclasses"]` renders **no text** and has a **zero-size rect**, so
+Playwright refuses to click it (*"element is not visible"*) even though `checkVisibility()` returns
+true. The **input** must be clicked instead — it is `opacity:0` but has a real 17x17 box, and
+opacity-0 is still visible to Playwright (Invariant 1).
+
+This is the **exact opposite** of the row checkboxes, where `admin-shared.md` §B5 says to click the
+`<label>` because it overlays the input. **Both rules are live on this one screen.** Check per
+control; never generalise §B5.
+
+### 10.8 `Cancel` on the class-selection step does NOT exit the flow
+
+Two controls, two jobs — verified twice, the second time on a freshly reloaded page, with no
+dialog, no backdrop and 0 visible modals:
+
+| Control | qid | Behaviour |
+|---|---|---|
+| **Go back** | `createReport-1` | **Leaves** — returns to `/reports`, `Reports (0)` unchanged |
+| **Cancel** (footer bar) | `createReport-13` | **Clears the selection** — row unticked, footer bar removed — and **stays on `/reports/create`** |
+
+The manual register's `TST_MRPT_TC_18` expected Cancel to return to the Reports tab. **It does
+not.** Confirmed as accepted behaviour by the user `[2026-09-08]` and the register was corrected;
+this is **not** a defect. `TST_MRPT_TC_3` (the `Go back` case) is correct as written.
+
+> This is the third distinct "Cancel" on this flow. §5's warning stands and grows:
+> `createReport-1` leaves, `createReport-13` clears the selection, `createReport-15` closes the
+> config dialog. A test written against "the Cancel button" hits whichever is in the DOM.
+
+### 10.9 `Cancel` in the config dialog PRESERVES the class selection
+
+§5's `[ASSUMED]` is resolved. Clicking `createReport-15`:
+
+- the dialog hides (`#schoolReportModal` stays in the DOM, `display:none`)
+- the class-selection step is shown again with the **class still ticked**, heading still
+  `Select classes(1)`, footer bar still present
+- the report type resets to **`Select a report type`**
+- no report is created; the URL never leaves `/reports/create`
+
+### 10.10 Correction to the element TYPES — three of these are not anchors
+
+Selectors written as `a[qid=...]` for these match **nothing**:
+
+| qid | id | Element |
+|---|---|---|
+| `createReport-14` Continue | `class-select-continue-btn` | **`button`** |
+| `createReport-15` Cancel (config dialog) | `class-report-cancel-btn` | **`button`** |
+| `createReport-16` Submit | `class-report-submit-btn` | **`button`** |
+| `createReport-13` Cancel (class step) | `class-select-cancel-btn` | `a` |
+| `createReport-1` Go back | — | `a` |
+
+`Submit` is disabled **natively AND by the CSS class** `disabled`, so `toBeDisabled()` works here —
+the opposite of the staff-profile `Yes, remove`, which is CSS-only. **Check per button.**
+
+### 10.11 Full `createReport-*` inventory captured 2026-09-08
+
+```
+createReport-1     a       Go back                     -> /reports
+createReport-2     input   Select all classes          id=checkbox-selectallclasses  (label is 0x0)
+createReport-3     a       Sort by Class name
+createReport-4     a       Sort by Start date
+createReport-5     a       Sort by End date
+createReport-6     a       Sort by Students            <- NOT "Select all classes"
+createReport-7-N   input   row checkbox                id=checkbox-N  (0-based, name="")
+createReport-8     a       Load more...                (lazy load, page size 20)
+createReport-9     input   search box                  id=searchText  maxlength=321
+createReport-10    a       Search                      (NOT required - search is live)
+createReport-11-N  a       class-name anchors          0 visible; count == matching total
+createReport-13    a       Cancel  (class step)        id=class-select-cancel-btn    absent at 0 selection
+createReport-14    button  Continue                    id=class-select-continue-btn  absent at 0 selection
+createReport-15    button  Cancel  (config dialog)     id=class-report-cancel-btn
+createReport-16    button  Submit                      id=class-report-submit-btn
+createReport-17    a       Create another report       id=create-other-report-btn
+createReport-18    button  Back to Reports             (success dialog)
+createReport-19    a       Filter                      id=filterModalToggle
+createReport-21-N  input   the five statuses           ids status.name0..4  (ALL CHECKED by default)
+createReport-22    a       Close  (filter panel)
+createReport-23    a       Clear all                   (resets + applies + closes)
+createReport-24    a       Apply                       (applies + closes)
+createReport-25    a       Try again                   id=try-again-btn  (failure dialog)
+createReport-26    button  Back to Reports             (failure dialog)
+```
+
+**The filter summary label has no id, class or qid** — reach it via `div.filtered-info .d-sm-flex`.
+Scoping matters: `.filtered-info` alone also contains the entire filter panel's text.
+
+**4 pre-rendered `.modal-content` on `/reports/create`** (3 on `/reports`), 0 visible.
+`#reportStartDate` / `#reportEndDate` are in the DOM but **hidden** until `Custom date range` is
+chosen — presence is not state (§B2).
+
+### 10.12 Measured transitions — do not re-guess (Invariant 1)
+
+Polled on a 100 ms grid; **0 ms means "already true at the first poll"**, i.e. synchronous
+client-side work:
+
+| Transition | Measured |
+|---|---|
+| footer bar appears after the first tick | **0 ms** (same tick) |
+| config dialog visible after `Continue` | **0 ms** |
+| date radios + `Submit` enable after choosing a type | **0 ms** |
+| `From`/`To` appear after `Custom date range` | **0 ms** |
+| config dialog hidden after its `Cancel` | **0 ms** |
+| filter panel opens after `Filter` | **0 ms** |
+| filter panel closes after `Apply` | **0 ms** |
+| `Go back` to `/reports` | **0 ms** |
+| select-all, all rows ticked + counts updated | under 1.5 s |
+| filtered list settles after `Apply` | under 1.5 s |
+| live search settles after typing | under 1.5 s |
+
+**Nothing on this screen is slow.** Still budget generously — Thor throughput varies 4-8x
+(`admin-shared.md` §B8) — but a long wait here is hiding a bug, not absorbing latency.
+
+### 10.13 Stable test data on `FCN-CHZ-PDA`
+
+| Class | Key | Notes |
+|---|---|---|
+| `Fixture_GradeSettings_DO_NOT_DELETE` | `62k3-AXm6` | Aug 20 2026 to Dec 31 2036, **0 students**, Active. Documented never-delete (`admin-shared.md` §A7), unique, and stable on a shared school. **Use it for the search, selection and cancel cases.** |
+
+The footer summary reads `0 students` for this class — *"You have selected 1 class with a total of
+0 students"*. Note the **plural "students" with a zero count**; the singular form `1 student`
+recorded in §5 came from the other school. Do not assert a singular/plural rule.
+
+### 10.14 Confirmed unchanged from the 2026-08-26 capture
+
+Re-verified on this school, so they are school-independent: the seven report types and their
+`schoolReportType-0..6` order (§2); both date radios and `Submit` **natively disabled** before a
+type is chosen (§3); `#report-custom-grade-checkbox` enabled and unticked from the start, labelled
+`Only include items that contribute to grade calculation`; `From`/`To` both `readOnly`, defaulting
+to the last seven days (captured `Wed, Sep 2, 2026` to `Tue, Sep 8, 2026`) with `min` 2022-01-01
+and `max` today; the footer action bar genuinely **absent** from the DOM at zero selection (§5);
+`Select classes` gaining its `(N)` only once at least one class is ticked; `#searchText`
+`maxlength="321"`; and `/reports/create` remaining reachable by deep link once the school context
+is set.

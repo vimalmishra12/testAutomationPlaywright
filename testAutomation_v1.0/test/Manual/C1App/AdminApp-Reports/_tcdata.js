@@ -4,7 +4,13 @@
  * cannot drift (SKILL golden rule 6).
  */
 
-const SCHOOL = 'Cqa Test Ashish School 1 (key VED-NEH-KVU)';
+// [2026-09-08] Re-grounded on FCN-CHZ-PDA. The original grounding school,
+// "Cqa Test Ashish School 1" (VED-NEH-KVU, org_cup_j9GskaJJmvDjmQZ9) via
+// cqatestashish_admin@mailsac.com, has NO credentials in the repo and is invisible to the
+// suite's login account (testt1@mailsac.com). FCN-CHZ-PDA is also the better fixture: 110
+// classes across several statuses, where VED-NEH-KVU held 6 all-Active classes and so could
+// not demonstrate filter exclusion at all.
+const SCHOOL = '3 July Test School 1 (key FCN-CHZ-PDA)';
 const PRE_TAB = 'Logged in as school-admin <REPORTS_ADMIN_USER>; school "' + SCHOOL + '" opened from "My school accounts"; Reports tab open.';
 const PRE_SEL = 'Logged in as school-admin <REPORTS_ADMIN_USER>; school "' + SCHOOL + '" opened; "Create report" clicked so the class-selection step is displayed.';
 
@@ -76,20 +82,20 @@ const TCS = [
     title: 'Verify a class is returned when the full class name is searched',
     req: '#2 — Verify search using class name or class key',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Type "Gated LP Class" into the "Search for class name or class key" box.\n2. Click "Search".\n3. Observe the class list.',
-    data: 'Search term: Gated LP Class',
-    expected: 'The list narrows to the class "Gated LP Class" with key 4mG6-9Jkf, and the row remains selectable.',
-    remarks: 'The search control is a text box plus an explicit "Search" button (captured live 2026-08-26). [ASSUMED] that, as on the Classes tab, typing alone does not filter and the button click is required.',
+    steps: '1. Type "Fixture_GradeSettings_DO_NOT_DELETE" into the "Search for class name or class key" box.\n2. Do NOT click "Search".\n3. Observe the class list.',
+    data: 'Search term: Fixture_GradeSettings_DO_NOT_DELETE',
+    expected: 'The list narrows to the single class "Fixture_GradeSettings_DO_NOT_DELETE" with key 62k3-AXm6, WITHOUT the "Search" button being clicked, and the row remains selectable.',
+    remarks: 'CORRECTED 2026-09-08 — the previous expected result was [ASSUMED] and WRONG. The search is LIVE / debounced, not submit-driven: the list narrowed to one row before the "Search" button was clicked. The earlier assumption was inherited from the Classes tab, which IS submit-driven — exactly the trap admin-shared.md §A4 warns about. A "Search" control (a[qid="createReport-10"]) does exist but is not required to filter. Test data also changed: the original "Gated LP Class" (4mG6-9Jkf) lives on VED-NEH-KVU, which the suite account cannot see. Fixture_GradeSettings_DO_NOT_DELETE is documented never-delete in admin-shared.md §A7, so it is unique and stable on this shared school.',
   },
   {
     id: 'TST_MRPT_TC_5',
     title: 'Verify a class is returned when its class key is searched',
     req: '#2 — Verify search using class name or class key',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Type "4mG6-9Jkf" into the search box.\n2. Click "Search".\n3. Observe the class list.',
-    data: 'Search term: 4mG6-9Jkf',
-    expected: 'The list narrows to the single class whose Class key column reads "4mG6-9Jkf" ("Gated LP Class").',
-    remarks: 'The placeholder offers both paths — "Search for class name or class key" — so the key path is covered separately from the name path.',
+    steps: '1. Type "62k3-AXm6" into the search box.\n2. Do NOT click "Search".\n3. Observe the class list.',
+    data: 'Search term: 62k3-AXm6',
+    expected: 'The list narrows to the single class whose Class key column reads "62k3-AXm6" ("Fixture_GradeSettings_DO_NOT_DELETE").',
+    remarks: 'Verified live 2026-09-08. The placeholder offers both paths — "Search for class name or class key" — so the key path is covered separately from the name path. Key changed from 4mG6-9Jkf (VED-NEH-KVU) to 62k3-AXm6 (FCN-CHZ-PDA) with the re-grounding. As with TC_4 the search is live — no "Search" click is required.',
   },
   {
     id: 'TST_MRPT_TC_6',
@@ -120,28 +126,28 @@ const TCS = [
     type: 'Positive', priority: 'Medium', pre: PRE_SEL,
     steps: '1. Click the "Filter" control.\n2. Observe the panel.',
     data: '—',
-    expected: 'A panel headed "Filter by" opens containing exactly five unticked checkboxes labelled "Not started", "Active", "Ended", "Expired" and "Deleted", plus a "Clear all" link, an "Apply" button and a "Close" control.',
-    remarks: 'All strings captured verbatim live 2026-08-26. Note the status set includes "Not started", which the existing Classes-tab knowledge did not record (it listed Ended / Expired / Deleted).',
+    expected: 'A panel headed "Filter by" opens containing exactly five checkboxes labelled "Not started", "Active", "Ended", "Expired" and "Deleted", ALL FIVE TICKED by default, plus a "Clear all" link, an "Apply" button and a "Close" control. The filter summary label reads "All class statuses".',
+    remarks: 'CORRECTED 2026-09-08 — the previous expected result said the five checkboxes were UNTICKED. They are all TICKED by default, which is what makes the unfiltered summary read "All class statuses". Strings otherwise captured verbatim live 2026-08-26 and re-verified 2026-09-08. Note the status set includes "Not started", which the existing Classes-tab knowledge did not record (it listed Ended / Expired / Deleted).',
   },
   {
     id: 'TST_MRPT_TC_9',
     title: 'Verify the class list is narrowed to one status when that status filter is applied',
     req: '#3 — Verify filter',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Click "Filter".\n2. Tick "Active".\n3. Click "Apply".\n4. Observe the class list and the filter summary label.',
-    data: 'Filter: Active',
-    expected: 'The panel closes and every rendered row shows "Active" in its Class status column. The summary label that read "All class statuses" now reflects the applied filter instead.',
-    remarks: '[ASSUMED] for the exact summary-label text after applying — only the unfiltered "All class statuses" value was captured live. All six classes on VED-NEH-KVU were Active on 2026-08-26, so this school cannot prove exclusion; use a status with both a matching and a non-matching set.',
+    steps: '1. Click "Filter".\n2. Untick "Not started", "Ended", "Expired" and "Deleted", leaving only "Active" ticked.\n3. Click "Apply".\n4. Observe the class list and the filter summary label.',
+    data: 'Filter: Active only',
+    expected: 'The panel closes and every rendered row shows "Active" in its Class status column. The summary label changes from "All class statuses" to "1 class status".',
+    remarks: 'VERIFIED live 2026-09-08 on FCN-CHZ-PDA; the [ASSUMED] on the summary label is resolved. The label is "<N> class status(es)" where N is the number of TICKED statuses — so leaving one ticked reads "1 class status" (singular). Steps corrected: because all five start ticked (TC_8), a single-status filter is reached by UNTICKING the other four, not by ticking one. This school proves exclusion properly — 21 of its 110 classes are Active, and the pre-filter list contained Deleted rows.',
   },
   {
     id: 'TST_MRPT_TC_10',
-    title: 'Verify all status selections are cleared when "Clear all" is used',
+    title: 'Verify the unfiltered class list is restored when "Clear all" is used',
     req: '#3 — Verify filter',
     type: 'Edge', priority: 'Medium', pre: PRE_SEL,
-    steps: '1. Click "Filter".\n2. Tick "Active" and "Ended".\n3. Click "Clear all".\n4. Observe the checkboxes and the class list.',
-    data: 'Filter: Active + Ended, then Clear all',
-    expected: 'All five status checkboxes return to unticked. [ASSUMED] the class list returns to the unfiltered set and the summary label returns to "All class statuses".',
-    remarks: '[ASSUMED] — whether "Clear all" applies immediately or still requires a subsequent "Apply" was NOT determined live. This is the most likely place in this group for a wrong expected result; resolve it first.',
+    steps: '1. Apply a filter of a single status (see TST_MRPT_TC_9) so the summary reads "1 class status".\n2. Click "Filter" to reopen the panel.\n3. Click "Clear all".\n4. Observe the checkboxes, the panel, the class list and the summary label.',
+    data: 'A single applied status, then Clear all',
+    expected: 'All five status checkboxes return to TICKED, the panel closes immediately WITHOUT "Apply" being clicked, the class list returns to the unfiltered set and the summary label returns to "All class statuses".',
+    remarks: 'CORRECTED 2026-09-08 — both [ASSUMED]s resolved, and the previous expected result was WRONG. "Clear all" is a RESET TO UNFILTERED, not an "untick everything": it re-checks all five statuses, applies immediately with no "Apply" click, and closes the panel. This was flagged in the original Remarks as the most likely place for a wrong expected result, and it was.',
   },
   {
     id: 'TST_MRPT_TC_11',
@@ -170,20 +176,20 @@ const TCS = [
     title: 'Verify the selection count and footer summary update when a single class checkbox is ticked',
     req: '#4 — Verify class selection checkbox',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Tick the "Select class" checkbox on the "Gated LP Class" row.\n2. Observe the section heading and the bottom of the page.',
-    data: 'Class: "Gated LP Class" (4mG6-9Jkf), 1 student',
-    expected: 'The section heading becomes "Select classes(1)". A footer bar appears reading "You have selected 1 class with a total of 1 student" and carrying a "Cancel" link and a "Continue" button.',
-    remarks: 'Captured live 2026-08-26. Both the "(1)" suffix and the whole footer bar are absent at zero selection — see TST_MRPT_TC_15.',
+    steps: '1. Search for "Fixture_GradeSettings_DO_NOT_DELETE" so the list holds a single known row.\n2. Tick that row\'s "Select class" checkbox.\n3. Observe the section heading and the bottom of the page.',
+    data: 'Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6), 0 students',
+    expected: 'The section heading becomes "Select classes(1)". A footer bar appears reading "You have selected 1 class with a total of 0 students" and carrying a "Cancel" link and a "Continue" button.',
+    remarks: 'Re-verified live 2026-09-08 on FCN-CHZ-PDA. Both the "(1)" suffix and the whole footer bar are absent at zero selection — see TST_MRPT_TC_15. NOTE the summary says "0 studentS" — plural with a zero count; the singular "1 student" form recorded on 2026-08-26 came from a different class. Do not assert a singular/plural rule. The footer appears on the SAME TICK as the click (measured 0 ms).',
   },
   {
     id: 'TST_MRPT_TC_14',
-    title: 'Verify every listed class is selected when "Select all classes" is ticked',
+    title: 'Verify every matching class is selected when "Select all classes" is ticked',
     req: '#4 — Verify class selection checkbox',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Tick the "Select all classes" checkbox.\n2. Observe the row checkboxes, the section heading and the footer bar.',
-    data: '6 classes on VED-NEH-KVU, 1 student each',
-    expected: 'Every class row checkbox becomes ticked, the heading reads "Select classes(<N>)" where <N> is the number of listed classes, and the footer bar summarises the same totals (e.g. "You have selected 6 classes with a total of 6 students").',
-    remarks: '[ASSUMED] plural wording ("classes" / "students") — only the singular "1 class" / "1 student" form was captured live. Also confirm whether "Select all" covers only the currently searched/filtered rows or every class on the school.',
+    steps: '1. With no search or filter applied, note how many class rows are rendered (the list lazy-loads 20 at a time and offers "Load more...").\n2. Tick the "Select all classes" checkbox.\n3. Observe the row checkboxes, the section heading and the footer bar.',
+    data: 'FCN-CHZ-PDA: 110 classes in total, 20 rendered per page, 30 students across the school',
+    expected: 'Every RENDERED row checkbox becomes ticked. The heading reads "Select classes(<TOTAL>)" where <TOTAL> is the number of classes MATCHING the current query — the full 110, not the 20 rendered — and the footer bar summarises the same totals ("You have selected 110 classes with a total of 30 students").',
+    remarks: 'RESOLVED live 2026-09-08 — the open question in the original Remarks is answered: "Select all" covers EVERY MATCHING class on the school, not just the loaded page. With 20 of 110 rows rendered the heading read "Select classes(110)". So an expected result of the form "<N> = the number of listed classes" is WRONG and would fail. Plural wording confirmed ("classes" / "students"). When automating, do not hardcode 110 — this school churns; assert the heading count against the createReport-11-N anchor count, which tracks the matching total. Also: clicking select-all while a PARTIAL selection exists clears it instead of completing it, so reaching "all selected" from one ticked row takes two clicks.',
   },
   {
     id: 'TST_MRPT_TC_15',
@@ -222,23 +228,23 @@ const TCS = [
   // ---------- Requirement #5
   {
     id: 'TST_MRPT_TC_18',
-    title: 'Verify the Reports tab is restored and no report is created when "Cancel" is used on the class-selection step',
+    title: 'Verify the class selection is cleared and no report is created when "Cancel" is used on the class-selection step',
     req: '#5 — Verify Cancel button functionality',
     type: 'Positive', priority: 'High', pre: PRE_SEL,
-    steps: '1. Tick one class checkbox so the footer bar appears.\n2. Click "Cancel" in the footer bar.\n3. Observe the page and the Reports list.',
-    data: 'Class: "Gated LP Class" (4mG6-9Jkf)',
-    expected: 'The app returns to /admin/admin/org_<slug>/reports and the Reports heading count is unchanged — no report has been created.',
-    remarks: 'This is the step-1 Cancel. A SECOND, separate Cancel exists inside the "Create report" dialog (TST_MRPT_TC_19) — the two must not be conflated.',
+    steps: '1. Tick one class checkbox so the footer bar appears.\n2. Click "Cancel" in the footer bar.\n3. Observe the row checkbox, the section heading, the footer bar and the URL.',
+    data: 'Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6)',
+    expected: 'The class is deselected, the section heading returns to a bare "Select classes" with no "(N)" suffix and the footer bar is removed from the page. The app REMAINS on /admin/admin/org_<slug>/reports/create. No report is created.',
+    remarks: 'CORRECTED 2026-09-08 — the previous expected result ("the app returns to the Reports tab") was WRONG and had never been verified live. Reproduced twice, the second time on a freshly reloaded page, with no dialog, no backdrop and 0 visible modals: the footer "Cancel" (createReport-13) CLEARS THE SELECTION and stays on the class-selection step. The control that leaves the flow is "Go back" (createReport-1), covered by TST_MRPT_TC_3, which was verified returning to /reports with "Reports (0)" unchanged. Confirmed as accepted product behaviour by the user 2026-09-08 — NOT raised as a defect. There are now THREE distinct Cancel-like controls on this flow: createReport-1 leaves, createReport-13 clears the selection, createReport-15 closes the config dialog (TST_MRPT_TC_19). They must not be conflated.',
   },
   {
     id: 'TST_MRPT_TC_19',
     title: 'Verify the report-configuration dialog closes without creating a report when its "Cancel" is used',
     req: '#5 — Verify Cancel button functionality',
     type: 'Positive', priority: 'Medium', pre: PRE_SEL,
-    steps: '1. Tick one class checkbox.\n2. Click "Continue" to open the "Create report" dialog.\n3. Choose a report type.\n4. Click "Cancel" in the dialog.\n5. Observe the page and the Reports list.',
-    data: 'Class: "Gated LP Class" · Report type: "Class summary"',
-    expected: '[ASSUMED] The dialog closes and the class-selection step is shown again with the class still selected; no report is created.',
-    remarks: '[ASSUMED] — whether the dialog Cancel preserves the class selection, clears it, or returns all the way to the Reports tab was NOT verified live. Confirm before automating.',
+    steps: '1. Tick one class checkbox.\n2. Click "Continue" to open the "Create report" dialog.\n3. Choose report type "Class summary".\n4. Click "Cancel" in the dialog.\n5. Observe the dialog, the class selection and the URL.',
+    data: 'Class: "Fixture_GradeSettings_DO_NOT_DELETE" (62k3-AXm6) · Report type: "Class summary"',
+    expected: 'The dialog closes and the class-selection step is shown again with the class STILL SELECTED — heading still "Select classes(1)", footer bar still present. The report type resets to "Select a report type". The app remains on /admin/admin/org_<slug>/reports/create and no report is created.',
+    remarks: 'VERIFIED live 2026-09-08 — the [ASSUMED] is resolved and the guess was right: the dialog Cancel PRESERVES the class selection. It does not clear it and does not return to the Reports tab. The dialog (#schoolReportModal) stays in the DOM at display:none, so assert visibility, never presence. The report type resetting to "Select a report type" is an additional confirmed detail. This case could not be confirmed on 2026-09-07 because the browser session was degraded, not because the product misbehaved.',
   },
   {
     id: 'TST_MRPT_TC_20',
@@ -407,6 +413,47 @@ const TCS = [
     status: 'Blocked',
     comments: 'Blocked at design time — a partially-failing report cannot be produced on Thor.',
   },
+
+  // ---------- Gap-analysis batch, added 2026-09-01.
+  // These three were appended straight to the .md/.xlsx and were NEVER added to this file, so
+  // regenerating would have silently deleted them. Restored here 2026-09-08 so the generator is
+  // once again the single source of truth (SKILL golden rule 6).
+  {
+    id: 'TST_MRPT_TC_40',
+    title: 'Verify the class-selection filter offers class statuses only and no class-label filter',
+    req: '#3 — Verify filter',
+    type: 'Positive', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Click "Create report" to reach the class-selection step.\n2. Open "Filter".\n3. Record every filter group the panel offers.\n4. Confirm no class-label group is present.',
+    data: '—',
+    expected: 'The filter panel offers EXACTLY ONE group — the five class statuses ("Not started", "Active", "Ended", "Expired", "Deleted") — and no class-label filter of any kind. The panel contains exactly five checkboxes in total.',
+    remarks: 'REWRITTEN 2026-09-08 by user decision. Originally added 2026-09-01 from the other team\'s TC_REP_003, which describes a "status/label filter", and the case asked whether the filter narrows the list by class LABEL. Its own Remarks flagged the premise as unconfirmed and said GROUND FIRST. Grounded live 2026-09-08: the premise is FALSE — the report-flow panel offers five status checkboxes and no other group, so the other team\'s sheet is wrong on this point. The case is therefore inverted into an expected-versus-actual assertion that PINS the absence of a label filter. A class-label filter does exist on the Classes tab (TST_CLST_TC_4); the report flow does not reuse that panel. Read-only.',
+  },
+  {
+    id: 'TST_MRPT_TC_41',
+    title: 'Verify a generated report contains data that reconciles with the class it was run against',
+    req: '#6 — Verify Class summary report from beginning',
+    type: 'Positive', priority: 'High',
+    pre: 'A fixture class whose activity data is known and stable, with a report generated over it.',
+    steps: '1. Record the fixture class\'s known activity — enrolled students and their completed activities/scores.\n2. Generate a "Class summary" report "From the beginning" and download it.\n3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly.\n4. Repeat for "Aggregated data" and confirm its figures sum/average the underlying class-level data.',
+    data: 'Fixture class <FROZEN_ACTIVITY_CLASS> with known, unchanging activity.',
+    expected: 'The downloaded report reflects the class\'s actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. [ASSUMED]',
+    remarks: 'Added 2026-09-01 — the most significant gap found in the whole comparison. Our seven generation cases (TST_MRPT_TC_21–TC_26, TC_37) all stop at "the report is created and listed for download"; every one of the other team\'s equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with WRONG CONTENT passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists.',
+    status: 'Blocked',
+    comments: 'Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. "3 July Test School 1" is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog.',
+  },
+  {
+    id: 'TST_MRPT_TC_42',
+    title: 'Verify a custom grade exclusion is respected consistently across every report type that supports it',
+    req: '#13 — Verify reports with custom grade settings applied',
+    type: 'Edge', priority: 'Medium',
+    pre: 'A class whose grade settings exclude one component or category from the grade, with known activity on the excluded item.',
+    steps: '1. Configure the class grade settings to exclude one component/category.\n2. Generate each supported type with the custom grade option ticked: Class summary, Class detailed data, Class daily data, Aggregated data, Assignments summary, Assignments detailed data.\n3. In each output, confirm the excluded item is absent and the totals recompute without it.',
+    data: 'Class <FROZEN_ACTIVITY_CLASS> with one component excluded from the grade.',
+    expected: 'All six report types consistently omit the excluded component and recompute their totals/averages without it. [ASSUMED]',
+    remarks: 'Added 2026-09-01 from the other team\'s TC_REP_014, which sweeps the exclusion across all six types. Our TST_MRPT_TC_35 proves the option takes effect on ONE report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as TST_MRPT_TC_41.',
+    status: 'Blocked',
+    comments: 'Blocked at design time: depends on the seeded, frozen-activity fixture class described in TST_MRPT_TC_41. Unblock together.',
+  },
 ];
 
 // Requirement order for the coverage map (verbatim scenario names from the source workbook).
@@ -428,4 +475,30 @@ const REQS = [
   '#15 — Added coverage: report generation error paths',
 ];
 
-module.exports = { TCS, REQS };
+// ---------------------------------------------------------------------------------------------
+// Phase 1 automation exclusions, agreed 2026-09-02.
+//
+// These are the cases carried as "Extra in Ours" in Admin_Gap_Analysis.xlsx — coverage we hold
+// that the other team's reviewed sheet does not. None of them is automated in Phase 1; Phase 1
+// scope is the cases NOT listed here. They stay in the register and are revisited later.
+//
+// Restored into the generator 2026-09-08: the marker had been hand-added to the .md/.xlsx only,
+// so regenerating would have dropped it from all ten Remarks cells.
+const PHASE1_EXCLUSIONS = [
+  'TST_MRPT_TC_1', 'TST_MRPT_TC_3', 'TST_MRPT_TC_17', 'TST_MRPT_TC_29', 'TST_MRPT_TC_30',
+  'TST_MRPT_TC_32', 'TST_MRPT_TC_33', 'TST_MRPT_TC_36', 'TST_MRPT_TC_38', 'TST_MRPT_TC_39',
+];
+
+const EXCLUSION_MARKER =
+  '**[EXTRA — Phase 1 exclusion]** Not present in the other team\'s reviewed sheet '
+  + '(`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in '
+  + 'Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ';
+
+// Applied here rather than in the generator so TCS is the finished article for every consumer.
+for (const tc of TCS) {
+  if (PHASE1_EXCLUSIONS.includes(tc.id) && !/\[EXTRA/.test(tc.remarks || '')) {
+    tc.remarks = EXCLUSION_MARKER + (tc.remarks || '');
+  }
+}
+
+module.exports = { TCS, REQS, PHASE1_EXCLUSIONS };
