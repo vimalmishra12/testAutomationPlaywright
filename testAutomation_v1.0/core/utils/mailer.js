@@ -8,7 +8,17 @@ var errorMailingList =
   "vimal.mishra@comprotechnologies.com,ashish.kushwaha@comprotechnologies.com";
 // GitHub Actions CI run URL.
 // argv.projectName = "owner/repo", argv.jobID = GITHUB_RUN_ID (passed by e2e-tests.yml).
-var githubActionsRunUrl = "https://github.com/" + argv.projectName + "/actions/runs/" + argv.jobID;
+var projectName = argv.projectName || process.env.GITHUB_REPOSITORY;
+var jobID = argv.jobID || process.env.GITHUB_RUN_ID;
+var isGitHubActions = Boolean(
+  argv.triggerSource === "GitHub Actions" ||
+  process.env.GITHUB_ACTIONS ||
+  (projectName && jobID && String(projectName).includes("/") && argv.triggerSource !== "Semaphore")
+);
+var githubActionsRunUrl =
+  isGitHubActions && projectName && jobID
+    ? "https://github.com/" + projectName + "/actions/runs/" + jobID
+    : "";
 
 // lambdatest shareable link detection
 const isLambdaTestRun = Boolean(process.env.LT_SHARE_URL);
@@ -36,7 +46,7 @@ async function main() {
       console.log("buildNumber = " + argv.buildNumber);
       console.log("mailingList = " + argv.mailingList);
       console.log("jobResult = " + argv.jobResult);
-      console.log("GitHub Actions Run = " + githubActionsRunUrl);
+      console.log("GitHub Actions Run = " + (githubActionsRunUrl || "N/A"));
       mailOutput =
         "<p>!!!!! ERROR: One or more environment parameters are missing!!!!!</p><p>&nbsp;appType = " +
         argv.appType +
@@ -54,9 +64,13 @@ async function main() {
         argv.triggerSource +
         "' on the '" +
         argv.branchName +
-        '\' branch. For GitHub Actions run details, click <a style="background-color: #ffffff;" href=' +
-        githubActionsRunUrl +
-        '><span style="font-weight: 400;">here</span></a></span></span></p>';
+        '\' branch.' +
+        (githubActionsRunUrl
+          ? ' For GitHub Actions run details, click <a style="background-color: #ffffff;" href="' +
+            githubActionsRunUrl +
+            '"><span style="font-weight: 400;">here</span></a>'
+          : "") +
+        "</span></span></p>";
       mailSubject =
         "❌ " +
         argv.appType +
@@ -288,9 +302,13 @@ async function createMail(logData, reportUrl, mailTitle) {
       argv.triggerSource +
       "' on the '" +
       argv.branchName +
-      "' branch. For GitHub Actions run details, click <a style=background-color: #ffffff;\" href=" +
-      githubActionsRunUrl +
-      "><span>here</span></a></span></p></body></html>";
+      "' branch." +
+      (githubActionsRunUrl
+        ? ' For GitHub Actions run details, click <a style="background-color: #ffffff;" href="' +
+          githubActionsRunUrl +
+          '"><span>here</span></a>'
+        : "") +
+      "</span></p></body></html>";
     subject =
       "❌ " +
       argv.appType +
@@ -302,6 +320,13 @@ async function createMail(logData, reportUrl, mailTitle) {
     tc_status = "error";
     mailingList = errorMailingList;
   } else {
+    let reportRowLabel = isLambdaTestRun ? "Lambdatest Report" : "Detailed Report";
+    let detailedArtifactRow = githubActionsRunUrl
+      ? '<tr><td><strong>Detailed Report</strong></td><td style="white-space: nowrap;"><a href="' +
+        githubActionsRunUrl +
+        '#artifacts"><span>See report files</span></a></td></tr>'
+      : "";
+
     output =
       '<!DOCTYPE html><html> <head><style> table, td { padding: 5px; border: 1.5px solid #D3D3D3; border-collapse: collapse; font-size: 14px; font-family: Arial; } </style> </head> <body><h2 style="font-family: Arial;"><strong>' +
       mailTitle +
@@ -329,11 +354,15 @@ async function createMail(logData, reportUrl, mailTitle) {
       appUrl +
       "</span></a></td></tr><tr><td><strong>Application Version&nbsp;</strong></td><td>" +
       appVersion +
-      '</td></tr><tr><td><strong>Detailed Report</strong></td><td style="white-space: nowrap;"><a href=' +
+      "</td></tr><tr><td><strong>" +
+      reportRowLabel +
+      '</strong></td><td style="white-space: nowrap;"><a href="' +
       reportUrl +
-      "><span >" +
+      '"><span>' +
       reportUrl +
-      "</span></a></td></tr></tbody></table>";
+      "</span></a></td></tr>" +
+      detailedArtifactRow +
+      "</tbody></table>";
     if (tc_status == "passed")
       subject =
         "✔️ " +
@@ -359,9 +388,13 @@ async function createMail(logData, reportUrl, mailTitle) {
       argv.triggerSource +
       "' on the '" +
       argv.branchName +
-      "' branch. For GitHub Actions run details, click <a style=background-color: #ffffff;\" href=" +
-      githubActionsRunUrl +
-      "><span>here</span></a></span></p></body></html>";
+      "' branch." +
+      (githubActionsRunUrl
+        ? ' For GitHub Actions run details, click <a style="background-color: #ffffff;" href="' +
+          githubActionsRunUrl +
+          '"><span>here</span></a>'
+        : "") +
+      "</span></p></body></html>";
     mailingList = argv.mailingList;
   }
 
