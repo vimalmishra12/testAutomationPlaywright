@@ -120,7 +120,7 @@ jobs:
             --branchName="${{ github.ref_name }}" \
             --buildNumber="${{ github.run_number }}" \
             --jobID="${{ github.run_id }}" \
-            --mailingList="ashish.kushwaha@comprotechnologies.com,vimal.mishra@comprotechnologies.com,anil.dani@comprotechnologies.com" \
+            --mailingList="ashish.kushwaha@comprotechnologies.com,vimal.mishra@comprotechnologies.com" \
             --jobResult="${{ steps.run_tests.outputs.TEST_RESULT }}" \
             --emailId="${{ secrets.EMAIL_ID }}" \
             --emailPwd="${{ secrets.EMAIL_PWD }}" \
