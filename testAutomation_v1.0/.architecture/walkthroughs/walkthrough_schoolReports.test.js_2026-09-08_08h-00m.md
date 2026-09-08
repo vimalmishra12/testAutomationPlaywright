@@ -242,6 +242,73 @@ single green run against a **race** fix proves very little — a race can pass b
 
 ---
 
+## 4d. Phase 2 exit — evidence audit and traps re-check
+
+**All 12 passing, 2 consecutive clean runs (106.5 s, 113.3 s).**
+
+**Evidence audit.** All 12 screenshots were extracted from `report.json` and inspected — not just
+counted. Every one shows what its TC asserts:
+
+- `TC_9` — `1 class status` beside Filter, every rendered row `Active`. This is the exact case
+  shape that ran green for weeks in `adminClassesTab` while photographing the *unfiltered* list;
+  it is correct here because the reset is in `BeforeEach` (ADR-019), not `AfterEach`.
+- `TC_14` — `Select classes (110)` with the footer reading *110 classes with a total of 30
+  students* while only 20 rows render. The central correction is visible in the image.
+- `TC_8` — the filter panel open with all five statuses **ticked**, which visually proves the
+  register correction.
+- `TC_27` — dialog open, `Class summary`, `Custom date range`, defaults `Wed, Sep 2, 2026` →
+  `Tue, Sep 8, 2026`, Submit enabled.
+
+> ⚠️ **`TC_18` is the one weak image**, and it is worth naming. A cleared selection looks identical
+> to a test that never selected anything. It stands only because `click_selectClassByText` waits
+> for the footer bar to APPEAR before the cancel, so the selection is proven before it is cleared.
+> **Keep that wait if the method is ever refactored** — without it the case still passes and its
+> evidence becomes meaningless, which is precisely the failure this audit exists to catch.
+
+**Falsifiability.** 95 assertions; no `>= 0`, no truthy-only checks, and every page-object call's
+result is captured and asserted — no fire-and-forget.
+
+**Traps table re-checked against shipped code.** Every "applies here" row has a real handler:
+modals use `isDisplayed`/`waitForDisplayed`; rows resolve by content via `getFilteredLocator`; no
+`setValue`/`fill` anywhere; `.list-items` and `.list-view` are scoped to the `create-report`
+component tag; the footer's absence uses `isExisting` (truthful here, per §5); select-all clicks
+the input while rows click the label.
+
+> **One row applied and was missed at build time — twice.** §B6, "wait on the thing that actually
+> changed". It cost runs 1 and 2. Recorded rather than quietly fixed: a documented trap being hit
+> anyway is the thing worth knowing.
+
+---
+
+## 4e. Phase 3 — visual assessment: NO CANDIDATES
+
+Every one of the 12 TCs hits a ❌ row on the AGENTS.md §8 decision table, so none is a candidate
+and no user confirmation was required (the rule is explicit that this is not a judgment call).
+All 12 remain `visualTest: false`; no `visualAcceptance_*` script was added.
+
+| TC | Data in frame | Decision-table row |
+|---|---|---|
+| `TC_2` | class names, keys, dates, student counts | user-generated keys · timestamps · dynamic counts |
+| `TC_4` `TC_5` | matched row, key, dates | user-generated keys · timestamps |
+| `TC_8` `TC_40` | filter panel — live class list in frame behind it | paginated / dynamic counts |
+| `TC_9` | filtered list, 20 live rows | paginated / dynamic counts |
+| `TC_13` | selection + footer counts | dynamic counts |
+| `TC_14` | `Select classes (110)`, footer totals | dynamic counts |
+| `TC_18` `TC_19` | class list in frame | user-generated keys · timestamps |
+| `TC_27` | **date defaults change daily**, list behind the modal | timestamps / dates |
+| `TC_34` | dialog with the live list visible behind it | dynamic counts |
+
+This is the eleventh admin assessment to reach "no candidates" (§B10), but it was **verified
+against the actual screenshots**, not inherited from precedent. Two things the images settled:
+
+1. **`TC_27` is the strongest ❌ in the set.** Its custom date range defaults to *today − 6 →
+   today*, so a baseline captured today fails tomorrow by design, with no UI change at all.
+2. **The dialog cases are not the exception they appear to be.** In the `TC_27` and `TC_34` images
+   the school's live class list is plainly visible behind and around the modal, so even the
+   "static dialog in frame" argument does not hold here — exactly the precedent §B10 records.
+
+---
+
 ## 5. Files touched
 
 **Commit `17c99a7`** — knowledge + register corrections:
@@ -266,4 +333,18 @@ single green run against a **race** fix proves very little — a race can pass b
 5. **`MRAC` is failing 0/2** — pre-existing, unrelated, not investigated by user decision.
 6. **`tcMap --findings` exits 1** on 13 pre-existing UNREGISTERED eBook TCs. MRPT itself is clean:
    0 MISFILED, 0 GHOST.
-7. **Phase 2 and Phase 3 are both ⬜ pending** for this suite.
+7. **`getData_rowLabels` still uses a `.nth(i)` loop** — the same shape as the bug in §10.17. It
+   only ever runs after `search_class` returns, i.e. on a settled list, so it was not implicated in
+   the run-2 failures. Worth replacing with a container read if that method is ever called
+   mid-transition.
+8. **Coverage arithmetic**, so the remaining work is not misread. The register holds **42** cases:
+   10 are `[EXTRA — Phase 1 exclusion]` and 5 are Blocked at design time (3 overlap), leaving
+   **30 in Phase 1 scope**. Of those, **12 are automated here**, **9 create a real report** and
+   need a data-owning suite, and **9 read-only edge/negative cases remain** — `TC_6`, `TC_7`,
+   `TC_10`, `TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_20`, `TC_31`.
+   > ⚠️ Earlier notes in this session repeated the handoff's *"21 positive cases in Phase 1 scope"*.
+   > That figure counts **Positive-type only**. The all-types in-scope total is **30**, so 18 cases
+   > remain, not 9.
+
+**All three phases are complete. This feature is closed** — its `authoring-status.md` block has
+been removed per that file's own rule (it holds in-flight work only; history lives here).
