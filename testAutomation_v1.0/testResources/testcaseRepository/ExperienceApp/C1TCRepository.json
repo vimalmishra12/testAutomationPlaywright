@@ -4673,6 +4673,27 @@
       ]
     },
     {
+      "modulename": "Admin App | Reports tab & Create report flow, read-only half (MRPT Phase 1) - NOTE the page object is schoolReports.page.js, not manageReports.page.js, which is taken by the teacher-side MRAC module",
+      "moduleId": "MRPT",
+      "testFile": "./test/ExperienceApp/schoolReports.test.js",
+      "testcase": [
+        { "id": "TST_MRPT_TC_100", "description": "BeforeEach housekeeping - reload the class-selection step so each case starts unfiltered and unsearched (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_101", "description": "Before-chain housekeeping - navigate from the Classes tab to Reports and open the class-selection step (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_2", "description": "Verify the class-selection step launches when Create report is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_4", "description": "Verify a class is returned when the full class name is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_5", "description": "Verify a class is returned when its class key is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_8", "description": "Verify the filter panel opens with all five class statuses when Filter is clicked", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_9", "description": "Verify the class list is narrowed to one status when that status filter is applied", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_13", "description": "Verify the selection count and footer summary update when a single class checkbox is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_14", "description": "Verify every matching class is selected when Select all classes is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_18", "description": "Verify the class selection is cleared and no report is created when Cancel is used on the class-selection step", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_19", "description": "Verify the report-configuration dialog closes without creating a report when its Cancel is used", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_27", "description": "Verify the custom date-range controls become available when a date-capable report type is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_34", "description": "Verify the custom grade-settings option is offered and unticked by default", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_40", "description": "Verify the class-selection filter offers class statuses only and no class-label filter", "tags": "P2", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "Admin App | Staff profile - view profile, admin rights & removal, read-only half (STFP Phase 1)",
       "moduleId": "STFP",
       "testFile": "./test/ExperienceApp/staffProfile.test.js",

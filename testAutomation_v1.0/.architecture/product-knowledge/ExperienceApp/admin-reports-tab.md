@@ -449,3 +449,84 @@ and `max` today; the footer action bar genuinely **absent** from the DOM at zero
 `Select classes` gaining its `(N)` only once at least one class is ticked; `#searchText`
 `maxlength="321"`; and `/reports/create` remaining reachable by deep link once the school context
 is set.
+
+### 10.15 The class-selection step has NO school tab strip `[2026-09-08]`
+
+`/reports/create` renders **zero `aDetail-*` links** — the CLASSES / STUDENTS / STAFF / LIBRARY /
+REPORTS tab strip that persists across every other admin screen (`admin-shared.md` §A9) is absent
+here. The class-selection step is a **full-page flow**, not a tab.
+
+**`Go back` (`createReport-1`) is therefore the only route back to `/reports`.** A page object that
+navigates by clicking the REPORTS tab works from the Classes tab and **times out** from here — it
+cost a 30 s `locator.click` timeout on the first run of the MRPT suite.
+
+> This extends §A9's tab-navigation notes with an exception: *the school tab strip is not
+> universal.* Check for it before writing tab-based navigation on a nested admin route.
+
+### 10.16 ⚠️ The class search is DEBOUNCED BY ~1 SECOND — measured
+
+Live measurement `[2026-09-08]`, polling the rendered row count on a 100 ms grid while typing
+`Fixture_GradeSettings_DO_NOT_DELETE` character by character:
+
+| t (ms from first keystroke) | rendered rows |
+|---|---|
+| 57 | 20 *(unfiltered — filter has not started)* |
+| **994** | **1** *(filtered)* |
+
+**~1 second of debounce.** This is the only measurable delay anywhere on this screen; §10.12's
+table of 0 ms transitions is otherwise accurate.
+
+**The trap this creates is worth stating plainly, because it produced a passing wait over a wrong
+list.** The first version of `search_class` waited for *"the row count has not changed across 3
+consecutive 100 ms reads"* and reported success in ~300 ms — while the list still held the
+**pre-search 20 rows**. A stability window cannot distinguish *"the filter has not started yet"*
+from *"the filter has finished"*, so it read the stale list as a settled result. Two cases then
+failed with 20 rows where 1 was expected, and five more failed downstream because the class they
+needed was not among the first 20 of 110 rendered.
+
+**Wait for the row-label FINGERPRINT to CHANGE, then settle** — the same signal `admin-shared.md`
+§B6 prescribes for sort order, and for the same reason. A count alone would also miss a search that
+returns a different set of the same size.
+
+> This is §B6's "wait on the thing that actually changed, never on its announcement" in a new
+> disguise: here there was no announcement at all, and *absence of change* was mistaken for
+> completion. Add it to the §B6 table as **class search → wrong signal: count stability → right
+> signal: row fingerprint change, after a ~1 s debounce.**
+
+### 10.17 ⚠️ NEVER index into a list that is still settling — read the container once
+
+The debounce in §10.16 has a second, sharper consequence that cost six cases a full mocha
+timeout each.
+
+A content fingerprint written as *"read the row count, then loop `.nth(0)…nth(n-1)`"* **cannot
+survive the change it is watching for.** Observed 2026-09-08: the count read 20, the loop began,
+the ~1 s debounce fired mid-loop, the list collapsed to **1** row, and `.nth(4)` then blocked for
+**Playwright's full 30 s default** waiting for an element that no longer existed:
+
+```
+locator.innerText: Timeout 30000ms exceeded.
+  waiting for locator('create-report div.list-items label.custom-control-label').nth(4).first()
+```
+
+Several such stalls inside one test exhausted mocha's 120 s cap, and the generic
+*"Timeout of 120000ms exceeded"* then **replaced the page object's own diagnostic**, so the run
+reported nothing about which wait had actually failed.
+
+**The fix is one atomic read.** `create-report div.list-view` is a single element (verified) that
+contains every row, so one `innerText` on it is a complete content fingerprint — one call instead
+of twenty-one, and impossible to go stale between reads.
+
+| | |
+|---|---|
+| ❌ | `count = getElementCount(rows); for (i<count) getText(nth(i))` — races the debounce, stalls 30 s per vanished row |
+| ✅ | `getText('create-report div.list-view')` — atomic, one call, cannot go stale |
+
+> **Two lessons, and the second is the one that generalises.**
+> 1. A per-row loop over a live list is a race, not a read. Any list with a debounce, a lazy
+>    load or a background refresh can shrink under it.
+> 2. **Keep a page object's own budgets well under mocha's `timeout`** (`.mocharc.js`: 120000).
+>    `search_class` originally used a 30 s budget for *both* of its waits; combined with the
+>    30 s locator stall above, the test died on mocha's clock rather than its own, and the
+>    diagnostic was lost. Budgets are now 15 s (change) + 5 s (settle) against a measured ~1 s
+>    debounce. This is `admin-shared.md` §B8's headroom rule, now hit for the third time in
+>    this repo — it is worth treating as a hard rule, not a caution.
