@@ -91,12 +91,8 @@ module.exports = {
       "A 'Last login <date>' line should be shown — got: " + sts.lastLogin);
 
     await assertion.assertEqual(sts.backDisplayed, true, "A 'Back' link should be displayed");
-    await assertion.assertEqual(sts.manageAccountDisplayed, true,
-      "The 'Manage account' dropdown should be displayed");
-    // Both menu items are pre-rendered inside the closed dropdown, so this proves the
-    // menu is genuinely CLOSED rather than merely present (admin-shared.md §B2).
-    await assertion.assertEqual(sts.manageAccountItemsDisplayedWhileClosed, false,
-      "Manage account items should be hidden until the dropdown is opened");
+    await assertion.assertEqual(sts.manageLearnerProfileDisplayed, true,
+      "The 'Manage learner profile' button should be displayed");
 
     await assertion.assertEqual(/^Course materials\s*\(\d+\)$/.test(normaliseCopy(sts.courseMaterialsHeading)), true,
       "A 'Course materials (N)' section should be shown — got: " + sts.courseMaterialsHeading);
@@ -268,11 +264,8 @@ module.exports = {
     sts = await schoolStudents.click_viewStudentProfile(testdata.childUsername);
     await assertion.assertEqual(sts.pageStatus, true, "The student profile page should load");
 
-    sts = await studentProfile.click_manageAccount();
-    await assertion.assertEqual(sts.editDetailsDisplayed, true,
-      "'Edit account details' should appear in the Manage account menu");
-
     sts = await studentProfile.click_editAccountDetails();
+    await assertion.assertEqual(sts.clickStatus, true, "Clicking 'Manage learner profile' should succeed");
     await assertion.assertEqual(sts.pageStatus, true, "The Manage learner profile page should load");
 
     sts = await studentProfile.click_passwordTab();
@@ -311,10 +304,8 @@ module.exports = {
     sts = await schoolStudents.click_viewStudentProfile(testdata.childUsername);
     await assertion.assertEqual(sts.pageStatus, true, "The child's profile page should load");
 
-    sts = await studentProfile.click_manageAccount();
-    await assertion.assertEqual(sts.editDetailsDisplayed, true,
-      "'Edit account details' should appear in the Manage account menu");
     sts = await studentProfile.click_editAccountDetails();
+    await assertion.assertEqual(sts.clickStatus, true, "Clicking 'Manage learner profile' should succeed");
     await assertion.assertEqual(sts.pageStatus, true, "The Manage learner profile page should load");
     await assertion.assertEqual(sts.url.indexOf(testdata.editProfileUrlFragment) >= 0, true,
       "Manage learner profile should open at '" + testdata.editProfileUrlFragment + "' — got: " + sts.url);

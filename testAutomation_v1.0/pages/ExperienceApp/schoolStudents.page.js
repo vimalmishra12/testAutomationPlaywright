@@ -185,10 +185,13 @@ module.exports = {
       searchBtnDisplayed: await action.isDisplayed(this.searchBtn),
       activationCheckboxDisplayed: await action.isDisplayed(this.activationCheckbox),
       manageStudentsDisplayed: await action.isDisplayed(this.manageStudentsDropdown),
-      selectAllDisplayed: await action.isDisplayed(this.selectAllCheckbox),
-      selectedCounterText: await action.getText(this.selectedCounterLabel),
+      selectAllDisplayed: (await action.isExisting(this.selectAllCheckbox))
+        ? await action.isDisplayed(this.selectAllCheckbox) : false,
+      selectedCounterText: (await action.isExisting(this.selectedCounterLabel))
+        ? await action.getText(this.selectedCounterLabel) : null,
       // Natively disabled at 0 selected — an ATTRIBUTE check, not a CSS-class one.
-      removeBtnEnabled: await action.isEnabled(this.removeFromSchoolBtn),
+      removeBtnEnabled: (await action.isExisting(this.removeFromSchoolBtn))
+        ? await action.isEnabled(this.removeFromSchoolBtn) : false,
       userGuideToggleDisplayed: await action.isDisplayed(this.userGuideToggleCollapsed),
       sortLastNameDisplayed: await action.isDisplayed(this.sortByLastNameBtn),
       sortFirstNameDisplayed: await action.isDisplayed(this.sortByFirstNameBtn),
