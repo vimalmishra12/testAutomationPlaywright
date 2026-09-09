@@ -1142,7 +1142,7 @@
         "profileLastLogin": "div.user-info div.last-login",
         "backLink": "a[qid='user-profile-1']",
         "manageAccountDropdown": "#learnerProfileManage",
-        "manageAccountEditDetails": "a[qid='user-profile-4']",
+        "manageAccountEditDetails": "a.manage-learner-profile-btn, a[aria-label='Manage learner profile'], a[qid='user-profile-4']",
         "manageAccountRemove": "a[qid='user-profile-5']",
         "removeConfirmModal": "div.view-profile .modal-content, .modal-content",
         "courseMaterialsSection": "div.course-material-section",
