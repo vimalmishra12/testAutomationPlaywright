@@ -1,0 +1,39 @@
+{
+  "C1": {
+    "adminStaffProfile": {
+      "_comment": "Admin App > staff profile (module STFP) on thor. Every fixture below was verified live on FCN-CHZ-PDA 2026-09-07. The school is SHARED and actively mutated by other teams - no value here may be turned into an absolute-count assertion (admin-shared.md A5). Nothing in this suite creates, changes or removes anything: six cases OPEN a mutating dialog and leave it, and never click a confirm button.",
+
+      "schoolKey": "FCN-CHZ-PDA",
+      "staffUrlFragment": "/staff",
+      "profileUrlFragment": "/profile/",
+
+      "_teacherComment": "Team-nominated healthy teacher fixture (admin-staff-tab.md 6). Do NOT substitute tch_L_20240705-095330_1_FCN-CHZ-PDA - its profile returns HTTP 500 and leaves #loader-container stuck, which cascades into unrelated timeouts. That account belongs to the Phase-1-excluded TST_STFP_TC_6.",
+      "teacherEmail": "teacher17aug2026@mailsac.com",
+      "teacherProfileHeading": "ln, teacher17aug2026",
+      "teacherProfileInitials": "TL",
+
+      "_adminComment": "An Administrator/Teacher that is NOT the login account. testt1@mailsac.com must never be used here - the product offers both Remove admin rights and Remove from school account on the signed-in user's own profile, and it is the login for every admin suite.",
+      "adminEmail": "cqa_teacher17oct3@mailsac.com",
+      "adminProfileHeading": "Ln, cqa_teacher17oct3",
+
+      "_classComment": "TST_STFP_TC_7. teacher17aug2026 held 43 classes on 2026-09-07, of which 'testClass1 17aug' was the ONLY uniquely-named one - the rest are accumulation from the class-creating suites (BulkCSV_Class2 x17, BulkCSV_Class1 x17, AutoClass_CreateOnly x8; admin-shared.md A7). The case asserts the name is unique, so if that stops being true it fails loudly rather than opening an arbitrary class.",
+      "teacherWithClassesEmail": "teacher17aug2026@mailsac.com",
+      "classNameToLaunch": "testClass1 17aug",
+
+      "roleTeacher": "Teacher",
+      "roleAdmin": "Administrator/Teacher",
+
+      "_copyComment": "Captured verbatim from the pre-rendered DOM 2026-09-07 (admin-shared.md A6 - free capture). Compared through a whitespace squash on both sides. The revoke dialog personalises in '<First> <Last>' order, the OPPOSITE of the profile heading's 'Last, First'.",
+      "revokeDialogHeading": "Remove admin rights?",
+      "revokeDialogBody": "will no longer have admin rights, but will still remain a teacher in your school",
+      "revokeKeepBtn": "No, keep admin rights",
+      "revokeConfirmBtn": "Yes, remove admin rights",
+
+      "removalDialogHeading": "Remove from school account",
+      "removalDialogBody": "This staff member will no longer have access to your school account or any of its classes. They can still use their account independently from your school",
+      "removalCheckboxLabel": "I confirm I want to remove this staff member from my school account",
+      "removalCancelBtn": "No, cancel",
+      "removalConfirmBtn": "Yes, remove"
+    }
+  }
+}

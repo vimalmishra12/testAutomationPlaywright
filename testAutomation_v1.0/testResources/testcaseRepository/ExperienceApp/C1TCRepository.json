@@ -4189,18 +4189,18 @@
       ]
     },
     {
-      "modulename": "Manage Reports Accessibility",
-      "moduleId": "",
+      "modulename": "Manage Reports Accessibility (teacher class page - NOT the Admin Reports tab)",
+      "moduleId": "MRAC",
       "testFile": "./test/ExperienceApp/manageReports.test.js",
       "testcase": [
         {
-          "id": "TST_MRPT_TC_1",
+          "id": "TST_MRAC_TC_1",
           "description": "Click Manage Reports from Actions dropdown",
           "tags": "P1",
           "visualTest": false
         },
         {
-          "id": "TST_MRPT_TC_2",
+          "id": "TST_MRAC_TC_2",
           "description": "Verify Download button has correct button role for accessibility",
           "tags": "P1",
           "visualTest": false
@@ -4670,6 +4670,44 @@
         { "id": "TST_STFL_TC_23", "description": "Verify the next page of staff is appended when Load more is clicked", "tags": "P1", "visualTest": false },
         { "id": "TST_STFL_TC_24", "description": "Verify the Load more control is removed when the whole staff list has been loaded", "tags": "P2", "visualTest": false },
         { "id": "TST_STFL_TC_25", "description": "Verify the Load more control is absent when a search returns fewer results than one page", "tags": "P2", "visualTest": false }
+      ]
+    },
+    {
+      "modulename": "Admin App | Reports tab & Create report flow, read-only half (MRPT Phase 1) - NOTE the page object is schoolReports.page.js, not manageReports.page.js, which is taken by the teacher-side MRAC module",
+      "moduleId": "MRPT",
+      "testFile": "./test/ExperienceApp/schoolReports.test.js",
+      "testcase": [
+        { "id": "TST_MRPT_TC_100", "description": "BeforeEach housekeeping - reload the class-selection step so each case starts unfiltered and unsearched (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_101", "description": "Before-chain housekeeping - navigate from the Classes tab to Reports and open the class-selection step (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_2", "description": "Verify the class-selection step launches when Create report is clicked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_4", "description": "Verify a class is returned when the full class name is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_5", "description": "Verify a class is returned when its class key is searched", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_8", "description": "Verify the filter panel opens with all five class statuses when Filter is clicked", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_9", "description": "Verify the class list is narrowed to one status when that status filter is applied", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_13", "description": "Verify the selection count and footer summary update when a single class checkbox is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_14", "description": "Verify every matching class is selected when Select all classes is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_18", "description": "Verify the class selection is cleared and no report is created when Cancel is used on the class-selection step", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_19", "description": "Verify the report-configuration dialog closes without creating a report when its Cancel is used", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_27", "description": "Verify the custom date-range controls become available when a date-capable report type is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_34", "description": "Verify the custom grade-settings option is offered and unticked by default", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_40", "description": "Verify the class-selection filter offers class statuses only and no class-label filter", "tags": "P2", "visualTest": false }
+      ]
+    },
+    {
+      "modulename": "Admin App | Staff profile - view profile, admin rights & removal, read-only half (STFP Phase 1)",
+      "moduleId": "STFP",
+      "testFile": "./test/ExperienceApp/staffProfile.test.js",
+      "testcase": [
+        { "id": "TST_STFP_TC_RESET", "description": "BeforeEach + suite-After housekeeping - return to the Staff tab and clear any search (not a functional test)", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_1", "description": "Verify the staff profile opens with all expected details when View profile is used on a teacher", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_2", "description": "Verify the role is shown as Administrator/Teacher when the profile of an administrator is opened", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_7", "description": "Verify the class page opens when a class is clicked on a staff profile", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_9", "description": "Verify Grant admin rights is offered when Manage account is opened on a teacher", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_11", "description": "Verify Remove admin rights is offered when Manage account is opened on an administrator", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_12", "description": "Verify admin rights are retained when the Remove admin rights confirmation is cancelled", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_15", "description": "Verify the removal confirmation explains the consequence when Remove from school account is opened", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_16", "description": "Verify the Yes, remove button is unavailable until the confirmation checkbox is ticked", "tags": "P1", "visualTest": false },
+        { "id": "TST_STFP_TC_17", "description": "Verify the staff member is retained when the removal confirmation is cancelled", "tags": "P1", "visualTest": false }
       ]
     }
   ]

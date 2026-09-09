@@ -1,0 +1,745 @@
+"use strict";
+var action = require("../../core/actionLibrary/baseActionLibrary.js");
+// Selectors resolved at load time from C1Selectors.json → css.ComproC1.schoolReports
+var selectorFile = jsonParserUtil.jsonParser(selectorDir);
+var sr = selectorFile.css.ComproC1.schoolReports;
+
+/**
+ * Admin App → Reports tab and the Create report flow (module MRPT).
+ *
+ * ⚠️ NAMING. This file is `schoolReports.page.js`, NOT the `manageReports.page.js` that
+ * AGENTS.md Rule 6 and manual-test-standard.md both cite as MRPT's worked example. That
+ * filename is already taken by the teacher-side class-page flow (module MRAC,
+ * `manageReports.test.js`), which is a different screen entirely. The module code stays
+ * `MRPT` — it is fixed across a 42-case manual register and the product-knowledge file, and
+ * commit 51938b7 renamed the older module to MRAC specifically to free it. The name here
+ * follows the admin-tab convention instead (`schoolStaff`, `schoolStudents`, `schoolClasses`).
+ *
+ * ---------------------------------------------------------------------------------------
+ * TRAPS THIS PAGE OBJECT HANDLES  (evidence: admin-reports-tab.md §10, captured 2026-09-08)
+ * ---------------------------------------------------------------------------------------
+ *
+ * 1. ROW IDS ARE POSITIONAL AND 0-BASED, AND `name` IS EMPTY.
+ *    `id="checkbox-0"` / `qid="createReport-7-0"` are re-issued on every search and filter —
+ *    literally Invariant 2's canonical `#checkbox-1` example. The product-knowledge file
+ *    previously claimed the checkbox `name` held the class UUID; it is EMPTY on this school.
+ *    → Every row is resolved by its LABEL TEXT (`rowLabelFor`), never by index.
+ *
+ * 2. `createReport-11-N` IS A FALSE-GREEN GENERATOR, BUT A GOOD TOTAL-COUNT ORACLE.
+ *    110 anchors present, 0 visible, with 20 rows rendered. Its COUNT tracks the number of
+ *    classes matching the current query (110 → 21 filtered → 1 searched).
+ *    → Never counted as "rows rendered"; used only by `getData_matchingClassTotal`.
+ *
+ * 3. TWO CLICK CONVENTIONS ON ONE SCREEN.
+ *    Row checkboxes follow admin-shared.md §B5 (the label overlays the input, click the
+ *    label). The SELECT-ALL checkbox is the opposite: its label renders no text at all and
+ *    has a permanent 0×0 rect, so Playwright refuses it as "not visible" — the INPUT must be
+ *    clicked, and works because opacity-0 is still visible to Playwright (Invariant 1).
+ *
+ * 4. THE FOOTER ACTION BAR DOES NOT EXIST AT ZERO SELECTION.
+ *    `createReport-13` (Cancel) and `createReport-14` (Continue) are absent from the DOM, not
+ *    disabled. → `getData_selectionState` asserts ABSENCE via isExisting, never isDisplayed
+ *    on a missing node.
+ *
+ * 5. THE SEARCH IS LIVE / DEBOUNCED, NOT SUBMIT-DRIVEN.
+ *    Typing alone filters; the `Search` button is not required. The Classes tab is the
+ *    opposite, and that expectation had been inherited into the register (admin-shared §A4).
+ *    → `search_class` types and waits for the list to settle. It never clicks Search.
+ *
+ * 6. NEITHER THE FILTER NOR THE SEARCH PERSISTS.
+ *    Both reset on reload — the opposite of the Classes tab's server-side persistence
+ *    (admin-shared.md §A4/§B7). → `reset_classPicker` is a plain reload, and owes no
+ *    server-side undo. This is also why `search_class` IS idempotent here, unlike
+ *    `schoolClasses.search_class`, which must clear first (§B7).
+ *
+ * 7. THREE DIFFERENT "CANCEL-LIKE" CONTROLS.
+ *    `createReport-1` Go back LEAVES the flow; `createReport-13` Cancel CLEARS THE SELECTION
+ *    and stays; `createReport-15` Cancel closes the config dialog. Separate methods, named
+ *    for what they do, so a caller cannot pick the wrong one by accident.
+ *
+ * 8. THE CONFIG DIALOG IS PRE-RENDERED (4 `.modal-content` on this route, 0 visible).
+ *    → Every dialog check uses isDisplayed, never isExisting (§B2). The date inputs are
+ *    likewise in the DOM but hidden until `Custom date range` is chosen.
+ */
+
+/**
+ * Budget for any transition on this screen.
+ *
+ * ⚠️ Everything measured on this page on 2026-09-08 completed WITHIN ONE 100ms POLL —
+ * the footer bar, the config dialog, the date radios enabling, the filter panel opening
+ * and closing, and the Go back navigation all read 0 ms. The list-affecting operations
+ * (select-all, apply filter, live search) had all settled by the first 1.5 s check.
+ *
+ * 15000 is ~10x the slowest thing observed. It is deliberately NOT larger: nothing here
+ * touches the network except the initial list fetch, so a long wait would hide a bug rather
+ * than absorb latency (admin-shared.md §B8, "prefer a SHORT timeout on client-side work").
+ * It still leaves ample headroom under mocha's 120000, so a failure reports this method's
+ * own diagnostic and not a generic timeout.
+ */
+var UI_TIMEOUT = 15000;
+
+/**
+ * Budget for the class list to finish rendering after a load, search or filter.
+ *
+ * Longer than UI_TIMEOUT because this one DOES wait on the server: the initial page load
+ * fetches the class list. Measured well under 3 s on a healthy Thor, but Thor's throughput
+ * varies 4-8x for identical work (§B8), so this is ~10x the observed figure.
+ */
+var LIST_TIMEOUT = 30000;
+
+/**
+ * Budgets for the two halves of a class search.
+ *
+ * The search is debounced by **~1 second** — measured 2026-09-08, the list narrowed from 20
+ * rows to 1 at **994 ms** after the last keystroke.
+ *
+ * ⚠️ THESE ARE DELIBERATELY SMALL ENOUGH TO FAIL BEFORE MOCHA DOES. `search_class` runs both
+ * waits back to back, so the pair must stay well under mocha's 120000 timeout
+ * (`.mocharc.js`). The first version used LIST_TIMEOUT (30000) for BOTH halves; combined with
+ * a 30 s Playwright locator stall that pushed six cases past 120 s, and mocha's generic
+ * "Timeout of 120000ms exceeded" then REPLACED this method's own diagnostic — leaving no clue
+ * which half had failed. That is exactly the trap admin-shared.md §B8 records ("a poll budget
+ * set to exactly mocha's timeout is useless... leave headroom"), and it has now been made
+ * twice in this repo.
+ *
+ * 15000 is ~15x the measured debounce; 5000 covers the follow-up render. Worst case ~20 s.
+ */
+var SEARCH_CHANGE_TIMEOUT = 15000;
+var SEARCH_SETTLE_TIMEOUT = 5000;
+
+/** Poll interval for the settle helpers below. */
+var POLL_MS = 100;
+
+/**
+ * Polls until `fn()` returns true, or the budget expires.
+ * Returns true on success and false on expiry — the CALLER decides whether expiry is a
+ * failure, so this never swallows a problem silently (Invariant 13).
+ */
+async function pollUntil(fn, timeout) {
+  var deadline = Date.now() + timeout;
+  /* eslint-disable no-await-in-loop */
+  while (Date.now() < deadline) {
+    if (await fn()) return true;
+    await browser.pause(POLL_MS);
+  }
+  /* eslint-enable no-await-in-loop */
+  return await fn();
+}
+
+/** Squashes runtime whitespace so a comparison is not defeated by the product's blank lines. */
+function squash(raw) {
+  if (raw === null || raw === undefined || raw.message) return "";
+  return String(raw).replace(/\s+/g, " ").trim();
+}
+
+module.exports = {
+  // Resolves to C1Selectors.json → css.ComproC1.schoolReports.*
+  reportsTabLink: sr.reportsTabLink,
+  createReportBtn: sr.createReportBtn,
+  createReportEmptyStateLink: sr.createReportEmptyStateLink,
+  goBackLink: sr.goBackLink,
+  pageComponent: sr.pageComponent,
+  createReportHeading: sr.createReportHeading,
+  selectClassesHeading: sr.selectClassesHeading,
+  footerPanel: sr.footerPanel,
+  searchInput: sr.searchInput,
+  searchBtn: sr.searchBtn,
+  selectAllCheckbox: sr.selectAllCheckbox,
+  selectAllLabel: sr.selectAllLabel,
+  rowCheckboxAll: sr.rowCheckboxAll,
+  rowLabelAll: sr.rowLabelAll,
+  listContainer: sr.listContainer,
+  classNameAnchorAll: sr.classNameAnchorAll,
+  loadMoreLink: sr.loadMoreLink,
+  filterToggle: sr.filterToggle,
+  filterPanelHeading: sr.filterPanelHeading,
+  filterStatusAll: sr.filterStatusAll,
+  filterStatusLabelAll: sr.filterStatusLabelAll,
+  filterClearAllLink: sr.filterClearAllLink,
+  filterApplyBtn: sr.filterApplyBtn,
+  filterCloseBtn: sr.filterCloseBtn,
+  filterSummaryLabel: sr.filterSummaryLabel,
+  footerCancelLink: sr.footerCancelLink,
+  footerContinueBtn: sr.footerContinueBtn,
+  reportModal: sr.reportModal,
+  reportTypeToggle: sr.reportTypeToggle,
+  reportTypeOptionAll: sr.reportTypeOptionAll,
+  customGradeCheckbox: sr.customGradeCheckbox,
+  customGradeLabel: sr.customGradeLabel,
+  rangeFromBeginningRadio: sr.rangeFromBeginningRadio,
+  rangeCustomRadio: sr.rangeCustomRadio,
+  rangeCustomLabel: sr.rangeCustomLabel,
+  rangeLabelAll: sr.rangeLabelAll,
+  dateFromInput: sr.dateFromInput,
+  dateToInput: sr.dateToInput,
+  modalCancelBtn: sr.modalCancelBtn,
+  modalSubmitBtn: sr.modalSubmitBtn,
+
+  /* ------------------------------------------------------------------ lifecycle */
+
+  /**
+   * Confirms the class-selection step has loaded AND its class list has rendered.
+   *
+   * Anchors on `h2.select-classes`, not a bare `h1` — every admin view renders an unclassed
+   * `<h1>` (here it says "Create report", the same words as the config dialog's own `<h4>`),
+   * so a bare `h1` would silently match the wrong thing (admin-shared.md §B9).
+   *
+   * ⚠️ Waits for the first ROW too, not just the heading. The heading renders before the
+   * class list arrives, and every case on this screen acts on rows — returning early would
+   * be the §B6 "optimistic UI" trap, where the announcement is mistaken for the thing.
+   */
+  isInitialized: async function () {
+    await logger.logInto(await stackTrace.get());
+    await action.waitForDocumentLoad();
+    var headingUp = await action.waitForDisplayed(this.selectClassesHeading, UI_TIMEOUT);
+    if (true != headingUp) return { pageStatus: headingUp };
+    var self = this;
+    var rowsUp = await pollUntil(async function () {
+      return (await action.getElementCount(self.rowCheckboxAll)) > 0;
+    }, LIST_TIMEOUT);
+    return { pageStatus: rowsUp === true ? true : new Error("the class list did not render within " + LIST_TIMEOUT + "ms") };
+  },
+
+  /**
+   * Navigates from any school tab to the REPORTS tab.
+   *
+   * ⚠️ Uses `aDetail-6`. The school tab family is NOT contiguous — the sequence is
+   * 1, 2, 4, 5, 6 (`aDetail-3` is skipped), so never iterate it (admin-shared.md §A9).
+   *
+   * ⚠️ Waits on the URL, not on the tab's active class. Every tab anchor carries an
+   * identical className whether active or not, so asserting on the anchor's class is a
+   * guaranteed false green; the active marker lives on the parent `<li>` (§A9).
+   * Measured: Reports took ~4.3 s to become active, so this uses LIST_TIMEOUT.
+   */
+  click_reportsTab: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.reportsTabLink);
+    if (true != res) return { pageStatus: res };
+    var landed = await action.waitForUrl(/\/reports$/, LIST_TIMEOUT);
+    if (true != landed) return { pageStatus: landed };
+    return { pageStatus: await action.waitForDisplayed(this.createReportBtn, LIST_TIMEOUT) };
+  },
+
+  /**
+   * Clicks "Create report" on the Reports tab and hands off to the class-selection step.
+   *
+   * ⚠️ TWO controls carry this label — the header button (`aReport-1`) and the empty-state
+   * link (`aReport-12`). This method deliberately uses the HEADER one, which is present in
+   * both the empty and populated states; the empty-state link only exists on a school with
+   * no reports (admin-reports-tab.md §4).
+   *
+   * Owned by this page object rather than a Reports-tab one because the tab that owns the
+   * control owns the hop into the destination — the convention `schoolStaff.click_viewProfile`
+   * established.
+   */
+  click_createReport: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.createReportBtn);
+    if (true != res) return { pageStatus: res };
+    var onStep = await action.waitForUrl(/\/reports\/create$/, UI_TIMEOUT);
+    if (true != onStep) return { pageStatus: onStep };
+    return await this.isInitialized();
+  },
+
+  /**
+   * Returns the class picker to its pristine state before each test.
+   *
+   * A plain reload is CORRECT and sufficient here — unlike the Classes tab, neither the
+   * filter nor the search persists server-side on this screen (admin-reports-tab.md §10.6),
+   * so there is nothing to undo beyond the current DOM. Verified live: after a reload all
+   * five statuses are ticked again, the summary reads "All class statuses" and the search
+   * box is empty.
+   *
+   * ⚠️ Returns its result so a failed reset FAILS rather than bleeding state into the next
+   * test (Invariant 13 — cleanup must never hide).
+   */
+  reset_classPicker: async function () {
+    await logger.logInto(await stackTrace.get());
+    var url = await browser.getUrl();
+    if (!/\/reports\/create/.test(String(url))) {
+      return { pageStatus: new Error("reset_classPicker called from " + url + ", not the class-selection step") };
+    }
+    await browser.url(String(url));
+    return await this.isInitialized();
+  },
+
+  /* ------------------------------------------------------------------- reading */
+
+  /**
+   * The class-selection step's structural layout — what TST_MRPT_TC_2 asserts.
+   */
+  getData_classStep: async function () {
+    await logger.logInto(await stackTrace.get());
+    return {
+      url: String(await browser.getUrl()),
+      heading: squash(await action.getText(this.selectClassesHeading)),
+      searchPlaceholder: String(await action.getAttribute(this.searchInput, "placeholder")),
+      searchMaxLength: String(await action.getAttribute(this.searchInput, "maxlength")),
+      filterSummary: squash(await action.getText(this.filterSummaryLabel)),
+      selectAllDisplayed: await action.isDisplayed(this.selectAllCheckbox),
+      rowCount: await action.getElementCount(this.rowCheckboxAll),
+    };
+  },
+
+  /**
+   * The number of classes MATCHING the current search/filter.
+   *
+   * ⚠️ Read from `createReport-11-N`, which is 0 VISIBLE in every state — so this must never
+   * be used as a count of rendered rows (that is the §B2 false green). Its count DOES track
+   * the matching total, which is the only churn-proof total on a shared school: measured
+   * 110 unfiltered, 21 with the Active filter, 1 on a single-hit search (§10.4).
+   */
+  getData_matchingClassTotal: async function () {
+    await logger.logInto(await stackTrace.get());
+    return {
+      matchingTotal: await action.getElementCount(this.classNameAnchorAll),
+      renderedRows: await action.getElementCount(this.rowCheckboxAll),
+      loadMorePresent: await action.isExisting(this.loadMoreLink),
+    };
+  },
+
+  /**
+   * Everything about the current selection — the heading count, the footer bar and the rows.
+   *
+   * ⚠️ `footerPresent` uses isExisting BY DESIGN. At zero selection the footer bar is absent
+   * from the DOM entirely, not disabled (admin-reports-tab.md §5), so this is one of the rare
+   * places where a presence check is the truthful assertion rather than a false green. That
+   * makes "no footer at zero selection" genuinely falsifiable.
+   */
+  getData_selectionState: async function () {
+    await logger.logInto(await stackTrace.get());
+    var heading = squash(await action.getText(this.selectClassesHeading));
+    var match = heading.match(/Select classes\((\d+)\)/);
+    var rows = await action.getElementCount(this.rowCheckboxAll);
+    var checked = 0;
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < rows; i++) {
+      if (true === (await action.isSelected(await action.getKthElement(this.rowCheckboxAll, i)))) checked++;
+    }
+    /* eslint-enable no-await-in-loop */
+    return {
+      heading: heading,
+      selectedCount: match ? Number(match[1]) : null,
+      headingHasCount: match !== null,
+      renderedRows: rows,
+      checkedRows: checked,
+      selectAllChecked: await action.isSelected(this.selectAllCheckbox),
+      footerPresent: await action.isExisting(this.footerCancelLink),
+      continuePresent: await action.isExisting(this.footerContinueBtn),
+      summaryText: (await action.isExisting(this.footerPanel))
+        ? squash(await action.getText(this.footerPanel))
+        : null,
+    };
+  },
+
+  /** The rendered rows' label text, one entry per row. Used to prove a filter or search narrowed the list. */
+  getData_rowLabels: async function () {
+    await logger.logInto(await stackTrace.get());
+    var n = await action.getElementCount(this.rowCheckboxAll);
+    var out = [];
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < n; i++) {
+      out.push(squash(await action.getText(await action.getKthElement(this.rowLabelAll, i))));
+    }
+    /* eslint-enable no-await-in-loop */
+    return { rowCount: n, labels: out };
+  },
+
+  /* -------------------------------------------------------------------- search */
+
+  /**
+   * Types a term into the class search and waits for the list to settle.
+   *
+   * ⚠️ DELIBERATELY DOES NOT CLICK "Search". This search is LIVE/debounced — the list
+   * narrowed before the button was clicked during capture (§10.5). Clicking it would still
+   * work, but asserting through it would hide a regression from live back to submit-driven.
+   *
+   * ⚠️ Uses clearValue + addValue, never setValue/fill — Angular ignores fill's value
+   * (Invariant 6 / §B5).
+   *
+   * ⚠️ THE SEARCH IS DEBOUNCED BY ~1 SECOND. Measured 2026-09-08: the list narrowed from 20
+   * rows to 1 at **994 ms** after the last keystroke. This is why the wait below is written
+   * as WAIT-FOR-CHANGE and not as a stability window.
+   *
+   * The first version of this method polled for "the row count has not changed across 3
+   * consecutive 100 ms reads" and reported success in ~300 ms — while the list was still
+   * showing the PRE-SEARCH 20 rows. A stability check cannot distinguish "the filter has not
+   * started yet" from "the filter has finished", so it read the old list as a settled result
+   * and TC_4/TC_5 failed with 20 rows instead of 1. Textbook admin-shared.md §B6: waiting on
+   * the wrong signal.
+   *
+   * The signal is the ROW-LABEL FINGERPRINT, not the row count — the same choice §B6
+   * prescribes for sort order. A count would miss a search that returns a different set of
+   * the same size; the fingerprint catches it.
+   *
+   * Unlike `schoolClasses.search_class` this IS idempotent — the term does not persist
+   * server-side here (§10.6) and BeforeEach reloads to the unfiltered list, so the
+   * fingerprint always changes for a narrowing search.
+   */
+  search_class: async function (term) {
+    await logger.logInto(await stackTrace.get(), "term:" + term);
+
+    var self = this;
+
+    /**
+     * ⚠️ ONE ATOMIC READ of the whole list container — never a per-row `.nth(i)` loop.
+     *
+     * The first fingerprint did exactly that: it read the row count (20), then looped
+     * `.nth(0)…nth(19)`. The ~1 s debounce fired MID-LOOP, the list collapsed to 1 row, and
+     * `.nth(4)` then blocked for Playwright's full 30 s default waiting for an element that
+     * no longer existed. A few of those per test exhausted mocha's 120 s cap, and six cases
+     * died reporting a generic timeout instead of this method's own diagnostic.
+     *
+     * The irony is the point: this fingerprint exists to detect the list changing, and the
+     * old implementation could not survive the very change it was watching for. A single
+     * `innerText` on `div.list-view` (verified unique, contains every row) is atomic, is one
+     * call instead of 21, and cannot go stale between reads.
+     *
+     * NEVER index into a list that is still settling.
+     */
+    var fingerprint = async function () {
+      return squash(await action.getText(self.listContainer));
+    };
+
+    var before = await fingerprint();
+
+    var cleared = await action.clearValue(this.searchInput);
+    if (true != cleared) return { pageStatus: cleared };
+    var typed = await action.addValue(this.searchInput, term);
+    if (true != typed) return { pageStatus: typed };
+
+    var actual = String(await action.getValue(this.searchInput));
+    if (actual !== term) {
+      return { pageStatus: new Error("the search box holds '" + actual + "' after typing '" + term + "' - Angular dropped keystrokes (§B5)") };
+    }
+
+    // Cross the ~1s debounce: wait for the list to actually become a different list.
+    var changed = await pollUntil(async function () {
+      return (await fingerprint()) !== before;
+    }, SEARCH_CHANGE_TIMEOUT);
+    if (changed !== true) {
+      return { pageStatus: new Error("the class list did not change within " + SEARCH_CHANGE_TIMEOUT + "ms of searching '" + term + "' (debounce measured at ~1s) - it still holds the pre-search rows") };
+    }
+
+    // Then let any follow-up render settle before the caller reads the list.
+    var last = null;
+    var stableFor = 0;
+    await pollUntil(async function () {
+      var fp = await fingerprint();
+      if (fp === last) { stableFor++; } else { stableFor = 0; last = fp; }
+      return stableFor >= 3;
+    }, SEARCH_SETTLE_TIMEOUT);
+
+    return {
+      pageStatus: true,
+      rowCount: await action.getElementCount(this.rowCheckboxAll),
+      searchClicked: false,
+    };
+  },
+
+  /* -------------------------------------------------------------------- filter */
+
+  /** Opens the filter panel and waits for Apply to be visible (the panel is pre-rendered — §B2). */
+  click_filter: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.filterToggle);
+    if (true != res) return { pageStatus: res };
+    return { pageStatus: await action.waitForDisplayed(this.filterApplyBtn, UI_TIMEOUT) };
+  },
+
+  /**
+   * The filter panel's contents — what TST_MRPT_TC_8 and TST_MRPT_TC_40 assert.
+   *
+   * `statusCount` is the assertion that PINS THE ABSENCE of a class-label filter (TC_40):
+   * the panel offers exactly five checkboxes and no other group, which disproves the other
+   * team's "status/label filter" description (§10 / register TC_40).
+   */
+  getData_filterPanel: async function () {
+    await logger.logInto(await stackTrace.get());
+    var n = await action.getElementCount(this.filterStatusAll);
+    var labels = [];
+    var checked = [];
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < n; i++) {
+      labels.push(squash(await action.getText(await action.getKthElement(this.filterStatusLabelAll, i))));
+      checked.push(await action.isSelected(await action.getKthElement(this.filterStatusAll, i)));
+    }
+    /* eslint-enable no-await-in-loop */
+    return {
+      panelDisplayed: await action.isDisplayed(this.filterApplyBtn),
+      headingDisplayed: await action.isDisplayed(this.filterPanelHeading),
+      statusCount: n,
+      statusLabels: labels,
+      statusChecked: checked,
+      allChecked: checked.length > 0 && checked.every(function (c) { return c === true; }),
+      clearAllDisplayed: await action.isDisplayed(this.filterClearAllLink),
+      applyDisplayed: await action.isDisplayed(this.filterApplyBtn),
+      closeDisplayed: await action.isDisplayed(this.filterCloseBtn),
+      summaryLabel: squash(await action.getText(this.filterSummaryLabel)),
+    };
+  },
+
+  /**
+   * Unticks every status except `keepLabel`, leaving exactly one applied.
+   *
+   * ⚠️ Written as UNTICK-THE-OTHERS, not tick-one, because all five start CHECKED
+   * (§10.2) — the register originally said unticked, and a tick-one implementation would
+   * have selected six-of-five and filtered nothing.
+   *
+   * Statuses are matched by LABEL TEXT, never by the positional `status.nameN` id.
+   */
+  apply_singleStatusFilter: async function (keepLabel) {
+    await logger.logInto(await stackTrace.get(), "keep:" + keepLabel);
+    var n = await action.getElementCount(this.filterStatusAll);
+    var kept = false;
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < n; i++) {
+      var label = await action.getKthElement(this.filterStatusLabelAll, i);
+      var text = squash(await action.getText(label));
+      var box = await action.getKthElement(this.filterStatusAll, i);
+      var isOn = await action.isSelected(box);
+      if (text === keepLabel) {
+        kept = true;
+        if (true !== isOn) {
+          var onRes = await action.click(label);
+          if (true != onRes) return { pageStatus: onRes };
+        }
+      } else if (true === isOn) {
+        var offRes = await action.click(label);
+        if (true != offRes) return { pageStatus: offRes };
+      }
+    }
+    /* eslint-enable no-await-in-loop */
+    if (!kept) return { pageStatus: new Error("no status checkbox is labelled '" + keepLabel + "'") };
+
+    var applied = await action.click(this.filterApplyBtn);
+    if (true != applied) return { pageStatus: applied };
+
+    // Apply CLOSES the panel — that is the observable outcome to wait on, not the click
+    // returning (§B4/§B6). Measured 0 ms, but assert it rather than assume it.
+    var closed = await action.waitForDisplayed(this.filterApplyBtn, UI_TIMEOUT, true);
+    if (true != closed) return { pageStatus: new Error("the filter panel did not close after Apply") };
+
+    var self = this;
+    await pollUntil(async function () {
+      return squash(await action.getText(self.filterSummaryLabel)) !== "All class statuses";
+    }, UI_TIMEOUT);
+
+    return { pageStatus: true, summaryLabel: squash(await action.getText(this.filterSummaryLabel)) };
+  },
+
+  /**
+   * Clicks "Clear all".
+   *
+   * ⚠️ This is a RESET, not an untick: it re-ticks all five statuses, applies IMMEDIATELY
+   * with no Apply click, and closes the panel (§10.2). The register's original expectation
+   * ("all five return to unticked") was wrong. This method therefore waits for the panel to
+   * CLOSE, which would not happen if the product ever reverted to needing Apply.
+   */
+  click_clearAllFilters: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.filterClearAllLink);
+    if (true != res) return { pageStatus: res };
+    var closed = await action.waitForDisplayed(this.filterApplyBtn, UI_TIMEOUT, true);
+    if (true != closed) return { pageStatus: new Error("the filter panel did not close after Clear all - has it started requiring Apply?") };
+    var self = this;
+    await pollUntil(async function () {
+      return squash(await action.getText(self.filterSummaryLabel)) === "All class statuses";
+    }, UI_TIMEOUT);
+    return { pageStatus: true, summaryLabel: squash(await action.getText(this.filterSummaryLabel)) };
+  },
+
+  /* ----------------------------------------------------------------- selection */
+
+  /**
+   * Ticks the row whose label contains `classText`.
+   *
+   * ⚠️ Resolved BY CONTENT, never by index — row ids are positional, 0-based and re-issued
+   * on every search/filter, and the checkbox `name` is empty (§10.1). The label carries the
+   * whole row, so filtering labels by the class name or key addresses the row uniquely.
+   *
+   * ⚠️ Clicks the LABEL, per admin-shared.md §B5 — the label overlays the input here. This
+   * is the OPPOSITE of `click_selectAllClasses` below; see that method's note.
+   */
+  click_selectClassByText: async function (classText) {
+    await logger.logInto(await stackTrace.get(), "class:" + classText);
+    var row = action.getFilteredLocator(this.rowLabelAll, classText);
+    var count = await action.getElementCount(row);
+    if (count !== 1) {
+      return { pageStatus: new Error("expected exactly 1 class row matching '" + classText + "', found " + count) };
+    }
+    var res = await action.click(row);
+    if (true != res) return { pageStatus: res };
+    // The footer bar appearing is the observable outcome (measured same-tick, 0 ms).
+    return { pageStatus: await action.waitForDisplayed(this.footerContinueBtn, UI_TIMEOUT) };
+  },
+
+  /**
+   * Ticks "Select all classes".
+   *
+   * ⚠️ Clicks the INPUT, not the label — and that is not an oversight. The select-all label
+   * renders NO TEXT and has a permanent 0×0 rect, so Playwright rejects it as "element is
+   * not visible"; the input is `opacity:0` but has a real 17×17 box, and opacity-0 is still
+   * visible to Playwright (Invariant 1). This is the exact opposite of the row checkboxes
+   * one line above, on the same screen (§10.7 — it qualifies admin-shared.md §B5).
+   *
+   * ⚠️ Selects EVERY MATCHING class, not the rendered page: 110 selected with 20 rows
+   * rendered (§10.3). Callers must not expect selectedCount === renderedRows.
+   */
+  click_selectAllClasses: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.selectAllCheckbox);
+    if (true != res) return { pageStatus: res };
+    var self = this;
+    var settled = await pollUntil(async function () {
+      return true === (await action.isSelected(self.selectAllCheckbox));
+    }, UI_TIMEOUT);
+    if (settled !== true) return { pageStatus: new Error("the Select all classes checkbox did not become checked within " + UI_TIMEOUT + "ms") };
+    // Wait for the heading to gain its count, which is what actually proves the selection
+    // model saw the click — the checkbox flipping alone would not (§8, synthetic clicks).
+    await pollUntil(async function () {
+      return /Select classes\(\d+\)/.test(squash(await action.getText(self.selectClassesHeading)));
+    }, UI_TIMEOUT);
+    return { pageStatus: true };
+  },
+
+  /* ------------------------------------------------------------------ the exits */
+
+  /**
+   * Clicks the footer bar's "Cancel" (`createReport-13`).
+   *
+   * ⚠️ THIS DOES NOT LEAVE THE FLOW. It CLEARS THE SELECTION and stays on the
+   * class-selection step — reproduced twice, the second on a fresh page load, and confirmed
+   * as accepted product behaviour on 2026-09-08 (§10.8). The register's original expectation
+   * that it returns to the Reports tab was wrong and has been corrected.
+   *
+   * The control that leaves is `click_goBack` below. Do not swap them.
+   */
+  click_cancelSelection: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.footerCancelLink);
+    if (true != res) return { pageStatus: res };
+    // The footer bar being REMOVED is the observable outcome. waitForDisplayed(..., true)
+    // waits for it to go; the node is deleted, so this also covers the absence case.
+    var gone = await pollUntil(async function () {
+      return false === (await action.isExisting(sr.footerCancelLink));
+    }, UI_TIMEOUT);
+    if (gone !== true) return { pageStatus: new Error("the footer action bar was still present " + UI_TIMEOUT + "ms after Cancel") };
+    return { pageStatus: true };
+  },
+
+  /**
+   * Clicks "Go back" (`createReport-1`) — the control that actually LEAVES the flow,
+   * returning to the Reports tab. Verified 2026-09-08 (§10.8).
+   */
+  click_goBack: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.goBackLink);
+    if (true != res) return { pageStatus: res };
+    return { pageStatus: await action.waitForUrl(/\/reports$/, UI_TIMEOUT) };
+  },
+
+  /* ------------------------------------------------------- the config dialog */
+
+  /** Clicks "Continue" and waits for the config dialog to become VISIBLE (it is pre-rendered — §B2). */
+  click_continue: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.footerContinueBtn);
+    if (true != res) return { pageStatus: res };
+    return { pageStatus: await action.waitForDisplayed(this.reportModal, UI_TIMEOUT) };
+  },
+
+  /**
+   * The config dialog's control states — what TST_MRPT_TC_27 and TST_MRPT_TC_34 assert.
+   *
+   * ⚠️ `submitNativelyDisabled` reads the real `disabled` property. On THIS dialog Submit is
+   * disabled both natively AND by the CSS class, so a native check is truthful — the
+   * opposite of the staff profile's "Yes, remove", where CSS-only disabling makes the same
+   * check a false green (§10.10 / §B4). Both are reported so a regression either way shows.
+   */
+  getData_reportDialog: async function () {
+    await logger.logInto(await stackTrace.get());
+    var submitCls = String(await action.getAttribute(this.modalSubmitBtn, "class"));
+    return {
+      dialogDisplayed: await action.isDisplayed(this.reportModal),
+      typeToggleText: squash(await action.getText(this.reportTypeToggle)),
+      reportTypeCount: await action.getElementCount(this.reportTypeOptionAll),
+      submitNativelyDisabled: !(await action.isEnabled(this.modalSubmitBtn)),
+      submitCssDisabled: /(^|\s)disabled(\s|$)/.test(submitCls),
+      fromBeginningEnabled: await action.isEnabled(this.rangeFromBeginningRadio),
+      fromBeginningSelected: await action.isSelected(this.rangeFromBeginningRadio),
+      customRangeEnabled: await action.isEnabled(this.rangeCustomRadio),
+      customRangeSelected: await action.isSelected(this.rangeCustomRadio),
+      gradeCheckboxEnabled: await action.isEnabled(this.customGradeCheckbox),
+      gradeCheckboxSelected: await action.isSelected(this.customGradeCheckbox),
+      gradeCheckboxLabel: squash(await action.getText(this.customGradeLabel)),
+      dateFieldsDisplayed: await action.isDisplayed(this.dateFromInput),
+    };
+  },
+
+  /** Opens the report-type dropdown and picks the option whose text is `typeName`. */
+  select_reportType: async function (typeName) {
+    await logger.logInto(await stackTrace.get(), "type:" + typeName);
+    var opened = await action.click(this.reportTypeToggle);
+    if (true != opened) return { pageStatus: opened };
+    var option = action.getFilteredLocator(this.reportTypeOptionAll, typeName);
+    var n = await action.getElementCount(option);
+    if (n !== 1) return { pageStatus: new Error("expected exactly 1 report type matching '" + typeName + "', found " + n) };
+    var picked = await action.click(option);
+    if (true != picked) return { pageStatus: picked };
+    var self = this;
+    var settled = await pollUntil(async function () {
+      return squash(await action.getText(self.reportTypeToggle)) === typeName;
+    }, UI_TIMEOUT);
+    if (settled !== true) return { pageStatus: new Error("the report type toggle never showed '" + typeName + "'") };
+    return { pageStatus: true };
+  },
+
+  /** Selects "Custom date range" and waits for the From/To fields to become visible. */
+  select_customDateRange: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.rangeCustomLabel);
+    if (true != res) return { pageStatus: res };
+    return { pageStatus: await action.waitForDisplayed(this.dateFromInput, UI_TIMEOUT) };
+  },
+
+  /** The custom date fields' values and constraints. Both are readOnly — the picker is the only input path (§3). */
+  getData_dateRange: async function () {
+    await logger.logInto(await stackTrace.get());
+    return {
+      fromDisplayed: await action.isDisplayed(this.dateFromInput),
+      toDisplayed: await action.isDisplayed(this.dateToInput),
+      fromValue: String(await action.getValue(this.dateFromInput)),
+      toValue: String(await action.getValue(this.dateToInput)),
+      fromReadOnly: (await action.getAttribute(this.dateFromInput, "readonly")) !== null,
+      toReadOnly: (await action.getAttribute(this.dateToInput, "readonly")) !== null,
+      rangeLabels: await (async function (self) {
+        var n = await action.getElementCount(self.rangeLabelAll);
+        var out = [];
+        /* eslint-disable no-await-in-loop */
+        for (var i = 0; i < n; i++) out.push(squash(await action.getText(await action.getKthElement(self.rangeLabelAll, i))));
+        /* eslint-enable no-await-in-loop */
+        return out;
+      })(this),
+    };
+  },
+
+  /**
+   * Clicks the config dialog's "Cancel" (`createReport-15`).
+   *
+   * ⚠️ This is the THIRD Cancel-like control on the flow and closes only the dialog. It
+   * PRESERVES the class selection and resets the report type (§10.9) — verified 2026-09-08,
+   * resolving a long-standing [ASSUMED].
+   *
+   * ⚠️ Waits for the dialog to become INVISIBLE, not to leave the DOM — it is pre-rendered
+   * and stays at display:none (§B2).
+   */
+  click_cancelReportDialog: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.modalCancelBtn);
+    if (true != res) return { pageStatus: res };
+    var hidden = await action.waitForDisplayed(this.reportModal, UI_TIMEOUT, true);
+    if (true != hidden) return { pageStatus: new Error("the Create report dialog was still visible " + UI_TIMEOUT + "ms after Cancel") };
+    return { pageStatus: true };
+  },
+};

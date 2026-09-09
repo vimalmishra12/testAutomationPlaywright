@@ -9,12 +9,14 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **17** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_STFL_TC_1`, `TST_STFL_TC_5`, `TST_STFL_TC_7`, `TST_STFL_TC_10`, `TST_STFL_TC_21`, `TST_STFL_TC_26`, `TST_STFP_TC_3`, `TST_STFP_TC_4`, `TST_STFP_TC_6`, `TST_STFP_TC_8`, `TST_STFP_TC_14`, `TST_STFB_TC_5`, `TST_STFB_TC_6`, `TST_STFB_TC_7`, `TST_STFB_TC_8`, `TST_STFB_TC_11`, `TST_STFB_TC_12`.
 
-**Execution status (2026-09-02):** **19 of 57 TCs automated and PASSING** — the whole Phase 1 `STFL` block, verified on Thor across two consecutive clean runs of `npm run adminStaffTabTest_thor` (19/19, 77.1 s then 76.3 s). **36 are Not Run**; **2 are Blocked** at design time (`TST_STFB_TC_11`, `TST_STFP_TC_20`).
-- Automated (`STFL`): `TST_STFL_TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25` — the side-effect-free list, search, user-guide, sort and Load-more cases. Nothing in the suite creates, edits or removes anything.
-- Deliberately NOT automated in Phase 1: the **6 STFL cases marked `[EXTRA — Phase 1 exclusion]`** above, and `TST_STFL_TC_27`, which needs an invited teacher to accept and so mutates real data.
-- `STFP` (17) and `STFB` (12) are **not started**. The read-only half of `STFP` is the natural next batch; `STFB` should be left until last — it needs a data-owning suite and `TST_STFB_TC_10` sends real email.
+**Execution status (2026-09-07):** **28 of 57 TCs automated and PASSING** — the whole Phase 1 `STFL` block plus the read-only half of `STFP`. **27 are Not Run**; **2 are Blocked** at design time (`TST_STFB_TC_11`, `TST_STFP_TC_20`).
+- Automated (`STFL`, 19): `TST_STFL_TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25` — the side-effect-free list, search, user-guide, sort and Load-more cases. Verified on Thor across two consecutive clean runs of `npm run adminStaffTabTest_thor` (19/19, 77.1 s then 76.3 s; re-confirmed 19/19 in 70.9 s on 2026-09-07). Nothing in the suite creates, edits or removes anything.
+- Automated (`STFP`, 9): `TST_STFP_TC_1, 2, 7, 9, 11, 12, 15, 16, 17` — the read-only half: profile layout for both roles, class launch, the role-conditional Manage account menu, and both destructive dialogs' CANCEL paths. Green on the FIRST run of `npm run adminStaffProfileTest_thor` and on two further consecutive runs (9/9 each, 2026-09-07). ⚠️ Six of these OPEN a mutating dialog and then leave it — they are side-effect free **only** because they never confirm.
+- Deliberately NOT automated in Phase 1: the **6 STFL cases marked `[EXTRA — Phase 1 exclusion]`** above, and `TST_STFL_TC_27`, which needs an invited teacher to accept and so mutates real data; the **5 STFP cases** marked `[EXTRA — Phase 1 exclusion]` (`TC_3, 4, 6, 8, 14`); and the four **mutating** STFP cases `TC_10` (grant), `TC_13` (revoke confirmed), `TC_18` (removal confirmed) and `TC_19`, which need a data-owning suite that creates its own staff member.
+- `STFB` (12) is **not started** and should be left until last — it needs a data-owning suite, `TST_STFB_TC_10` sends real email, and the form auto-restores a shared draft so it is never empty on load.
 
-> Automation artifacts: `test/ExperienceApp/adminStaffTab.test.js` · `pages/ExperienceApp/schoolStaff.page.js` · selectors under `css.ComproC1.schoolStaff` · exec file `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffTab.json`. Live capture, traps and measured transitions: `product-knowledge/ExperienceApp/admin-staff-tab.md` §7.
+> Automation artifacts — `STFL`: `test/ExperienceApp/adminStaffTab.test.js` · `pages/ExperienceApp/schoolStaff.page.js` · selectors `css.ComproC1.schoolStaff` · exec `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffTab.json`. Live capture, traps and measured transitions: `product-knowledge/ExperienceApp/admin-staff-tab.md` §7.
+> `STFP`: `test/ExperienceApp/staffProfile.test.js` · `pages/ExperienceApp/staffProfile.page.js` (plus `click_viewProfile` on `schoolStaff.page.js`, since the Staff tab owns the row menu) · selectors `css.ComproC1.staffProfile` · exec `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffProfile.json` · data `adminStaffProfileData.json`. Live capture, five newly-found traps and the corrections to §2/§4: `admin-staff-tab.md` §8.
 - Module **STFL** (`TST_STFL_TC_1–27`, **26 TCs** — `TST_STFL_TC_22` withdrawn, see below) — scenarios #1–#6, #13.
 - Module **STFP** (`TST_STFP_TC_1–18`, **17 TCs** — `TST_STFP_TC_5` withdrawn, see below) — scenarios #7–#11.
 - Module **STFB** (`TST_STFB_TC_1–12`, 12 TCs) — scenario #12.
@@ -694,7 +696,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The profile opens at `/admin/admin/org_<slug>/profile/<orgUuid>/<userId>` showing: a `Back` link; the initials avatar; the heading `ln, teacher17aug2026` (Last name, First name); the role `Teacher`; the email `teacher17aug2026@mailsac.com`; `Last login <date>`; a `Manage account` menu; and the classes section. |
 | **Remarks** | The row itself is the menu toggle — the whole row is a button with `data-toggle="dropdown"`, and the menu holds exactly ONE item, `View profile`. There is no "Activate course materials" item as there is on the Students tab. `teacher17aug2026@mailsac.com` is the **team-nominated teacher fixture** for this school `[confirmed with the team 2026-08-24]`. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -713,7 +715,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The profile shows the heading `gg, testteacher18` and the role line reads `Administrator/Teacher`, matching the Role column on the list. |
 | **Remarks** | Verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -791,7 +793,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The class page opens at `/class/teacher/org_<slug>/class/<uuid>/view`, settling on `/view/classdata`, with `h1` reading the class name `A11y test` and the browser tab reading `A11y test | Cambridge One`. |
 | **Remarks** | Verified live 2026-08-24. Each listed class is a real link (`user-profile-6-<index>`). **Contrast with the student profile, where the umbrella name is plain text with no link** — do not assume the two profiles behave alike. Crossing from `admin` to `class` is a full page load, not an Angular route change; budget for it. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -831,7 +833,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The menu holds exactly two items — `Grant admin rights` and `Remove from school account`. `Remove admin rights` is NOT offered. |
 | **Remarks** | Verified live 2026-08-24. The menu is role-conditional: `Grant admin rights` appears only for a `Teacher`. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -871,7 +873,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The menu holds exactly two items — `Remove admin rights` and `Remove from school account`. `Grant admin rights` is NOT offered. |
 | **Remarks** | Verified live 2026-08-24. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -890,7 +892,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The dialog is headed `Remove admin rights?` and reads `<First name> <Last name> will no longer have admin rights, but will still remain a teacher in your school`, with buttons `No, keep admin rights` and `Yes, remove admin rights`. After `No, keep admin rights` the dialog closes and the role still reads `Administrator/Teacher`. |
 | **Remarks** | Verified live 2026-08-24, including the cancel path — this case is **non-mutating and safe to run freely**. The dialog body is personalised with the staff member's name in `<First name> <Last name>` order, although the profile heading uses `Last name, First name`. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -949,7 +951,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The dialog is headed `Remove from school account` and reads `This staff member will no longer have access to your school account or any of its classes. They can still use their account independently from your school`, with the confirmation checkbox `I confirm I want to remove this staff member from my school account` and the buttons `No, cancel` and `Yes, remove`. |
 | **Remarks** | Captured verbatim from the pre-rendered DOM and confirmed by opening the dialog, 2026-08-24. Opening and cancelling is non-mutating. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -968,7 +970,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | The dialog closes, the profile is unchanged and the staff member is still listed on the Staff tab. |
 | **Remarks** | Verified live 2026-08-24 — non-mutating and safe to run freely. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -1006,7 +1008,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Expected Result** | `Yes, remove` is presented as unavailable while the box is unticked, becomes available when it is ticked, and returns to unavailable when it is unticked again. |
 | **Remarks** | Verified live 2026-08-24. **Automation trap:** the button is disabled by CSS class only — it carries the class `disabled` while its native `disabled` property stays `false`, so a `toBeDisabled()` assertion is a false green. Assert on the class (`admin-shared.md` §B4). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | *(blank in design — Not Run)* |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---

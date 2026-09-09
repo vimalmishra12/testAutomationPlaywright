@@ -40,6 +40,8 @@
     "adminStudentsTabTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminStudentsTab.json --browserCapability=desktop-chrome-1920",
     "adminStaffTabTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminStaffTab.json --browserCapability=desktop-chrome-1920",
     "adminStudentProfileTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminStudentProfile.json --browserCapability=desktop-chrome-1920",
+    "adminStaffProfileTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminStaffProfile.json --browserCapability=desktop-chrome-1920",
+    "adminSchoolReportsTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminSchoolReports.json --browserCapability=desktop-chrome-1920",
     "P1Adminclassworkflow_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassValidation_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassValidation.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassBulk_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassBulk.json --browserCapability=desktop-chrome-1920",

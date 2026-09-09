@@ -1,0 +1,32 @@
+{
+  "C1": {
+    "adminSchoolReports": {
+      "_comment": "Admin App > Reports tab / Create report flow (module MRPT) on thor. Every fixture below was verified live on FCN-CHZ-PDA 2026-09-08 - see .architecture/product-knowledge/ExperienceApp/admin-reports-tab.md 10. NOTHING IN THIS SUITE CREATES A REPORT: two cases open the config dialog and leave it, and no case ever clicks Submit. The school is SHARED and actively mutated by other teams, so no value here may become an absolute-count assertion (admin-shared.md A5) - that is why there is no expected class count in this file.",
+
+      "schoolKey": "FCN-CHZ-PDA",
+      "reportsUrlFragment": "/reports",
+      "createUrlFragment": "/reports/create",
+
+      "_classComment": "Fixture_GradeSettings_DO_NOT_DELETE is documented never-delete in admin-shared.md A7 and is the only uniquely-named class on this school - the rest are accumulation from the class-creating suites (AutoClass_CreateOnly, BulkCSV_Class1 x3+, admin-shared.md A7), and duplicates would make 'the row under test' ambiguous. It holds 0 students, which is why the footer summary below reads '0 students' - note the PLURAL with a zero count, so there is no singular/plural rule to assert.",
+      "className": "Fixture_GradeSettings_DO_NOT_DELETE",
+      "classKey": "62k3-AXm6",
+      "singleSelectionSummary": "You have selected 1 class",
+
+      "_searchComment": "TST_MRPT_TC_4 / TC_5. The search is LIVE/debounced, NOT submit-driven - the list narrows before the Search button is clicked (10.5). This corrects an assumption inherited from the Classes tab, whose search IS submit-driven.",
+      "searchPlaceholder": "Search for class name or class key",
+      "searchMaxLength": "321",
+
+      "_filterComment": "TST_MRPT_TC_8 / TC_9 / TC_40. All five statuses start TICKED (the register previously said unticked). The summary label is '<N> class status(es)' where N is the number of TICKED statuses, so a single applied status reads '1 class status' - singular. 'Active' is used for TC_9 because this school holds classes in several statuses, so the filter can be shown to EXCLUDE something; on the original grounding school every class was Active and the case could prove nothing.",
+      "classStatuses": ["Not started", "Active", "Ended", "Expired", "Deleted"],
+      "unfilteredSummaryLabel": "All class statuses",
+      "filterStatus": "Active",
+      "singleStatusSummaryLabel": "1 class status",
+
+      "_dialogComment": "TST_MRPT_TC_19 / TC_27 / TC_34. 'Class summary' is used because it is date-capable AND grade-capable (admin-reports-tab.md 2). Estimated CEFR level supports neither and would invert TC_27's expectations. reportTypeCount is 7 - the source scenario workbook lists 6 and that omission is a known, confirmed gap.",
+      "reportType": "Class summary",
+      "reportTypePlaceholder": "Select a report type",
+      "reportTypeCount": 7,
+      "customGradeLabel": "Only include items that contribute to grade calculation"
+    }
+  }
+}

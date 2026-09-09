@@ -442,3 +442,180 @@ Shipped to `main`: `6e698e9` (Phase 1) and `05ba477` (Phase 2).
 - Two product items still open and unraised in Jira as far as this session knows: the heading /
   row-count disagreement (`Staff (22)` over 21 rows) and the "no administrators" copy on a tab that
   lists teachers too.
+
+---
+
+# Session 3 — 2026-09-07 · Phase 1 automation of the STFP read-only block
+
+**Test file:** `test/ExperienceApp/staffProfile.test.js` (new) · **Module:** `STFP`
+**Page object:** `pages/ExperienceApp/staffProfile.page.js` (new), plus `click_rowActionMenu`
+and `click_viewProfile` added to the existing `schoolStaff.page.js`.
+**Suite:** `npm run adminStaffProfileTest_thor` · Thor / `FCN-CHZ-PDA`
+
+## Summary
+
+Nine read-only `STFP` cases built and **passing 9/9 on the first run**, then twice more
+consecutively. No fix cycle — the second batch running where live selector capture removed
+the guesswork entirely.
+
+## Scope, and why it is 9 and not 19
+
+`STFP` holds 19 live cases (`TC_1..TC_20`, `TC_5` retired). Five are
+`[EXTRA — Phase 1 exclusion]` (`TC_3, 4, 6, 8, 14`), leaving 14. Four of those **mutate real
+data** and belong to a data-owning suite (`TC_10` grant, `TC_13` revoke-confirmed, `TC_18`
+removal-confirmed, `TC_19` which depends on `TC_10`), and `TC_20` is Blocked — it needs a
+school with exactly one administrator, and `FCN-CHZ-PDA` cannot be reduced to one without
+breaking every other admin suite mid-run. That leaves the **9** built here:
+`TC_1, 2, 7, 9, 11, 12, 15, 16, 17`.
+
+⚠️ **Six of the nine open a mutating dialog and then leave it.** They are side-effect free
+**only** because they never confirm. That was treated as a hard rule throughout: no confirm
+button was clicked at any point, in the suite or during capture.
+
+## The environment blocked the session twice, and both were reported rather than worked around
+
+1. **Thor was down for school selection.** Login and the dashboard worked, but clicking any
+   school card hard-navigated to `/dashboard/error`. Confirmed it was not our code three
+   ways: `FCN-CHZ-PDA` failed, a *different* school (`KNF-XRD-QVE`) failed identically, and
+   the **shipped, unchanged `STFL` suite** failed in its `Before` chain at `TST_SADB_TC_1`
+   with the same error — a suite that had passed 19/19 four times on 2026-09-02. Reported
+   and held rather than proceeding. Once the user confirmed the fix, the same `STFL` suite
+   was re-run as the readiness gate: **19/19 in 70.9 s**, which also showed the runtime
+   drift flagged in the 2026-09-02 handoff (77 → 229 s) had not persisted.
+2. **A degraded browser session impersonated a product defect.** See below.
+
+## The near-miss worth recording: a "defect" that was not one
+
+Clicking `Remove admin rights` produced `.modal-backdrop fade show` plus `body.modal-open`
+while the dialog itself stayed `display:none` / `aria-hidden="true"` — a full-screen
+click-blocking overlay with **no dialog in it**, recoverable only by reloading. It
+reproduced twice, once by real mouse click and once by JS click.
+
+It was written up as a **candidate** defect and explicitly not asserted as one, because it
+arrived alongside 45-second CDP timeouts, failed screenshot injection and Angular handlers
+silently not firing — the `admin-shared.md` §B11 "MCP input goes dead" family. The user was
+asked how to proceed rather than being handed a guess.
+
+**On a fresh browser tab the dialog opened correctly every time.** So it was the tooling,
+not the product. Closing the tab and opening a new one was enough; a full Claude Code
+restart was not needed. Recorded in `admin-staff-tab.md` §8.8 so the next person recognises
+the symptom instead of filing the same false defect.
+
+The general lesson: *reproducible* is not the same as *product-side*. A sick session
+reproduces too.
+
+## Step 0 — reconnaissance sweep (live, via Chrome MCP)
+
+- **2** `.modal-content` pre-rendered on the profile, both hidden — presence proves nothing.
+- Page scope is `div.view-profile`; there is **no `<staff>` tag** on this view, and the
+  wrapper is **shared with the student profile**.
+- Manage account menu opens in **~1 ms** (class toggle on pre-rendered markup).
+- Both dialogs' copy captured **free** from the pre-rendered DOM before triggering anything.
+- Measured: View profile 5.0–5.5 s · `Back` ~2.4 s · class launch 3.44 s document load ·
+  search settle ~0.5 s. Every timeout in the page object cites one of these.
+
+## Step 0b — applicable-traps table
+
+| Trap | Applies? | Where handled |
+|---|---|---|
+| Pre-rendered modals → presence is a false green | yes | every modal check uses `isDisplayed` |
+| `Yes, remove` disabled by CSS class only | yes | `disabledByClass`; `TC_16` asserts the class, and pins native `disabled` as unchanged |
+| Positional row ids | yes | `schoolStaff.findRowIndexByText`, never a literal index |
+| Whole row is the dropdown toggle | yes | `click_rowActionMenu` opens the toggle first |
+| Profile URL not deep-linkable | yes | always reached through the list |
+| `#loader-container` cascade after a failed profile load | yes | the HTTP-500 account is excluded and never opened |
+| `admin` → `class` full page load | yes | `waitForUrl` + `waitForDocumentLoad` |
+| Never assert an absolute count | yes | `Classes (N)` asserted by shape only |
+| Reset in `BeforeEach` + suite `After`, never `AfterEach` | yes | ADR-019; `AfterEach` is empty |
+| Bootstrap custom-control checkbox needs its `<label>` | yes | `click_removalConfirmCheckbox` |
+| Assertions must be falsifiable | yes | menu cases assert the ABSENT item too |
+| `a.class-details` matches ~2 per row (**new**) | yes | class resolved by `span.class-name` text |
+| `.list-items` shared by staff rows and class rows (**new**) | yes | scoped to `div.class-section` |
+| Cookie banner intercepts clicks | no — not rendered in either session | left unhandled, not papered over |
+
+## Five findings new to this sweep (now in `admin-staff-tab.md` §8)
+
+1. The class **name** anchor has **no qid** — `user-profile-6-<n>` is the chevron icon.
+   §2 said the name was that qid; corrected.
+2. `a.class-details` matches roughly **two elements per row** — 129 for 43 classes, with the
+   target at index 84. Index-based resolution here is meaningless.
+3. Class rows reuse the Staff tab's **`.list-items`** class.
+4. `h6.class-count` is **absent entirely** when a staff member has no classes — not
+   `Classes (0)`.
+5. Manage account items are **absent from the DOM**, not hidden, when they do not apply.
+   A welcome exception to §B2 — it is what makes the "not offered" assertions falsifiable.
+
+## Fixture correction
+
+`admin-staff-tab.md` §6 said the login account was the only staff member with classes, so
+`TC_7` would have had to use the admin's own profile — a decision the user had already made.
+That is now **out of date**: `teacher17aug2026@mailsac.com` holds `Classes (43)`. The user
+was told the gap had closed and `TC_7` now runs against a real teacher.
+
+Only **one** of those 43 names is unique (`testClass1 17aug`) — the rest are accumulation
+from the class-creating suites (`BulkCSV_Class2` ×17, `BulkCSV_Class1` ×17,
+`AutoClass_CreateOnly` ×8). So the case **asserts the name is unique** before launching it;
+if the data shifts again it fails loudly rather than opening an arbitrary class.
+
+## Changes made
+
+| File | Change |
+|---|---|
+| `testResources/selectors/ExperienceApp/C1Selectors.json` | new `css.ComproC1.staffProfile` block, 29 keys (+31 lines, no reformat) |
+| `pages/ExperienceApp/staffProfile.page.js` | **new** — 15 methods |
+| `pages/ExperienceApp/schoolStaff.page.js` | added `click_rowActionMenu` + `click_viewProfile` (the Staff tab owns the row menu — the precedent `schoolStudents.click_viewStudentProfile` set) |
+| `test/ExperienceApp/staffProfile.test.js` | **new** — 9 TCs + `TC_RESET` |
+| `testResources/testcaseRepository/ExperienceApp/C1TCRepository.json` | new `STFP` module, 10 entries, all `visualTest: false` (+17 lines, no reformat) |
+| `testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json` | **new** |
+| `testResources/testExecutionFiles/ExperienceApp/thor/adminStaffProfile.json` | **new** |
+| `package.json` | `adminStaffProfileTest_thor` |
+| `.architecture/product-knowledge/ExperienceApp/admin-staff-tab.md` | new §8 |
+| `.architecture/authoring-status.md` | new `adminStaffProfile` block |
+| `test/Manual/.../AdminApp_Staff_tab_test_cases.md` + `.xlsx` | 9 cases → Pass; summary rolled to 28 / 27 / 2 |
+
+**A near-miss on the JSON files.** The first attempt rewrote both `C1Selectors.json` and
+`C1TCRepository.json` with `JSON.stringify(…, 2)`. The selector file survived (already
+2-space formatted, +31 lines) but the TC repository came out as **1411 insertions / 384
+deletions** — a whole-file reformat that would have buried the real change and wrecked
+`git blame`. Reverted and redone as a surgical text insert: **+17 lines**. Worth remembering
+that these two files are formatted differently despite sitting in the same tree.
+
+## Protected files touched
+
+**None.** No new action-library capability was needed — `isSelected`, `isEnabled`,
+`waitForUrl` and `waitForDisplayed(sel, ms, reverse)` all already existed, and each was
+checked against its actual signature before use rather than assumed.
+
+## Verification
+
+- `node tooling/tcMap.js --findings` → exit 0; **0 MISFILED, 0 GHOST, no STFP findings**.
+  (13 UNREGISTERED and 48 ORPHAN entries are pre-existing eBook/other-module issues.)
+- `npm run adminStaffProfileTest_thor` → **9 passing / 0 failing**, three times:
+  2m, 3m, 2m.
+- Register `.md` and `.xlsx` cross-checked: **28 Pass / 27 Not Run / 2 Blocked** in both.
+- Fixture roles re-read after every run — `teacher17aug2026` still `Teacher`,
+  `cqa_teacher17oct3` still `Administrator/Teacher`. **Nothing was mutated.**
+
+## Open item carried to Phase 2
+
+**`TST_STFP_TC_17` takes ~39 s against ~5 s for its neighbours**, consistently across runs
+(two other cases spiked once each and were environmental). It is the only case that
+searches, leaves the tab, returns via `Back`, and then searches the **same term** again.
+`click_back` resolves as soon as the heading renders — verified live that the list *does*
+repopulate to 20 rows, but only afterwards — so `search_staff`'s row fingerprint can be
+taken against the stale filtered list and then never change, burning the full 20 s poll.
+
+Suspected fix: pass `{ expectListChange: false }` on that second search, which is precisely
+what that option in `schoolStaff.search_staff` exists for; it then waits on the search
+banner instead. **Proposed to the user, not applied** (Golden Rule 6) — the case passes
+either way, so this is a latent time cost rather than a failure.
+
+## Follow-ups
+
+- Phase 2 (run/fix) for `adminStaffProfile`, starting with the `TC_17` item above.
+- Phase 3 (visual) for `adminStaffProfile` — expected "no candidates" (every case frames
+  shared-school data), but the assessment is owed, not inheritable.
+- `STFP` mutating block (`TC_10, 13, 18, 19`) — needs a data-owning suite creating its own
+  `AutoStaff_` staff member.
+- `STFB` last, for the reasons in the register.
+- Phase 3 for `adminStaffTab` remains **deferred by user decision**, not done.
