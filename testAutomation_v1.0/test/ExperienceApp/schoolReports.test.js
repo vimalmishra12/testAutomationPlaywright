@@ -202,7 +202,7 @@ module.exports = {
     await assertion.assertEqual(
       panel.allChecked,
       true,
-      "Expected all five statuses TICKED by default, got: " + JSON.stringify(panel.statusChecked)
+      "Expected all five statuses TICKED by default, got: " + panel.checkedCount + " of " + panel.statusCount + " ticked"
     );
     await assertion.assertEqual(panel.clearAllDisplayed, true, "'Clear all' is not displayed.");
     await assertion.assertEqual(panel.applyDisplayed, true, "'Apply' is not displayed.");
@@ -548,6 +548,375 @@ module.exports = {
    * The assertion is `statusCount === 5` over ALL checkboxes in the panel, which is what
    * makes "and no other group" falsifiable rather than merely unstated.
    */
+  /**
+   * TC_6 — partial, differently-cased search terms match.
+   *
+   * ⚠️ ALSO PINS THAT THE SEARCH IS A SUBSTRING MATCH, NOT FUZZY. That distinction is the
+   * whole reason this case is worth having: `admin-shared.md` §A4 records that the Classes tab
+   * is substring while the Library tab is FUZZY, and warns against inheriting either. Grounded
+   * live 2026-09-10 — this screen is substring:
+   *   "school license" → 4     "License Test" → 4
+   *   "schoolclass" (non-contiguous) → 0     "licence" (misspelt) → 0
+   * The negative probes are what make it a real assertion; without them the case would pass
+   * against a fuzzy implementation too.
+   *
+   * ⚠️ No hardcoded result count — this school is shared and its class list churns
+   * (`admin-shared.md` §A5). The case asserts "more than one, and every one matches".
+   */
+  TST_MRPT_TC_6: async function (testdata) {
+    sts = await schoolReports.search_class(testdata.partialSearchTerm);
+    await assertion.assertEqual(sts.pageStatus, true, "The partial search did not settle.");
+
+    var totals = await schoolReports.getData_matchingClassTotal();
+    await assertion.assert(
+      totals.matchingTotal > 1,
+      "The partial, lower-case term '" + testdata.partialSearchTerm + "' matched " +
+        totals.matchingTotal + " classes - expected more than one, which is what proves the " +
+        "search is partial and case-insensitive."
+    );
+
+    var rows = await schoolReports.getData_rowLabels();
+    for (var i = 0; i < rows.labels.length; i++) {
+      await assertion.assert(
+        rows.labels[i].toLowerCase().indexOf(testdata.partialSearchTerm.toLowerCase()) !== -1,
+        "Row " + i + " does not contain '" + testdata.partialSearchTerm + "' in any case: " + rows.labels[i]
+      );
+    }
+
+    // Substring, not fuzzy: a non-contiguous term and a misspelling must both return nothing.
+    sts = await schoolReports.search_class(testdata.nonContiguousTerm);
+    await assertion.assertEqual(sts.pageStatus, true, "The non-contiguous search did not settle.");
+    var fuzzyProbe = await schoolReports.getData_emptyState();
+    await assertion.assertEqual(
+      fuzzyProbe.matchingTotal,
+      0,
+      "The non-contiguous term '" + testdata.nonContiguousTerm + "' returned " +
+        fuzzyProbe.matchingTotal + " classes. The search has become FUZZY - it was a substring " +
+        "match when grounded, and every expectation here assumes substring."
+    );
+  },
+
+  /**
+   * TC_7 — the no-results state.
+   *
+   * ⚠️ CORRECTED 2026-09-10. The register's `[ASSUMED]` expected the Classes tab's copy,
+   * `No classes that match your search <term>`, which **echoes the term**. Live it is a bare
+   * **"No results"** and the term is not shown at all.
+   *
+   * ⚠️ `div.list-view` is genuinely REMOVED here, so asserting its absence is truthful rather
+   * than the usual §B2 false green.
+   */
+  TST_MRPT_TC_7: async function (testdata) {
+    sts = await schoolReports.search_class(testdata.noMatchSearchTerm);
+    await assertion.assertEqual(sts.pageStatus, true, "The no-match search did not settle.");
+
+    var empty = await schoolReports.getData_emptyState();
+    await assertion.assertEqual(empty.rowCount, 0, "Class rows were rendered for a term that matches nothing.");
+    await assertion.assertEqual(empty.matchingTotal, 0, "The matching-class total is not zero for a term that matches nothing.");
+    await assertion.assertEqual(empty.emptyStateShown, true, "No empty state was shown.");
+    await assertion.assertEqual(
+      empty.emptyStateText,
+      testdata.noResultsText,
+      "The no-results copy does not match."
+    );
+    await assertion.assertEqual(
+      empty.listViewPresent,
+      false,
+      "The class list container is still present in the DOM when nothing matched."
+    );
+  },
+
+  /**
+   * TC_10 — `Clear all` restores the unfiltered list.
+   *
+   * ⚠️ CORRECTED — this is a RESET, not an "untick everything": it re-ticks all five statuses,
+   * applies IMMEDIATELY with no `Apply` click, and closes the panel (§10.2). The register
+   * expected the boxes to end up unticked, which was wrong.
+   */
+  TST_MRPT_TC_10: async function (testdata) {
+    // Get into a filtered state first, so "restored" means something.
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not open.");
+    sts = await schoolReports.apply_singleStatusFilter(testdata.filterStatus);
+    await assertion.assertEqual(sts.pageStatus, true, "Applying the single-status filter failed.");
+
+    var filtered = await schoolReports.getData_matchingClassTotal();
+
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not reopen.");
+    sts = await schoolReports.click_clearAllFilters();
+    await assertion.assertEqual(sts.pageStatus, true, "Clear all did not restore the unfiltered list.");
+    await assertion.assertEqual(
+      sts.summaryLabel,
+      testdata.unfilteredSummaryLabel,
+      "The filter summary did not return to the unfiltered label."
+    );
+
+    // All five ticked again — the part the register got wrong.
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not open for verification.");
+    var panel = await schoolReports.getData_filterPanel();
+    await assertion.assertEqual(
+      panel.allChecked,
+      true,
+      "Clear all left statuses UNTICKED. It is a reset - all five should be ticked again. Got: " +
+        panel.checkedCount + " of " + panel.statusCount + " ticked"
+    );
+
+    var restored = await schoolReports.getData_matchingClassTotal();
+    await assertion.assert(
+      restored.matchingTotal > filtered.matchingTotal,
+      "The class list did not grow after Clear all (" + filtered.matchingTotal + " filtered, " +
+        restored.matchingTotal + " after) - the filter was not actually cleared."
+    );
+  },
+
+  /**
+   * TC_11 — two statuses applied together behave as OR, not AND.
+   *
+   * ⚠️ Proved by ARITHMETIC, not by eyeballing rows. A class has exactly one status, so the
+   * two sets are disjoint and `|A ∪ B|` must equal `|A| + |B|`. That single equality rules out
+   * every wrong implementation at once: AND would give 0, "last selection wins" would give
+   * one of the two, and a broken union would give neither sum.
+   *
+   * ⚠️ It is also the only churn-proof way to assert this. The school is shared and its class
+   * counts move (`admin-shared.md` §A5), so each side is measured in the same run rather than
+   * compared against a number recorded here.
+   */
+  TST_MRPT_TC_11: async function (testdata) {
+    var a = testdata.orFilterStatusA;
+    var b = testdata.orFilterStatusB;
+
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not open.");
+    sts = await schoolReports.apply_statusFilter([a]);
+    await assertion.assertEqual(sts.pageStatus, true, "Applying the '" + a + "' filter failed.");
+    var onlyA = sts.matchingTotal;
+
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not reopen.");
+    sts = await schoolReports.apply_statusFilter([b]);
+    await assertion.assertEqual(sts.pageStatus, true, "Applying the '" + b + "' filter failed.");
+    var onlyB = sts.matchingTotal;
+
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not reopen.");
+    sts = await schoolReports.apply_statusFilter([a, b]);
+    await assertion.assertEqual(sts.pageStatus, true, "Applying the combined filter failed.");
+    var both = sts.matchingTotal;
+
+    await assertion.assert(
+      onlyA > 0 && onlyB > 0,
+      "This case needs BOTH statuses to hold classes on this school - '" + a + "' has " + onlyA +
+        " and '" + b + "' has " + onlyB + ". With either at zero it cannot prove OR."
+    );
+    await assertion.assertEqual(
+      both,
+      onlyA + onlyB,
+      "'" + a + "' + '" + b + "' returned " + both + ", expected " + (onlyA + onlyB) + " (" +
+        onlyA + " + " + onlyB + "). A class holds exactly one status, so the union must be the " +
+        "sum. AND would give 0; last-selection-wins would give " + onlyA + " or " + onlyB + "."
+    );
+
+    // Every rendered row must carry one of the two statuses.
+    var rows = await schoolReports.getData_rowLabels();
+    for (var i = 0; i < rows.labels.length; i++) {
+      var endsWithA = new RegExp(a + "$").test(rows.labels[i]);
+      var endsWithB = new RegExp(b + "$").test(rows.labels[i]);
+      await assertion.assert(
+        endsWithA || endsWithB,
+        "Row " + i + " is neither '" + a + "' nor '" + b + "': " + rows.labels[i]
+      );
+    }
+  },
+
+  /**
+   * TC_12 — the empty state when the applied filter matches nothing.
+   *
+   * ⚠️ REWRITTEN 2026-09-10 by user decision. The register said "tick Deleted only, expect no
+   * classes". **That is not reproducible on `FCN-CHZ-PDA`** — every one of the five statuses
+   * holds classes there (Not started 10, Active 21, Ended 6, Expired 24, Deleted 49). Not a
+   * defect, just this school's data.
+   *
+   * So the case now reaches the same empty state by combining a status filter with a class
+   * that is NOT in that status. It exercises the identical empty-state path — verified live:
+   * 0 rows, `list-view` removed, "No results".
+   *
+   * ⚠️ Note what this means for coverage: the empty state is now proven, but "a filter ALONE
+   * matching nothing" is not. Unblocking that needs a school where some status is genuinely
+   * empty.
+   */
+  TST_MRPT_TC_12: async function (testdata) {
+    sts = await schoolReports.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not open.");
+    sts = await schoolReports.apply_statusFilter([testdata.emptyComboStatus]);
+    await assertion.assertEqual(sts.pageStatus, true, "Applying the '" + testdata.emptyComboStatus + "' filter failed.");
+    await assertion.assert(
+      sts.matchingTotal > 0,
+      "'" + testdata.emptyComboStatus + "' matched no classes on its own, so this case cannot " +
+        "show that the COMBINATION is what empties the list."
+    );
+
+    sts = await schoolReports.search_class(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "The search did not settle.");
+
+    var empty = await schoolReports.getData_emptyState();
+    await assertion.assertEqual(empty.rowCount, 0, "Class rows were rendered although the filter and search cannot both match.");
+    await assertion.assertEqual(empty.emptyStateShown, true, "No empty state was shown.");
+    await assertion.assertEqual(empty.emptyStateText, testdata.noResultsText, "The no-results copy does not match.");
+    await assertion.assertEqual(empty.listViewPresent, false, "The class list container is still present when nothing matched.");
+  },
+
+  /**
+   * TC_15 — the footer action bar is absent at zero selection.
+   *
+   * ⚠️ Genuinely ABSENT from the DOM, not disabled (§5). This is one of the rare places in
+   * this app where `isExisting` is the truthful check rather than a §B2 false green — an
+   * assertion of "Continue is disabled" would fail to find the element at all.
+   */
+  TST_MRPT_TC_15: async function (testdata) {
+    var state = await schoolReports.getData_selectionState();
+    await assertion.assertEqual(state.checkedRows, 0, "A class is already selected - BeforeEach did not reset the picker.");
+    await assertion.assertEqual(
+      state.headingHasCount,
+      false,
+      "The heading carries a '(N)' count at zero selection: '" + state.heading + "'"
+    );
+    await assertion.assertEqual(state.footerPresent, false, "The footer Cancel exists at zero selection - it should be absent from the DOM.");
+    await assertion.assertEqual(state.continuePresent, false, "Continue exists at zero selection - there should be no way to reach the config dialog.");
+    await assertion.assertEqual(state.summaryText, null, "A selection summary is rendered at zero selection.");
+  },
+
+  /**
+   * TC_16 — the selection count decreases when a class is unticked.
+   *
+   * Ticks two classes, unticks one, and checks the count falls to 1 and the footer survives.
+   * Unticking the LAST class is TC_15's territory, not this one.
+   */
+  TST_MRPT_TC_16: async function (testdata) {
+    sts = await schoolReports.search_class(testdata.partialSearchTerm);
+    await assertion.assertEqual(sts.pageStatus, true, "The search did not settle.");
+
+    var rows = await schoolReports.getData_rowLabels();
+    await assertion.assert(
+      rows.rowCount >= 2,
+      "This case needs at least 2 rows to tick; '" + testdata.partialSearchTerm + "' returned " + rows.rowCount + "."
+    );
+
+    sts = await schoolReports.click_selectClassByIndex(0);
+    await assertion.assertEqual(sts.pageStatus, true, "Ticking the first class failed.");
+    sts = await schoolReports.click_selectClassByIndex(1);
+    await assertion.assertEqual(sts.pageStatus, true, "Ticking the second class failed.");
+
+    var two = await schoolReports.getData_selectionState();
+    await assertion.assertEqual(two.selectedCount, 2, "The heading does not read (2) after ticking two classes.");
+
+    sts = await schoolReports.click_selectClassByIndex(1);
+    await assertion.assertEqual(sts.pageStatus, true, "Unticking the second class failed.");
+
+    var one = await schoolReports.getData_selectionState();
+    await assertion.assertEqual(one.selectedCount, 1, "The heading did not fall back to (1) after unticking one class.");
+    await assertion.assertEqual(one.checkedRows, 1, "More than one row is still ticked.");
+    await assertion.assertEqual(one.footerPresent, true, "The footer bar disappeared while one class was still selected.");
+  },
+
+  /**
+   * TC_20 — the config dialog's **Close (X)** control.
+   *
+   * ⚠️ VERIFIED 2026-09-10 — the register's `[ASSUMED]` was right: Close behaves identically
+   * to Cancel. Selection preserved, report type reset, no report created.
+   *
+   * ⚠️ This is the FOURTH dismiss-like control on the flow and the two that share an outcome
+   * are these. `createReport-1` leaves, `createReport-13` clears the selection,
+   * `createReport-15` and `crm-close` both just close the dialog.
+   *
+   * ⚠️ SIDE-EFFECT FREE ONLY BECAUSE IT NEVER CLICKS SUBMIT.
+   */
+  TST_MRPT_TC_20: async function (testdata) {
+    sts = await schoolReports.search_class(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle.");
+    sts = await schoolReports.click_selectClassByText(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "Selecting the class row failed.");
+    sts = await schoolReports.click_continue();
+    await assertion.assertEqual(sts.pageStatus, true, "The Create report dialog did not open.");
+    sts = await schoolReports.select_reportType(testdata.reportType);
+    await assertion.assertEqual(sts.pageStatus, true, "Choosing the report type failed.");
+
+    sts = await schoolReports.click_closeReportDialog();
+    await assertion.assertEqual(sts.pageStatus, true, "The dialog did not close on the X control.");
+
+    var dialog = await schoolReports.getData_reportDialog();
+    await assertion.assertEqual(dialog.dialogDisplayed, false, "The Create report dialog is still displayed.");
+    await assertion.assertEqual(
+      dialog.typeToggleText,
+      testdata.reportTypePlaceholder,
+      "The report type did not reset after Close."
+    );
+
+    var state = await schoolReports.getData_selectionState();
+    await assertion.assertEqual(state.selectedCount, 1, "The class selection was not preserved when the dialog was closed with X.");
+    await assertion.assertEqual(state.footerPresent, true, "The footer action bar is gone after closing the dialog.");
+    await assertion.assert(
+      /\/reports\/create$/.test(String(await browser.getUrl())),
+      "Closing the dialog navigated away from the class-selection step."
+    );
+  },
+
+  /**
+   * TC_31 — the end date cannot be set earlier than the start date.
+   *
+   * ⚠️ Asserted over the WHOLE picker grid, not by probing one date. With `From` at its
+   * default the `To` picker's enabled window is exactly **[From, today]** — measured live:
+   * with From = Sep 4, cells Sep 1-3 were disabled, Sep 4-10 enabled, Sep 11+ disabled.
+   * Reading every cell makes the case falsifiable in both directions: it fails if an earlier
+   * date becomes selectable AND if a valid one stops being.
+   *
+   * ⚠️ SIDE-EFFECT FREE ONLY BECAUSE IT NEVER CLICKS SUBMIT.
+   */
+  TST_MRPT_TC_31: async function (testdata) {
+    sts = await schoolReports.search_class(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "The class search did not settle.");
+    sts = await schoolReports.click_selectClassByText(testdata.className);
+    await assertion.assertEqual(sts.pageStatus, true, "Selecting the class row failed.");
+    sts = await schoolReports.click_continue();
+    await assertion.assertEqual(sts.pageStatus, true, "The Create report dialog did not open.");
+    sts = await schoolReports.select_reportType(testdata.reportType);
+    await assertion.assertEqual(sts.pageStatus, true, "Choosing the report type failed.");
+    sts = await schoolReports.select_customDateRange();
+    await assertion.assertEqual(sts.pageStatus, true, "The custom date fields did not appear.");
+
+    var dates = await schoolReports.getData_dateRange();
+    var startLabel = String(dates.fromValue).replace(/^[A-Za-z]{3},\s*/, "");   // "Fri, Sep 4, 2026" -> "Sep 4, 2026"
+
+    var win = await schoolReports.getData_datePickerWindow("to");
+    await assertion.assertEqual(win.pageStatus, true, "Could not read the 'To' date picker.");
+
+    await assertion.assert(
+      win.enabled.indexOf(startLabel) !== -1,
+      "The start date '" + startLabel + "' is not selectable in the 'To' picker, but the window " +
+        "should be inclusive of it. Enabled: " + win.enabled.join(", ")
+    );
+    await assertion.assert(
+      win.disabled.length > 0,
+      "No dates are disabled in the 'To' picker - neither the pre-start nor the future bound is enforced."
+    );
+
+    // Nothing before the start date may be selectable.
+    var startIdx = win.enabled.indexOf(startLabel);
+    var startTime = new Date(startLabel).getTime();
+    for (var i = 0; i < win.enabled.length; i++) {
+      await assertion.assert(
+        new Date(win.enabled[i]).getTime() >= startTime,
+        "'" + win.enabled[i] + "' is selectable as an end date but falls BEFORE the start date '" +
+          startLabel + "'."
+      );
+    }
+    await assertion.assert(
+      startIdx !== -1 && win.enabled.length >= 1,
+      "The 'To' picker offered no selectable date at all."
+    );
+  },
+
   TST_MRPT_TC_40: async function (testdata) {
     sts = await schoolReports.click_filter();
     await assertion.assertEqual(sts.pageStatus, true, "The filter panel did not open.");

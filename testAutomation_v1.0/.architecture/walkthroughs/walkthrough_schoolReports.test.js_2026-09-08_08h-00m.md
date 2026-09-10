@@ -474,3 +474,120 @@ design-time Blocked set.
    Worth a deliberate decision before this suite is scheduled.
 3. `TC_35`, `TC_41`, `TC_42` all wait on the same fixture: a class with known, frozen activity and
    a grade exclusion.
+
+---
+---
+
+# Session 3 — the read-only edge/negative block — 2026-09-10
+
+**Goal.** The nine remaining read-only cases: `TC_6`, `TC_7`, `TC_10`, `TC_11`, `TC_12`, `TC_15`,
+`TC_16`, `TC_20`, `TC_31`. They join the EXISTING read-only suite on `FCN-CHZ-PDA` (`testt1`),
+taking it from 12 to 21 cases.
+
+**Result: 21/21 on two consecutive runs (153 s, 201 s).** Coverage 20 → **29 of 42**.
+
+---
+
+## S3.1 Four register `[ASSUMED]`s resolved, one of them wrong
+
+| Open item | Answer |
+|---|---|
+| #1 — is the search substring or fuzzy? | **SUBSTRING.** `schoolclass` → 0, `licence` → 0, `License Test` → 4 |
+| #1 — the no-results copy | ⚠️ **`No results`** — a bare string. The `[ASSUMED]` expected the Classes tab's term-echoing form and was **wrong** |
+| #5 — does the dialog's `Close (X)` match its `Cancel`? | **Yes**, identically. The `[ASSUMED]` was right |
+| #8 — does the `To` floor track `From`? | **Yes** — the picker's enabled window is exactly `[From, today]` |
+
+> The two **negative** search probes are the part worth keeping. A case asserting only
+> *"`school license` returns 4"* would pass against a fuzzy implementation too; `schoolclass` → 0
+> is what actually pins substring.
+
+⚠️ **`Close (X)` makes FOUR dismiss-like controls on this flow, with three outcomes** —
+`createReport-1` leaves, `createReport-13` clears the selection, and `createReport-15` +
+`crm-close` both merely close the dialog. §5's "two separate Cancels" warning was an undercount.
+
+## S3.2 `TC_12` could not be automated as written
+
+The case wants a filter that matches nothing. Measured on `FCN-CHZ-PDA`:
+
+| Not started | Active | Ended | Expired | Deleted | Total |
+|---|---|---|---|---|---|
+| 10 | 21 | 6 | 24 | 49 | **110** ✓ |
+
+**Every status holds classes**, so the premise is not reproducible here — a data fact, not a
+defect. Rewritten by user decision to combine a status filter with a class not in that status,
+which reaches the identical empty state.
+
+> ⚠️ **Coverage note, deliberately not buried:** the empty state is now proven, but *"a filter
+> ALONE matching nothing"* is **not**. That needs a school where some status is genuinely empty.
+> Recorded in the test file, the data file and §12.6.
+
+The same measurement gave `TC_11` a much better assertion than planned: the five statuses sum
+exactly to 110, so a class holds **exactly one** status and the sets are disjoint — therefore
+`|A ∪ B|` must equal `|A| + |B|`. **One equality rules out AND (0), last-selection-wins (one of
+the two) and a broken union at once**, and needs no hardcoded number on a churning shared school.
+
+## S3.3 One deliberate Invariant-2 exception
+
+`TC_16` needs to tick two rows and untick one. `FCN-CHZ-PDA` holds many classes sharing a name
+(`BulkCSV_Class1` ×3+, `AutoClass_CreateOnly` ×8), so *"the second BulkCSV_Class1"* is not
+expressible by text — `click_selectClassByText` cannot serve it.
+
+`click_selectClassByIndex` was added for this, and the reasoning is written into the method:
+Invariant 2 forbids positional ids because they get **re-issued**, and here the index is used and
+discarded **inside one settled list** with no search, filter or sort in between. Anywhere a name
+is unique, the by-text method is still the right one.
+
+## S3.4 ⚠️ Performance: 822 s → 153 s, with no assertion changed
+
+The suite passed at 822 s before any of this. **None of these three defects failed a test** —
+they only made it crawl, which is exactly why they survive a first run unnoticed.
+
+Found by **summing the framework's own info-log timestamps per action name**, not by reading the
+code and guessing. The ranking was not what the code looked like it would be:
+
+| Action | Calls | Total |
+|---|---|---|
+| `getElementCount` | 284 | **320 s** |
+| `isSelected` | 161 | **108 s** |
+| `waitForDocumentLoad` | 26 | 90 s |
+
+**(a) Never `getText` an element that may be absent.** On a zero-result search `div.list-view` is
+removed, so the settle-poll waited Playwright's **full 30 s default on every poll** — each such
+search cost ~90 s. Read the count first; read content only when there is some.
+
+**(b) Never loop `isSelected` over rows.** ~0.67 s per call here, so a 20-row loop cost ~13 s
+*every* time the method ran. One `:checked` count replaces it.
+
+**(c) `getElementCount` is ~1.1 s per call** on this screen — the most expensive action, so a
+poll that calls it repeatedly deserves designing.
+
+> **The pattern across all three sessions.** Every failure and every slowdown has been one of two
+> shapes: **an incomplete signal** (watching the rendered page when the matching total is what
+> moves) or **waiting on something absent** (`.nth(4)` after the list shrank; `div.list-view` when
+> empty). Four instances now. The second shape is the more dangerous — it does not fail, it just
+> costs 30 s in silence.
+
+**One mistake caught in the act.** While optimising, the per-box `statusChecked` array was
+reconstructed from a count as "first N are true". That is wrong the moment a *middle* status is
+the ticked one. It only fed an error message, but **a diagnostic that lies is worse than one that
+is absent** — replaced with an honest `checkedCount`.
+
+## S3.5 Phase 3 — no visual candidates
+
+All nine hit ❌ rows: every case frames the shared school's live class list or its counts.
+`TC_31` is the clearest — its picker window is `[From, today]`, which changes daily. All stay
+`visualTest: false`.
+
+## S3.6 Coverage now
+
+**29 of 42.** Remaining **13**: `TC_35` (deferred, needs file-content comparison), 7 Phase 1
+exclusions (`TC_1`, `TC_3`, `TC_29`, `TC_30`, `TC_32`, `TC_33`, `TC_36`), and 5 Blocked
+(`TC_17`, `TC_38`, `TC_39`, `TC_41`, `TC_42`).
+
+**Carried forward:**
+
+1. **`TC_41` remains the most valuable gap.** All 8 creating cases assert only that a report *was
+   created* — **nothing checks the numbers inside it**. A report generated with wrong content
+   passes every case in this repo.
+2. The pure-filter empty state (§S3.2) needs a school with an empty status.
+3. `Automation_class2_DND` (0 students) is still unused — the empty-class report is untested.

@@ -5,13 +5,13 @@
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
 **Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-09-10):** **20 of 42 TCs automated and passing.** 17 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
+**Execution status (2026-09-10):** **29 of 42 TCs automated and passing.** 8 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
 
 > **[2026-09-10] Automated across TWO suites, which must stay separate.**
 >
 > | Suite | npm script | TCs | School | Side effects |
 > |---|---|---|---|---|
-> | Read-only | `adminSchoolReportsTest_thor` | **12** — `TC_2`, `TC_4`, `TC_5`, `TC_8`, `TC_9`, `TC_13`, `TC_14`, `TC_18`, `TC_19`, `TC_27`, `TC_34`, `TC_40` | `FCN-CHZ-PDA` (`testt1`) | none |
+> | Read-only | `adminSchoolReportsTest_thor` | **21** — `TC_2`, `TC_4`, `TC_5`, `TC_6`, `TC_7`, `TC_8`, `TC_9`, `TC_10`, `TC_11`, `TC_12`, `TC_13`, `TC_14`, `TC_15`, `TC_16`, `TC_18`, `TC_19`, `TC_20`, `TC_27`, `TC_31`, `TC_34`, `TC_40` | `FCN-CHZ-PDA` (`testt1`) | none |
 > | Data-owning | `adminSchoolReportsCreateTest_thor` | **8** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
 >
 > 🚨 **The data-owning suite cannot clean up after itself.** A successfully created report has
@@ -378,7 +378,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | [ASSUMED] All four "School License Test Class 1–4" rows are returned, proving the search is partial-matching and case-insensitive. |
 | **Remarks** | [ASSUMED] — NOT verified live. admin-shared.md §A4 warns explicitly that the Library tab search is FUZZY rather than substring while the Classes tab search is substring, and that a Classes-tab expectation must not be inherited onto a new admin tab without re-verifying. Confirm the semantics here before trusting this case. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -397,7 +397,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | [ASSUMED] No class rows are rendered and a no-results message is shown that echoes the search term (the Classes tab renders "No classes that match your search <term>"). |
 | **Remarks** | [ASSUMED] copy — the no-results state was not reached during the 2026-08-26 capture. Capture the exact string live before automating. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -456,7 +456,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | All five status checkboxes return to TICKED, the panel closes immediately WITHOUT "Apply" being clicked, the class list returns to the unfiltered set and the summary label returns to "All class statuses". |
 | **Remarks** | CORRECTED 2026-09-08 — both [ASSUMED]s resolved, and the previous expected result was WRONG. "Clear all" is a RESET TO UNFILTERED, not an "untick everything": it re-checks all five statuses, applies immediately with no "Apply" click, and closes the panel. This was flagged in the original Remarks as the most likely place for a wrong expected result, and it was. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -475,7 +475,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The list contains classes of BOTH statuses (an OR combination), not their intersection. |
 | **Remarks** | Requires the school to hold at least one "Not started" class. All six classes on VED-NEH-KVU were Active on 2026-08-26, so this needs a class whose start date is in the future. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -494,7 +494,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | [ASSUMED] No class rows are rendered and a no-results message naming the applied status is shown (the Classes tab renders "No classes that are <status>, <label>"). |
 | **Remarks** | [ASSUMED] copy — not captured live. Depends on the school holding no soft-deleted class; on a school that does, pick a status that is genuinely absent. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -572,7 +572,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The section heading reads "Select classes" with no "(N)" suffix, and no footer bar is present — there is no "Continue" control by which the report-configuration step could be reached. |
 | **Remarks** | Verified live 2026-08-26: the footer panel is genuinely ABSENT from the DOM at zero selection, not merely a disabled button. An automated assertion of the form "Continue is disabled" would fail to find the element at all — assert absence instead. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -591,7 +591,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The heading returns to "Select classes(1)" and the footer summary returns to "You have selected 1 class with a total of 1 student". |
 | **Remarks** | Unticking the last remaining class should also remove the footer bar entirely — cross-check against TST_MRPT_TC_15. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -669,7 +669,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | [ASSUMED] The dialog closes with the same outcome as its "Cancel" button, and no report is created. |
 | **Remarks** | [ASSUMED] — the dialog exposes a "Close" control distinct from "Cancel" (both captured live in the pre-rendered DOM). Verify the two behave identically rather than assuming it. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -911,7 +911,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | Dates before the current "From" value are disabled in the "To" picker; the start date itself is selectable (a single-day range). The floor moves when "From" is changed. |
 | **Remarks** | Verified live 2026-08-26: the "To" input carried min="2026-08-19T18:30:00.000Z" while "From" was Aug 20, 2026 — the end-date floor tracks the chosen start date. Step 4 (that the floor moves) is [ASSUMED]. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---

@@ -517,9 +517,11 @@ for (const tc of TCS) {
 // rendered page; TC_9 needs a status that excludes something), and neither is possible on
 // VED-NEH-KVU's 9 all-Active classes.
 const AUTOMATED_READ_ONLY = [
-  'TST_MRPT_TC_2', 'TST_MRPT_TC_4', 'TST_MRPT_TC_5', 'TST_MRPT_TC_8', 'TST_MRPT_TC_9',
-  'TST_MRPT_TC_13', 'TST_MRPT_TC_14', 'TST_MRPT_TC_18', 'TST_MRPT_TC_19', 'TST_MRPT_TC_27',
-  'TST_MRPT_TC_34', 'TST_MRPT_TC_40',
+  'TST_MRPT_TC_2', 'TST_MRPT_TC_4', 'TST_MRPT_TC_5', 'TST_MRPT_TC_6', 'TST_MRPT_TC_7',
+  'TST_MRPT_TC_8', 'TST_MRPT_TC_9', 'TST_MRPT_TC_10', 'TST_MRPT_TC_11', 'TST_MRPT_TC_12',
+  'TST_MRPT_TC_13', 'TST_MRPT_TC_14', 'TST_MRPT_TC_15', 'TST_MRPT_TC_16', 'TST_MRPT_TC_18',
+  'TST_MRPT_TC_19', 'TST_MRPT_TC_20', 'TST_MRPT_TC_27', 'TST_MRPT_TC_31', 'TST_MRPT_TC_34',
+  'TST_MRPT_TC_40',
 ];
 const AUTOMATED_DATA_OWNING = [
   'TST_MRPT_TC_21', 'TST_MRPT_TC_22', 'TST_MRPT_TC_23', 'TST_MRPT_TC_24', 'TST_MRPT_TC_25',

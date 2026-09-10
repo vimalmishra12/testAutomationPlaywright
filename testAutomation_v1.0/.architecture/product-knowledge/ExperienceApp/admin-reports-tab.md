@@ -754,3 +754,141 @@ Filtering `"Sep 7, 2026"` therefore found **0 cells** and failed `TST_MRPT_TC_28
 > carries the whole row, and **not** for calendar cells, whose identifying content is an
 > attribute. *Content-based* does not always mean *text-based* — check where the identity actually
 > lives before reaching for the helper.
+
+---
+
+## 12. The read-only edge/negative block `[2026-09-10]`
+
+*Captured on Thor, `FCN-CHZ-PDA` via `testt1@mailsac.com`, while automating the nine remaining
+read-only cases (`TC_6`, `TC_7`, `TC_10`, `TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_20`, `TC_31`).*
+
+### 12.1 The search is a SUBSTRING match, not fuzzy — resolved
+
+Register open item #1's second half is answered. Probed live on `VED-NEH-KVU`, whose
+`School License Test Class 1–4` make an ideal fixture:
+
+| Term | Result | What it proves |
+|---|---|---|
+| `school license` | **4** | partial **and** case-insensitive |
+| `License Test` | **4** | contiguous substring matches |
+| `schoolclass` | **0** | non-contiguous does NOT match → not fuzzy |
+| `licence` | **0** | a misspelling does NOT match → not fuzzy |
+
+**So this screen behaves like the Classes tab, not the Library tab.** `admin-shared.md` §A4
+records the Library search as *fuzzy* and warns against inheriting either behaviour — the warning
+was right to exist, and the answer here is "substring".
+
+> The two negative probes are the part worth keeping. Without them a case asserting only
+> *"`school license` returns 4"* would pass against a fuzzy implementation too.
+
+### 12.2 ⚠️ The no-results copy is a bare `No results`
+
+Register open item #1's third part, and it **contradicts the `[ASSUMED]`**. The register expected
+the Classes tab's form, `No classes that match your search <term>`, which **echoes the term**.
+
+Live it is just:
+
+```
+No results
+```
+
+No term, no status, no context. And there is **no filter-specific variant** — a filter that
+matches nothing and a search that matches nothing produce the identical message.
+
+**The empty state's DOM:**
+
+| | |
+|---|---|
+| Container | `create-report div.no-records` |
+| Copy | `No results` |
+| ⚠️ `div.list-view` | **REMOVED from the DOM entirely** |
+
+That removal is genuinely truthful (unlike most of this app, §B2) — so asserting the container's
+absence is a real check. It is also a performance trap; see §12.5.
+
+### 12.3 `Close (X)` behaves exactly like the dialog's `Cancel` — resolved
+
+Register open item #5's second half. `button[qid="crm-close"]` on the config dialog:
+
+- the dialog hides (still in the DOM at `display:none`)
+- the **class selection is preserved** — heading still `Select classes(1)`, footer bar present
+- the report type resets to `Select a report type`
+- no report is created
+
+Identical to `createReport-15`. **The `[ASSUMED]` was correct.**
+
+> ⚠️ **That makes FOUR dismiss-like controls on this flow, with three different outcomes:**
+> `createReport-1` **leaves**, `createReport-13` **clears the selection and stays**,
+> `createReport-15` and `crm-close` **both just close the dialog**. §5's original warning about
+> "two separate Cancels" was an undercount.
+
+### 12.4 The `To` picker's window is exactly `[From, today]` — resolved
+
+Register open item #8. With `From` = Sep 4 and today = Sep 10, the `To` picker rendered:
+
+```
+Sep 1 [disabled]  Sep 2 [disabled]  Sep 3 [disabled]     ← before the start date
+Sep 4 [enabled]   ...   Sep 10 [enabled]                 ← the allowed window
+Sep 11 [disabled] ...   Sep 30 [disabled]                ← future
+```
+
+35 of 42 cells disabled. Both bounds are enforced in the picker itself, so the end date simply
+cannot be set before the start date — there is no error message to assert, because the invalid
+state is unreachable.
+
+### 12.5 ⚠️ PERFORMANCE: three ways this screen makes a suite slow
+
+The 21-case read-only suite went **822 s → 153 s (5.4×)** with no change to what it asserts. All
+three causes are general, and none of them fails a test — they just make it crawl, which is why
+they survive a first run unnoticed.
+
+**(a) Never `getText` an element that may not exist.** When a search matches nothing,
+`div.list-view` is removed (§12.2). A settle-poll that read that container waited Playwright's
+**full 30 s default on every poll**, so each zero-result search cost **~90 s**. Read the row
+count first and only read content when there is some.
+
+> Same shape as the `.nth(4)` stall in §10.17. **Twice now, from the same root: waiting on
+> something that is not there.** Playwright does this silently and the test still passes.
+
+**(b) Never loop `isSelected` over rows — count with `:checked`.** Measured on this app,
+`isSelected` costs **~0.67 s per call**. A per-row loop over 20 rows cost ~13 s *every time* the
+method ran, and it runs several times per case: **161 calls, 108 s** across one run. One
+`getElementCount("input[qid^='createReport-7-']:checked")` replaces the whole loop.
+
+**(c) `getElementCount` is not free here** — measured **~1.1 s per call**, 284 calls, **320 s**
+(39% of that run). It is the single most expensive action on this screen, so a poll that calls it
+repeatedly is worth designing rather than writing casually.
+
+> **Measure before optimising.** These three were found by summing the framework's own info-log
+> timestamps per action name, not by guessing — and the ranking was not what the code looked
+> like it would be.
+
+### 12.6 Status distribution on `FCN-CHZ-PDA` `[2026-09-10]`
+
+Measured by applying each status filter in turn and reading the `createReport-11-N` total:
+
+| Status | Classes |
+|---|---|
+| Not started | 10 |
+| Active | 21 |
+| Ended | 6 |
+| Expired | 24 |
+| Deleted | **49** |
+| **Total** | **110** ✓ |
+
+The five sum exactly to the school total, which is what validates the measurement — and confirms
+a class holds **exactly one** status.
+
+**Two consequences for test design:**
+
+1. **A multi-status filter can be proven by arithmetic.** The sets are disjoint, so
+   `|A ∪ B|` must equal `|A| + |B|`. That single equality rules out AND (0), last-selection-wins
+   (one of the two) and a broken union at once — and needs no hardcoded number, which matters on
+   a shared school whose counts churn (§A5).
+2. ⚠️ **No status is empty here, so "a filter alone matching nothing" is NOT reproducible on this
+   school.** `TST_MRPT_TC_12` was rewritten to combine a status filter with a class that is not
+   in that status; it reaches the identical empty state, but the pure-filter case remains
+   uncovered and needs a school where some status is genuinely empty.
+
+> ⚠️ These counts are a snapshot of a **shared, actively mutated** school. They are recorded to
+> justify the test design, not to be asserted — no case hardcodes any of them.

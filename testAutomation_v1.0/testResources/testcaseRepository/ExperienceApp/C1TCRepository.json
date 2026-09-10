@@ -433,7 +433,6 @@
           "tags": "P3",
           "visualTest": true
         },
-
         {
           "id": "TST_CREA_TC_19",
           "description": "Validate that class data button is clickable and works correctly",
@@ -478,141 +477,140 @@
         }
       ]
     },
-   {
-  "modulename": "C1 Assignment Page",
-  "moduleId": "",
-  "testFile": "./test/ExperienceApp/c1assignment.test.js",
-  "testcase": [
     {
-      "id": "TST_C1AS_TC_1",
-      "description": "Click Class Heading",
-      "tags": "P3",
-      "visualTest": true
+      "modulename": "C1 Assignment Page",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/c1assignment.test.js",
+      "testcase": [
+        {
+          "id": "TST_C1AS_TC_1",
+          "description": "Click Class Heading",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_2",
+          "description": "Click Assignments",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_3",
+          "description": "Click Create Assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_4",
+          "description": "Click Practice Extra CQA",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_5",
+          "description": "Click Unit 1",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_6",
+          "description": "Click Lesson A",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_7",
+          "description": "Click Next Button",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_8",
+          "description": "Enter Assignment Name",
+          "tags": "P2",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_9",
+          "description": "Click Input Tag",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_10",
+          "description": "Click Set Date",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_11",
+          "description": "Click Select Student",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_12",
+          "description": "Click View Summary",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_13",
+          "description": "Click Assign",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_14",
+          "description": "Click Kebab Icon",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_15",
+          "description": "Click Delete Assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_16",
+          "description": "Click Yes on Delete Confirmation",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_17",
+          "description": "Click view assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_18",
+          "description": "Click hamburger icon assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_19",
+          "description": "Click cross icon assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_20",
+          "description": "Click back icon assignment",
+          "tags": "P3",
+          "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_14",
+          "description": "Click Kebab Icon",
+          "tags": "P3",
+          "visualTest": true
+        }
+      ]
     },
     {
-      "id": "TST_C1AS_TC_2",
-      "description": "Click Assignments",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_3",
-      "description": "Click Create Assignment",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_4",
-      "description": "Click Practice Extra CQA",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_5",
-      "description": "Click Unit 1",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_6",
-      "description": "Click Lesson A",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_7",
-      "description": "Click Next Button",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_8",
-      "description": "Enter Assignment Name",
-      "tags": "P2",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_9",
-      "description": "Click Input Tag",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_10",
-      "description": "Click Set Date",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_11",
-      "description": "Click Select Student",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_12",
-      "description": "Click View Summary",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_13",
-      "description": "Click Assign",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_14",
-      "description": "Click Kebab Icon",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_15",
-      "description": "Click Delete Assignment",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_16",
-      "description": "Click Yes on Delete Confirmation",
-      "tags": "P3",
-      "visualTest": true
-    }
-    ,{
-      "id": "TST_C1AS_TC_17",
-      "description": "Click view assignment",
-      "tags": "P3",
-      "visualTest": true
-    }
-    ,{
-      "id": "TST_C1AS_TC_18",
-      "description": "Click hamburger icon assignment",
-      "tags": "P3",
-      "visualTest": true
-    }
-     ,{
-      "id": "TST_C1AS_TC_19",
-      "description": "Click cross icon assignment",
-      "tags": "P3",
-      "visualTest": true
-    }
-     ,{
-      "id": "TST_C1AS_TC_20",
-      "description": "Click back icon assignment",
-      "tags": "P3",
-      "visualTest": true
-    },
-    {
-      "id": "TST_C1AS_TC_14",
-      "description": "Click Kebab Icon",
-      "tags": "P3",
-      "visualTest": true
-    }
-  ]
-}
-,
-{
       "modulename": "C1 Student Assignment Page",
       "moduleId": "",
       "testFile": "./test/ExperienceApp/c1student.test.js",
@@ -667,7 +665,6 @@
         }
       ]
     },
-
     {
       "modulename": "Delete Class",
       "moduleId": "",
@@ -705,7 +702,6 @@
         }
       ]
     },
-
     {
       "modulename": "invitationNotification",
       "moduleId": "",
@@ -749,7 +745,6 @@
         }
       ]
     },
-
     {
       "modulename": "timer",
       "moduleId": "",
@@ -4407,25 +4402,120 @@
       "moduleId": "NEMO",
       "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
       "testcase": [
-        { "id": "TST_NEMO24306_TC_LOGIN", "description": "School-admin login guard — confirms 'My school accounts' loaded after login (Before hook)", "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_1",  "description": "AC1.UC1.S1.TC1 | Valid adult CSV — no format validation errors",       "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_2",  "description": "AC1.UC1.S1.TC2 | Valid children CSV — no format validation errors",    "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_3",  "description": "AC2.UC2.S1.TC1 | Password with letter + number accepted",              "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_4",  "description": "AC2.UC2.S2.TC1 | Password with letter + special character accepted",   "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_5",  "description": "AC1.UC2.S1.TC1 | Username at 3-character minimum boundary accepted",   "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_6",  "description": "AC1.UC2.S2.TC1 | Username at 30-character maximum boundary accepted",  "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_7",  "description": "AC1.UC3.S1.TC1 | Username with hyphen and underscore accepted",        "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_8",  "description": "AC2.UC1.S1.TC1 | Password at minimum-length boundary accepted",        "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_9",  "description": "AC3.UC1.S1.TC1 | CSV with 200 records (upper boundary) accepted",      "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_10", "description": "AC1.UC1.S2.TC1 | Username starting with uppercase shows error",        "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_11", "description": "AC1.UC1.S3.TC1 | Username starting with a number shows error",         "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_12", "description": "AC1.UC1.S4.TC1 | [HEADLINE DEFECT] Empty username (adult) shows 'Enter Username'",    "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_13", "description": "AC1.UC1.S4.TC2 | [HEADLINE DEFECT] Empty username (children) shows 'Enter Username'", "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_14", "description": "AC1.UC2.S3.TC1 | Username 2 chars (below minimum) shows length error", "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_15", "description": "AC2.UC1.S2.TC1 | Password less than 8 chars shows error",              "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_16", "description": "AC2.UC2.S3.TC1 | Password letters-only (no number/special) shows error","tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_17", "description": "AC2.UC2.S4.TC1 | Password numbers-only (no letter) shows error",       "tags": "P1", "visualTest": false },
-        { "id": "TST_NEMO24306_TC_18", "description": "AC3.UC1.S2.TC1 | CSV with 201 records (above max) shows error",        "tags": "P1", "visualTest": false }
+        {
+          "id": "TST_NEMO24306_TC_LOGIN",
+          "description": "School-admin login guard — confirms 'My school accounts' loaded after login (Before hook)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_1",
+          "description": "AC1.UC1.S1.TC1 | Valid adult CSV — no format validation errors",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_2",
+          "description": "AC1.UC1.S1.TC2 | Valid children CSV — no format validation errors",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_3",
+          "description": "AC2.UC2.S1.TC1 | Password with letter + number accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_4",
+          "description": "AC2.UC2.S2.TC1 | Password with letter + special character accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_5",
+          "description": "AC1.UC2.S1.TC1 | Username at 3-character minimum boundary accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_6",
+          "description": "AC1.UC2.S2.TC1 | Username at 30-character maximum boundary accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_7",
+          "description": "AC1.UC3.S1.TC1 | Username with hyphen and underscore accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_8",
+          "description": "AC2.UC1.S1.TC1 | Password at minimum-length boundary accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_9",
+          "description": "AC3.UC1.S1.TC1 | CSV with 200 records (upper boundary) accepted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_10",
+          "description": "AC1.UC1.S2.TC1 | Username starting with uppercase shows error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_11",
+          "description": "AC1.UC1.S3.TC1 | Username starting with a number shows error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_12",
+          "description": "AC1.UC1.S4.TC1 | [HEADLINE DEFECT] Empty username (adult) shows 'Enter Username'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_13",
+          "description": "AC1.UC1.S4.TC2 | [HEADLINE DEFECT] Empty username (children) shows 'Enter Username'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_14",
+          "description": "AC1.UC2.S3.TC1 | Username 2 chars (below minimum) shows length error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_15",
+          "description": "AC2.UC1.S2.TC1 | Password less than 8 chars shows error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_16",
+          "description": "AC2.UC2.S3.TC1 | Password letters-only (no number/special) shows error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_17",
+          "description": "AC2.UC2.S4.TC1 | Password numbers-only (no letter) shows error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NEMO24306_TC_18",
+          "description": "AC3.UC1.S2.TC1 | CSV with 201 records (above max) shows error",
+          "tags": "P1",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4433,32 +4523,162 @@
       "moduleId": "ADMINADDCLASS",
       "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
       "testcase": [
-        { "id": "TST_SADB_TC_1", "description": "Open target school by school key (FCN-CHZ-PDA) from 'My school accounts'", "tags": "P1", "visualTest": false },
-        { "id": "TST_SCLS_TC_1", "description": "Capture current active-class count (baseline; creation is async)",        "tags": "P1", "visualTest": false },
-        { "id": "TST_SCLS_TC_2", "description": "Click 'Add class' and open the Create new classes form",                 "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_1", "description": "Enter class name",                                                        "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_2", "description": "Set start date (today) via the date picker",                             "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_3", "description": "Set end date (day 15 of next month) via the date picker",                "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_5", "description": "Open the row 'Add Materials' modal",                                     "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_6", "description": "Search and select the material by name",                                 "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_7", "description": "Confirm 'Add materials' and verify the material attached to the row",    "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_4", "description": "Click 'Create class' and verify the success dialog appears",             "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_8", "description": "Click 'Back to dashboard' and confirm the school Classes page reloads", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_9",  "description": "BCCF_TC_15 (Neg) | 'Create' disabled on an empty row",                      "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_10", "description": "BCCF_TC_16 (Neg) | 'Create' stays disabled for a non-alphanumeric name",    "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_11", "description": "BCCF_TC_13 (Edge) | Class-name input maxlength is 50",                       "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_12", "description": "BCCF_TC_14 (Edge) | End-date picker disables days on/before the start date", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_13", "description": "BCCF_TC_6 (Pos) | Filling a second row increases the Create button class count by one", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_14", "description": "BCCF_TC_1 (Pos) | Bulk create form loads with all components", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_15", "description": "BCCF_TC_3 (Pos) | A teacher can be added to a class row", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_16", "description": "BCCF_TC_5 (Pos) | An existing label can be applied to a class row", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_17", "description": "BCCF_TC_9 (Pos) | Bulk toolbar sets start/end date on selected rows", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_18", "description": "BCCF_TC_7 (Pos) | Duplicate copies a selected class row with its details", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_19", "description": "BCCF_TC_11 (Pos) | Uploading a CSV bulk-populates the class rows", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_20", "description": "BCCF_TC_12 (Pos) | 'Create more classes' returns to a usable create form (CREATES A CLASS)", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_21", "description": "BCCF_TC_8 (Pos) | 'Copy an Existing Class' copies teachers/materials onto the selected row", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_22", "description": "BCCF_TC_10 (Pos) | 'Get CSV template' downloads the template with the correct headers", "tags": "P1", "visualTest": false },
-        { "id": "TST_CCLS_TC_23", "description": "Housekeeping | Reset the create form to a single empty row (the form restores an auto-saved draft)", "tags": "P1", "visualTest": false }
+        {
+          "id": "TST_SADB_TC_1",
+          "description": "Open target school by school key (FCN-CHZ-PDA) from 'My school accounts'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SCLS_TC_1",
+          "description": "Capture current active-class count (baseline; creation is async)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SCLS_TC_2",
+          "description": "Click 'Add class' and open the Create new classes form",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_1",
+          "description": "Enter class name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_2",
+          "description": "Set start date (today) via the date picker",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_3",
+          "description": "Set end date (day 15 of next month) via the date picker",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_5",
+          "description": "Open the row 'Add Materials' modal",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_6",
+          "description": "Search and select the material by name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_7",
+          "description": "Confirm 'Add materials' and verify the material attached to the row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_4",
+          "description": "Click 'Create class' and verify the success dialog appears",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_8",
+          "description": "Click 'Back to dashboard' and confirm the school Classes page reloads",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_9",
+          "description": "BCCF_TC_15 (Neg) | 'Create' disabled on an empty row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_10",
+          "description": "BCCF_TC_16 (Neg) | 'Create' stays disabled for a non-alphanumeric name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_11",
+          "description": "BCCF_TC_13 (Edge) | Class-name input maxlength is 50",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_12",
+          "description": "BCCF_TC_14 (Edge) | End-date picker disables days on/before the start date",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_13",
+          "description": "BCCF_TC_6 (Pos) | Filling a second row increases the Create button class count by one",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_14",
+          "description": "BCCF_TC_1 (Pos) | Bulk create form loads with all components",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_15",
+          "description": "BCCF_TC_3 (Pos) | A teacher can be added to a class row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_16",
+          "description": "BCCF_TC_5 (Pos) | An existing label can be applied to a class row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_17",
+          "description": "BCCF_TC_9 (Pos) | Bulk toolbar sets start/end date on selected rows",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_18",
+          "description": "BCCF_TC_7 (Pos) | Duplicate copies a selected class row with its details",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_19",
+          "description": "BCCF_TC_11 (Pos) | Uploading a CSV bulk-populates the class rows",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_20",
+          "description": "BCCF_TC_12 (Pos) | 'Create more classes' returns to a usable create form (CREATES A CLASS)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_21",
+          "description": "BCCF_TC_8 (Pos) | 'Copy an Existing Class' copies teachers/materials onto the selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_22",
+          "description": "BCCF_TC_10 (Pos) | 'Get CSV template' downloads the template with the correct headers",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_23",
+          "description": "Housekeeping | Reset the create form to a single empty row (the form restores an auto-saved draft)",
+          "tags": "P1",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4466,30 +4686,150 @@
       "moduleId": "CLST",
       "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
       "testcase": [
-        { "id": "TST_CLST_TC_1", "description": "Verify the Classes tab loads with all expected components",       "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_2", "description": "Verify the Filter modal opens and shows all filter options",       "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_23", "description": "Verify the X button closes the Filter modal without applying a filter", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_3", "description": "Verify filtering by Class status returns only classes of that status", "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_5", "description": "Verify search by class name returns the matching class",          "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_6", "description": "Verify search by class key returns the matching class",           "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_7", "description": "Verify sorting by Class name toggles ascending/descending",       "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_8", "description": "Verify sorting by Start date and End date",                       "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_9", "description": "Verify expanding a class row shows the class details",           "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_10", "description": "Verify collapsing an expanded class row hides the details",      "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_11", "description": "Verify expanding the user guide shows the help panel",           "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_12", "description": "Verify collapsing the user guide hides the help panel",          "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_13", "description": "Verify launching an Active class opens the Class Page",          "tags": "P1", "visualTest": false },
-        { "id": "TST_CLST_TC_14", "description": "Verify Active and Ended classes appear in separate sections with counts", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_15", "description": "Verify expanding and collapsing the Ended classes section",      "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_16", "description": "Verify launching a class from the Ended section opens the Class Page", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_17", "description": "Verify 'Load more' loads additional classes in the Ended section", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_18", "description": "Verify class search is case-insensitive and matches partial names", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_20", "description": "Verify 'Load more' no longer appears once all classes are loaded", "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_19", "description": "Verify 'Clear all' resets the filter selections",                 "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_21", "description": "Verify searching for a non-existent class shows a no-results state", "tags": "P2", "visualTest": false },
-        { "id": "TST_CLST_TC_22", "description": "Verify a filter combination with no matches shows an empty state", "tags": "P3", "visualTest": false },
-        { "id": "TST_CLST_TC_RESET", "description": "Before/AfterEach — clear applied filters and search so each TC starts from the full list", "tags": "P3", "visualTest": false }
+        {
+          "id": "TST_CLST_TC_1",
+          "description": "Verify the Classes tab loads with all expected components",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_2",
+          "description": "Verify the Filter modal opens and shows all filter options",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_23",
+          "description": "Verify the X button closes the Filter modal without applying a filter",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_3",
+          "description": "Verify filtering by Class status returns only classes of that status",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_4",
+          "description": "Verify filtering by a Class label returns only classes with that label",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_5",
+          "description": "Verify search by class name returns the matching class",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_6",
+          "description": "Verify search by class key returns the matching class",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_7",
+          "description": "Verify sorting by Class name toggles ascending/descending",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_8",
+          "description": "Verify sorting by Start date and End date",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_9",
+          "description": "Verify expanding a class row shows the class details",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_10",
+          "description": "Verify collapsing an expanded class row hides the details",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_11",
+          "description": "Verify expanding the user guide shows the help panel",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_12",
+          "description": "Verify collapsing the user guide hides the help panel",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_13",
+          "description": "Verify launching an Active class opens the Class Page",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_14",
+          "description": "Verify Active and Ended classes appear in separate sections with counts",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_15",
+          "description": "Verify expanding and collapsing the Ended classes section",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_16",
+          "description": "Verify launching a class from the Ended section opens the Class Page",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_17",
+          "description": "Verify 'Load more' loads additional classes in the Ended section",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_18",
+          "description": "Verify class search is case-insensitive and matches partial names",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_20",
+          "description": "Verify 'Load more' no longer appears once all classes are loaded",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_19",
+          "description": "Verify 'Clear all' resets the filter selections",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_21",
+          "description": "Verify searching for a non-existent class shows a no-results state",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_22",
+          "description": "Verify a filter combination with no matches shows an empty state",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_RESET",
+          "description": "Before/AfterEach — clear applied filters and search so each TC starts from the full list",
+          "tags": "P3",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4497,15 +4837,60 @@
       "moduleId": "GCAT",
       "testFile": "./test/ExperienceApp/adminGradingCategories.test.js",
       "testcase": [
-        { "id": "TST_GCAT_TC_1", "description": "Verify the Manage grading categories page loads with all components", "tags": "P1", "visualTest": false },
-        { "id": "TST_GCAT_TC_2", "description": "Verify a grading category is created with a valid name",            "tags": "P1", "visualTest": false },
-        { "id": "TST_GCAT_TC_3", "description": "Verify a grading category name at the 50-character maximum is accepted", "tags": "P3", "visualTest": false },
-        { "id": "TST_GCAT_TC_5", "description": "Verify a grading category cannot be created with an empty name",   "tags": "P2", "visualTest": false },
-        { "id": "TST_GCAT_TC_6", "description": "Verify the grading category 'See details' page opens",             "tags": "P2", "visualTest": false },
-        { "id": "TST_GCAT_TC_7", "description": "Verify the class grade settings page launches from a category details page", "tags": "P2", "visualTest": false },
-        { "id": "TST_GCAT_TC_8", "description": "Verify a grading category is removed after confirmation",          "tags": "P1", "visualTest": false },
-        { "id": "TST_GCAT_TC_9", "description": "Verify removing a grading category can be cancelled",              "tags": "P3", "visualTest": false },
-        { "id": "TST_GCAT_TC_10", "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories", "tags": "P3", "visualTest": false }
+        {
+          "id": "TST_GCAT_TC_1",
+          "description": "Verify the Manage grading categories page loads with all components",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_2",
+          "description": "Verify a grading category is created with a valid name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_3",
+          "description": "Verify a grading category name at the 50-character maximum is accepted",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_5",
+          "description": "Verify a grading category cannot be created with an empty name",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_6",
+          "description": "Verify the grading category 'See details' page opens",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_7",
+          "description": "Verify the class grade settings page launches from a category details page",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_8",
+          "description": "Verify a grading category is removed after confirmation",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_9",
+          "description": "Verify removing a grading category can be cancelled",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_10",
+          "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories",
+          "tags": "P3",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4513,18 +4898,78 @@
       "moduleId": "GSCL",
       "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
       "testcase": [
-        { "id": "TST_GSCL_TC_1", "description": "Verify the Manage grading scales page loads with all components", "tags": "P1", "visualTest": false },
-        { "id": "TST_GSCL_TC_2", "description": "Verify a grading scale is created with a title, bands and target score", "tags": "P1", "visualTest": false },
-        { "id": "TST_GSCL_TC_3", "description": "Verify a middle band can be added with '+ Add new grade'", "tags": "P2", "visualTest": false },
-        { "id": "TST_GSCL_TC_5", "description": "Verify Save is disabled until title, valid bands and target are provided", "tags": "P1", "visualTest": false },
-        { "id": "TST_GSCL_TC_6", "description": "Verify the grading scale View details page opens", "tags": "P2", "visualTest": false },
-        { "id": "TST_GSCL_TC_7", "description": "Verify the class grade settings page launches from a scale details page", "tags": "P2", "visualTest": false },
-        { "id": "TST_GSCL_TC_8", "description": "Verify a grading scale can be set as the school default", "tags": "P1", "visualTest": false },
-        { "id": "TST_GSCL_TC_9", "description": "Verify a grading scale is deleted after confirmation", "tags": "P1", "visualTest": false },
-        { "id": "TST_GSCL_TC_10", "description": "Verify deleting a grading scale can be cancelled", "tags": "P3", "visualTest": false },
-        { "id": "TST_GSCL_TC_11", "description": "Verify the default grading scale cannot be deleted", "tags": "P2", "visualTest": false },
-        { "id": "TST_GSCL_TC_12", "description": "Verify expanding the grading scale bands shows the bands", "tags": "P2", "visualTest": false },
-        { "id": "TST_GSCL_TC_13", "description": "BeforeEach — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales", "tags": "P3", "visualTest": false }
+        {
+          "id": "TST_GSCL_TC_1",
+          "description": "Verify the Manage grading scales page loads with all components",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_2",
+          "description": "Verify a grading scale is created with a title, bands and target score",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_3",
+          "description": "Verify a middle band can be added with '+ Add new grade'",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_5",
+          "description": "Verify Save is disabled until title, valid bands and target are provided",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_6",
+          "description": "Verify the grading scale View details page opens",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_7",
+          "description": "Verify the class grade settings page launches from a scale details page",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_8",
+          "description": "Verify a grading scale can be set as the school default",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_9",
+          "description": "Verify a grading scale is deleted after confirmation",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_10",
+          "description": "Verify deleting a grading scale can be cancelled",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_11",
+          "description": "Verify the default grading scale cannot be deleted",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_12",
+          "description": "Verify expanding the grading scale bands shows the bands",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_13",
+          "description": "BeforeEach — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales",
+          "tags": "P3",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4532,15 +4977,60 @@
       "moduleId": "CGST",
       "testFile": "./test/ExperienceApp/adminClassGradeSettings.test.js",
       "testcase": [
-        { "id": "TST_CGST_TC_1", "description": "Verify the Class grade settings page launches from a class page", "tags": "P1", "visualTest": false },
-        { "id": "TST_CGST_TC_2", "description": "Verify the grading scale can be changed for a class (and the scale itself is unchanged)", "tags": "P1", "visualTest": false },
-        { "id": "TST_CGST_TC_3", "description": "Verify a grading category can be added to a class", "tags": "P1", "visualTest": false },
-        { "id": "TST_CGST_TC_4", "description": "Verify the score calculation (Best / First score) can be changed", "tags": "P2", "visualTest": false },
-        { "id": "TST_CGST_TC_5", "description": "Verify the teacher score-override setting can be toggled", "tags": "P3", "visualTest": false },
-        { "id": "TST_CGST_TC_6", "description": "Verify the total grade weightage must equal 100%", "tags": "P2", "visualTest": false },
-        { "id": "TST_CGST_TC_7", "description": "Housekeeping — sweep any leftover AutoClass_CGST class from the Active list", "tags": "P3", "visualTest": false },
-        { "id": "TST_CGST_TC_8", "description": "Helper — poll for the newly created class and launch it", "tags": "P3", "visualTest": false },
-        { "id": "TST_CGST_TC_9", "description": "Cleanup — return to the Classes tab and delete the class under test", "tags": "P3", "visualTest": false }
+        {
+          "id": "TST_CGST_TC_1",
+          "description": "Verify the Class grade settings page launches from a class page",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_2",
+          "description": "Verify the grading scale can be changed for a class (and the scale itself is unchanged)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_3",
+          "description": "Verify a grading category can be added to a class",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_4",
+          "description": "Verify the score calculation (Best / First score) can be changed",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_5",
+          "description": "Verify the teacher score-override setting can be toggled",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_6",
+          "description": "Verify the total grade weightage must equal 100%",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_7",
+          "description": "Housekeeping — sweep any leftover AutoClass_CGST class from the Active list",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_8",
+          "description": "Helper — poll for the newly created class and launch it",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CGST_TC_9",
+          "description": "Cleanup — return to the Classes tab and delete the class under test",
+          "tags": "P3",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4548,25 +5038,120 @@
       "moduleId": "",
       "testFile": "./test/ExperienceApp/ebookFocusA11y.test.js",
       "testcase": [
-        { "id": "TST_KBOA_TC_1", "description": "Go to Page 22 and wait for Notes", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_2", "description": "Press Tab and check focus on Notes", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_3", "description": "Press Tab and check focus on Home", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_4", "description": "Press Tab and check focus loops back to Notes", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_5", "description": "Keyboard click Notes and check panel opens", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_6", "description": "Keyboard click Close and check panel closes", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_7", "description": "Go to Page 24 and wait for Hotlink", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_8", "description": "Press Tab and check focus on Hotlink", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_9", "description": "Press Tab and check focus on Home", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_10", "description": "Press Shift+Tab and check focus moves back to Hotlink", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_11", "description": "Keyboard click Hotlink and check navigation jump to Page 28", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_12", "description": "Navigate back to Page 24", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_13", "description": "Go to Page 26", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_14", "description": "Press Tab and check focus on Home directly", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_15", "description": "Go to Page 28 and wait for Note and Hotlink", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_16", "description": "Press Tab and check focus on Note first", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_17", "description": "Press Tab and check focus on Hotlink second", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_18", "description": "Press Tab and check focus on Home third", "tags": "P3", "visualTest": false },
-        { "id": "TST_KBOA_TC_19", "description": "Navigate to page 20 before finishing Suite 4", "tags": "P3", "visualTest": false }
+        {
+          "id": "TST_KBOA_TC_1",
+          "description": "Go to Page 22 and wait for Notes",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_2",
+          "description": "Press Tab and check focus on Notes",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_3",
+          "description": "Press Tab and check focus on Home",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_4",
+          "description": "Press Tab and check focus loops back to Notes",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_5",
+          "description": "Keyboard click Notes and check panel opens",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_6",
+          "description": "Keyboard click Close and check panel closes",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_7",
+          "description": "Go to Page 24 and wait for Hotlink",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_8",
+          "description": "Press Tab and check focus on Hotlink",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_9",
+          "description": "Press Tab and check focus on Home",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_10",
+          "description": "Press Shift+Tab and check focus moves back to Hotlink",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_11",
+          "description": "Keyboard click Hotlink and check navigation jump to Page 28",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_12",
+          "description": "Navigate back to Page 24",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_13",
+          "description": "Go to Page 26",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_14",
+          "description": "Press Tab and check focus on Home directly",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_15",
+          "description": "Go to Page 28 and wait for Note and Hotlink",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_16",
+          "description": "Press Tab and check focus on Note first",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_17",
+          "description": "Press Tab and check focus on Hotlink second",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_18",
+          "description": "Press Tab and check focus on Home third",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_KBOA_TC_19",
+          "description": "Navigate to page 20 before finishing Suite 4",
+          "tags": "P3",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4574,22 +5159,102 @@
       "moduleId": "EBTF",
       "testFile": "./test/ExperienceApp/ebookToolbarFocus.test.js",
       "testcase": [
-        { "id": "TST_EBTF_TC_1", "description": "Go to Page 26 and reset focus to eBook reader container", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_2", "description": "Press Tab and check focus on Home button on Page 26", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_3", "description": "Press Tab and check focus on Content button on Page 26", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_4", "description": "Press Tab and check focus on Tools button on Page 26", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_5", "description": "Press Tab and check focus on Zoom Out button on Page 26", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_6", "description": "Press Tab and check focus on Zoom In button on Page 26", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_7", "description": "Press Tab to focus on Fit To Height button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_8", "description": "Press Tab to move focus forward to Jump to Page button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_9", "description": "Press Tab to move focus forward to Previous button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_10", "description": "Press Tab to move focus forward to TOC button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_11", "description": "Press Tab to move focus forward to Next button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_12", "description": "Press Tab to move focus forward to Single Page View button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_13", "description": "Press Tab to move focus forward to Change Course Material button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_14", "description": "Press Tab to move focus forward to Move Toolbar button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_15", "description": "Press Tab to move focus forward to Toolbar Status Container button", "tags": "P1", "visualTest": true },
-        { "id": "TST_EBTF_TC_16", "description": "Navigate back to page 20 before completing suite", "tags": "P1", "visualTest": true }
+        {
+          "id": "TST_EBTF_TC_1",
+          "description": "Go to Page 26 and reset focus to eBook reader container",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_2",
+          "description": "Press Tab and check focus on Home button on Page 26",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_3",
+          "description": "Press Tab and check focus on Content button on Page 26",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_4",
+          "description": "Press Tab and check focus on Tools button on Page 26",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_5",
+          "description": "Press Tab and check focus on Zoom Out button on Page 26",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_6",
+          "description": "Press Tab and check focus on Zoom In button on Page 26",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_7",
+          "description": "Press Tab to focus on Fit To Height button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_8",
+          "description": "Press Tab to move focus forward to Jump to Page button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_9",
+          "description": "Press Tab to move focus forward to Previous button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_10",
+          "description": "Press Tab to move focus forward to TOC button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_11",
+          "description": "Press Tab to move focus forward to Next button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_12",
+          "description": "Press Tab to move focus forward to Single Page View button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_13",
+          "description": "Press Tab to move focus forward to Change Course Material button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_14",
+          "description": "Press Tab to move focus forward to Move Toolbar button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_15",
+          "description": "Press Tab to move focus forward to Toolbar Status Container button",
+          "tags": "P1",
+          "visualTest": true
+        },
+        {
+          "id": "TST_EBTF_TC_16",
+          "description": "Navigate back to page 20 before completing suite",
+          "tags": "P1",
+          "visualTest": true
+        }
       ]
     },
     {
@@ -4597,19 +5262,84 @@
       "moduleId": "SPRF",
       "testFile": "./test/ExperienceApp/studentProfile.test.js",
       "testcase": [
-        { "id": "TST_SPRF_TC_RESET", "description": "BeforeEach/After housekeeping - return to the Students tab and clear any search (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_1", "description": "Verify the profile of an adult learner with an email address shows all expected sections", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_2", "description": "Verify the profile of a child account shows the username as its identifier", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_4", "description": "Verify each course-material component shows its correct activation state and dates", "tags": "P2", "visualTest": false },
-        { "id": "TST_SPRF_TC_5", "description": "Verify Back on the profile page returns the admin to the Students tab", "tags": "P2", "visualTest": false },
-        { "id": "TST_SPRF_TC_6", "description": "Verify a student profile URL can be opened directly as a deep link", "tags": "P2", "visualTest": false },
-        { "id": "TST_SPRF_TC_7", "description": "Verify an error is shown to the admin when a student profile cannot be loaded - EXPECTED TO FAIL, open product defect (HTTP 500 on getUserDetailWithClasses); deliberately not listed in any execution file", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_9", "description": "Verify a password that fails the complexity rules is rejected with a clear message", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_11", "description": "Verify Username and Location are shown but cannot be edited", "tags": "P2", "visualTest": false },
-        { "id": "TST_SPRF_TC_15", "description": "Verify Activate stays disabled until an activation code is entered", "tags": "P2", "visualTest": false },
-        { "id": "TST_SPRF_TC_16", "description": "Verify an unusable activation code is rejected with an on-screen error", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_17", "description": "Verify a class can be launched from the student's profile page", "tags": "P1", "visualTest": false },
-        { "id": "TST_SPRF_TC_21", "description": "Verify Remove from school account is disabled while no student is selected", "tags": "P2", "visualTest": false }
+        {
+          "id": "TST_SPRF_TC_RESET",
+          "description": "BeforeEach/After housekeeping - return to the Students tab and clear any search (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_1",
+          "description": "Verify the profile of an adult learner with an email address shows all expected sections",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_2",
+          "description": "Verify the profile of a child account shows the username as its identifier",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_4",
+          "description": "Verify each course-material component shows its correct activation state and dates",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_5",
+          "description": "Verify Back on the profile page returns the admin to the Students tab",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_6",
+          "description": "Verify a student profile URL can be opened directly as a deep link",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_7",
+          "description": "Verify an error is shown to the admin when a student profile cannot be loaded - EXPECTED TO FAIL, open product defect (HTTP 500 on getUserDetailWithClasses); deliberately not listed in any execution file",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_9",
+          "description": "Verify a password that fails the complexity rules is rejected with a clear message",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_11",
+          "description": "Verify Username and Location are shown but cannot be edited",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_15",
+          "description": "Verify Activate stays disabled until an activation code is entered",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_16",
+          "description": "Verify an unusable activation code is rejected with an on-screen error",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_17",
+          "description": "Verify a class can be launched from the student's profile page",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_21",
+          "description": "Verify Remove from school account is disabled while no student is selected",
+          "tags": "P2",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4617,31 +5347,156 @@
       "moduleId": "SLST",
       "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
       "testcase": [
-        { "id": "TST_SLST_TC_NAV", "description": "Before-hook navigation - hop from the Classes tab to the Students tab (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_RESET", "description": "BeforeEach/After housekeeping - clear any search and untick the activation checkbox (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_1", "description": "Verify the Students tab loads with all expected components", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_2", "description": "Verify a student is returned when searching by their exact first name", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_9", "description": "Verify the list does not filter until the Search button is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_10", "description": "Verify Clear restores the full student list and the count heading", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_3", "description": "Verify a partial, differently-cased first name still matches", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_11", "description": "Verify a whitespace-only search term is treated as an empty search", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_12", "description": "Verify a meaningful empty state is shown when a search matches no student", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_4", "description": "Verify a student is returned when searching by their last name", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_5", "description": "Verify a student is returned when searching by their full email address", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_6", "description": "Verify an email typed entirely in upper case still matches the lower-case account", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_7", "description": "Verify an email containing special characters is matched exactly", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_8", "description": "Verify a child account is returned when searching by its username", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_15", "description": "Verify the list is sorted by First name ascending when the tab first loads", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_16", "description": "Verify clicking Last name sorts ascending and clicking again sorts descending", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_17", "description": "Verify clicking Email address or Username sorts the list by that column", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_18", "description": "Verify sorting uses code-point order rather than locale-aware collation", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_19", "description": "Verify the chosen sort is not retained across a page reload", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_20", "description": "Verify the user guide expands and shows the four documented actions", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_21", "description": "Verify the user guide collapses and its panel is removed from the page", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_22", "description": "Verify Load more appends the remaining students to the list", "tags": "P1", "visualTest": false },
-        { "id": "TST_SLST_TC_23", "description": "Verify Load more disappears once every student has been loaded", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_24", "description": "Verify Load more is not offered when a result set fits on one page", "tags": "P2", "visualTest": false },
-        { "id": "TST_SLST_TC_13", "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list", "tags": "P2", "visualTest": false }
+        {
+          "id": "TST_SLST_TC_NAV",
+          "description": "Before-hook navigation - hop from the Classes tab to the Students tab (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_RESET",
+          "description": "BeforeEach/After housekeeping - clear any search and untick the activation checkbox (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_1",
+          "description": "Verify the Students tab loads with all expected components",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_2",
+          "description": "Verify a student is returned when searching by their exact first name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_9",
+          "description": "Verify the list does not filter until the Search button is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_10",
+          "description": "Verify Clear restores the full student list and the count heading",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_3",
+          "description": "Verify a partial, differently-cased first name still matches",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_11",
+          "description": "Verify a whitespace-only search term is treated as an empty search",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_12",
+          "description": "Verify a meaningful empty state is shown when a search matches no student",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_4",
+          "description": "Verify a student is returned when searching by their last name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_5",
+          "description": "Verify a student is returned when searching by their full email address",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_6",
+          "description": "Verify an email typed entirely in upper case still matches the lower-case account",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_7",
+          "description": "Verify an email containing special characters is matched exactly",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_8",
+          "description": "Verify a child account is returned when searching by its username",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_15",
+          "description": "Verify the list is sorted by First name ascending when the tab first loads",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_16",
+          "description": "Verify clicking Last name sorts ascending and clicking again sorts descending",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_17",
+          "description": "Verify clicking Email address or Username sorts the list by that column",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_18",
+          "description": "Verify sorting uses code-point order rather than locale-aware collation",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_19",
+          "description": "Verify the chosen sort is not retained across a page reload",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_20",
+          "description": "Verify the user guide expands and shows the four documented actions",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_21",
+          "description": "Verify the user guide collapses and its panel is removed from the page",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_22",
+          "description": "Verify Load more appends the remaining students to the list",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_23",
+          "description": "Verify Load more disappears once every student has been loaded",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_24",
+          "description": "Verify Load more is not offered when a result set fits on one page",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_13",
+          "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list",
+          "tags": "P2",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4649,27 +5504,132 @@
       "moduleId": "STFL",
       "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
       "testcase": [
-        { "id": "TST_STFL_TC_NAV", "description": "Before-hook navigation - hop from the Classes tab to the Staff tab (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_RESET", "description": "BeforeEach/After housekeeping - clear any search and collapse the user guide (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_2", "description": "Verify matching staff are returned when a full first name is searched", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_3", "description": "Verify all partial matches are returned when only part of a first name is searched", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_4", "description": "Verify the same results are returned when a first name is searched in a different case", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_6", "description": "Verify matching staff are returned when a last name is searched", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_8", "description": "Verify the correct staff member is returned when a full email address is searched", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_9", "description": "Verify all staff on a domain are returned when a partial email address is searched", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_11", "description": "Verify an empty-state message is shown when a search matches no staff member", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_12", "description": "Verify the user guide panel is shown when the User guide toggle is clicked", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_13", "description": "Verify the user guide panel is removed when the Hide toggle is clicked", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_14", "description": "Verify the list is sorted by Last name ascending when the Staff tab first loads", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_15", "description": "Verify the list is re-ordered by first name when the First name column header is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_16", "description": "Verify the list is re-ordered by email address when the Email address column header is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_17", "description": "Verify the list is grouped by role when the Role column header is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_18", "description": "Verify the Role sort reverses when the Role column header is clicked a second time", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_19", "description": "Verify the previous sort indicator is cleared when a different column takes over the sort", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_20", "description": "Verify sorting orders values by code point when last names mix upper and lower case", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_23", "description": "Verify the next page of staff is appended when Load more is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFL_TC_24", "description": "Verify the Load more control is removed when the whole staff list has been loaded", "tags": "P2", "visualTest": false },
-        { "id": "TST_STFL_TC_25", "description": "Verify the Load more control is absent when a search returns fewer results than one page", "tags": "P2", "visualTest": false }
+        {
+          "id": "TST_STFL_TC_NAV",
+          "description": "Before-hook navigation - hop from the Classes tab to the Staff tab (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_RESET",
+          "description": "BeforeEach/After housekeeping - clear any search and collapse the user guide (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_2",
+          "description": "Verify matching staff are returned when a full first name is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_3",
+          "description": "Verify all partial matches are returned when only part of a first name is searched",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_4",
+          "description": "Verify the same results are returned when a first name is searched in a different case",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_6",
+          "description": "Verify matching staff are returned when a last name is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_8",
+          "description": "Verify the correct staff member is returned when a full email address is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_9",
+          "description": "Verify all staff on a domain are returned when a partial email address is searched",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_11",
+          "description": "Verify an empty-state message is shown when a search matches no staff member",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_12",
+          "description": "Verify the user guide panel is shown when the User guide toggle is clicked",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_13",
+          "description": "Verify the user guide panel is removed when the Hide toggle is clicked",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_14",
+          "description": "Verify the list is sorted by Last name ascending when the Staff tab first loads",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_15",
+          "description": "Verify the list is re-ordered by first name when the First name column header is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_16",
+          "description": "Verify the list is re-ordered by email address when the Email address column header is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_17",
+          "description": "Verify the list is grouped by role when the Role column header is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_18",
+          "description": "Verify the Role sort reverses when the Role column header is clicked a second time",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_19",
+          "description": "Verify the previous sort indicator is cleared when a different column takes over the sort",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_20",
+          "description": "Verify sorting orders values by code point when last names mix upper and lower case",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_23",
+          "description": "Verify the next page of staff is appended when Load more is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_24",
+          "description": "Verify the Load more control is removed when the whole staff list has been loaded",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFL_TC_25",
+          "description": "Verify the Load more control is absent when a search returns fewer results than one page",
+          "tags": "P2",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4677,20 +5637,144 @@
       "moduleId": "MRPT",
       "testFile": "./test/ExperienceApp/schoolReports.test.js",
       "testcase": [
-        { "id": "TST_MRPT_TC_100", "description": "BeforeEach housekeeping - reload the class-selection step so each case starts unfiltered and unsearched (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_101", "description": "Before-chain housekeeping - navigate from the Classes tab to Reports and open the class-selection step (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_2", "description": "Verify the class-selection step launches when Create report is clicked", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_4", "description": "Verify a class is returned when the full class name is searched", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_5", "description": "Verify a class is returned when its class key is searched", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_8", "description": "Verify the filter panel opens with all five class statuses when Filter is clicked", "tags": "P2", "visualTest": false },
-        { "id": "TST_MRPT_TC_9", "description": "Verify the class list is narrowed to one status when that status filter is applied", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_13", "description": "Verify the selection count and footer summary update when a single class checkbox is ticked", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_14", "description": "Verify every matching class is selected when Select all classes is ticked", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_18", "description": "Verify the class selection is cleared and no report is created when Cancel is used on the class-selection step", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_19", "description": "Verify the report-configuration dialog closes without creating a report when its Cancel is used", "tags": "P2", "visualTest": false },
-        { "id": "TST_MRPT_TC_27", "description": "Verify the custom date-range controls become available when a date-capable report type is selected", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_34", "description": "Verify the custom grade-settings option is offered and unticked by default", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_40", "description": "Verify the class-selection filter offers class statuses only and no class-label filter", "tags": "P2", "visualTest": false }
+        {
+          "id": "TST_MRPT_TC_100",
+          "description": "BeforeEach housekeeping - reload the class-selection step so each case starts unfiltered and unsearched (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_101",
+          "description": "Before-chain housekeeping - navigate from the Classes tab to Reports and open the class-selection step (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_2",
+          "description": "Verify the class-selection step launches when Create report is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_4",
+          "description": "Verify a class is returned when the full class name is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_5",
+          "description": "Verify a class is returned when its class key is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_8",
+          "description": "Verify the filter panel opens with all five class statuses when Filter is clicked",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_9",
+          "description": "Verify the class list is narrowed to one status when that status filter is applied",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_13",
+          "description": "Verify the selection count and footer summary update when a single class checkbox is ticked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_14",
+          "description": "Verify every matching class is selected when Select all classes is ticked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_18",
+          "description": "Verify the class selection is cleared and no report is created when Cancel is used on the class-selection step",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_19",
+          "description": "Verify the report-configuration dialog closes without creating a report when its Cancel is used",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_27",
+          "description": "Verify the custom date-range controls become available when a date-capable report type is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_34",
+          "description": "Verify the custom grade-settings option is offered and unticked by default",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_40",
+          "description": "Verify the class-selection filter offers class statuses only and no class-label filter",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_6",
+          "description": "Verify matching classes are returned when a partial, differently-cased term is searched (also pins substring, not fuzzy)",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_7",
+          "description": "Verify a no-results state is shown when the search term matches no class",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_10",
+          "description": "Verify the unfiltered class list is restored when Clear all is used",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_11",
+          "description": "Verify classes of every selected status are listed when multiple status filters are applied (OR, not AND)",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_12",
+          "description": "Verify an empty class list is shown when the applied filter and search cannot both match",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_15",
+          "description": "Verify the footer action bar is not rendered when no class is selected",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_16",
+          "description": "Verify the selection count decreases when a selected class checkbox is unticked",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_20",
+          "description": "Verify the report-configuration dialog closes without creating a report when its Close control is used",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_31",
+          "description": "Verify the end date cannot be set earlier than the selected start date",
+          "tags": "P2",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4698,16 +5782,66 @@
       "moduleId": "MRPT",
       "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
       "testcase": [
-        { "id": "TST_MRPT_TC_201", "description": "Before-chain housekeeping - log in as the single-school admin and assert the school key (this account never sees 'My school accounts', so the school is asserted rather than selected)", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_200", "description": "BeforeEach housekeeping - return to the Reports tab (removes nothing; created reports cannot be deleted)", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_21", "description": "Verify a Class summary report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_22", "description": "Verify a Class detailed data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_23", "description": "Verify a Class daily data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_24", "description": "Verify an Aggregated data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_25", "description": "Verify an Assignments summary report is created and listed for download when From the beginning is selected", "tags": "P2", "visualTest": false },
-        { "id": "TST_MRPT_TC_26", "description": "Verify an Assignments detailed data report is created and listed for download when From the beginning is selected", "tags": "P2", "visualTest": false },
-        { "id": "TST_MRPT_TC_28", "description": "Verify a report is created over the chosen window when a custom date range is submitted", "tags": "P1", "visualTest": false },
-        { "id": "TST_MRPT_TC_37", "description": "Verify an Estimated CEFR level report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false }
+        {
+          "id": "TST_MRPT_TC_201",
+          "description": "Before-chain housekeeping - log in as the single-school admin and assert the school key (this account never sees 'My school accounts', so the school is asserted rather than selected)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_200",
+          "description": "BeforeEach housekeeping - return to the Reports tab (removes nothing; created reports cannot be deleted)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_21",
+          "description": "Verify a Class summary report is created and listed for download when From the beginning is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_22",
+          "description": "Verify a Class detailed data report is created and listed for download when From the beginning is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_23",
+          "description": "Verify a Class daily data report is created and listed for download when From the beginning is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_24",
+          "description": "Verify an Aggregated data report is created and listed for download when From the beginning is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_25",
+          "description": "Verify an Assignments summary report is created and listed for download when From the beginning is selected",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_26",
+          "description": "Verify an Assignments detailed data report is created and listed for download when From the beginning is selected",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_28",
+          "description": "Verify a report is created over the chosen window when a custom date range is submitted",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_37",
+          "description": "Verify an Estimated CEFR level report is created and listed for download when From the beginning is selected",
+          "tags": "P1",
+          "visualTest": false
+        }
       ]
     },
     {
@@ -4715,16 +5849,66 @@
       "moduleId": "STFP",
       "testFile": "./test/ExperienceApp/staffProfile.test.js",
       "testcase": [
-        { "id": "TST_STFP_TC_RESET", "description": "BeforeEach + suite-After housekeeping - return to the Staff tab and clear any search (not a functional test)", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_1", "description": "Verify the staff profile opens with all expected details when View profile is used on a teacher", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_2", "description": "Verify the role is shown as Administrator/Teacher when the profile of an administrator is opened", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_7", "description": "Verify the class page opens when a class is clicked on a staff profile", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_9", "description": "Verify Grant admin rights is offered when Manage account is opened on a teacher", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_11", "description": "Verify Remove admin rights is offered when Manage account is opened on an administrator", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_12", "description": "Verify admin rights are retained when the Remove admin rights confirmation is cancelled", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_15", "description": "Verify the removal confirmation explains the consequence when Remove from school account is opened", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_16", "description": "Verify the Yes, remove button is unavailable until the confirmation checkbox is ticked", "tags": "P1", "visualTest": false },
-        { "id": "TST_STFP_TC_17", "description": "Verify the staff member is retained when the removal confirmation is cancelled", "tags": "P1", "visualTest": false }
+        {
+          "id": "TST_STFP_TC_RESET",
+          "description": "BeforeEach + suite-After housekeeping - return to the Staff tab and clear any search (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_1",
+          "description": "Verify the staff profile opens with all expected details when View profile is used on a teacher",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_2",
+          "description": "Verify the role is shown as Administrator/Teacher when the profile of an administrator is opened",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_7",
+          "description": "Verify the class page opens when a class is clicked on a staff profile",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_9",
+          "description": "Verify Grant admin rights is offered when Manage account is opened on a teacher",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_11",
+          "description": "Verify Remove admin rights is offered when Manage account is opened on an administrator",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_12",
+          "description": "Verify admin rights are retained when the Remove admin rights confirmation is cancelled",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_15",
+          "description": "Verify the removal confirmation explains the consequence when Remove from school account is opened",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_16",
+          "description": "Verify the Yes, remove button is unavailable until the confirmation checkbox is ticked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_17",
+          "description": "Verify the staff member is retained when the removal confirmation is cancelled",
+          "tags": "P1",
+          "visualTest": false
+        }
       ]
     }
   ]

@@ -147,8 +147,12 @@ module.exports = {
   selectAllCheckbox: sr.selectAllCheckbox,
   selectAllLabel: sr.selectAllLabel,
   rowCheckboxAll: sr.rowCheckboxAll,
+  rowCheckboxChecked: sr.rowCheckboxChecked,
+  filterStatusChecked: sr.filterStatusChecked,
   rowLabelAll: sr.rowLabelAll,
   listContainer: sr.listContainer,
+  noRecords: sr.noRecords,
+  modalCloseBtn: sr.modalCloseBtn,
   classNameAnchorAll: sr.classNameAnchorAll,
   loadMoreLink: sr.loadMoreLink,
   filterToggle: sr.filterToggle,
@@ -324,12 +328,11 @@ module.exports = {
     var heading = squash(await action.getText(this.selectClassesHeading));
     var match = heading.match(/Select classes\((\d+)\)/);
     var rows = await action.getElementCount(this.rowCheckboxAll);
-    var checked = 0;
-    /* eslint-disable no-await-in-loop */
-    for (var i = 0; i < rows; i++) {
-      if (true === (await action.isSelected(await action.getKthElement(this.rowCheckboxAll, i)))) checked++;
-    }
-    /* eslint-enable no-await-in-loop */
+    // ⚠️ Counted with a `:checked` selector, NOT by looping isSelected over every row.
+    // Measured 2026-09-10: isSelected costs ~0.67s per call, so a 20-row loop cost ~13s EVERY
+    // time this method ran, and it runs several times per test. Across the suite that loop
+    // alone accounted for ~108s of a 822s run. One count call replaces twenty.
+    var checked = await action.getElementCount(this.rowCheckboxChecked);
     return {
       heading: heading,
       selectedCount: match ? Number(match[1]) : null,
@@ -409,9 +412,30 @@ module.exports = {
      * call instead of 21, and cannot go stale between reads.
      *
      * NEVER index into a list that is still settling.
+     *
+     * ⚠️ THE MATCHING TOTAL IS PART OF THE FINGERPRINT, and it is the half that actually
+     * works. The rendered page alone is not enough: `FCN-CHZ-PDA`'s unfiltered list already
+     * BEGINS with the `BulkCSV_*` classes, so searching "bulkcsv" returns the same first 20
+     * rows and the visible text never changes — the wait then burned its whole budget and
+     * failed TC_6 and TC_16 with "the class list did not change".
+     *
+     * `createReport-11-N` counts every MATCHING class, not the rendered page (§10.4), so it
+     * moves 110 -> 34 on that same search. Any narrowing search changes it, and BeforeEach
+     * always reloads to the unfiltered list, so it is a reliable signal.
      */
     var fingerprint = async function () {
-      return squash(await action.getText(self.listContainer));
+      var total = await action.getElementCount(self.classNameAnchorAll);
+      var rows = await action.getElementCount(self.rowCheckboxAll);
+      // ⚠️ NEVER getText the list container here. When a search matches nothing the container
+      // (`div.list-view`) is REMOVED from the DOM, and Playwright's innerText then WAITS its
+      // full 30 s default for an element that will never appear — on every poll. That made
+      // each zero-result search cost ~90 s and was the whole reason TC_6, TC_7 and TC_12 were
+      // slow. Same shape as the `.nth(4)` stall in §10.17: waiting on something that is not
+      // there. Only the first row is read, and only when there IS one.
+      var first = rows > 0
+        ? squash(await action.getText(await action.getKthElement(self.rowLabelAll, 0)))
+        : "";
+      return total + "::" + rows + "::" + first;
     };
 
     var before = await fingerprint();
@@ -471,20 +495,26 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var n = await action.getElementCount(this.filterStatusAll);
     var labels = [];
-    var checked = [];
     /* eslint-disable no-await-in-loop */
     for (var i = 0; i < n; i++) {
       labels.push(squash(await action.getText(await action.getKthElement(this.filterStatusLabelAll, i))));
-      checked.push(await action.isSelected(await action.getKthElement(this.filterStatusAll, i)));
     }
     /* eslint-enable no-await-in-loop */
+    // Same reasoning as getData_selectionState: one `:checked` count instead of five
+    // isSelected calls.
+    //
+    // ⚠️ Reports a COUNT, deliberately not a per-box boolean array. The count cannot say WHICH
+    // boxes are ticked, and fabricating an array from it (first N = true) would be wrong the
+    // moment a middle status is the ticked one — a diagnostic that lies is worse than one that
+    // is absent. Every assertion here only needs "how many", so that is all it returns.
+    var checkedCount = await action.getElementCount(this.filterStatusChecked);
     return {
       panelDisplayed: await action.isDisplayed(this.filterApplyBtn),
       headingDisplayed: await action.isDisplayed(this.filterPanelHeading),
       statusCount: n,
       statusLabels: labels,
-      statusChecked: checked,
-      allChecked: checked.length > 0 && checked.every(function (c) { return c === true; }),
+      checkedCount: checkedCount,
+      allChecked: n > 0 && checkedCount === n,
       clearAllDisplayed: await action.isDisplayed(this.filterClearAllLink),
       applyDisplayed: await action.isDisplayed(this.filterApplyBtn),
       closeDisplayed: await action.isDisplayed(this.filterCloseBtn),
@@ -542,6 +572,134 @@ module.exports = {
   },
 
   /**
+   * The empty state shown when nothing matches the current search and/or filter.
+   *
+   * ⚠️ The copy is a bare **"No results"** — it does NOT echo the search term. The register
+   * assumed the Classes tab's form (`No classes that match your search <term>`) and that was
+   * wrong (§11.10). There is also **no filter-specific variant**: a filter that matches nothing
+   * and a search that matches nothing produce the same message.
+   *
+   * ⚠️ `div.list-view` is genuinely REMOVED in this state, not merely emptied — so its absence
+   * is a truthful signal here, unlike most of this app (§B2).
+   */
+  getData_emptyState: async function () {
+    await logger.logInto(await stackTrace.get());
+    var present = await action.isExisting(this.noRecords);
+    return {
+      emptyStateShown: present,
+      emptyStateText: present ? squash(await action.getText(this.noRecords)) : null,
+      listViewPresent: await action.isExisting(this.listContainer),
+      rowCount: await action.getElementCount(this.rowCheckboxAll),
+      matchingTotal: await action.getElementCount(this.classNameAnchorAll),
+    };
+  },
+
+  /**
+   * Ticks EXACTLY the statuses named in `keepLabels` and applies the filter.
+   *
+   * The multi-status sibling of `apply_singleStatusFilter`. Same reasoning: all five start
+   * CHECKED (§10.2), so this unticks everything not named rather than ticking what is.
+   * Statuses are matched by LABEL TEXT, never by the positional `status.nameN` id.
+   */
+  apply_statusFilter: async function (keepLabels) {
+    await logger.logInto(await stackTrace.get(), "keep:" + keepLabels.join("+"));
+    var n = await action.getElementCount(this.filterStatusAll);
+    var seen = [];
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < n; i++) {
+      var label = await action.getKthElement(this.filterStatusLabelAll, i);
+      var text = squash(await action.getText(label));
+      var box = await action.getKthElement(this.filterStatusAll, i);
+      var isOn = await action.isSelected(box);
+      var want = keepLabels.indexOf(text) !== -1;
+      if (want) seen.push(text);
+      if (isOn !== want) {
+        var res = await action.click(label);
+        if (true != res) return { pageStatus: res };
+      }
+    }
+    /* eslint-enable no-await-in-loop */
+    for (var k = 0; k < keepLabels.length; k++) {
+      if (seen.indexOf(keepLabels[k]) === -1) {
+        return { pageStatus: new Error("no status checkbox is labelled '" + keepLabels[k] + "'") };
+      }
+    }
+
+    var applied = await action.click(this.filterApplyBtn);
+    if (true != applied) return { pageStatus: applied };
+    var closed = await action.waitForDisplayed(this.filterApplyBtn, UI_TIMEOUT, true);
+    if (true != closed) return { pageStatus: new Error("the filter panel did not close after Apply") };
+
+    var self = this;
+    await pollUntil(async function () {
+      return squash(await action.getText(self.filterSummaryLabel)) !== "All class statuses";
+    }, UI_TIMEOUT);
+
+    return {
+      pageStatus: true,
+      summaryLabel: squash(await action.getText(this.filterSummaryLabel)),
+      matchingTotal: await action.getElementCount(this.classNameAnchorAll),
+    };
+  },
+
+  /**
+   * Closes the report-configuration dialog with its **X** control (`crm-close`).
+   *
+   * ⚠️ The FOURTH dismiss-like control on this flow, and it behaves identically to the
+   * dialog's Cancel — verified 2026-09-10: the selection is preserved and the report type
+   * resets (§11.11). `createReport-1` leaves the flow, `createReport-13` clears the selection,
+   * `createReport-15` cancels the dialog, `crm-close` closes it. Four controls, three
+   * different outcomes.
+   */
+  click_closeReportDialog: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.modalCloseBtn);
+    if (true != res) return { pageStatus: res };
+    var hidden = await action.waitForDisplayed(this.reportModal, UI_TIMEOUT, true);
+    if (true != hidden) return { pageStatus: new Error("the Create report dialog was still visible " + UI_TIMEOUT + "ms after Close") };
+    return { pageStatus: true };
+  },
+
+  /**
+   * Opens a date picker and reports which dates it allows.
+   *
+   * Used by the end-date boundary case: with `From` set, the `To` picker disables every date
+   * BEFORE the start date and every date after today, so its enabled window is exactly
+   * `[From, today]` (§11.12). Reading the whole grid makes that assertion falsifiable in both
+   * directions rather than probing one date.
+   *
+   * Leaves the picker CLOSED via Cancel — it is a modal and would block everything after it.
+   */
+  getData_datePickerWindow: async function (which) {
+    await logger.logInto(await stackTrace.get(), which);
+    var field = which === "from" ? this.dateFromInput : this.dateToInput;
+    var opened = await action.click(field);
+    if (true != opened) return { pageStatus: opened };
+    var up = await action.waitForDisplayed(this.datePicker, UI_TIMEOUT);
+    if (true != up) return { pageStatus: new Error("the '" + which + "' date picker did not open") };
+
+    var n = await action.getElementCount(this.datePickerCellAll);
+    var enabled = [];
+    var disabled = [];
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < n; i++) {
+      var cell = await action.getKthElement(this.datePickerCellAll, i);
+      var lbl = await action.getAttribute(cell, "aria-label");
+      var cls = String(await action.getAttribute(cell, "class"));
+      if (!lbl) continue;
+      if (/owl-dt-calendar-cell-disabled/.test(cls)) disabled.push(String(lbl));
+      else enabled.push(String(lbl));
+    }
+    /* eslint-enable no-await-in-loop */
+
+    var closed = await action.click(this.datePickerCancelBtn);
+    if (true != closed) return { pageStatus: new Error("could not close the '" + which + "' date picker") };
+    await action.waitForDisplayed(this.datePicker, UI_TIMEOUT, true);
+
+    return { pageStatus: true, enabled: enabled, disabled: disabled, totalCells: n };
+  },
+
+  /**
    * Clicks "Clear all".
    *
    * ⚠️ This is a RESET, not an untick: it re-ticks all five statuses, applies IMMEDIATELY
@@ -585,6 +743,44 @@ module.exports = {
     if (true != res) return { pageStatus: res };
     // The footer bar appearing is the observable outcome (measured same-tick, 0 ms).
     return { pageStatus: await action.waitForDisplayed(this.footerContinueBtn, UI_TIMEOUT) };
+  },
+
+  /**
+   * TOGGLES the Nth currently-rendered row, and returns whether it ended up checked.
+   *
+   * ⚠️ POSITIONAL ON PURPOSE, and this is the one place it is defensible. Invariant 2 forbids
+   * positional ids because they get RE-ISSUED — an index cached across a search, a filter or a
+   * re-sort points at a different row later. Here the index is used and discarded inside a
+   * single settled list, with nothing in between that could re-order it.
+   *
+   * It exists because content-based resolution genuinely cannot work for the untick case:
+   * `FCN-CHZ-PDA` holds many classes sharing one name (`BulkCSV_Class1` ×3+,
+   * `AutoClass_CreateOnly` ×8), so "the second BulkCSV_Class1" is not expressible by text.
+   * `click_selectClassByText` remains the right method wherever a name IS unique.
+   *
+   * ⚠️ Waits on the CHECKBOX's own state, not on the footer bar — the footer is already
+   * present when unticking one of several, so waiting for it would prove nothing.
+   */
+  click_selectClassByIndex: async function (index) {
+    await logger.logInto(await stackTrace.get(), "index:" + index);
+    var n = await action.getElementCount(this.rowCheckboxAll);
+    if (index < 0 || index >= n) {
+      return { pageStatus: new Error("row index " + index + " is out of range - only " + n + " rows are rendered") };
+    }
+    var box = await action.getKthElement(this.rowCheckboxAll, index);
+    var before = await action.isSelected(box);
+
+    var res = await action.click(await action.getKthElement(this.rowLabelAll, index));
+    if (true != res) return { pageStatus: res };
+
+    var self = this;
+    var flipped = await pollUntil(async function () {
+      return (await action.isSelected(await action.getKthElement(self.rowCheckboxAll, index))) !== before;
+    }, UI_TIMEOUT);
+    if (flipped !== true) {
+      return { pageStatus: new Error("row " + index + " did not change checked state (still " + before + ")") };
+    }
+    return { pageStatus: true, checked: !before };
   },
 
   /**

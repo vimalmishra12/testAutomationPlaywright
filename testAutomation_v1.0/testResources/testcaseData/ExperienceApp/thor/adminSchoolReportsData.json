@@ -22,6 +22,19 @@
       "filterStatus": "Active",
       "singleStatusSummaryLabel": "1 class status",
 
+      "_searchSemanticsComment": "TST_MRPT_TC_6 / TC_7, grounded live 2026-09-10. The search is a SUBSTRING match, case-insensitive - NOT fuzzy. Probes: 'school license' -> 4, 'License Test' -> 4, 'schoolclass' (non-contiguous) -> 0, 'licence' (misspelt) -> 0. This matters because admin-shared.md A4 records the Library tab as FUZZY and the Classes tab as substring, and warns against inheriting either. 'bulkcsv' is used as the partial term because it is lower-case (the real classes are 'BulkCSV_*') and matched 34 classes - no count is asserted, only 'more than one, and every row contains the term'.",
+      "partialSearchTerm": "bulkcsv",
+      "nonContiguousTerm": "bulkclass",
+      "noMatchSearchTerm": "zzzznotaclass",
+      "noResultsText": "No results",
+
+      "_orFilterComment": "TST_MRPT_TC_11. Status distribution measured on FCN-CHZ-PDA 2026-09-10: Not started 10, Active 21, Ended 6, Expired 24, Deleted 49 (sum 110 = the school total). Ended + Not started are chosen as the two smallest non-zero sets, so the union stays inside one rendered page. The case measures each side in the same run and asserts |A OR B| == |A| + |B| - a class holds exactly one status, so the sets are disjoint. Nothing here is hardcoded: this school is shared and its counts churn (admin-shared.md A5).",
+      "orFilterStatusA": "Ended",
+      "orFilterStatusB": "Not started",
+
+      "_emptyComboComment": "TST_MRPT_TC_12, REWRITTEN 2026-09-10. The register asked for a filter that matches no class, but on FCN-CHZ-PDA every one of the five statuses holds classes, so that is not reproducible here. The case instead combines a status filter with a class that is NOT in that status: Fixture_GradeSettings_DO_NOT_DELETE is Active (end date Dec 31 2036), so filtering to Ended and searching for it empties the list. Same empty-state path, verified live. NOTE this leaves 'a filter ALONE matching nothing' uncovered - that needs a school where some status is genuinely empty.",
+      "emptyComboStatus": "Ended",
+
       "_dialogComment": "TST_MRPT_TC_19 / TC_27 / TC_34. 'Class summary' is used because it is date-capable AND grade-capable (admin-reports-tab.md 2). Estimated CEFR level supports neither and would invert TC_27's expectations. reportTypeCount is 7 - the source scenario workbook lists 6 and that omission is a known, confirmed gap.",
       "reportType": "Class summary",
       "reportTypePlaceholder": "Select a report type",
