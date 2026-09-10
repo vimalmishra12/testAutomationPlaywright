@@ -4694,6 +4694,23 @@
       ]
     },
     {
+      "modulename": "Admin App | Create report flow, REPORT-CREATING half (MRPT data-owning) - WARNING: creates real reports that CANNOT be deleted from the UI; runs on the automation-only school VED-NEH-KVU, never on the shared FCN-CHZ-PDA",
+      "moduleId": "MRPT",
+      "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
+      "testcase": [
+        { "id": "TST_MRPT_TC_201", "description": "Before-chain housekeeping - log in as the single-school admin and assert the school key (this account never sees 'My school accounts', so the school is asserted rather than selected)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_200", "description": "BeforeEach housekeeping - return to the Reports tab (removes nothing; created reports cannot be deleted)", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_21", "description": "Verify a Class summary report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_22", "description": "Verify a Class detailed data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_23", "description": "Verify a Class daily data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_24", "description": "Verify an Aggregated data report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_25", "description": "Verify an Assignments summary report is created and listed for download when From the beginning is selected", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_26", "description": "Verify an Assignments detailed data report is created and listed for download when From the beginning is selected", "tags": "P2", "visualTest": false },
+        { "id": "TST_MRPT_TC_28", "description": "Verify a report is created over the chosen window when a custom date range is submitted", "tags": "P1", "visualTest": false },
+        { "id": "TST_MRPT_TC_37", "description": "Verify an Estimated CEFR level report is created and listed for download when From the beginning is selected", "tags": "P1", "visualTest": false }
+      ]
+    },
+    {
       "modulename": "Admin App | Staff profile - view profile, admin rights & removal, read-only half (STFP Phase 1)",
       "moduleId": "STFP",
       "testFile": "./test/ExperienceApp/staffProfile.test.js",

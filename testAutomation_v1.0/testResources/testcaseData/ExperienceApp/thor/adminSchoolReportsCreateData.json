@@ -1,0 +1,35 @@
+{
+  "C1": {
+    "adminSchoolReportsCreate": {
+      "_comment": "Admin App > Create report flow, the REPORT-CREATING half (module MRPT) on thor. Verified live 2026-09-10. WARNING: this suite CREATES REAL REPORTS and CANNOT delete them - a successful report's only row control is Download; the 'Remove from the reports list' button belongs to the generation-FAILED dialog. One run leaves 8 reports on the school for 60 days. Accepted by the user 2026-09-10.",
+
+      "_schoolComment": "VED-NEH-KVU is an automation-only school, which is why creating data here is acceptable. It is NOT the shared FCN-CHZ-PDA that the read-only MRPT suite uses - data-creating suites live apart from side-effect-free ones (admin-shared.md A7/B7). Different login account too: cqatestashish_admin, node C1.login.user.reportsSchoolAdmin.",
+      "schoolKey": "VED-NEH-KVU",
+      "reportsUrlFragment": "/reports",
+      "createUrlFragment": "/reports/create",
+
+      "_classComment": "Automation_class_DND holds 2 students, so the generated reports contain real data rather than being empty. Its sibling Automation_class2_DND (YK8c-ViYk) holds 0 students and is deliberately NOT used here - an empty-class report is a different question and no case in this batch covers it. Both were created 2026-09-10 for automation and are marked DND (do not delete).",
+      "className": "Automation_class_DND",
+      "classKey": "z698-JPfC",
+      "classStudentCount": 2,
+
+      "_typeComment": "All seven report types, verified live in this exact dropdown order (schoolReportType-0..6). Estimated CEFR level is the only one supporting neither a custom date range nor custom grade settings.",
+      "typeClassSummary": "Class summary",
+      "typeClassDetailed": "Class detailed data",
+      "typeClassDaily": "Class daily data",
+      "typeAggregated": "Aggregated data",
+      "typeAssignmentsSummary": "Assignments summary",
+      "typeAssignmentsDetailed": "Assignments detailed data",
+      "typeCefr": "Estimated CEFR level",
+
+      "_copyComment": "Captured verbatim live 2026-09-10. The success dialog interpolates the report type, which is what proves the correct type was submitted rather than merely that something was.",
+      "successHeading": "We are preparing your report",
+      "newBadge": "New",
+      "itemsAllItems": "All items",
+      "fromBeginningRangePrefix": "All student data (up to - ",
+
+      "_dateComment": "TST_MRPT_TC_28. This is an OFFSET IN DAYS, not a literal date, and that is deliberate: the picker opens on the month of the current From value (which defaults to today-6), so a hardcoded date would drop out of the visible grid within a month and fail for a non-product reason. 3 days ago is always in the past (never disabled - the ceiling is today), always differs from the default From, and is reliably inside the rendered grid because the calendar also draws adjacent-month days.",
+      "customFromDaysAgo": 3
+    }
+  }
+}

@@ -174,6 +174,19 @@ module.exports = {
   dateToInput: sr.dateToInput,
   modalCancelBtn: sr.modalCancelBtn,
   modalSubmitBtn: sr.modalSubmitBtn,
+  successModal: sr.successModal,
+  successCreateAnotherLink: sr.successCreateAnotherLink,
+  successBackToReportsBtn: sr.successBackToReportsBtn,
+  schoolCode: sr.schoolCode,
+  reportsHeading: sr.reportsHeading,
+  reportRowAll: sr.reportRowAll,
+  reportDownloadAll: sr.reportDownloadAll,
+  datePicker: sr.datePicker,
+  datePickerCellAll: sr.datePickerCellAll,
+  // Selector TEMPLATE — {{label}} resolved at call time.
+  datePickerCellByLabel: sr.datePickerCellByLabel,
+  datePickerSetBtn: sr.datePickerSetBtn,
+  datePickerCancelBtn: sr.datePickerCancelBtn,
 
   /* ------------------------------------------------------------------ lifecycle */
 
@@ -741,5 +754,193 @@ module.exports = {
     var hidden = await action.waitForDisplayed(this.reportModal, UI_TIMEOUT, true);
     if (true != hidden) return { pageStatus: new Error("the Create report dialog was still visible " + UI_TIMEOUT + "ms after Cancel") };
     return { pageStatus: true };
+  },
+
+  /* ===================================================================================== */
+  /* REPORT-CREATING half (data-owning suite). Everything below CREATES REAL DATA.          */
+  /*                                                                                        */
+  /* ⚠️ A SUCCESSFULLY CREATED REPORT CANNOT BE DELETED FROM THE UI. Verified live           */
+  /*    2026-09-10: the report row's ONLY control is Download (`aReport-2-N`). The           */
+  /*    `Remove from the reports list` button (`aReport-9`) lives inside                     */
+  /*    `#reportCreationFailedModal` and applies to FAILED reports only.                     */
+  /*                                                                                        */
+  /*    So there is NO cleanup method here, and its absence is deliberate — not an           */
+  /*    oversight to be "fixed" later. Every run leaves its reports on the school for 60     */
+  /*    days. This is why the creating suite lives on the automation-only school             */
+  /*    VED-NEH-KVU and NEVER on the shared FCN-CHZ-PDA (admin-shared.md §A7).               */
+  /* ===================================================================================== */
+
+  /**
+   * Reads the school context the browser is currently in.
+   *
+   * ⚠️ Exists because a SINGLE-school admin never sees "My school accounts", so the usual
+   * `TST_SADB_TC_1` ("open the school by key") cannot run and the school is never explicitly
+   * chosen. The admin-shared.md §0 rule — *always identify a school by KEY, never by name or
+   * position* — still has to be honoured, so the key is READ BACK from the page instead of
+   * being selected. If the account ever lands on a different school, the caller fails loudly
+   * rather than silently creating reports in the wrong place.
+   */
+  getData_schoolContext: async function () {
+    await logger.logInto(await stackTrace.get());
+    await action.waitForDisplayed(this.schoolCode, LIST_TIMEOUT);
+    return {
+      url: String(await browser.getUrl()),
+      schoolKey: squash(await action.getText(this.schoolCode)),
+    };
+  },
+
+  /**
+   * Sets a custom date-range bound using the calendar picker.
+   *
+   * ⚠️ BOTH date inputs are `readOnly` — the picker is the ONLY input path, so `addValue`
+   * and `setValue` are both useless here (admin-reports-tab.md §3).
+   *
+   * ⚠️ THE `Set` BUTTON IS MANDATORY. Clicking a calendar cell alone selects it visually but
+   * does NOT commit the value and leaves the picker open — measured live 2026-09-10: after
+   * clicking the Sep 2 cell the field still read `Fri, Sep 4, 2026`. Only after `Set` did it
+   * become `Wed, Sep 2, 2026` and the picker close. A test that skipped `Set` would submit
+   * the DEFAULT window while appearing to have chosen one.
+   *
+   * ⚠️ Cells are addressed by their `aria-label` (the full date, e.g. "Sep 2, 2026"), never
+   * by index — the grid is 42 cells spanning three months and re-flows per month (Invariant 2).
+   *
+   * @param {string} which  "from" or "to"
+   * @param {string} ariaDate  the cell's aria-label, e.g. "Sep 2, 2026"
+   */
+  set_dateRangeBound: async function (which, ariaDate) {
+    await logger.logInto(await stackTrace.get(), which + ":" + ariaDate);
+    var field = which === "from" ? this.dateFromInput : this.dateToInput;
+
+    var opened = await action.click(field);
+    if (true != opened) return { pageStatus: opened };
+    var pickerUp = await action.waitForDisplayed(this.datePicker, UI_TIMEOUT);
+    if (true != pickerUp) return { pageStatus: new Error("the date picker did not open for the '" + which + "' field") };
+
+    // ⚠️ Matched on the ATTRIBUTE, not with getFilteredLocator. That helper filters by
+    // hasText, and a calendar cell's TEXT is just the day number ("7") — the full date lives
+    // only in `aria-label`. Filtering by text found 0 cells and failed TC_28 on run 2.
+    var cell = this.datePickerCellByLabel.replace("{{label}}", ariaDate);
+    var n = await action.getElementCount(cell);
+    if (n !== 1) {
+      return { pageStatus: new Error("expected exactly 1 calendar cell for '" + ariaDate + "', found " + n + " - is the picker showing a different month, or is that date disabled?") };
+    }
+    var picked = await action.click(cell);
+    if (true != picked) return { pageStatus: picked };
+
+    // Commit. Without this the value silently stays at its previous setting.
+    var set = await action.click(this.datePickerSetBtn);
+    if (true != set) return { pageStatus: set };
+    var closed = await action.waitForDisplayed(this.datePicker, UI_TIMEOUT, true);
+    if (true != closed) return { pageStatus: new Error("the date picker did not close after Set") };
+
+    var actual = String(await action.getValue(field));
+    if (actual.indexOf(ariaDate) === -1) {
+      return { pageStatus: new Error("the '" + which + "' field reads '" + actual + "' after choosing '" + ariaDate + "' - the Set click did not commit") };
+    }
+    return { pageStatus: true, value: actual };
+  },
+
+  /**
+   * Submits the report-configuration dialog. ⚠️ THIS CREATES A REAL REPORT.
+   *
+   * Waits for the success dialog to become VISIBLE — it is pre-rendered (`#reportEmailModal`),
+   * so presence proves nothing (§B2). Measured live 2026-09-10: the dialog appeared within the
+   * first 100 ms poll, i.e. the app does not wait for generation before confirming.
+   */
+  click_submitReport: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.modalSubmitBtn);
+    if (true != res) return { pageStatus: res };
+    var up = await action.waitForDisplayed(this.successModal, UI_TIMEOUT);
+    if (true != up) return { pageStatus: new Error("the success dialog did not appear after Submit - was the report created?") };
+    return { pageStatus: true };
+  },
+
+  /** The success dialog's copy and controls — what the creating TCs assert after Submit. */
+  getData_successDialog: async function () {
+    await logger.logInto(await stackTrace.get());
+    return {
+      displayed: await action.isDisplayed(this.successModal),
+      text: squash(await action.getText(this.successModal)),
+      createAnotherDisplayed: await action.isDisplayed(this.successCreateAnotherLink),
+      backToReportsDisplayed: await action.isDisplayed(this.successBackToReportsBtn),
+    };
+  },
+
+  /** Leaves the success dialog via "Back to Reports" and waits for the Reports list. */
+  click_backToReports: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.successBackToReportsBtn);
+    if (true != res) return { pageStatus: res };
+    var landed = await action.waitForUrl(/\/reports$/, LIST_TIMEOUT);
+    if (true != landed) return { pageStatus: landed };
+    var self = this;
+    var listed = await pollUntil(async function () {
+      return /Reports \(\d+\)/.test(squash(await action.getText(self.reportsHeading)));
+    }, LIST_TIMEOUT);
+    if (listed !== true) return { pageStatus: new Error("the Reports heading did not render after Back to Reports") };
+    return { pageStatus: true };
+  },
+
+  /**
+   * Waits until the NEWEST report row offers a Download control.
+   *
+   * ⚠️ Report generation is ASYNCHRONOUS. Submit returns immediately and the row appears
+   * straight away, but its `Download` button only renders once the file exists. On run 2 the
+   * list held 2 rows and 1 Download — the just-created report was still generating — and an
+   * assertion of "every row is downloadable" failed for a reason that was not a defect.
+   *
+   * ⚠️ Scoped to the TOP row on purpose. A whole-list assertion also depends on rows this
+   * suite did not create (earlier runs, manual tests), whose state it cannot control — that is
+   * what made the original check fragile rather than strict.
+   *
+   * Budget is LIST_TIMEOUT: generation was seconds in manual capture (2.8 KB), but this is the
+   * one genuinely server-side wait on the screen and Thor's throughput varies 4-8x (§B8).
+   */
+  waitFor_newestReportDownloadable: async function () {
+    await logger.logInto(await stackTrace.get());
+    var self = this;
+    var ok = await pollUntil(async function () {
+      if ((await action.getElementCount(self.reportRowAll)) === 0) return false;
+      var top = await action.getKthElement(self.reportRowAll, 0);
+      return (await action.getElementCount(top.locator("button[qid^='aReport-2-']"))) > 0;
+    }, LIST_TIMEOUT);
+    if (ok !== true) {
+      return { pageStatus: new Error("the newest report row still offers no Download control after " + LIST_TIMEOUT + "ms - generation may have failed") };
+    }
+    return { pageStatus: true };
+  },
+
+  /**
+   * The Reports tab's list state.
+   *
+   * ⚠️ `reportRowAll` is `div.list-view div.list-items` — the FOURTH screen in this app to use
+   * `.list-items` (staff list, staff-profile classes, the class picker, and now this). It is
+   * only unambiguous because the Reports LIST route renders no class picker; do not reuse this
+   * key on `/reports/create` (§B3).
+   */
+  getData_reportsList: async function () {
+    await logger.logInto(await stackTrace.get());
+    var heading = squash(await action.getText(this.reportsHeading));
+    var m = heading.match(/Reports \((\d+)\)/);
+    var n = await action.getElementCount(this.reportRowAll);
+
+    // ⚠️ Reads ONLY the newest row, never the whole list — this is a cost decision, not a
+    // convenience one. Created reports CANNOT be deleted (see the header), so this list grows
+    // by 8 on every run and never shrinks inside the 60-day window. The first version looped
+    // getText over every row and the suite went from 116 s to 385 s between two runs purely
+    // because the list had grown from ~8 rows to ~16. Left alone it would keep degrading, and
+    // eventually hit mocha's timeout for a reason unrelated to the product.
+    //
+    // Nothing here needs the older rows: the assertions are the heading count and the newest
+    // report's own contents.
+    var topRow = n > 0 ? squash(await action.getText(await action.getKthElement(this.reportRowAll, 0))) : null;
+
+    return {
+      heading: heading,
+      headingCount: m ? Number(m[1]) : null,
+      rowCount: n,
+      topRow: topRow,
+    };
   },
 };

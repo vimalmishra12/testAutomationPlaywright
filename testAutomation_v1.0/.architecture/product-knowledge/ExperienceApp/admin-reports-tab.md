@@ -530,3 +530,227 @@ of twenty-one, and impossible to go stale between reads.
 >    diagnostic was lost. Budgets are now 15 s (change) + 5 s (settle) against a measured ~1 s
 >    debounce. This is `admin-shared.md` §B8's headroom rule, now hit for the third time in
 >    this repo — it is worth treating as a hard rule, not a caution.
+
+---
+
+## 11. The report-CREATING half, and the automation school `[2026-09-10]`
+
+*Captured live on Thor, school **`VED-NEH-KVU`** ("Cqa Test Ashish School 1", org
+`org_cup_j9GskaJJmvDjmQZ9`) via **`cqatestashish_admin@mailsac.com`**. This is the school this
+file was ORIGINALLY seeded from on 2026-08-26 — the credential gap that forced the 2026-09-08
+re-grounding onto `FCN-CHZ-PDA` has now been closed: the account's password was added to
+`logindata.json` as `C1.login.user.reportsSchoolAdmin`.*
+
+### 11.1 🚨 A SUCCESSFULLY CREATED REPORT CANNOT BE DELETED
+
+**This is the single most important fact on this screen for suite design.**
+
+A created report's row carries **exactly one control: `Download`** (`aReport-2-N`, positional per
+row). There is no delete, no remove, no overflow menu.
+
+The `Remove from the reports list` button **does exist** — and it is a trap. It lives here:
+
+```
+#reportCreationFailedModal          ← the report-generation-FAILED dialog
+  └─ div.modal-footer
+       └─ button[qid="aReport-9"]   "Remove from the reports list"
+```
+
+So it applies to a **failed** report, not a successful one. Reading `aReport-9` out of a selector
+sweep and concluding "reports can be cleaned up" is wrong, and it was the working assumption for
+this batch until it was tested.
+
+**Consequences, and they are structural:**
+
+- **A report-creating suite cannot be made side-effect free.** There is no cleanup to write.
+- Each run of the 8-case creating suite leaves **8 reports** on the school for **60 days**
+  (`Reports are available to download for up to 60 days`, §4).
+- Therefore the creating suite runs on **`VED-NEH-KVU`, an automation-only school**, and must
+  **never** be pointed at the shared `FCN-CHZ-PDA` (`admin-shared.md` §A7/§B7 — data-creating
+  suites live apart from side-effect-free ones).
+- ⚠️ **Do not "fix" the missing `After` hook** in `adminSchoolReportsCreate.json`. Its emptiness
+  is a finding, not an omission.
+
+> Whether create-without-delete is itself a product gap was **raised with the user and accepted
+> as-is on 2026-09-10**; it is not filed as a defect.
+
+### 11.2 The creation flow, verified end to end
+
+Submit → success dialog → Back to Reports → new row. All measured within the first 100 ms poll,
+i.e. the app confirms **before** generation finishes; it does not block.
+
+**Success dialog** — `#reportEmailModal` (note: *email*, not *report*, in the id):
+
+| Element | Value |
+|---|---|
+| Copy | `We are preparing your report` · `We will notify you when your <Report type> report is ready to download` |
+| `a[qid="createReport-17"]` | `Create another report` (id `create-other-report-btn`) |
+| `button[qid="createReport-18"]` | `Back to Reports` |
+
+The report type **is interpolated into the copy at runtime**, which makes it the honest check that
+the *right* type was submitted. (§7's warning stands: in the pre-rendered DOM this same text reads
+`ADMIN.CREATE_REPORT.null` — not an i18n bug.)
+
+**The created row**, captured verbatim for a Class summary over a 2-student class:
+
+```
+Class summary | New | 1 | 2 | All items | All student data (up to - Sep 10, 2026) | Sep 10, 2026 | 2.8 KB | Download
+```
+
+Columns: *Report type · Classes · Students · Items · Date range · Date created · size · Download*.
+**Generation is genuinely fast** — 2.8 KB and downloadable within seconds of Submit, confirming §4.
+
+**Reports list selectors:**
+
+```
+h2.mb-3                            "Reports (N)"  - the ONLY h2 on the route
+div.list-view div.list-items       one per report row
+button[qid="aReport-2-N"]          Download, POSITIONAL per row
+```
+
+⚠️ **`.list-items` now collides on FOUR screens** — staff list, staff-profile classes, the report
+class picker, and the reports list. This one is only unambiguous because the `/reports` route
+renders no class picker. Never reuse the key across routes (§B3).
+
+⚠️ **The Reports LIST route has no page-scoping component tag** (unlike `create-report` on the
+create step, §10.11). `h2.mb-3` is the anchor, and asserting its text against `/^Reports \(\d+\)$/`
+is what keeps it honest.
+
+### 11.3 ⚠️ The date picker needs `Set` — clicking a day is not enough
+
+`/reports/create` step 2 uses an **owl-date-time** picker (same library as the class-create form's
+end-date field, `admin-shared.md` §A3). Both date inputs are `readOnly`, so this is the only path.
+
+| Step | Selector |
+|---|---|
+| 1. Open | click `#reportStartDate` (or `#reportEndDate`) — the readOnly input itself |
+| 2. Container | `.owl-dt-container` (`owl-date-time-container`) |
+| 3. Pick a day | `.owl-dt-container td.owl-dt-calendar-cell` filtered by **`aria-label`**, e.g. `"Sep 2, 2026"` |
+| 4. **Commit** | **`Set`** button — `Cancel` sits beside it |
+
+🚨 **Clicking the day cell alone does NOT commit the value and does NOT close the picker.**
+Measured live: after clicking the *Sep 2* cell the field still read `Fri, Sep 4, 2026`. Only after
+`Set` did it become `Wed, Sep 2, 2026` and the picker close.
+
+**This is a silent-wrong-result trap, not a crash.** A test that skips `Set` submits the DEFAULT
+window while appearing to have chosen one, and every assertion about "a report was created" still
+passes. Assert the field's value changed, not just that the click returned.
+
+**Cells carry the full date in `aria-label`** (`"Sep 2, 2026"`), so address them by content — the
+grid is 42 cells, re-flows per month, and **renders adjacent-month days** (the Sep 2026 view
+included `Aug 31, 2026`). Never by index (Invariant 2).
+
+**31 of 42 cells were disabled** — the ceiling is today, per §3.
+
+> **Do not hardcode a date in test data.** The picker opens on the month of the current `From`
+> value (default today−6), so a literal date drops out of the visible grid within a month and the
+> case fails for a reason unrelated to the product. Store an **offset in days** and compute the
+> `aria-label` at run time.
+
+### 11.4 Resolved: the `To` floor DOES track `From`
+
+Open item #8 in the manual register asked whether the end-date floor moves when `From` changes.
+**It does.** Setting `From` to Sep 2 moved `#reportEndDate`'s `min` from `2026-09-03T18:30:00.000Z`
+to `2026-09-01T18:30:00.000Z` (IST offset — see §3). No longer `[ASSUMED]`.
+
+### 11.5 The automation school differs from `FCN-CHZ-PDA` in ways that matter
+
+| | `VED-NEH-KVU` (creating suite) | `FCN-CHZ-PDA` (read-only suite) |
+|---|---|---|
+| Classes | **9**, all Active | 110, several statuses |
+| `Load more` | **absent** — one page | present, page size 20 |
+| Students | 2 in total | 30 |
+| Reports at baseline | 0 | 0 |
+
+⚠️ **The read-only suite would FAIL on this school**, and not because of a defect:
+`TST_MRPT_TC_14` asserts the selection exceeds the rendered rows (impossible with 9 of 9 shown)
+and `TST_MRPT_TC_9` needs a status that excludes something (everything here is Active). The two
+suites are correctly pinned to different schools; **do not "unify" them.**
+
+**Fixture classes** (both created 2026-09-10 for automation, both `DND`):
+
+| Class | Key | Students | Use |
+|---|---|---|---|
+| `Automation_class_DND` | `z698-JPfC` | **2** | every creating case — reports contain real data |
+| `Automation_class2_DND` | `YK8c-ViYk` | **0** | *unused so far* — reserved for the empty-class question |
+
+> **The empty-class report is an open question, not a covered case.** Whether a 0-student class
+> produces a valid report, an empty one, or a generation failure has **not** been tested. No case
+> in this batch touches it.
+
+### 11.6 ⚠️ A single-school admin NEVER sees "My school accounts"
+
+`cqatestashish_admin@mailsac.com` administers exactly **one** school, and the app therefore skips
+the school picker entirely. Verified live 2026-09-10: an explicit visit to
+`/admin/admin/dashboard` **redirects** to `/admin/admin/org_<slug>/class` and renders **zero**
+`a.inst-link` cards — `aDashboard-1` does not exist at all.
+
+This breaks the standard admin Before chain, which every other admin suite uses:
+
+| Step | Multi-school admin (`testt1`, 7 schools) | Single-school admin (`cqatestashish_admin`) |
+|---|---|---|
+| `TST_NEMO24306_TC_LOGIN` | waits for `aDashboard-1` ✅ | **times out after 30 s** ❌ |
+| `TST_SADB_TC_1` (open school by key) | clicks the card ✅ | **nothing to click** ❌ |
+
+**The failure message is misleading** — *"School admin dashboard did not load after login"* points
+at the dashboard or the credentials, when the real cause is the account's *shape*. It cost this
+suite its first run and looked exactly like a wrong password.
+
+**Remedy:** `login.page.js` now carries `click_login_btn_singleSchoolAdmin()`, which waits for the
+URL to reach `/admin/admin/org_<slug>/` — the one signal common to both landing paths. The two
+methods are **not interchangeable**; pick by how many schools the account administers.
+
+> ⚠️ **And the school must still be verified by KEY.** With no picker, `admin-shared.md` §0's
+> "always select by key" rule cannot be satisfied by *selecting* — so the key is **read back**
+> from `span.school-code` and asserted instead. On a suite that creates real data, landing on an
+> unintended school silently would be the worst possible failure.
+
+### 11.7 Report generation is ASYNC — the row appears before the Download does
+
+Submit returns immediately and the row is listed at once, but its `Download` button
+(`aReport-2-N`) renders only once the file exists.
+
+Caught by a real failure: the list held **2 rows and 1 Download**, because the just-created report
+was still generating. An assertion of *"every row offers Download"* therefore failed for something
+that is not a defect.
+
+**Two lessons, and the second is the more general one:**
+
+1. **Poll for the newest row's Download**, do not read it once. The case's own title says
+   *"created and listed **for download**"*, so the wait belongs in the test rather than being
+   assumed away.
+2. **Do not assert over the WHOLE list.** Older rows were created by earlier runs and by manual
+   testing, and this suite controls none of them. Scoping the assertion to the row just created
+   made it both stronger and stable — a whole-list check was fragile, not strict.
+
+### 11.8 ⚠️ The reports list only grows — so never read it row by row
+
+Because created reports cannot be deleted (§11.1), the Reports list grows by 8 on every run and
+never shrinks inside the 60-day window.
+
+A page-object read that looped `getText` over **every** row made the suite **degrade run over
+run**: 116 s with ~8 rows, **385 s** with ~16 — purely from list growth, with no product change.
+Left alone it would eventually hit mocha's 120 s per-test timeout for a reason that has nothing to
+do with the product.
+
+**Read the heading count and the NEWEST row only.** Nothing in these cases needs the older rows.
+
+> This generalises to any admin list that a data-creating suite feeds and cannot clean up. The
+> cost of a per-row loop is invisible on the first run and compounds forever afterwards.
+
+### 11.9 `getFilteredLocator` filters by TEXT — useless for calendar cells
+
+`action.getFilteredLocator(sel, text)` resolves to Playwright's `.filter({ hasText })`, so it
+matches an element's **text content**. A calendar cell's text is just the day number (`"7"`); the
+full date lives **only** in `aria-label`.
+
+Filtering `"Sep 7, 2026"` therefore found **0 cells** and failed `TST_MRPT_TC_28`.
+
+**Match the attribute directly** via a selector template —
+`.owl-dt-container td.owl-dt-calendar-cell[aria-label="{{label}}"]` — resolved at call time.
+
+> Worth noting because §10.1 recommends resolving rows **by content** to dodge positional ids, and
+> `getFilteredLocator` is the natural tool for that. It works for the class rows, whose label text
+> carries the whole row, and **not** for calendar cells, whose identifying content is an
+> attribute. *Content-based* does not always mean *text-based* — check where the identity actually
+> lives before reaching for the helper.

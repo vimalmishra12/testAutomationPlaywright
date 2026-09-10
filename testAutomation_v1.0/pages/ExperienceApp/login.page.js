@@ -192,6 +192,32 @@ module.exports = {
     return res;
   },
 
+  /**
+   * Clicks login for a school admin who administers exactly ONE school.
+   *
+   * ⚠️ Such an account NEVER SEES "My school accounts". Verified live 2026-09-10 with
+   * `cqatestashish_admin@mailsac.com`: navigating explicitly to `/admin/admin/dashboard`
+   * redirects straight to `/admin/admin/org_<slug>/class` and renders **zero** school cards.
+   *
+   * So `click_login_btn_schoolAdmin` — which waits for `aDashboard-1` — CANNOT work here. It
+   * is correct for a multi-school admin such as `testt1@mailsac.com` (7 schools); the two are
+   * not interchangeable, and picking the wrong one costs a 30 s timeout whose message blames
+   * the dashboard rather than the account shape.
+   *
+   * Waits on the URL reaching a school context, which is the one signal common to both the
+   * redirect and a direct landing.
+   */
+  click_login_btn_singleSchoolAdmin: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.login_btn);
+    if (true != res) {
+      await logger.logInto(await stackTrace.get(), res + " login_btn NOT clicked", "error");
+      return res;
+    }
+    await logger.logInto(await stackTrace.get(), "login_btn clicked for single-school admin");
+    return await action.waitForUrl(/\/admin\/admin\/org_[^/]+\//, 60000);
+  },
+
   set_userName_tbox: async function (value) {
     var res;
     await logger.logInto(await stackTrace.get());

@@ -1284,7 +1284,20 @@
         "dateFromInput": "#reportStartDate",
         "dateToInput": "#reportEndDate",
         "modalCancelBtn": "button[qid='createReport-15']",
-        "modalSubmitBtn": "button[qid='createReport-16']"
+        "modalSubmitBtn": "button[qid='createReport-16']",
+        "_commentCreateBlock": "Below: the REPORT-CREATING half (module MRPT, data-owning suite on VED-NEH-KVU). Captured live 2026-09-10 - see admin-reports-tab.md 11. WARNING: a successfully created report CANNOT be deleted from the UI. The row's only control is Download; aReport-9 'Remove from the reports list' lives inside #reportCreationFailedModal and applies to FAILED reports only. Every run of the creating suite therefore leaves real reports behind for 60 days.",
+        "successModal": "#reportEmailModal",
+        "successCreateAnotherLink": "a[qid='createReport-17']",
+        "successBackToReportsBtn": "button[qid='createReport-18']",
+        "schoolCode": "span.school-code",
+        "reportsHeading": "h2.mb-3",
+        "reportRowAll": "div.list-view div.list-items",
+        "reportDownloadAll": "button[qid^='aReport-2-']",
+        "datePicker": ".owl-dt-container",
+        "datePickerCellAll": ".owl-dt-container td.owl-dt-calendar-cell",
+        "datePickerCellByLabel": ".owl-dt-container td.owl-dt-calendar-cell[aria-label=\"{{label}}\"]",
+        "datePickerSetBtn": ".owl-dt-container button:has-text(\"Set\")",
+        "datePickerCancelBtn": ".owl-dt-container button:has-text(\"Cancel\")"
       },
       "schoolClasses": {
         "addClassBtn": "a[qid='aClass-10']",

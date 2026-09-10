@@ -10,7 +10,7 @@
 const fs = require("fs");
 const path = require("path");
 const ExcelJS = require("D:/testAutomation/QATestAutomation/testAutomation_v1.0/node_modules/exceljs");
-const { TCS, REQS, PHASE1_EXCLUSIONS } = require("./_tcdata.js");
+const { TCS, REQS, PHASE1_EXCLUSIONS, AUTOMATED, AUTOMATED_READ_ONLY, AUTOMATED_DATA_OWNING } = require("./_tcdata.js");
 
 const BASE = "AdminApp_Reports_tab_test_cases";
 const DATE = "2026-08-26";
@@ -92,7 +92,33 @@ const md = `# Manual Functional Test Cases — Cambridge One Admin App: Reports 
 **App:** Cambridge One Admin App (NEMO microservice) — \`micro-nemo.comprodls.com\` (Thor)
 **Page in scope:** Reports tab and the Create report flow — \`/admin/admin/org_<slug>/reports\` and \`/admin/admin/org_<slug>/reports/create\`
 **Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive} Positive · ${counts.Edge} Edge · ${counts.Negative} Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (${DATE}):** **0 of ${rows.length} TCs automated.** ${notRun.length} are Not Run and ${blocked.length} are Blocked at design time (${blocked.map((b) => b.id).join(", ")}).
+**Execution status (2026-09-10):** **${AUTOMATED.length} of ${rows.length} TCs automated and passing.** ${notRun.length} are Not Run and ${blocked.length} are Blocked at design time (${blocked.map((b) => b.id).join(", ")}).
+
+> **[2026-09-10] Automated across TWO suites, which must stay separate.**
+>
+> | Suite | npm script | TCs | School | Side effects |
+> |---|---|---|---|---|
+> | Read-only | \`adminSchoolReportsTest_thor\` | **${AUTOMATED_READ_ONLY.length}** — ${AUTOMATED_READ_ONLY.map((i) => "\`" + i.replace(/^TST_MRPT_/, "") + "\`").join(", ")} | \`FCN-CHZ-PDA\` (\`testt1\`) | none |
+> | Data-owning | \`adminSchoolReportsCreateTest_thor\` | **${AUTOMATED_DATA_OWNING.length}** — ${AUTOMATED_DATA_OWNING.map((i) => "\`" + i.replace(/^TST_MRPT_/, "") + "\`").join(", ")} | \`VED-NEH-KVU\` (\`cqatestashish_admin\`) | **creates 8 real reports per run** |
+>
+> 🚨 **The data-owning suite cannot clean up after itself.** A successfully created report has
+> **no delete control** — the row offers only \`Download\`, and the \`Remove from the reports list\`
+> button belongs to the report-generation-FAILED dialog. Every run therefore leaves 8 reports on
+> the school for 60 days. This was raised with the user on 2026-09-10 and **accepted**; it is why
+> the suite runs on an automation-only school and never on the shared \`FCN-CHZ-PDA\`.
+>
+> ⚠️ **The two suites use different schools deliberately and must not be merged.** The read-only
+> cases need \`FCN-CHZ-PDA\`'s 110 classes and mixed statuses — \`TC_14\` asserts the selection
+> exceeds the rendered page and \`TC_9\` needs a status that excludes something, and neither is
+> possible on \`VED-NEH-KVU\`'s 9 all-Active classes.
+>
+> ⚠️ \`cqatestashish_admin\` administers exactly ONE school, so it **never sees "My school
+> accounts"** — the standard \`TST_NEMO24306_TC_LOGIN\` + \`TST_SADB_TC_1\` Before pair cannot work
+> for it. See \`admin-reports-tab.md\` §11.6.
+>
+> **Still not automated:** \`TC_35\` (needs a file-content comparison and a class with a grade
+> exclusion — deferred with \`TC_41\`/\`TC_42\`), and the read-only edge/negative cases \`TC_6\`,
+> \`TC_7\`, \`TC_10\`, \`TC_11\`, \`TC_12\`, \`TC_15\`, \`TC_16\`, \`TC_20\`, \`TC_31\`.
 
 > **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's \`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx\`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), and the design-time blockers are marked \`Blocked\` with their unblock route in Comments. See \`HANDOFF_adminGapAnalysis_2026-09-01.md\`.
 

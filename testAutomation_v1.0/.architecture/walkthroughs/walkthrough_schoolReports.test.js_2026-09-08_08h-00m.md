@@ -348,3 +348,129 @@ against the actual screenshots**, not inherited from precedent. Two things the i
 
 **All three phases are complete. This feature is closed** — its `authoring-status.md` block has
 been removed per that file's own rule (it holds in-flight work only; history lives here).
+
+---
+---
+
+# Session 2 — the DATA-OWNING half (`schoolReportsCreate.test.js`) — 2026-09-10
+
+**Goal.** Automate the 8 report-CREATING cases (`TC_21`–`TC_26`, `TC_28`, `TC_37`) that Session 1
+deliberately deferred. `TC_35` stayed deferred by user decision — it needs a file-content
+comparison and a class with a grade exclusion, the same dependency as the Blocked `TC_41`/`TC_42`.
+
+**Environment — deliberately NOT the same as Session 1.** Thor, school **`VED-NEH-KVU`**
+("Cqa Test Ashish School 1", org `org_cup_j9GskaJJmvDjmQZ9`) via
+**`cqatestashish_admin@mailsac.com`**. The user supplied the account and two purpose-built
+fixture classes, and confirmed the school exists for automation.
+
+The credential gap that forced Session 1 onto `FCN-CHZ-PDA` is now closed: the password was added
+as `C1.login.user.reportsSchoolAdmin`. It was copied programmatically from the existing
+`schoolAdmin` node on the user's instruction, so the value never passed through the conversation.
+
+---
+
+## S2.1 The finding that changed the design: reports cannot be deleted
+
+The plan was "create reports, then clean them up". **Grounding killed it.**
+
+A created report's row carries **exactly one control — `Download`**. The
+`Remove from the reports list` button (`aReport-9`) that made cleanup look possible turned out to
+live inside **`#reportCreationFailedModal`**: it removes a **failed** report, not a successful one.
+
+Raised with the user, who **accepted the accumulation**. Consequences, all now written into the
+code and the register rather than left as tribal knowledge:
+
+- there is **no `After` hook**, and its absence is documented as deliberate
+- one run leaves **8 reports** for **60 days**
+- the suite runs on an automation-only school and **never** on the shared `FCN-CHZ-PDA`
+
+> **Lesson.** A control's *label* is not its *scope*. `aReport-9` reads exactly like a per-row
+> delete in a selector sweep. Ten minutes of grounding replaced a design that could not have worked.
+
+---
+
+## S2.2 Four failures across five runs — every one mine, none a product defect
+
+| Run | Result | Cause |
+|---|---|---|
+| 1 | **0 tests ran** | Before chain waited for a school-picker card this account never renders |
+| 2 | 6/8 (116 s) | date picker matched by text; Download asserted before generation finished |
+| 3 | 8/8 (**385 s**) | passing, but degrading badly |
+| 4 | 8/8 (154 s) | after the list-read fix |
+| 5 | **8/8 (121 s)** | determinism confirmed |
+
+### A. A single-school admin never sees "My school accounts"
+
+`cqatestashish_admin` administers exactly ONE school, so the app skips the picker entirely —
+`/admin/admin/dashboard` **redirects** to the school and renders **zero** cards. The standard
+`TST_NEMO24306_TC_LOGIN` waits for `aDashboard-1` and timed out after 30 s.
+
+**The message blamed the wrong thing** — *"School admin dashboard did not load after login"* —
+and looked exactly like a wrong password. It was not; the password was fine.
+
+Fixed with `login.click_login_btn_singleSchoolAdmin()`, which waits for the URL to reach a school
+context. And because there is no picker, `TST_SADB_TC_1` cannot run — so the school key is
+**asserted** from `span.school-code` instead of selected. On a suite that creates real data,
+silently landing on the wrong school is the worst available failure.
+
+### B. `getFilteredLocator` filters by TEXT — the same mistake in a new place
+
+A calendar cell's text is the day number (`"7"`); the date lives only in `aria-label`. Filtering
+`"Sep 7, 2026"` found 0 cells.
+
+> This is Session 1's mistake wearing a different hat. §10.1 says *resolve by content* — and that
+> helper is the natural tool — but **content is not always text**. It works for class rows, whose
+> label carries the whole row, and not for calendar cells, whose identity is an attribute.
+
+### C. Generation is async — the row lists before the Download exists
+
+The list held 2 rows and 1 Download because the new report was still generating. The original
+assertion also spanned the **whole list**, including rows this suite never created. Scoping it to
+the newest row and polling made it both stronger and stable.
+
+### D. ⚠️ The list only grows — so never read it row by row
+
+Because reports cannot be deleted, the list grows by 8 per run. A page object that looped `getText`
+over every row took the suite from **116 s to 385 s between two runs** purely from list growth.
+Left alone it would have hit mocha's per-test timeout for a reason unrelated to the product.
+
+> **The most transferable lesson of the session.** This cost is **invisible on the first run** and
+> compounds forever. Any admin list fed by a suite that cannot clean up has the same shape — read
+> the heading count and the newest row, never the whole list.
+
+---
+
+## S2.3 Phase 3 — no visual candidates
+
+All 8 hit ❌ rows: every case ends on the Reports list, framing a file size, a creation date, a
+date range containing today, and a `Reports (N)` count that **increases on every run** — so a
+baseline fails on the very next execution. `TC_28` adds a custom window computed from today.
+
+Clearer-cut than either previous admin assessment. All stay `visualTest: false`.
+
+---
+
+## S2.4 Coverage after this session
+
+**20 of 42 automated**, across two suites that must stay separate:
+
+| Suite | npm script | TCs | School | Side effects |
+|---|---|---|---|---|
+| Read-only | `adminSchoolReportsTest_thor` | 12 | `FCN-CHZ-PDA` | none |
+| Data-owning | `adminSchoolReportsCreateTest_thor` | 8 | `VED-NEH-KVU` | 8 real reports/run |
+
+⚠️ **Do not merge them.** `TC_14` asserts the selection exceeds the rendered page and `TC_9` needs
+a status that excludes something — neither is possible on `VED-NEH-KVU`'s 9 all-Active classes.
+
+**Remaining: 22.** `TC_35` plus the 9 read-only edge/negative cases (`TC_6`, `TC_7`, `TC_10`,
+`TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_20`, `TC_31`), the 10 Phase 1 exclusions and the
+design-time Blocked set.
+
+**Carried forward:**
+
+1. **`Automation_class2_DND` (0 students) is unused.** Whether an empty class produces a valid
+   report, an empty one, or a generation failure is **untested** — no case covers it.
+2. **CI cost.** Daily runs would leave hundreds of undeletable reports inside the 60-day window.
+   Worth a deliberate decision before this suite is scheduled.
+3. `TC_35`, `TC_41`, `TC_42` all wait on the same fixture: a class with known, frozen activity and
+   a grade exclusion.

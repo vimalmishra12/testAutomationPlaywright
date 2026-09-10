@@ -501,4 +501,37 @@ for (const tc of TCS) {
   }
 }
 
-module.exports = { TCS, REQS, PHASE1_EXCLUSIONS };
+// ---------------------------------------------------------------------------------------------
+// Automated as of 2026-09-10, across TWO suites that must stay separate.
+//
+//   READ-ONLY   npm run adminSchoolReportsTest_thor        12 TCs, school FCN-CHZ-PDA (testt1)
+//               Creates nothing. Two of its cases open the config dialog and leave it without
+//               submitting, which is the only reason they are side-effect free.
+//
+//   DATA-OWNING npm run adminSchoolReportsCreateTest_thor   8 TCs, school VED-NEH-KVU
+//               (cqatestashish_admin). Creates 8 REAL reports per run and CANNOT delete them -
+//               a successful report's only row control is Download. They expire after 60 days.
+//
+// ⚠️ The two run on DIFFERENT schools on purpose and must not be merged: the read-only suite
+// needs FCN-CHZ-PDA's 110 classes and mixed statuses (TC_14 asserts the selection exceeds the
+// rendered page; TC_9 needs a status that excludes something), and neither is possible on
+// VED-NEH-KVU's 9 all-Active classes.
+const AUTOMATED_READ_ONLY = [
+  'TST_MRPT_TC_2', 'TST_MRPT_TC_4', 'TST_MRPT_TC_5', 'TST_MRPT_TC_8', 'TST_MRPT_TC_9',
+  'TST_MRPT_TC_13', 'TST_MRPT_TC_14', 'TST_MRPT_TC_18', 'TST_MRPT_TC_19', 'TST_MRPT_TC_27',
+  'TST_MRPT_TC_34', 'TST_MRPT_TC_40',
+];
+const AUTOMATED_DATA_OWNING = [
+  'TST_MRPT_TC_21', 'TST_MRPT_TC_22', 'TST_MRPT_TC_23', 'TST_MRPT_TC_24', 'TST_MRPT_TC_25',
+  'TST_MRPT_TC_26', 'TST_MRPT_TC_28', 'TST_MRPT_TC_37',
+];
+const AUTOMATED = AUTOMATED_READ_ONLY.concat(AUTOMATED_DATA_OWNING);
+
+for (const tc of TCS) {
+  if (AUTOMATED.includes(tc.id) && tc.status !== 'Blocked') tc.status = 'Pass';
+}
+
+module.exports = {
+  TCS, REQS, PHASE1_EXCLUSIONS,
+  AUTOMATED, AUTOMATED_READ_ONLY, AUTOMATED_DATA_OWNING,
+};

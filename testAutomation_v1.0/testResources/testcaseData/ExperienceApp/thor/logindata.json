@@ -321,6 +321,14 @@
           "name": "Test",
           "school": "MQA Sierra School",
           "info": "School admin used for NEMO-24306 CSV upload regression tests"
+        },
+        "reportsSchoolAdmin": {
+          "email": "cqatestashish_admin@mailsac.com",
+          "password": "Compro11",
+          "role": "school-admin",
+          "school": "Cqa Test Ashish School 1",
+          "schoolKey": "VED-NEH-KVU",
+          "info": "Data-owning Reports suite (MRPT). Creates REAL reports on an automation-only school. Password copied from C1.login.user.schoolAdmin on 2026-09-10 per user instruction - the thor test accounts share one password. If login fails, this is the first thing to re-check."
         }
       }
     },

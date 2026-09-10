@@ -5,7 +5,33 @@
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
 **Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-08-26):** **0 of 42 TCs automated.** 37 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
+**Execution status (2026-09-10):** **20 of 42 TCs automated and passing.** 17 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
+
+> **[2026-09-10] Automated across TWO suites, which must stay separate.**
+>
+> | Suite | npm script | TCs | School | Side effects |
+> |---|---|---|---|---|
+> | Read-only | `adminSchoolReportsTest_thor` | **12** — `TC_2`, `TC_4`, `TC_5`, `TC_8`, `TC_9`, `TC_13`, `TC_14`, `TC_18`, `TC_19`, `TC_27`, `TC_34`, `TC_40` | `FCN-CHZ-PDA` (`testt1`) | none |
+> | Data-owning | `adminSchoolReportsCreateTest_thor` | **8** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
+>
+> 🚨 **The data-owning suite cannot clean up after itself.** A successfully created report has
+> **no delete control** — the row offers only `Download`, and the `Remove from the reports list`
+> button belongs to the report-generation-FAILED dialog. Every run therefore leaves 8 reports on
+> the school for 60 days. This was raised with the user on 2026-09-10 and **accepted**; it is why
+> the suite runs on an automation-only school and never on the shared `FCN-CHZ-PDA`.
+>
+> ⚠️ **The two suites use different schools deliberately and must not be merged.** The read-only
+> cases need `FCN-CHZ-PDA`'s 110 classes and mixed statuses — `TC_14` asserts the selection
+> exceeds the rendered page and `TC_9` needs a status that excludes something, and neither is
+> possible on `VED-NEH-KVU`'s 9 all-Active classes.
+>
+> ⚠️ `cqatestashish_admin` administers exactly ONE school, so it **never sees "My school
+> accounts"** — the standard `TST_NEMO24306_TC_LOGIN` + `TST_SADB_TC_1` Before pair cannot work
+> for it. See `admin-reports-tab.md` §11.6.
+>
+> **Still not automated:** `TC_35` (needs a file-content comparison and a class with a grade
+> exclusion — deferred with `TC_41`/`TC_42`), and the read-only edge/negative cases `TC_6`,
+> `TC_7`, `TC_10`, `TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_20`, `TC_31`.
 
 > **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
 
@@ -274,7 +300,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The app navigates to /admin/admin/org_<slug>/reports/create. The page shows a "Go back" link, the heading "Create report", the sub-heading "Choose classes you want to include in your report", a section heading "Select classes" with the note "You can include up to 1500 classes", a search box placeholdered "Search for class name or class key", a "Filter" control showing "All class statuses", a "Select all classes" checkbox, sortable column headers (Class name, Class key, Start date, End date, Students, Class status) and one selectable row per class. |
 | **Remarks** | Captured live 2026-08-26. Note the "Select classes" heading carries NO count while zero classes are selected — the "(N)" appears only once at least one class is ticked. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -314,7 +340,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The list narrows to the single class "Fixture_GradeSettings_DO_NOT_DELETE" with key 62k3-AXm6, WITHOUT the "Search" button being clicked, and the row remains selectable. |
 | **Remarks** | CORRECTED 2026-09-08 — the previous expected result was [ASSUMED] and WRONG. The search is LIVE / debounced, not submit-driven: the list narrowed to one row before the "Search" button was clicked. The earlier assumption was inherited from the Classes tab, which IS submit-driven — exactly the trap admin-shared.md §A4 warns about. A "Search" control (a[qid="createReport-10"]) does exist but is not required to filter. Test data also changed: the original "Gated LP Class" (4mG6-9Jkf) lives on VED-NEH-KVU, which the suite account cannot see. Fixture_GradeSettings_DO_NOT_DELETE is documented never-delete in admin-shared.md §A7, so it is unique and stable on this shared school. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -333,7 +359,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The list narrows to the single class whose Class key column reads "62k3-AXm6" ("Fixture_GradeSettings_DO_NOT_DELETE"). |
 | **Remarks** | Verified live 2026-09-08. The placeholder offers both paths — "Search for class name or class key" — so the key path is covered separately from the name path. Key changed from 4mG6-9Jkf (VED-NEH-KVU) to 62k3-AXm6 (FCN-CHZ-PDA) with the re-grounding. As with TC_4 the search is live — no "Search" click is required. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -392,7 +418,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | A panel headed "Filter by" opens containing exactly five checkboxes labelled "Not started", "Active", "Ended", "Expired" and "Deleted", ALL FIVE TICKED by default, plus a "Clear all" link, an "Apply" button and a "Close" control. The filter summary label reads "All class statuses". |
 | **Remarks** | CORRECTED 2026-09-08 — the previous expected result said the five checkboxes were UNTICKED. They are all TICKED by default, which is what makes the unfiltered summary read "All class statuses". Strings otherwise captured verbatim live 2026-08-26 and re-verified 2026-09-08. Note the status set includes "Not started", which the existing Classes-tab knowledge did not record (it listed Ended / Expired / Deleted). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -411,7 +437,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The panel closes and every rendered row shows "Active" in its Class status column. The summary label changes from "All class statuses" to "1 class status". |
 | **Remarks** | VERIFIED live 2026-09-08 on FCN-CHZ-PDA; the [ASSUMED] on the summary label is resolved. The label is "<N> class status(es)" where N is the number of TICKED statuses — so leaving one ticked reads "1 class status" (singular). Steps corrected: because all five start ticked (TC_8), a single-status filter is reached by UNTICKING the other four, not by ticking one. This school proves exclusion properly — 21 of its 110 classes are Active, and the pre-filter list contained Deleted rows. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -487,7 +513,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The filter panel offers EXACTLY ONE group — the five class statuses ("Not started", "Active", "Ended", "Expired", "Deleted") — and no class-label filter of any kind. The panel contains exactly five checkboxes in total. |
 | **Remarks** | REWRITTEN 2026-09-08 by user decision. Originally added 2026-09-01 from the other team's TC_REP_003, which describes a "status/label filter", and the case asked whether the filter narrows the list by class LABEL. Its own Remarks flagged the premise as unconfirmed and said GROUND FIRST. Grounded live 2026-09-08: the premise is FALSE — the report-flow panel offers five status checkboxes and no other group, so the other team's sheet is wrong on this point. The case is therefore inverted into an expected-versus-actual assertion that PINS the absence of a label filter. A class-label filter does exist on the Classes tab (TST_CLST_TC_4); the report flow does not reuse that panel. Read-only. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -508,7 +534,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The section heading becomes "Select classes(1)". A footer bar appears reading "You have selected 1 class with a total of 0 students" and carrying a "Cancel" link and a "Continue" button. |
 | **Remarks** | Re-verified live 2026-09-08 on FCN-CHZ-PDA. Both the "(1)" suffix and the whole footer bar are absent at zero selection — see TST_MRPT_TC_15. NOTE the summary says "0 studentS" — plural with a zero count; the singular "1 student" form recorded on 2026-08-26 came from a different class. Do not assert a singular/plural rule. The footer appears on the SAME TICK as the click (measured 0 ms). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -527,7 +553,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | Every RENDERED row checkbox becomes ticked. The heading reads "Select classes(<TOTAL>)" where <TOTAL> is the number of classes MATCHING the current query — the full 110, not the 20 rendered — and the footer bar summarises the same totals ("You have selected 110 classes with a total of 30 students"). |
 | **Remarks** | RESOLVED live 2026-09-08 — the open question in the original Remarks is answered: "Select all" covers EVERY MATCHING class on the school, not just the loaded page. With 20 of 110 rows rendered the heading read "Select classes(110)". So an expected result of the form "<N> = the number of listed classes" is WRONG and would fail. Plural wording confirmed ("classes" / "students"). When automating, do not hardcode 110 — this school churns; assert the heading count against the createReport-11-N anchor count, which tracks the matching total. Also: clicking select-all while a PARTIAL selection exists clears it instead of completing it, so reaching "all selected" from one ticked row takes two clicks. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -605,7 +631,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The class is deselected, the section heading returns to a bare "Select classes" with no "(N)" suffix and the footer bar is removed from the page. The app REMAINS on /admin/admin/org_<slug>/reports/create. No report is created. |
 | **Remarks** | CORRECTED 2026-09-08 — the previous expected result ("the app returns to the Reports tab") was WRONG and had never been verified live. Reproduced twice, the second time on a freshly reloaded page, with no dialog, no backdrop and 0 visible modals: the footer "Cancel" (createReport-13) CLEARS THE SELECTION and stays on the class-selection step. The control that leaves the flow is "Go back" (createReport-1), covered by TST_MRPT_TC_3, which was verified returning to /reports with "Reports (0)" unchanged. Confirmed as accepted product behaviour by the user 2026-09-08 — NOT raised as a defect. There are now THREE distinct Cancel-like controls on this flow: createReport-1 leaves, createReport-13 clears the selection, createReport-15 closes the config dialog (TST_MRPT_TC_19). They must not be conflated. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -624,7 +650,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The dialog closes and the class-selection step is shown again with the class STILL SELECTED — heading still "Select classes(1)", footer bar still present. The report type resets to "Select a report type". The app remains on /admin/admin/org_<slug>/reports/create and no report is created. |
 | **Remarks** | VERIFIED live 2026-09-08 — the [ASSUMED] is resolved and the guess was right: the dialog Cancel PRESERVES the class selection. It does not clear it and does not return to the Reports tab. The dialog (#schoolReportModal) stays in the DOM at display:none, so assert visibility, never presence. The report type resetting to "Select a report type" is an additional confirmed detail. This case could not be confirmed on 2026-09-07 because the browser session was degraded, not because the product misbehaved. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -664,7 +690,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class summary report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class summary"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. This is the fully grounded case; the other five follow the identical flow. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -704,7 +730,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class detailed data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class detailed data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. [ASSUMED] for this report type — the report-type value and its availability were verified live, but the resulting row was not. The row shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -725,7 +751,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Class daily data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Class daily data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. [ASSUMED] for this report type — the report-type value and its availability were verified live, but the resulting row was not. The row shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -746,7 +772,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Aggregated data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Aggregated data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. [ASSUMED] for this report type — the report-type value and its availability were verified live, but the resulting row was not. The row shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -767,7 +793,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Assignments summary report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Assignments summary"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. [ASSUMED] for this report type — the report-type value and its availability were verified live, but the resulting row was not. The row shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -788,7 +814,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Assignments detailed data report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Assignments detailed data"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | Grounded live for Class summary on 2026-08-26 — the row rendered "All items" / "All student data (up to - Aug 26, 2026)" / "496 Bytes" / Download, and generation completed within seconds despite the "we will notify you" wording. [ASSUMED] for this report type — the report-type value and its availability were verified live, but the resulting row was not. The row shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -809,7 +835,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | At step 2 both date-range radios are DISABLED, "From the beginning" is pre-selected and "Submit" is disabled. After step 3 both radios and "Submit" become enabled. The radios read "From the beginning" / "Export all student data" and "Custom date range" / "Export data based on specific dates". After step 5 a "From" and a "To" field appear, pre-filled with the last seven days (start = today minus 6 days, end = today). |
 | **Remarks** | All states verified live 2026-08-26: radios disabled until a report type is chosen; the defaults were "Thu, Aug 20, 2026" to "Wed, Aug 26, 2026". Repeat for Class detailed data, Class daily data and Aggregated data — all four verified date-capable. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -828,7 +854,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The confirmation dialog appears as in TST_MRPT_TC_21, and the new Reports row shows a "Date range" value reflecting the chosen window rather than "All student data (up to - <TODAY>)". |
 | **Remarks** | [ASSUMED] the exact "Date range" cell format for a custom window — only the "From the beginning" form ("All student data (up to - Aug 26, 2026)") was captured live. Listed in Open items. Repeat for the other three date-capable types. CREATES REAL DATA. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -944,7 +970,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | For all six types the checkbox "Only include items that contribute to grade calculation" is present, ENABLED and unticked by default. |
 | **Remarks** | Verified live 2026-08-26 across all seven types — exactly these six offer it, matching the six listed in scenario #13. This checkbox is the product's expression of "custom grade settings applied (eg: exclude a component)": the exclusion itself is configured on the class's Class grade settings page (module CGST), and this checkbox makes the report honour it. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -1022,7 +1048,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | After step 6 the confirmation dialog reads "We are preparing your report" and "We will notify you when your Estimated CEFR level report is ready to download", offering "Create another report" and "Back to Reports".<br>After step 7 the Reports heading count increases by one and a new row carrying a "New" badge shows: Report type = "Estimated CEFR level"; Classes = 1; Students = 1; Items = "All items"; Date range = "All student data (up to - <TODAY>)"; Date created = <TODAY>; a file size; and a "Download" link. |
 | **Remarks** | IN SCOPE — confirmed with the requester on 2026-08-26 that this seventh report type was a genuine omission from AdminApp_Report tab.xlsx, not a deliberate exclusion. It is therefore treated as a first-class report-type scenario alongside #6–#11 rather than as added coverage. Its dropdown description reads "Gives an indication of your students' level based on all tests submitted." Estimated CEFR level supports NEITHER a custom date range NOR custom grade settings (verified live 2026-08-26), so it is correctly absent from scenarios #12 and #13; those exclusions are pinned by TST_MRPT_TC_33 and TST_MRPT_TC_36. [ASSUMED] for the resulting Reports row — the report-type value and its availability were verified live, but the row was not; its shape is inherited from the grounded Class summary run. CREATES REAL DATA: a report on the school, auto-expiring after 60 days. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Pass |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
