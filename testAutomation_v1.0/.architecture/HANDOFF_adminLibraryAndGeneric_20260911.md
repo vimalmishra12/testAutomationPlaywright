@@ -2,7 +2,7 @@
 
 **Date written:** 2026-09-11
 **Session owner:** Vimal Mishra
-**Repo:** `D:\testAutomation\QATestAutomation` · **main is at** `682b533` — this handoff's own commit (pushed)
+**Repo:** `D:\testAutomation\QATestAutomation` · everything below is **merged into `main` and pushed**
 **Status:** The whole **`MRPT` (Reports) programme is closed and on `main`** — 31 of 43 automated.
 The next work is **Library (`LIBR` / `UMBP`)** and **Generic/shell (`ASHL` / `MYPR` / `SKEY` +
 extensions)**. Both have **finished manual registers and zero automation**.
@@ -266,7 +266,12 @@ every admin suite. Those cases need a disposable account (`admin-shared.md` §A9
 
 ## 10. State of the repo
 
-- `main` = `origin/main` = **`682b533`**, everything pushed. (`a7e139a` was the Reports work; `682b533` adds this handoff.)
+- **`main` = `origin/main`, everything pushed.** The Reports programme and this handoff are both
+  on it.
+  > ⚠️ **No SHA is quoted here on purpose.** An earlier draft pinned one and it went stale the
+  > moment the document was committed — the commit that adds a handoff necessarily moves `main`.
+  > Verify with `git log --oneline -5 main` instead; the last Reports commit is
+  > `feat(admin-reports): unblock and automate TST_MRPT_TC_41`.
 - Branch `claude/admin-reports-tab-handoff-4060b3` is merged into `main`; nothing is outstanding.
 - The Reports walkthrough is
   `.architecture/walkthroughs/walkthrough_schoolReports.test.js_2026-09-08_08h-00m.md`
