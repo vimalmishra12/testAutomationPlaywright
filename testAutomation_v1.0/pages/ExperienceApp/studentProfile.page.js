@@ -198,10 +198,13 @@ module.exports = {
       identifier: await action.getText(this.profileIdentifier),
       lastLogin: await action.getText(this.profileLastLogin),
       backDisplayed: await action.isDisplayed(this.backLink),
-      manageAccountDisplayed: await action.isDisplayed(this.manageAccountDropdown),
-      manageAccountItemsDisplayedWhileClosed:
-        (await action.isDisplayed(this.manageAccountEditDetails)) === true
-        || (await action.isDisplayed(this.manageAccountRemove)) === true,
+      manageLearnerProfileDisplayed: (await action.isExisting(this.manageAccountEditDetails))
+        ? await action.isDisplayed(this.manageAccountEditDetails) : false,
+      manageAccountDisplayed: (await action.isExisting(this.manageAccountDropdown))
+        ? await action.isDisplayed(this.manageAccountDropdown) : false,
+      manageAccountItemsDisplayedWhileClosed: (await action.isExisting(this.manageAccountDropdown))
+        ? ((await action.isDisplayed(this.manageAccountEditDetails)) === true
+           || (await action.isDisplayed(this.manageAccountRemove)) === true) : false,
       courseMaterialsHeading: (await action.isExisting(this.courseMaterialsHeading))
         ? String(await action.getText(this.courseMaterialsHeading)).trim() : null,
       // The Classes section has no heading node of its own — its first rendered line IS
@@ -277,15 +280,24 @@ module.exports = {
     };
   },
 
-  /** Opens the Manage account dropdown and reports what it offers. */
+  /** Opens the Manage account dropdown (if present) or checks the direct action button and reports what it offers. */
   click_manageAccount: async function () {
     await logger.logInto(await stackTrace.get());
-    var clickStatus = await action.click(this.manageAccountDropdown);
-    if (true !== clickStatus) return { clickStatus: clickStatus };
+    if (await action.isExisting(this.manageAccountDropdown)) {
+      var clickStatus = await action.click(this.manageAccountDropdown);
+      if (true !== clickStatus) return { clickStatus: clickStatus };
+      return {
+        clickStatus: clickStatus,
+        editDetailsDisplayed: await action.waitForDisplayed(this.manageAccountEditDetails),
+        removeDisplayed: await action.isDisplayed(this.manageAccountRemove)
+      };
+    }
     return {
-      clickStatus: clickStatus,
-      editDetailsDisplayed: await action.waitForDisplayed(this.manageAccountEditDetails),
-      removeDisplayed: await action.isDisplayed(this.manageAccountRemove)
+      clickStatus: true,
+      editDetailsDisplayed: (await action.isExisting(this.manageAccountEditDetails))
+        ? await action.isDisplayed(this.manageAccountEditDetails) : false,
+      removeDisplayed: (await action.isExisting(this.manageAccountRemove))
+        ? await action.isDisplayed(this.manageAccountRemove) : false
     };
   },
 
