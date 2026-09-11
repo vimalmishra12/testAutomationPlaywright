@@ -5841,6 +5841,12 @@
           "description": "Verify an Estimated CEFR level report is created and listed for download when From the beginning is selected",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_43",
+          "description": "Verify the downloaded report file is well formed and contains the right class and students (the first case to look INSIDE a report)",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },

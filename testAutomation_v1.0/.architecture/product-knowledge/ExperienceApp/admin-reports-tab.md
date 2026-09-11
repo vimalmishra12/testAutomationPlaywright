@@ -892,3 +892,100 @@ a class holds **exactly one** status.
 
 > ⚠️ These counts are a snapshot of a **shared, actively mutated** school. They are recorded to
 > justify the test design, not to be asserted — no case hardcodes any of them.
+
+---
+
+## 13. What a downloaded report actually looks like `[2026-09-11]`
+
+*From a real `Class summary` report downloaded off `VED-NEH-KVU` over `Automation_class_DND`.
+Until this was opened, nothing in this repo had ever looked INSIDE a report.*
+
+### 13.1 ⚠️ The download is a ZIP of MANY CSVs — one per product component
+
+Not a single file. The `Download` button (`aReport-2-N`) yields:
+
+```
+11-Sep-2026_Class summary report.zip          (~2.8 KB)
+├── r55 multi component umbrella_practice extra - group enabled_11-Sep-2026_Class summary report.csv
+├── r55 multi component umbrella_practice extra_11-Sep-2026_Class summary report.csv
+└── r55 multi component umbrella_project work_11-Sep-2026_Class summary report.csv
+```
+
+| | |
+|---|---|
+| Zip name | `<DD-MMM-YYYY>_<report type> report.zip` |
+| CSV name | `<product> <component>_<DD-MMM-YYYY>_<report type> report.csv` |
+| CSV count | **one per component of the product**, not one per class |
+| Encoding | UTF-8 **with BOM** — strip `^﻿` before parsing |
+
+> ⚠️ **The CSV count follows the PRODUCT, not the report.** The class here sits on a 3-component
+> product, so three files. Asserting a fixed count would fail on a product change rather than a
+> defect.
+
+### 13.2 The 19 columns, and the one that is not fixed
+
+```
+ 1 First name        2 Last name       3 Email          4 Username
+ 5 Class name        6 Class key       7 Product        8 Component
+ 9 Best score average               10 First score average
+11 Total number of activities       12 Number of activities completed
+13 Percentage (%) of activities completed
+14 Best attempts above target score [ (Gold Medals) ]     ← ⚠️ VARIES
+15 Best attempts below target score
+16 First attempts above target score
+17 First attempts below target score
+18 Time spent        19 Last active
+```
+
+🚨 **Column 14's label differs BETWEEN FILES IN THE SAME DOWNLOAD.** Two of the three CSVs read
+`Best attempts above target score (Gold Medals)`; the third reads `Best attempts above target
+score`. The suffix appears to follow whether the component has the Gold Medals feature.
+
+**So a single fixed header string cannot be asserted across the files of one report.** Columns
+1–8 — the identity block — are stable and are what a test should pin.
+
+### 13.3 One row per enrolled student, and the identity is repeated on every row
+
+Two enrolled students produced exactly two data rows per CSV. **Every row repeats
+`Class name` and `Class key`**, which makes them the strongest available anchor: a report
+generated against the wrong class is caught on any row.
+
+Observed for `Automation_class_DND` / `z698-JPfC`:
+
+| First name | Email | Class name | Class key |
+|---|---|---|---|
+| `cqa_stu8sept` | `cqa_stu8sept@mailsac.com` | `Automation_class_DND` | `z698-JPfC` |
+| `cqa_student12jan` | `cqa_student12jan@mailsac.com` | `Automation_class_DND` | `z698-JPfC` |
+
+`Username` reads `N/A` for both — these are email-based accounts.
+
+### 13.4 Every activity column was EMPTY
+
+`Best score average` through `First attempts below target score` were all blank, `Time spent`
+`00:00:00`, `Last active` blank — because this class has no activity.
+
+**This is what separates the two halves of report verification:**
+
+| Half | Needs | Status |
+|---|---|---|
+| **Structure + identity** — right file, right class, right students, right columns | only a stable ROSTER | ✅ automated as `TST_MRPT_TC_43` |
+| **The numbers** — scores, completion, time | a class with known, FROZEN activity | ❌ still `TST_MRPT_TC_41`, Blocked |
+
+> **Why this matters more than it looks.** Before `TC_43`, all eight generation cases stopped at
+> *"a row appeared in the Reports list"*. A report that generated successfully with **entirely
+> wrong content** — wrong class, no students, empty file — passed every one of them. The
+> structural half is now closed; the numeric half is not, and a green suite must not be read as
+> "report contents are verified".
+
+### 13.5 Automation notes
+
+- **`action.downloadFile(selector, saveDir)`** already exists and returns
+  `{downloaded, fileName, filePath}`. Precedent: `createClasses.page.js` downloads the class CSV
+  template and reads it with `fs.readFileSync` — the same shape works here.
+- **`jszip` is now a DECLARED dependency** in `package.json`. It was already on disk as a
+  transitive dependency of `exceljs`; relying on that would have broken these tests the day
+  exceljs changed its internals, for a reason having nothing to do with the product.
+- **`csv-parse` is v4** in this repo, so the sync API is `require("csv-parse/lib/sync")` —
+  **not** `csv-parse/sync`, which is v5+ and does not resolve here.
+- The report row's Download button only renders once generation finishes (§11.7), so a download
+  must be preceded by the poll in `waitFor_newestReportDownloadable`.

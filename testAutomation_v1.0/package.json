@@ -139,6 +139,7 @@
     "jscodeshift": "^0.13.1",
     "json-format": "1.0.1",
     "jsonexport": "^3.0.1",
+    "jszip": "^3.10.1",
     "lodash.get": "4.4.2",
     "mem-fs": "^1.2.0",
     "mem-fs-editor": "^8.0.0",

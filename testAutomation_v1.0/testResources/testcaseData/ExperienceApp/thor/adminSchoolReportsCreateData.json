@@ -12,6 +12,11 @@
       "className": "Automation_class_DND",
       "classKey": "z698-JPfC",
       "classStudentCount": 2,
+      "classStudentEmails": ["cqa_stu8sept@mailsac.com", "cqa_student12jan@mailsac.com"],
+
+      "_reportFileComment": "TST_MRPT_TC_43, captured from a real downloaded report 2026-09-10. The download is a ZIP containing ONE CSV PER PRODUCT COMPONENT, named '<product> <component>_<DD-MMM-YYYY>_<report type> report.csv'. Each CSV carries a UTF-8 BOM and has 19 columns. TWO THINGS ARE DELIBERATELY ABSENT FROM THIS DATA: (1) the label of column 14, which VARIES BY COMPONENT - the same download held 'Best attempts above target score (Gold Medals)' on two CSVs and 'Best attempts above target score' on the third; (2) the expected CSV count, which follows the product's component count and would fail on a product change rather than a defect. Only the fixed identity block is asserted.",
+      "reportColumnCount": 19,
+      "reportIdentityColumns": ["First name", "Last name", "Email", "Username", "Class name", "Class key", "Product", "Component"],
 
       "_typeComment": "All seven report types, verified live in this exact dropdown order (schoolReportType-0..6). Estimated CEFR level is the only one supporting neither a custom date range nor custom grade settings.",
       "typeClassSummary": "Class summary",

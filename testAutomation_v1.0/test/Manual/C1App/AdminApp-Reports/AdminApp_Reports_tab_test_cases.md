@@ -4,15 +4,15 @@
 **Module:** MRPT (Manage Reports) — *maps to the future `manageReports.page.js` page object when automated*
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
-**Generated:** 2026-08-26 | **Total TCs:** 42 (23 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-09-10):** **29 of 42 TCs automated and passing.** 8 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
+**Generated:** 2026-08-26 | **Total TCs:** 43 (24 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
+**Execution status (2026-09-10):** **30 of 43 TCs automated and passing.** 8 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
 
 > **[2026-09-10] Automated across TWO suites, which must stay separate.**
 >
 > | Suite | npm script | TCs | School | Side effects |
 > |---|---|---|---|---|
 > | Read-only | `adminSchoolReportsTest_thor` | **21** — `TC_2`, `TC_4`, `TC_5`, `TC_6`, `TC_7`, `TC_8`, `TC_9`, `TC_10`, `TC_11`, `TC_12`, `TC_13`, `TC_14`, `TC_15`, `TC_16`, `TC_18`, `TC_19`, `TC_20`, `TC_27`, `TC_31`, `TC_34`, `TC_40` | `FCN-CHZ-PDA` (`testt1`) | none |
-> | Data-owning | `adminSchoolReportsCreateTest_thor` | **8** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
+> | Data-owning | `adminSchoolReportsCreateTest_thor` | **9** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37`, `TC_43` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
 >
 > 🚨 **The data-owning suite cannot clean up after itself.** A successfully created report has
 > **no delete control** — the row offers only `Download`, and the `Remove from the reports list`
@@ -57,7 +57,7 @@
 > TC_18's change was reviewed and **confirmed as accepted product behaviour, not a defect**.
 > Full evidence in `product-knowledge/ExperienceApp/admin-reports-tab.md` §10.
 
-**Batches:** Batch 1 — Reports tab and Create report flow (`TST_MRPT_*`, module MRPT, 42 TCs).
+**Batches:** Batch 1 — Reports tab and Create report flow (`TST_MRPT_*`, module MRPT, 43 TCs).
 
 > **Ordering:** test cases are **grouped by Linked Requirement (scenario)** so every requirement's
 > TCs sit together; within each group they run **Positive → Edge → Negative**. (This intentionally
@@ -114,7 +114,7 @@ these are automated — they must not sit in a side-effect-free suite.
 | #3 — Verify filter | TC_8, TC_9, TC_40, TC_10 (E), TC_11 (E), TC_12 (N) |
 | #4 — Verify class selection checkbox | TC_13, TC_14, TC_15 (E), TC_16 (E), TC_17 (E) |
 | #5 — Verify Cancel button functionality | TC_18, TC_19, TC_20 (E) |
-| #6 — Verify Class summary report from beginning | TC_21, TC_41 |
+| #6 — Verify Class summary report from beginning | TC_21, TC_41, TC_43 |
 | #7 — Verify Class detailed data report from beginning | TC_22 |
 | #8 — Verify Class daily data report from beginning | TC_23 |
 | #9 — Verify Aggregated data report from beginning | TC_24 |
@@ -711,6 +711,25 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
 | **Comments / Defect ID** | Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. "3 July Test School 1" is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog. |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 43 |
+| **Test Case ID** | TST_MRPT_TC_43 |
+| **Title** | Verify the downloaded report file is well formed and contains the right class and students |
+| **Linked Requirement** | #6 — Verify Class summary report from beginning |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | Logged in as school-admin <REPORTS_ADMIN_USER>; school "3 July Test School 1 (key FCN-CHZ-PDA)" opened; "Create report" clicked so the class-selection step is displayed. |
+| **Test Steps** | 1. Create a "Class summary" report over the fixture class and return to the Reports tab.<br>2. Wait for the new row to offer "Download", then click it.<br>3. Unzip the downloaded archive.<br>4. Open each CSV inside it and check the header row and the data rows. |
+| **Test Data** | Class: "Automation_class_DND" (z698-JPfC), 2 students: cqa_stu8sept@mailsac.com, cqa_student12jan@mailsac.com |
+| **Expected Result** | The download is a ZIP containing at least one CSV, one per product component, named "<product> <component>_<DD-MMM-YYYY>_<report type> report.csv". Every CSV has 19 columns beginning with the fixed identity block "First name, Last name, Email, Username, Class name, Class key, Product, Component". Every data row carries Class name "Automation_class_DND" and Class key "z698-JPfC". Each CSV holds exactly one row per enrolled student (2), and the set of Email values equals the class roster. |
+| **Remarks** | ADDED 2026-09-11 after a real report was downloaded and inspected — the first case in this register to look INSIDE the file. Until now every generation case (TST_MRPT_TC_21–TC_26, TC_28, TC_37) stopped at "a row appeared in the list", so a report generated with entirely wrong CONTENT passed all of them. This case closes the structural half of that gap: empty file, corrupt ZIP, wrong class, a missing student, or changed columns are all now caught. It does NOT reconcile the activity NUMBERS (scores, completion, time spent) — that still needs the frozen-activity fixture and remains TST_MRPT_TC_41, which stays Blocked. TWO THINGS ARE DELIBERATELY NOT ASSERTED: (1) the exact label of column 14, which varies by component — observed as "Best attempts above target score (Gold Medals)" on two CSVs and "Best attempts above target score" on the third; (2) the NUMBER of CSVs, which follows the product's component count and would fail on a product change rather than a defect. Runs in the data-owning suite because a report must exist before it can be downloaded. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | *(blank in design)* |
 
 ---
 

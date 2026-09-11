@@ -591,3 +591,88 @@ exclusions (`TC_1`, `TC_3`, `TC_29`, `TC_30`, `TC_32`, `TC_33`, `TC_36`), and 5 
    passes every case in this repo.
 2. The pure-filter empty state (§S3.2) needs a school with an empty status.
 3. `Automation_class2_DND` (0 students) is still unused — the empty-class report is untested.
+
+---
+---
+
+# Session 4 — looking INSIDE a report (`TST_MRPT_TC_43`) — 2026-09-11
+
+**Why.** Every one of the eight generation cases stopped at *"a row appeared in the Reports
+list"*. A report that generated successfully with **entirely wrong content** — wrong class, no
+students, an empty file — passed all of them. That was flagged at the end of Session 2 as the
+most valuable remaining gap.
+
+**Trigger.** The user supplied a real downloaded report. Until then nothing in this repo had ever
+opened one.
+
+---
+
+## S4.1 What the file turned out to be — and why guessing would have failed
+
+**The download is a ZIP containing one CSV per PRODUCT COMPONENT**, not a single file:
+
+```
+11-Sep-2026_Class summary report.zip
+├── r55 multi component umbrella_practice extra - group enabled_...csv
+├── r55 multi component umbrella_practice extra_...csv
+└── r55 multi component umbrella_project work_...csv
+```
+
+19 columns, UTF-8 **with BOM**, **one row per enrolled student** (2 students → 2 rows), and
+`Class name` + `Class key` repeated **on every row**.
+
+🚨 **Column 14's label differs BETWEEN FILES IN THE SAME DOWNLOAD** — two CSVs read
+`Best attempts above target score (Gold Medals)`, the third omits the suffix. A single fixed
+header assertion across the files would have been wrong on day one.
+
+> Had this been designed from the register's description instead of from the file, it would have
+> assumed one CSV, one header, and probably a fixed column list. Three wrong assumptions, all
+> avoided by spending ten minutes reading the artefact.
+
+## S4.2 What `TC_43` asserts — and what it deliberately does not
+
+**Asserts (8):** zip is non-empty · contains ≥1 CSV · 19 columns · identity columns 1–8 exact ·
+one row per enrolled student · every row's `Class name` · every row's `Class key` · the email set
+equals the roster.
+
+**Deliberately NOT asserted, both recorded with reasons in the data file and the test:**
+
+- **column 14's label** — varies by component (above)
+- **the CSV count** — follows the product's component count, so it would fail on a product change
+  rather than a defect
+
+## S4.3 The honest limit
+
+Every activity column in the real file was **empty** — `Time spent 00:00:00`, `Last active`
+blank — because the fixture class has no activity.
+
+| Half of "is the report right?" | Needs | Status |
+|---|---|---|
+| Structure + identity | a stable ROSTER | ✅ `TC_43` |
+| The NUMBERS | a class with known, FROZEN activity | ❌ `TC_41`, still Blocked |
+
+**`TC_41` was NOT closed and must not be treated as closed.** A green suite still does not mean
+"report contents are verified" — it means the right students of the right class are in a
+well-formed file.
+
+## S4.4 Dependency and API notes
+
+- **`jszip` is now DECLARED** in `package.json`. It was already on disk as a transitive dependency
+  of `exceljs`, and using it that way would have worked — until exceljs changed its internals and
+  broke these tests for an unrelated reason. It is physically the same install, so nothing
+  changes at install time.
+- **`csv-parse` here is v4**, so the sync entry is `require("csv-parse/lib/sync")`. The v5+
+  `csv-parse/sync` path does **not** resolve — checked before writing the code rather than after
+  a failing run.
+- `action.downloadFile` already existed, with a working precedent in `createClasses.page.js`
+  (class CSV template). The BOM strip was taken from that same precedent.
+
+## S4.5 Result
+
+**9/9 passing, 132 s**, green on the first run of the new case. Verified non-vacuous: the zip the
+test itself downloaded was reopened afterwards and held 3 CSVs, 19 columns, 2 data rows, and the
+correct class name and key — the assertions ran against real data.
+
+**Coverage: 30 of 43** (the register gained `TC_43`).
+
+**Cost:** this suite now creates **9** undeletable reports per run instead of 8.

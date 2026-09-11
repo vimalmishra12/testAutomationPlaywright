@@ -454,6 +454,30 @@ const TCS = [
     status: 'Blocked',
     comments: 'Blocked at design time: depends on the seeded, frozen-activity fixture class described in TST_MRPT_TC_41. Unblock together.',
   },
+
+  // ---------- Added 2026-09-11 after inspecting a real downloaded report.
+  {
+    id: 'TST_MRPT_TC_43',
+    title: 'Verify the downloaded report file is well formed and contains the right class and students',
+    req: '#6 — Verify Class summary report from beginning',
+    type: 'Positive', priority: 'High', pre: PRE_SEL,
+    steps: '1. Create a "Class summary" report over the fixture class and return to the Reports tab.\n'
+      + '2. Wait for the new row to offer "Download", then click it.\n'
+      + '3. Unzip the downloaded archive.\n'
+      + '4. Open each CSV inside it and check the header row and the data rows.',
+    data: 'Class: "Automation_class_DND" (z698-JPfC), 2 students: cqa_stu8sept@mailsac.com, cqa_student12jan@mailsac.com',
+    expected: 'The download is a ZIP containing at least one CSV, one per product component, named "<product> <component>_<DD-MMM-YYYY>_<report type> report.csv". '
+      + 'Every CSV has 19 columns beginning with the fixed identity block "First name, Last name, Email, Username, Class name, Class key, Product, Component". '
+      + 'Every data row carries Class name "Automation_class_DND" and Class key "z698-JPfC". '
+      + 'Each CSV holds exactly one row per enrolled student (2), and the set of Email values equals the class roster.',
+    remarks: 'ADDED 2026-09-11 after a real report was downloaded and inspected — the first case in this register to look INSIDE the file. '
+      + 'Until now every generation case (TST_MRPT_TC_21–TC_26, TC_28, TC_37) stopped at "a row appeared in the list", so a report generated with entirely wrong CONTENT passed all of them. '
+      + 'This case closes the structural half of that gap: empty file, corrupt ZIP, wrong class, a missing student, or changed columns are all now caught. '
+      + 'It does NOT reconcile the activity NUMBERS (scores, completion, time spent) — that still needs the frozen-activity fixture and remains TST_MRPT_TC_41, which stays Blocked. '
+      + 'TWO THINGS ARE DELIBERATELY NOT ASSERTED: (1) the exact label of column 14, which varies by component — observed as "Best attempts above target score (Gold Medals)" on two CSVs and "Best attempts above target score" on the third; '
+      + '(2) the NUMBER of CSVs, which follows the product\'s component count and would fail on a product change rather than a defect. '
+      + 'Runs in the data-owning suite because a report must exist before it can be downloaded.',
+  },
 ];
 
 // Requirement order for the coverage map (verbatim scenario names from the source workbook).
@@ -525,7 +549,7 @@ const AUTOMATED_READ_ONLY = [
 ];
 const AUTOMATED_DATA_OWNING = [
   'TST_MRPT_TC_21', 'TST_MRPT_TC_22', 'TST_MRPT_TC_23', 'TST_MRPT_TC_24', 'TST_MRPT_TC_25',
-  'TST_MRPT_TC_26', 'TST_MRPT_TC_28', 'TST_MRPT_TC_37',
+  'TST_MRPT_TC_26', 'TST_MRPT_TC_28', 'TST_MRPT_TC_37', 'TST_MRPT_TC_43',
 ];
 const AUTOMATED = AUTOMATED_READ_ONLY.concat(AUTOMATED_DATA_OWNING);
 

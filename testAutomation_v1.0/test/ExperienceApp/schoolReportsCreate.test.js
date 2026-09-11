@@ -243,6 +243,89 @@ module.exports = {
   },
 
   /**
+   * TC_43 — the downloaded report FILE is well formed and holds the right class and students.
+   *
+   * ⚠️ THE FIRST CASE IN THIS REPO TO LOOK INSIDE A REPORT. Every other generation case stops
+   * at "a row appeared in the list", which means a report generated with entirely wrong CONTENT
+   * passes all of them. This closes the structural half of that gap.
+   *
+   * ⚠️ It does NOT reconcile the activity NUMBERS — scores, completion, time spent. Those need
+   * a class whose activity is known and frozen, which is `TST_MRPT_TC_41` and remains Blocked.
+   * Do not read a green here as "report contents are verified".
+   *
+   * ⚠️ TWO THINGS ARE DELIBERATELY NOT ASSERTED, both because they would fail on a product
+   * change rather than a defect:
+   *   - the exact label of column 14, which varies BY COMPONENT (observed as
+   *     "Best attempts above target score (Gold Medals)" on two CSVs and without the suffix on
+   *     the third, in the same download)
+   *   - the NUMBER of CSVs, which follows the product's component count
+   */
+  TST_MRPT_TC_43: async function (testdata) {
+    await createReportAndVerify(testdata, testdata.typeClassSummary);
+
+    // The row exists; the FILE only appears once generation finishes.
+    sts = await schoolReports.waitFor_newestReportDownloadable();
+    await assertion.assertEqual(sts.pageStatus, true, "The created report never became downloadable.");
+
+    sts = await schoolReports.download_newestReport();
+    await assertion.assertEqual(sts.pageStatus, true, "Downloading and reading the report failed.");
+
+    await assertion.assert(
+      sts.zipBytes > 0,
+      "The downloaded archive is empty (0 bytes): " + sts.zipName
+    );
+    await assertion.assert(
+      sts.csvCount >= 1,
+      "The archive '" + sts.zipName + "' contains no CSV at all - a report was listed but its file has no content."
+    );
+
+    for (var f = 0; f < sts.files.length; f++) {
+      var file = sts.files[f];
+      var where = " [" + file.name + "]";
+
+      await assertion.assertEqual(
+        file.headers.length,
+        testdata.reportColumnCount,
+        "Expected " + testdata.reportColumnCount + " columns, got " + file.headers.length + where
+      );
+      // The identity block is fixed across every component; only column 14 varies.
+      await assertion.assertEqual(
+        file.headers.slice(0, testdata.reportIdentityColumns.length).join("|"),
+        testdata.reportIdentityColumns.join("|"),
+        "The report's identity columns do not match" + where
+      );
+
+      await assertion.assertEqual(
+        file.rows.length,
+        testdata.classStudentCount,
+        "Expected one row per enrolled student (" + testdata.classStudentCount + "), got " +
+          file.rows.length + where
+      );
+
+      var emails = [];
+      for (var r = 0; r < file.rows.length; r++) {
+        var row = file.rows[r];
+        await assertion.assertEqual(
+          row["Class name"],
+          testdata.className,
+          "A report row names the wrong class" + where
+        );
+        await assertion.assertEqual(
+          row["Class key"],
+          testdata.classKey,
+          "A report row carries the wrong class key" + where
+        );
+        emails.push(row.Email);
+      }
+      await assertion.assertEqual(
+        emails.slice().sort().join(","),
+        testdata.classStudentEmails.slice().sort().join(","),
+        "The students in the report do not match the class roster" + where
+      );
+    }
+  },
+
+  /**
    * TC_28 — a report is created over a chosen custom window.
    *
    * ⚠️ Does NOT reuse the shared helper: the date picker has to be driven between choosing

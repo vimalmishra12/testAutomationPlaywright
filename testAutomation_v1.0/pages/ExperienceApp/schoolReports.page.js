@@ -1,4 +1,6 @@
 "use strict";
+var fs = require("fs");
+var path = require("path");
 var action = require("../../core/actionLibrary/baseActionLibrary.js");
 // Selectors resolved at load time from C1Selectors.json → css.ComproC1.schoolReports
 var selectorFile = jsonParserUtil.jsonParser(selectorDir);
@@ -1105,6 +1107,78 @@ module.exports = {
       return { pageStatus: new Error("the newest report row still offers no Download control after " + LIST_TIMEOUT + "ms - generation may have failed") };
     }
     return { pageStatus: true };
+  },
+
+  /**
+   * Downloads the NEWEST report and returns its parsed contents.
+   *
+   * ⚠️ THE DOWNLOAD IS A ZIP CONTAINING ONE CSV PER PRODUCT COMPONENT — not a single file.
+   * Captured from a real download 2026-09-10 (§13): a `Class summary` report over a class on
+   * one 3-component product produced three CSVs, named
+   * `<product> <component>_<DD-MMM-YYYY>_<report type> report.csv`.
+   *
+   * ⚠️ Every CSV carries a UTF-8 BOM. It is stripped before parsing, exactly as
+   * `createClasses.page.js` does for the downloaded class template — without that the first
+   * header reads `﻿First name` and every column lookup misses.
+   *
+   * Unzipping uses `jszip`, now a DECLARED dependency. It was already on disk as a transitive
+   * dependency of `exceljs`, but relying on that would break these tests the day exceljs
+   * changed its own internals — an unrelated cause for an unrelated failure.
+   *
+   * Returns one entry per CSV so the caller can assert across all of them.
+   */
+  download_newestReport: async function (saveDir) {
+    await logger.logInto(await stackTrace.get());
+    var JSZip = require("jszip");
+    var parseCsv = require("csv-parse/lib/sync");
+
+    var dir = saveDir || path.join(process.cwd(), "output", "downloads", "reports");
+    var top = await action.getKthElement(this.reportRowAll, 0);
+    if (!top) return { pageStatus: new Error("there is no report row to download") };
+
+    var res = await action.downloadFile(top.locator("button[qid^='aReport-2-']"), dir);
+    if (!res || res.downloaded !== true) {
+      return { pageStatus: res instanceof Error ? res : new Error("the report download did not start or did not complete") };
+    }
+
+    var buf;
+    try {
+      buf = fs.readFileSync(res.filePath);
+    } catch (err) {
+      return { pageStatus: new Error("the downloaded report could not be read from " + res.filePath + ": " + err.message) };
+    }
+    if (!buf.length) return { pageStatus: new Error("the downloaded report is 0 bytes: " + res.filePath) };
+
+    var zip;
+    try {
+      zip = await JSZip.loadAsync(buf);
+    } catch (err) {
+      return { pageStatus: new Error("the downloaded report is not a readable ZIP (" + res.fileName + "): " + err.message) };
+    }
+
+    var names = Object.keys(zip.files).filter(function (n) {
+      return !zip.files[n].dir && /\.csv$/i.test(n);
+    });
+
+    var files = [];
+    /* eslint-disable no-await-in-loop */
+    for (var i = 0; i < names.length; i++) {
+      var text = await zip.files[names[i]].async("string");
+      text = text.replace(/^﻿/, "");                       // strip the BOM
+      var rows = parseCsv(text, { columns: true, skip_empty_lines: true, bom: true });
+      var headers = parseCsv(text, { to_line: 1, skip_empty_lines: true })[0] || [];
+      files.push({ name: names[i], headers: headers, rows: rows });
+    }
+    /* eslint-enable no-await-in-loop */
+
+    return {
+      pageStatus: true,
+      zipName: res.fileName,
+      zipPath: res.filePath,
+      zipBytes: buf.length,
+      csvCount: files.length,
+      files: files,
+    };
   },
 
   /**
