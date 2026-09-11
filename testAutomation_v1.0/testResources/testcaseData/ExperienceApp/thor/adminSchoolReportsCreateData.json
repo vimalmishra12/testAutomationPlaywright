@@ -18,6 +18,20 @@
       "reportColumnCount": 19,
       "reportIdentityColumns": ["First name", "Last name", "Email", "Username", "Class name", "Class key", "Product", "Component"],
 
+      "_frozenComment": "TST_MRPT_TC_41 - the FROZEN-ACTIVITY fixture. 🚨 NEVER MODIFY THIS CLASS. Do not enrol or remove students, do not change its material or grade settings, and NEVER log in as cqatestauto_stu1/stu2 and touch content. The expected numbers below are frozen snapshots; the day anyone does activity on this class, TC_41 starts failing and it will NOT be a product defect. Created by the user 2026-09-11 specifically so report CONTENT could be verified; captured live the same day.",
+      "_frozenTruthComment": "The completed counts are the ONE thing here that did not come from the product: the user performed 3 activities as stu1 and 1 as stu2 and told us so BEFORE the report was read. The report then said 3 and 1. That makes this a real correctness check rather than a 'the report has not changed' check - everything else in this block is a frozen snapshot and only catches regressions.",
+      "frozenClassName": "Automation_frozen_DND",
+      "frozenClassKey": "gHoZ-iBXf",
+      "frozenStudentCount": 2,
+      "frozenActiveComponent": "Project Work",
+      "frozenTotalActivities": 24,
+      "frozenStudents": [
+        { "email": "cqatestauto_stu1@mailsac.com", "firstName": "cqatestauto_stu1", "completed": 3, "percentage": 13, "bestScoreAverage": "72", "firstScoreAverage": "72" },
+        { "email": "cqatestauto_stu2@mailsac.com", "firstName": "cqatestauto_stu2", "completed": 1, "percentage": 4, "bestScoreAverage": "67", "firstScoreAverage": "67" }
+      ],
+      "_frozenNotAssertedComment": "Time spent (00:02:40 / 00:00:50) and Last active (11-Sep-2026-11:10:18am / 11-Sep-2026-11:13:12am) were captured but are deliberately NOT asserted as values - both move if anyone so much as opens the content. TC_41 only asserts that they are NON-EMPTY on the component that has activity and EMPTY on the components that do not, which is stable.",
+      "frozenEmptyComponents": ["Practice Extra", "Practice Extra - Group Enabled"],
+
       "_typeComment": "All seven report types, verified live in this exact dropdown order (schoolReportType-0..6). Estimated CEFR level is the only one supporting neither a custom date range nor custom grade settings.",
       "typeClassSummary": "Class summary",
       "typeClassDetailed": "Class detailed data",

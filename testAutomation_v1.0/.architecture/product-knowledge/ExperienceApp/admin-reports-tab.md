@@ -989,3 +989,96 @@ Observed for `Automation_class_DND` / `z698-JPfC`:
   **not** `csv-parse/sync`, which is v5+ and does not resolve here.
 - The report row's Download button only renders once generation finishes (§11.7), so a download
   must be preceded by the poll in `waitFor_newestReportDownloadable`.
+
+---
+
+## 14. The frozen-activity fixture, and report CONTENT verification `[2026-09-11]`
+
+*The fixture the register had called "the single most valuable fixture on the Reports backlog"
+was provisioned by the user on 2026-09-11, and `TST_MRPT_TC_41` was automated the same day.*
+
+### 14.1 🚨 `Automation_frozen_DND` — NEVER MODIFY
+
+| | |
+|---|---|
+| Class | `Automation_frozen_DND` |
+| Key | `gHoZ-iBXf` |
+| School | `VED-NEH-KVU` (automation-only) |
+| Students | `cqatestauto_stu1@mailsac.com`, `cqatestauto_stu2@mailsac.com` |
+| Known activity | stu1 completed **3** activities · stu2 completed **1** |
+
+**Do not** enrol or remove students, change its material or grade settings, or log in as either
+student account and open content. `TST_MRPT_TC_41` asserts frozen figures; **the day anyone
+touches this class the case fails, and it will NOT be a product defect.**
+
+### 14.2 What a report over it contains — captured live
+
+**`Project Work`** (the component holding the activity):
+
+| Student | Best score avg | First score avg | Total | Completed | % | Time spent | Last active |
+|---|---|---|---|---|---|---|---|
+| `cqatestauto_stu1` | 72 | 72 | 24 | **3** | 13 | 00:02:40 | 11-Sep-2026-11:10:18am |
+| `cqatestauto_stu2` | 67 | 67 | 24 | **1** | 4 | 00:00:50 | 11-Sep-2026-11:13:12am |
+
+**`Practice Extra`** and **`Practice Extra - Group Enabled`**: every activity column blank,
+`Time spent 00:00:00`. A class's activity sits on **one component**, and the other components'
+CSVs are emitted anyway, empty.
+
+### 14.3 ⚠️ The distinction that decides how much a content test is worth
+
+**The completed counts (3 and 1) are the only expectation here that did NOT come from the
+product.** The user performed that activity and stated the counts *before* the report was read;
+the report then agreed.
+
+| Expectation | Source | What a failure means |
+|---|---|---|
+| `Number of activities completed` = 3 / 1 | **outside the product** | the report is **wrong** |
+| score averages, totals | frozen snapshot of the report | the report **changed** |
+| `Percentage` | the report's own arithmetic | the calculation is **inconsistent** |
+
+> **Freezing a value you read out of the product only ever catches regression.** To catch a
+> report that has been wrong since day one you need a number from somewhere else — a human who
+> performed the activity, a gradebook, an API. Worth remembering before calling any
+> "content verification" complete.
+
+The percentage is additionally checked against `round(completed / total × 100)` — 3/24 → 13,
+1/24 → 4. That needs **no frozen value at all**, so it keeps working if the fixture is ever
+re-baselined.
+
+### 14.4 Two columns that must not be asserted as values
+
+`Time spent` and `Last active` were captured but are asserted **only for presence**:
+
+- both move the moment anyone opens the content, even without completing anything
+- `Last active` is a timestamp, so it is a fixed string only while the class stays untouched
+
+`TST_MRPT_TC_41` checks that they are non-empty on the component with activity and empty
+(`00:00:00`) on the components without, which is stable.
+
+### 14.5 Locate a component's CSV by its Component COLUMN
+
+Not by filename, not by position in the zip. The zip's file order is not guaranteed, and the
+filename embeds the product and component in lower case with spaces — brittle to match on. Every
+row carries a `Component` value; use it.
+
+### 14.6 Where report verification now stands
+
+| Question | Case | Status |
+|---|---|---|
+| Was a report created and listed? | `TC_21`–`TC_26`, `TC_28`, `TC_37` | ✅ |
+| Is the FILE well formed, with the right class and students? | `TC_43` | ✅ |
+| Do the NUMBERS reconcile? | **`TC_41`** | ✅ **as of 2026-09-11** |
+| Is a grade exclusion honoured across every report type? | `TC_42` | ❌ still Blocked |
+
+`TC_42`'s blocker is now **much narrower**: the frozen class exists, so all that remains is to
+exclude **one component** from its grade settings and put activity on the excluded item. Once
+that is configured, `TC_42` can follow `TC_41` directly.
+
+### 14.7 Automation note — two cases download to the same path
+
+`TST_MRPT_TC_43` and `TST_MRPT_TC_41` both download to
+`output/downloads/reports/<DD-MMM-YYYY>_<type> report.zip`, so the second overwrites the first.
+
+**Harmless today** — each case reads its own file immediately after downloading it, and mocha
+runs serially (parallel mode is off, ADR-012 D9). It would break silently if the suite were ever
+parallelised; pass a distinct `saveDir` to `download_newestReport` if that ever changes.

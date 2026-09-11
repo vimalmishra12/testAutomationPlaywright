@@ -163,6 +163,17 @@
             "jsonPath": "C1.adminSchoolReportsCreate"
           }
         ]
+      },
+      {
+        "id": "TST_MRPT_TC_41",
+        "description": "Verify the report NUMBERS reconcile with the frozen fixture class Automation_frozen_DND",
+        "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolReportsCreateData.json",
+            "jsonPath": "C1.adminSchoolReportsCreate"
+          }
+        ]
       }
     ],
     "AfterEach": [],

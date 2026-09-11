@@ -326,6 +326,159 @@ module.exports = {
   },
 
   /**
+   * TC_41 — the report's NUMBERS reconcile with the class it was run against.
+   *
+   * 🚨 DEPENDS ON A FROZEN FIXTURE. `Automation_frozen_DND` must never be modified — no
+   * enrolment changes, no material or grade-settings changes, and above all **nobody may log in
+   * as `cqatestauto_stu1` / `stu2` and touch content**. The day someone does, this case starts
+   * failing and it will NOT be a product defect. The data file says the same thing.
+   *
+   * ⚠️ WHAT MAKES THIS A REAL CORRECTNESS CHECK, not just a regression check: the completed
+   * counts (3 and 1) came from OUTSIDE the product — the user performed that activity and stated
+   * the counts before the report was ever read. The report then reported 3 and 1. Everything
+   * else asserted here is a frozen snapshot, which only catches change.
+   *
+   * ⚠️ `Time spent` and `Last active` are NOT asserted as values — both move the moment anyone
+   * opens the content. Only their presence/absence is checked, which is stable.
+   */
+  TST_MRPT_TC_41: async function (testdata) {
+    // Build the report over the FROZEN class, not the usual fixture.
+    sts = await schoolReports.click_reportsTab();
+    await assertion.assertEqual(sts.pageStatus, true, "The Reports tab did not open.");
+    sts = await schoolReports.click_createReport();
+    await assertion.assertEqual(sts.pageStatus, true, "The class-selection step did not open.");
+    sts = await schoolReports.search_class(testdata.frozenClassName);
+    await assertion.assertEqual(sts.pageStatus, true, "The frozen-class search did not settle.");
+    sts = await schoolReports.click_selectClassByText(testdata.frozenClassName);
+    await assertion.assertEqual(sts.pageStatus, true, "Selecting the frozen class failed.");
+    sts = await schoolReports.click_continue();
+    await assertion.assertEqual(sts.pageStatus, true, "The Create report dialog did not open.");
+    sts = await schoolReports.select_reportType(testdata.typeClassSummary);
+    await assertion.assertEqual(sts.pageStatus, true, "Choosing the report type failed.");
+    sts = await schoolReports.click_submitReport();
+    await assertion.assertEqual(sts.pageStatus, true, "Submitting the report failed.");
+    sts = await schoolReports.click_backToReports();
+    await assertion.assertEqual(sts.pageStatus, true, "'Back to Reports' did not return to the list.");
+
+    sts = await schoolReports.waitFor_newestReportDownloadable();
+    await assertion.assertEqual(sts.pageStatus, true, "The report never became downloadable.");
+
+    sts = await schoolReports.download_newestReport();
+    await assertion.assertEqual(sts.pageStatus, true, "Downloading and reading the report failed.");
+
+    // Locate each component's CSV by its Component COLUMN, never by filename or position —
+    // the file order inside the zip is not guaranteed.
+    var active = null;
+    var empties = [];
+    for (var f = 0; f < sts.files.length; f++) {
+      var file = sts.files[f];
+      if (!file.rows.length) continue;
+      var component = file.rows[0].Component;
+      if (component === testdata.frozenActiveComponent) active = file;
+      else if (testdata.frozenEmptyComponents.indexOf(component) !== -1) empties.push(file);
+    }
+
+    await assertion.assert(
+      active !== null,
+      "No CSV in the report carries Component '" + testdata.frozenActiveComponent +
+        "' - the component that holds this class's activity is missing from the report."
+    );
+
+    // ---- the component WITH activity -------------------------------------------------
+    await assertion.assertEqual(
+      active.rows.length,
+      testdata.frozenStudentCount,
+      "The active component does not hold one row per enrolled student."
+    );
+
+    for (var s = 0; s < testdata.frozenStudents.length; s++) {
+      var want = testdata.frozenStudents[s];
+      var row = null;
+      for (var r = 0; r < active.rows.length; r++) {
+        if (active.rows[r].Email === want.email) row = active.rows[r];
+      }
+      await assertion.assert(row !== null, "No report row for " + want.email);
+
+      await assertion.assertEqual(
+        row["Class name"], testdata.frozenClassName,
+        "Wrong class name on the row for " + want.email
+      );
+      await assertion.assertEqual(
+        row["Class key"], testdata.frozenClassKey,
+        "Wrong class key on the row for " + want.email
+      );
+
+      // THE independent-truth assertion: the user performed exactly this many activities.
+      await assertion.assertEqual(
+        Number(row["Number of activities completed"]),
+        want.completed,
+        want.email + " completed " + want.completed + " activities, but the report says '" +
+          row["Number of activities completed"] + "'. This count was known BEFORE the report " +
+          "was read, so a mismatch means the report is wrong - not that the fixture drifted."
+      );
+      await assertion.assertEqual(
+        Number(row["Total number of activities"]),
+        testdata.frozenTotalActivities,
+        "The total activity count changed for " + want.email + " - has the product's content changed?"
+      );
+      await assertion.assertEqual(
+        row["Best score average"], want.bestScoreAverage,
+        "Best score average changed for " + want.email
+      );
+      await assertion.assertEqual(
+        row["First score average"], want.firstScoreAverage,
+        "First score average changed for " + want.email
+      );
+
+      // The report's own arithmetic must hold. This needs no frozen value at all, so it keeps
+      // working even if the fixture is ever re-baselined.
+      var expectedPct = Math.round((want.completed / testdata.frozenTotalActivities) * 100);
+      await assertion.assertEqual(
+        Number(row["Percentage (%) of activities completed"]),
+        expectedPct,
+        "The percentage is not self-consistent for " + want.email + ": " + want.completed + " of " +
+          testdata.frozenTotalActivities + " should round to " + expectedPct + "%, report says '" +
+          row["Percentage (%) of activities completed"] + "'."
+      );
+      await assertion.assertEqual(
+        expectedPct, want.percentage,
+        "The frozen percentage for " + want.email + " disagrees with its own arithmetic - the test data is wrong, not the product."
+      );
+
+      // Presence only — the values move if anyone opens the content.
+      await assertion.assert(
+        String(row["Time spent"] || "") !== "" && String(row["Time spent"]) !== "00:00:00",
+        want.email + " has activity but no Time spent recorded."
+      );
+      await assertion.assert(
+        String(row["Last active"] || "") !== "",
+        want.email + " has activity but no Last active recorded."
+      );
+    }
+
+    // ---- the components WITHOUT activity ---------------------------------------------
+    await assertion.assertEqual(
+      empties.length,
+      testdata.frozenEmptyComponents.length,
+      "Expected " + testdata.frozenEmptyComponents.length + " components with no activity, found " + empties.length + "."
+    );
+    for (var e = 0; e < empties.length; e++) {
+      for (var q = 0; q < empties[e].rows.length; q++) {
+        var er = empties[e].rows[q];
+        await assertion.assertEqual(
+          String(er["Number of activities completed"] || ""), "",
+          "Component '" + er.Component + "' reports activity for " + er.Email +
+            ", but this class has activity only on '" + testdata.frozenActiveComponent + "'."
+        );
+        await assertion.assertEqual(
+          String(er["Time spent"]), "00:00:00",
+          "Component '" + er.Component + "' reports time spent for " + er.Email + "."
+        );
+      }
+    }
+  },
+
+  /**
    * TC_28 — a report is created over a chosen custom window.
    *
    * ⚠️ Does NOT reuse the shared helper: the date picker has to be driven between choosing

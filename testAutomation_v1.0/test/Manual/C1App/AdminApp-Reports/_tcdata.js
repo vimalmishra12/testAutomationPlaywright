@@ -436,10 +436,25 @@ const TCS = [
     pre: 'A fixture class whose activity data is known and stable, with a report generated over it.',
     steps: '1. Record the fixture class\'s known activity — enrolled students and their completed activities/scores.\n2. Generate a "Class summary" report "From the beginning" and download it.\n3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly.\n4. Repeat for "Aggregated data" and confirm its figures sum/average the underlying class-level data.',
     data: 'Fixture class <FROZEN_ACTIVITY_CLASS> with known, unchanging activity.',
-    expected: 'The downloaded report reflects the class\'s actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. [ASSUMED]',
-    remarks: 'Added 2026-09-01 — the most significant gap found in the whole comparison. Our seven generation cases (TST_MRPT_TC_21–TC_26, TC_37) all stop at "the report is created and listed for download"; every one of the other team\'s equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with WRONG CONTENT passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists.',
-    status: 'Blocked',
-    comments: 'Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. "3 July Test School 1" is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog.',
+    pre: 'Logged in as the Reports school-admin; the FROZEN fixture class "Automation_frozen_DND" (gHoZ-iBXf) exists on VED-NEH-KVU with 2 enrolled students whose activity is known and unchanging.',
+    steps: '1. Create a "Class summary" report over "Automation_frozen_DND" and return to the Reports tab.\n'
+      + '2. Wait for the new row to offer "Download", then download and unzip it.\n'
+      + '3. Locate each component\'s CSV by its Component COLUMN (not by filename or position).\n'
+      + '4. For the component that holds the activity ("Project Work"), reconcile every student row against the known activity.\n'
+      + '5. Confirm the components with no activity report none.',
+    data: 'Class "Automation_frozen_DND" (gHoZ-iBXf). cqatestauto_stu1@mailsac.com performed 3 activities; cqatestauto_stu2@mailsac.com performed 1. Product total: 24 activities on the "Project Work" component.',
+    expected: 'The "Project Work" CSV holds one row per enrolled student, each carrying Class name "Automation_frozen_DND" and Class key "gHoZ-iBXf". '
+      + 'cqatestauto_stu1 reports 3 activities completed of 24 (13%), best and first score average 72. '
+      + 'cqatestauto_stu2 reports 1 of 24 (4%), best and first score average 67. '
+      + 'The percentage is arithmetically consistent with completed/total in every row. '
+      + 'Both students show a non-zero Time spent and a Last active value. '
+      + 'The CSVs for "Practice Extra" and "Practice Extra - Group Enabled" report no completed activities and 00:00:00 time spent for either student.',
+    remarks: 'UNBLOCKED AND AUTOMATED 2026-09-11 — the fixture was provisioned by the user specifically for this. '
+      + 'THE POINT OF THIS CASE, and why it is worth the fixture: our eight generation cases (TST_MRPT_TC_21–TC_26, TC_28, TC_37) all stop at "a row appeared in the list", and TST_MRPT_TC_43 checks the file\'s structure and identity — a report generated with the WRONG NUMBERS passes all nine. This is the only case that reads the figures. '
+      + 'The completed counts (3 and 1) are the one expectation here that did NOT come from the product: the user performed that activity and stated the counts BEFORE the report was read, and the report then agreed. That makes this a genuine correctness check; the score averages and totals are frozen snapshots and only catch regressions. '
+      + 'The percentage is additionally asserted against its own arithmetic (round(completed/total*100)), which needs no frozen value and keeps working if the fixture is ever re-baselined. '
+      + 'DELIBERATELY NOT ASSERTED AS VALUES: "Time spent" (00:02:40 / 00:00:50) and "Last active" (11-Sep-2026-11:10:18am / 11:13:12am) — both move the moment anyone opens the content, so only their presence or absence is checked. '
+      + '🚨 NEVER MODIFY "Automation_frozen_DND": no enrolment changes, no material or grade-settings changes, and never log in as cqatestauto_stu1/stu2 and touch content. The day someone does, this case fails and it is NOT a product defect.',
   },
   {
     id: 'TST_MRPT_TC_42',
@@ -452,7 +467,7 @@ const TCS = [
     expected: 'All six report types consistently omit the excluded component and recompute their totals/averages without it. [ASSUMED]',
     remarks: 'Added 2026-09-01 from the other team\'s TC_REP_014, which sweeps the exclusion across all six types. Our TST_MRPT_TC_35 proves the option takes effect on ONE report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as TST_MRPT_TC_41.',
     status: 'Blocked',
-    comments: 'Blocked at design time: depends on the seeded, frozen-activity fixture class described in TST_MRPT_TC_41. Unblock together.',
+    comments: 'Blocked at design time. The frozen-activity fixture it needed NOW EXISTS (Automation_frozen_DND / gHoZ-iBXf, provisioned 2026-09-11 and used by TST_MRPT_TC_41), so the remaining blocker is narrower than it was: that class still needs ONE COMPONENT EXCLUDED from its grade settings, and activity on the excluded item. Once that is configured this case can follow TST_MRPT_TC_41 directly.',
   },
 
   // ---------- Added 2026-09-11 after inspecting a real downloaded report.
@@ -549,7 +564,7 @@ const AUTOMATED_READ_ONLY = [
 ];
 const AUTOMATED_DATA_OWNING = [
   'TST_MRPT_TC_21', 'TST_MRPT_TC_22', 'TST_MRPT_TC_23', 'TST_MRPT_TC_24', 'TST_MRPT_TC_25',
-  'TST_MRPT_TC_26', 'TST_MRPT_TC_28', 'TST_MRPT_TC_37', 'TST_MRPT_TC_43',
+  'TST_MRPT_TC_26', 'TST_MRPT_TC_28', 'TST_MRPT_TC_37', 'TST_MRPT_TC_41', 'TST_MRPT_TC_43',
 ];
 const AUTOMATED = AUTOMATED_READ_ONLY.concat(AUTOMATED_DATA_OWNING);
 

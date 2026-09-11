@@ -5847,6 +5847,12 @@
           "description": "Verify the downloaded report file is well formed and contains the right class and students (the first case to look INSIDE a report)",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_MRPT_TC_41",
+          "description": "Verify the report NUMBERS reconcile with the frozen fixture class - the only case that reads the figures inside a report",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },

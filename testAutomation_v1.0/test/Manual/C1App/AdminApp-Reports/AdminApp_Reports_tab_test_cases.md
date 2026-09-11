@@ -5,14 +5,14 @@
 **App:** Cambridge One Admin App (NEMO microservice) — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** Reports tab and the Create report flow — `/admin/admin/org_<slug>/reports` and `/admin/admin/org_<slug>/reports/create`
 **Generated:** 2026-08-26 | **Total TCs:** 43 (24 Positive · 12 Edge · 7 Negative) — all 13 source scenarios covered, plus scenario #14 (a confirmed source omission) and one added-coverage group
-**Execution status (2026-09-10):** **30 of 43 TCs automated and passing.** 8 are Not Run and 5 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_41, TST_MRPT_TC_42).
+**Execution status (2026-09-10):** **31 of 43 TCs automated and passing.** 8 are Not Run and 4 are Blocked at design time (TST_MRPT_TC_17, TST_MRPT_TC_38, TST_MRPT_TC_39, TST_MRPT_TC_42).
 
 > **[2026-09-10] Automated across TWO suites, which must stay separate.**
 >
 > | Suite | npm script | TCs | School | Side effects |
 > |---|---|---|---|---|
 > | Read-only | `adminSchoolReportsTest_thor` | **21** — `TC_2`, `TC_4`, `TC_5`, `TC_6`, `TC_7`, `TC_8`, `TC_9`, `TC_10`, `TC_11`, `TC_12`, `TC_13`, `TC_14`, `TC_15`, `TC_16`, `TC_18`, `TC_19`, `TC_20`, `TC_27`, `TC_31`, `TC_34`, `TC_40` | `FCN-CHZ-PDA` (`testt1`) | none |
-> | Data-owning | `adminSchoolReportsCreateTest_thor` | **9** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37`, `TC_43` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
+> | Data-owning | `adminSchoolReportsCreateTest_thor` | **10** — `TC_21`, `TC_22`, `TC_23`, `TC_24`, `TC_25`, `TC_26`, `TC_28`, `TC_37`, `TC_41`, `TC_43` | `VED-NEH-KVU` (`cqatestashish_admin`) | **creates 8 real reports per run** |
 >
 > 🚨 **The data-owning suite cannot clean up after itself.** A successfully created report has
 > **no delete control** — the row offers only `Download`, and the `Remove from the reports list`
@@ -93,7 +93,7 @@ covered: one positive creation case plus both negative capability cases.
 14th — *"Verify Estimated CEFR level report from beginning"* — so the scenario register and this
 document agree.
 
-**Blocked cases (2026-08-26).** 5 cases are **Blocked on the day they were written**, not Not Run:
+**Blocked cases (2026-08-26).** 4 cases are **Blocked on the day they were written**, not Not Run:
 `TST_MRPT_TC_17` needs a school holding more than 1500 classes; `TST_MRPT_TC_38` and
 `TST_MRPT_TC_39` need report generation to fail, which cannot be forced on Thor. Their **expected
 results are nonetheless verified**, because the dialog copy was captured from the pre-rendered DOM
@@ -703,14 +703,14 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Linked Requirement** | #6 — Verify Class summary report from beginning |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | A fixture class whose activity data is known and stable, with a report generated over it. |
-| **Test Steps** | 1. Record the fixture class's known activity — enrolled students and their completed activities/scores.<br>2. Generate a "Class summary" report "From the beginning" and download it.<br>3. Reconcile the file against the recorded data: one row per enrolled student, totals summing correctly.<br>4. Repeat for "Aggregated data" and confirm its figures sum/average the underlying class-level data. |
-| **Test Data** | Fixture class <FROZEN_ACTIVITY_CLASS> with known, unchanging activity. |
-| **Expected Result** | The downloaded report reflects the class's actual data: every enrolled student is represented, totals and averages are arithmetically correct, and no activity outside the requested window appears. [ASSUMED] |
-| **Remarks** | Added 2026-09-01 — the most significant gap found in the whole comparison. Our seven generation cases (TST_MRPT_TC_21–TC_26, TC_37) all stop at "the report is created and listed for download"; every one of the other team's equivalents (TC_REP_006–TC_REP_012) asserts the numbers inside. A report that generates successfully with WRONG CONTENT passes every case we currently hold. Written against Class summary and Aggregated data as the two highest-value types; extend to the rest once the fixture exists. |
+| **Preconditions** | Logged in as the Reports school-admin; the FROZEN fixture class "Automation_frozen_DND" (gHoZ-iBXf) exists on VED-NEH-KVU with 2 enrolled students whose activity is known and unchanging. |
+| **Test Steps** | 1. Create a "Class summary" report over "Automation_frozen_DND" and return to the Reports tab.<br>2. Wait for the new row to offer "Download", then download and unzip it.<br>3. Locate each component's CSV by its Component COLUMN (not by filename or position).<br>4. For the component that holds the activity ("Project Work"), reconcile every student row against the known activity.<br>5. Confirm the components with no activity report none. |
+| **Test Data** | Class "Automation_frozen_DND" (gHoZ-iBXf). cqatestauto_stu1@mailsac.com performed 3 activities; cqatestauto_stu2@mailsac.com performed 1. Product total: 24 activities on the "Project Work" component. |
+| **Expected Result** | The "Project Work" CSV holds one row per enrolled student, each carrying Class name "Automation_frozen_DND" and Class key "gHoZ-iBXf". cqatestauto_stu1 reports 3 activities completed of 24 (13%), best and first score average 72. cqatestauto_stu2 reports 1 of 24 (4%), best and first score average 67. The percentage is arithmetically consistent with completed/total in every row. Both students show a non-zero Time spent and a Last active value. The CSVs for "Practice Extra" and "Practice Extra - Group Enabled" report no completed activities and 00:00:00 time spent for either student. |
+| **Remarks** | UNBLOCKED AND AUTOMATED 2026-09-11 — the fixture was provisioned by the user specifically for this. THE POINT OF THIS CASE, and why it is worth the fixture: our eight generation cases (TST_MRPT_TC_21–TC_26, TC_28, TC_37) all stop at "a row appeared in the list", and TST_MRPT_TC_43 checks the file's structure and identity — a report generated with the WRONG NUMBERS passes all nine. This is the only case that reads the figures. The completed counts (3 and 1) are the one expectation here that did NOT come from the product: the user performed that activity and stated the counts BEFORE the report was read, and the report then agreed. That makes this a genuine correctness check; the score averages and totals are frozen snapshots and only catch regressions. The percentage is additionally asserted against its own arithmetic (round(completed/total*100)), which needs no frozen value and keeps working if the fixture is ever re-baselined. DELIBERATELY NOT ASSERTED AS VALUES: "Time spent" (00:02:40 / 00:00:50) and "Last active" (11-Sep-2026-11:10:18am / 11:13:12am) — both move the moment anyone opens the content, so only their presence or absence is checked. 🚨 NEVER MODIFY "Automation_frozen_DND": no enrolment changes, no material or grade-settings changes, and never log in as cqatestauto_stu1/stu2 and touch content. The day someone does, this case fails and it is NOT a product defect. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | **Blocked** |
-| **Comments / Defect ID** | Blocked at design time (skill rule 4): reconciliation needs a class whose activity is seeded and frozen. "3 July Test School 1" is shared and its activity changes under other suites, so figures would not be reproducible. Unblock by provisioning a fixture class with known, stable activity data — this is the single most valuable fixture on the Reports backlog. |
+| **Status** | Pass |
+| **Comments / Defect ID** | *(blank in design)* |
 
 ---
 
@@ -1047,7 +1047,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Remarks** | Added 2026-09-01 from the other team's TC_REP_014, which sweeps the exclusion across all six types. Our TST_MRPT_TC_35 proves the option takes effect on ONE report; consistency across types was untested — and inconsistency between report types is precisely the defect this guards against. Depends on the same fixture as TST_MRPT_TC_41. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | **Blocked** |
-| **Comments / Defect ID** | Blocked at design time: depends on the seeded, frozen-activity fixture class described in TST_MRPT_TC_41. Unblock together. |
+| **Comments / Defect ID** | Blocked at design time. The frozen-activity fixture it needed NOW EXISTS (Automation_frozen_DND / gHoZ-iBXf, provisioned 2026-09-11 and used by TST_MRPT_TC_41), so the remaining blocker is narrower than it was: that class still needs ONE COMPONENT EXCLUDED from its grade settings, and activity on the excluded item. Once that is configured this case can follow TST_MRPT_TC_41 directly. |
 
 ---
 

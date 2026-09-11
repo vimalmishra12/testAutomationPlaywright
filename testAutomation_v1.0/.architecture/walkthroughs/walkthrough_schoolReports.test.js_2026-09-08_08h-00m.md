@@ -676,3 +676,82 @@ correct class name and key — the assertions ran against real data.
 **Coverage: 30 of 43** (the register gained `TC_43`).
 
 **Cost:** this suite now creates **9** undeletable reports per run instead of 8.
+
+---
+---
+
+# Session 5 — `TST_MRPT_TC_41`: the report's NUMBERS — 2026-09-11
+
+**The register called this "the single most valuable fixture on the Reports backlog".** The user
+provisioned it and the case was automated the same day. **10/10 on two consecutive runs
+(147 s, 145 s).**
+
+## S5.1 The fixture
+
+`Automation_frozen_DND` / `gHoZ-iBXf` on `VED-NEH-KVU`, two students, **deliberately unequal
+activity**: `cqatestauto_stu1` completed **3** activities, `cqatestauto_stu2` completed **1**.
+
+The inequality was requested on purpose. With identical data a bug that **swapped the two rows**,
+or wrote one student's figures into both, would pass unnoticed.
+
+## S5.2 ⚠️ The distinction that decides what a content test is worth
+
+**The completed counts are the only expectation that did not come from the product.** The user
+performed the activity and stated "3 and 1" *before* any report was read. The report then said
+3 and 1.
+
+| Expectation | Source | A failure means |
+|---|---|---|
+| completed = 3 / 1 | **outside the product** | the report is **wrong** |
+| score averages, totals | frozen snapshot | the report **changed** |
+| percentage | its own arithmetic | the calculation is **inconsistent** |
+
+> **Freezing a number you read out of the product only ever catches regression.** Catching a
+> report that has been wrong since day one needs a number from somewhere else. Worth stating
+> because it is easy to build a "content verification" suite that can only ever detect change.
+
+The percentage is also asserted against `round(completed/total × 100)` — 3/24 → 13, 1/24 → 4 —
+which needs **no frozen value**, so it survives a re-baseline of the fixture.
+
+## S5.3 What is deliberately not asserted
+
+`Time spent` (00:02:40 / 00:00:50) and `Last active` (timestamps) are captured in the data file
+but asserted **for presence only** — both move the moment anyone opens the content. Recorded with
+the reason so nobody "finishes the job" by pinning them later.
+
+## S5.4 Verified non-vacuous
+
+A green on the case that justifies a permanent fixture deserves more than the word "passed":
+
+- `assert(active !== null)` passed → the `Project Work` CSV was located **by its Component
+  column**, not by filename or position
+- `assert(row !== null)` passed for each student → rows were matched by email
+- the artifact the run itself downloaded was reopened afterwards: class `Automation_frozen_DND`,
+  `completed = [3, 1]`, and the other two components empty
+
+So the comparisons ran with real values on both sides. What was **not** done is a deliberate-break
+run proving a wrong value turns it red; that follows from `assertEqual`'s semantics, used by
+100+ assertions in this repo, and did not seem worth 10 more undeletable reports.
+
+## S5.5 Two things worth knowing
+
+**Locate a component's CSV by its `Component` COLUMN.** The zip's file order is not guaranteed and
+the filename embeds product and component in lower case with spaces — brittle to match on.
+
+**`TC_43` and `TC_41` download to the same path**, so the second overwrites the first. Harmless
+today (each reads its own file immediately; mocha is serial, parallel mode off per ADR-012 D9) but
+it would break silently if the suite were ever parallelised.
+
+## S5.6 Where this leaves the feature
+
+| Question | Case | Status |
+|---|---|---|
+| Report created and listed? | `TC_21`–`26`, `28`, `37` | ✅ |
+| File well formed, right class and students? | `TC_43` | ✅ |
+| Do the NUMBERS reconcile? | **`TC_41`** | ✅ |
+| Grade exclusion honoured across report types? | `TC_42` | ❌ Blocked |
+
+**Coverage 31 of 43. Blocked down from 5 to 4.**
+
+`TC_42`'s blocker is now much narrower — the frozen class exists; it needs **one component
+excluded** from that class's grade settings, plus activity on the excluded item.
