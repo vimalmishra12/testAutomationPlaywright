@@ -5922,6 +5922,116 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Admin App | Library tab - list, sort, search, School licence section (LIBR Phase 1). NOTE the manual register holds 42 cases but 28 carry '[EXTRA - Phase 1 exclusion]' and are deliberately NOT automated; the 10 LIBR cases here are those without the marker, plus two housekeeping TCs.",
+      "moduleId": "LIBR",
+      "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+      "testcase": [
+        {
+          "id": "TST_LIBR_TC_100",
+          "description": "BeforeEach housekeeping - clear any active search so each case starts on the full product list (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_101",
+          "description": "Before-chain step - navigate from the Classes tab to the Library tab and wait for the full product list to render (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_2",
+          "description": "Verify the product list is sorted by title in ascending order when the Library tab first loads",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_3",
+          "description": "Verify the product list reverses to descending order when the Sort by Title control is clicked once",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_4",
+          "description": "Verify the product list returns to ascending order when the Sort by Title control is clicked a second time",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_10",
+          "description": "Verify the searched product is returned as the first result when its full exact title is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_11",
+          "description": "Verify all products whose title contains the term are returned first when a partial title is searched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_12",
+          "description": "Verify search results are the same regardless of the case of the search term",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_20",
+          "description": "Verify the no-results message is shown and echoes the term when a search matches no product",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_23",
+          "description": "Verify the School licence section lists one tile per school licence held by the school",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_25",
+          "description": "Verify the product materials view opens when a School licence tile is clicked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LIBR_TC_33",
+          "description": "Verify every sortable Library column orders the product list in both directions - grounded 2026-09-11: Title is the ONLY sort control, so this enumerates the controls and fails if a second is ever added",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Product materials view reached by 'See materials' (UMBP Phase 1). This page is VUE on the TEACHER route /dashboard/teacher/org_<slug>/bundle/<id>/view, NOT the Angular admin app. 6 of the register's 10 UMBP cases carry '[EXTRA - Phase 1 exclusion]' and are not automated. SEPARATE TEST FILE IS MANDATORY: testrunner.js resolves a TC by the FIRST module matching a testFile and then breaks, so two modules sharing one testFile makes the second unreachable - this module shared schoolLibrary.test.js on the first run and every UMBP TC failed to resolve.",
+      "moduleId": "UMBP",
+      "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
+      "testcase": [
+        {
+          "id": "TST_UMBP_TC_1",
+          "description": "Verify the product materials view opens when See materials is clicked on a Library product row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_UMBP_TC_2",
+          "description": "Verify every component of a multi-component umbrella product is listed under Learning materials",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_UMBP_TC_3",
+          "description": "Verify each component tile shows its component type and its component name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_UMBP_TC_9",
+          "description": "Verify the component list renders correctly for products with differing component counts",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

@@ -1552,6 +1552,41 @@
         "detailsClassStatusByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) div.item-info span",
         "detailsClassGradeSettingsLinkByKey": "grading-scale-details div.row.no-gutters.py-0:has(div.item-info:text-is('{{key}}')) a[qid^='gradingScaleDetails-3-']",
         "detailsLoadMoreLink": "a[qid='gradingScaleDetails-4']"
+      },
+      "schoolLibrary": {
+        "_comment": "Admin App > Library tab (module LIBR). Captured live on Thor / FCN-CHZ-PDA 2026-09-11 - see .architecture/product-knowledge/ExperienceApp/admin-library-tab.md. WARNINGS: (1) productRowByTitle is a TEMPLATE - replace {{title}} with the product title; it resolves the row by its aria-label ('See <title>'), which is STABLE, unlike the positional qid aLibrary-4-<n>. (2) The Clear link is aClass-99 - a CLASSES-tab qid living on the Library tab, so a sweep scoped to aLibrary-* misses it. (3) listContainer is the ONLY whole-list container; its innerText carries the 'Sort by:' header line plus two lines per row (title + 'See materials') - the page object strips both. (4) noResultsMessage, sortByTitle and clearSearchLink are GENUINELY REMOVED when not applicable (rare on admin screens - a presence check is truthful here).",
+        "pageComponent": "library",
+        "libraryTabLink": "[qid=\"aDetail-5\"]",
+        "libraryHeading": "library h2",
+        "searchInput": "[qid=\"aLibrary-1\"]",
+        "searchBtn": "[qid=\"aLibrary-2\"]",
+        "sortByTitle": "[qid=\"aLibrary-3\"]",
+        "clearSearchLink": "[qid=\"aClass-99\"]",
+        "listContainer": "div.list-container",
+        "productRow": "[qid^=\"aLibrary-4-\"]",
+        "productRowTitle": "[qid^=\"aLibrary-4-\"] span.item-text",
+        "productRowByTitle": "[qid^=\"aLibrary-4-\"][aria-label=\"See {{title}}\"]",
+        "noResultsContainer": "div.no-records",
+        "noResultsMessage": "div.no-records p.mb-0",
+        "schoolLicenceSection": "[qid=\"sa-lbt-sle-cntr\"]",
+        "schoolLicenceHeading": "[qid=\"sa-lbt-sle-cntr\"] p.heading",
+        "schoolLicenceDescription": "[qid=\"sa-lbt-sle-cntr\"] p.school-licence-desc",
+        "schoolLicenceTile": "[qid^=\"sa-lbt-sle-prdtcrd-\"]",
+        "schoolLicenceTileTitle": "[qid^=\"sa-lbt-sle-prdtcrd-\"] div.card-title span.mb-1",
+        "schoolLicenceTileLink": "[qid^=\"sa-lbt-sle-prdtcrd-\"] a.product-tile",
+        "schoolLicenceTileLinkByTitle": "[qid^=\"sa-lbt-sle-prdtcrd-\"]:has(div.card-title span.mb-1:text-is(\"{{title}}\")) a.product-tile",
+        "pageLoader": "#loader-container .loader"
+      },
+      "umbrellaProduct": {
+        "_comment": "Admin App > product materials view reached by 'See materials' (module UMBP). Captured live on Thor 2026-09-11 - see admin-library-tab.md. This page is VUE (data-v-*), NOT the Angular admin app, and it lives on the TEACHER route /dashboard/teacher/org_<slug>/bundle/<id>/view. WARNINGS: (1) TWO h2 exist and the FIRST is 'Download the Cambridge One Desktop App' - a bare h2 matches the wrong one, so learningMaterialsHeading is scoped to section.umbrella-components. (2) EVERY component tile carries the SAME qid t-prd-cmp-cntr-1 (12 on one product, 15 on another) - the qid cannot address one tile; index or text it. (3) componentName is ALWAYS PRESENT but EMPTY for a component with no name - count it and you get a false green; read its TEXT. (4) backLink (t-prd-umb-link-1) DROPS THE SCHOOL CONTEXT - requests /admin/admin//library and lands on My school accounts; re-navigate via the school card instead (TST_UMBP_TC_10).",
+        "pageComponent": "section.umbrella-components",
+        "backLink": "[qid=\"t-prd-umb-link-1\"]",
+        "productTitleHeading": "[qid=\"t-prd-umb-link-2\"]",
+        "learningMaterialsHeading": "section.umbrella-components h2",
+        "addToClassBtn": "[qid=\"t-prd-umb-btn-1\"]",
+        "componentTile": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"]",
+        "componentType": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"] div.heading",
+        "componentName": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"] div.font-xs.mb-1"
       }
     }
   }

@@ -1,0 +1,32 @@
+{
+  "C1": {
+    "adminSchoolLibrary": {
+      "_comment": "Admin App > Library tab (LIBR) and product materials view (UMBP) on thor. Every fixture below was verified live on FCN-CHZ-PDA 2026-09-11 - see .architecture/product-knowledge/ExperienceApp/admin-library-tab.md. THIS SUITE IS ENTIRELY SIDE-EFFECT FREE: it searches, sorts and opens products, and never touches 'Add to a class', which is the only mutating action on these screens. The school is SHARED and actively mutated by other teams, so NO value here is an expected count - the catalogue moved 970 -> 974 between the register's capture and this build (admin-shared.md A5, ADR-021 rule 1).",
+
+      "schoolKey": "FCN-CHZ-PDA",
+      "libraryUrlFragment": "/library",
+
+      "_searchDataComment": "TST_LIBR_TC_10 / TC_11 / TC_12. The terms are AUTOMATION-OWNED products (vm_automation_*), never another team's, because FCN-CHZ-PDA is shared and other teams' products get renamed under us - one was renamed within two days in Aug 2026 [user decision, 2026-08-26]. The search is FUZZY BY DESIGN and confirmed intended by the product team, so an exact title still returns a tail (10 results for exactTitle on both the 2026-08-26 and 2026-09-11 captures). NO RESULT COUNT IS ASSERTED ANYWHERE - the tail is data-dependent. What is asserted is the RANKING: substring matches lead. Multi-word terms are OR-matched, so adding a word BROADENS the search - do not write a term expecting it to narrow.",
+      "exactTitle": "vm_automation_book101",
+      "partialTerm": "vm_automation",
+      "partialTermUpper": "VM_AUTOMATION",
+      "expectedSubstringMatches": ["vm_automation_book101", "vm_automation_testing_108"],
+
+      "_noMatchComment": "TST_LIBR_TC_20. The message echoes the term verbatim and has NO closing full stop - that is the product's real copy, verified live, not a transcription slip. In this state the SORT CONTROL IS GENUINELY REMOVED from the DOM (one of the few truthful absence checks on an admin screen) while the School licence section is untouched.",
+      "noMatchTerm": "zzqqxx9999",
+
+      "_licenceComment": "TST_LIBR_TC_23 / TC_25. NO LICENCE NAME IS RECORDED HERE ON PURPOSE. FCN-CHZ-PDA held 3 licences at both captures, but the SET changed between them - 'presentation_plus_test_umb_product_2_june_1' (2026-08-26) had been replaced by 'devtest0106' by 2026-09-11. TC_25 therefore reads the tile's title from the page at run time and uses it as its own expected heading, so the case proves 'the tile opens ITS product' whatever that product currently is. licenceTileIndex is the tile it clicks; index 2 was the long-titled product at capture, but any index works because nothing about the specific product is asserted.",
+      "licenceTileIndex": 2,
+
+      "_productComment": "TST_UMBP_TC_1 / TC_2 / TC_3 / TC_9. These two product TITLES are the one genuinely brittle thing in this file: they belong to another team and titles on this school DO change (multiComponentProduct was itself renamed from 'testumbrellabundleverylongnametocheckwrappingoftext' between 2026-08-24 and 2026-08-26 - the product ID in the URL was unaffected). They are kept in data, not in code, so a rename is a ONE-LINE fix here; click_productByTitle fails with the title it could not find, which names the problem directly. Component counts are NOT recorded: TC_2/TC_3 assert structure, and TC_9 asserts only that the two products render DIFFERENT counts, which is the property that makes the case meaningful.",
+      "multiComponentProduct": "testumbrellabundlevery_longname_tocheck_wrapping_oftext",
+      "multiComponentProductId": "testumbrellabundle",
+      "secondProduct": "R55 Multi Component Umbrella",
+      "secondProductId": "r55multicomponent",
+
+      "_sortComment": "TST_LIBR_TC_2 / TC_3 / TC_4 / TC_33. THE COLLATION IS localeCompare, NOT naive lowercasing - measured across all 974 titles 2026-09-11: localeCompare matched the product's order exactly, a lowercase lexicographic sort diverged at index 41 (the product puts 'anmol_13_oct_2022_03' before 'anmol-test-11-nov'). This is the OPPOSITE of the Classes tab, where admin-shared.md A4 records that a localeCompare expectation is wrong. No expected first/last title is stored - the durable assertion is 'the list equals itself sorted'. TC_33: the tab offers exactly ONE sort control (Title); the 'Date added' column the other team's sheet assumes does not exist here.",
+      "expectedSortControlCount": 1,
+      "expectedSortControlLabel": "Title"
+    }
+  }
+}

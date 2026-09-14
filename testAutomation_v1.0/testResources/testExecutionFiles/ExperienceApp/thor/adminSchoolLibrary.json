@@ -1,0 +1,243 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Library tab - LIBR/UMBP Phase 1 read-only (sort, search, School licence, product materials) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Thor base URL (micro-nemo)",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Click Login button on Landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter school admin username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter school admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.schoolAdmin"
+          }
+        ]
+      },
+      {
+        "id": "TST_NEMO24306_TC_LOGIN",
+        "description": "Click Login and confirm 'My school accounts' loaded",
+        "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SADB_TC_1",
+        "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA (never by name - two schools share it)",
+        "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_101",
+        "description": "Navigate from the Classes tab to the Library tab and wait for the full product list to render",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [
+      {
+        "id": "TST_LIBR_TC_100",
+        "description": "Clear any active search so this TC starts on the full product list",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      }
+    ],
+    "Test": [
+      {
+        "id": "TST_LIBR_TC_2",
+        "description": "Verify the product list is sorted by title in ascending order when the Library tab first loads",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_3",
+        "description": "Verify the product list reverses to descending order when the Sort by Title control is clicked once",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_4",
+        "description": "Verify the product list returns to ascending order when the Sort by Title control is clicked a second time",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_33",
+        "description": "Verify the Library tab offers exactly one sortable control (Title) - the 'Date added' column assumed by the source sheet does not exist here",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_10",
+        "description": "Verify the searched product is returned as the first result when its full exact title is searched",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_11",
+        "description": "Verify all products whose title contains the term are returned first when a partial title is searched",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_12",
+        "description": "Verify search results are the same regardless of the case of the search term",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_20",
+        "description": "Verify the no-results message is shown and echoes the term when a search matches no product",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_23",
+        "description": "Verify the School licence section lists one tile per school licence held by the school",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_UMBP_TC_2",
+        "description": "Verify every component of a multi-component umbrella product is listed under Learning materials",
+        "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_UMBP_TC_3",
+        "description": "Verify each component tile shows its component type and its component name",
+        "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_UMBP_TC_9",
+        "description": "Verify the component list renders correctly for products with differing component counts",
+        "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_UMBP_TC_1",
+        "description": "Verify the product materials view opens when See materials is clicked on a Library product row",
+        "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_25",
+        "description": "Verify the product materials view opens when a School licence tile is clicked",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminSchoolLibraryData.json",
+            "jsonPath": "C1.adminSchoolLibrary"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

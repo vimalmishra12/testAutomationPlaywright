@@ -684,3 +684,18 @@ qid on the teacher class page, but that is a hypothesis, not a finding.
   defect — `Staff (22)` over 21 rows on 2026-09-07, unchanged from 2026-09-02. Phase-1-
   excluded, so no automated case asserts the two match.
 
+
+---
+
+## schoolLibrary + umbrellaProduct (ExperienceApp, thor) — modules LIBR / UMBP
+- Phase 1 (build):   ✅ 2026-09-14 — TST_LIBR_TC_2, 3, 4, 10, 11, 12, 20, 23, 25, 33 + TST_UMBP_TC_1, 2, 3, 9 registered (plus housekeeping TST_LIBR_TC_100/101); all `visualTest: false`. npm script `adminSchoolLibraryTest_thor`. Executed: first real run 9 passing / 5 failing; **14 / 14 passing** after fixes (238 s). Visual candidates: none flagged — every case frames the shared 974-row catalogue or live licence/component data (admin-shared.md §B10 precedent).
+- Phase 2 (run/fix): ✅ 2026-09-14 — folded into the same session. Five bugs, all in our code, none in the product: (1) LIBR and UMBP shared one `testFile` — the runner takes the FIRST matching module and breaks, so UMBP was unreachable; **`tooling/tcMap.js` reported 0 MISFILED and did not catch it**; (2) glob `waitForURL` gave no URL on failure → substring poll; (3) `getText` on the list container, which is REMOVED in the no-results state (30 s stall); (4) the `#loader-container .loader` overlay swallowed clicks on visible elements; (5) product pages live on the TEACHER route and discard school context → return path re-selects the school by key.
+- Phase 3 (visual):  ⬜ pending — expected outcome "no candidates" (§B10), still formally owed.
+
+**Scope:** 14 of 42 register cases. The other 28 carry `[EXTRA — Phase 1 exclusion]` and are deliberately not automated.
+
+**⚠️ OPEN — the LIBRARY tab click is intermittently inert.** It navigated in most runs; twice it reported success while the browser stayed on `/class`, once with the loader overlay already waited out — so the overlay is NOT its cause. Root cause unknown. The BeforeEach recovery path avoids it (direct navigation after re-selecting the school); `TST_LIBR_TC_101` still uses it. Needs a live browser session to diagnose.
+
+**⚠️ Brittle by necessity:** `TST_UMBP_TC_1/2/3/9` locate products BY TITLE, and both belong to another team (one was renamed once already). Titles live in `adminSchoolLibraryData.json`; a rename is a one-line fix there.
+
+**NOT in this entry — the Generic/shell batch** (`test/Manual/C1App/AdminApp-Generic/`) is not started: 28 of 41 cases in Phase 1 scope, 5 Blocked (`SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`).
