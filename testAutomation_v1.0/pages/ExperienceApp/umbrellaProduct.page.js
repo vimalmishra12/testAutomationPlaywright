@@ -67,6 +67,8 @@ module.exports = {
   componentTile: up.componentTile,
   componentType: up.componentType,
   componentName: up.componentName,
+  tileType: up.tileType,
+  tileName: up.tileName,
 
   /**
    * Confirms the materials view is loaded.
@@ -112,30 +114,45 @@ module.exports = {
   /**
    * Returns every component tile's TYPE and NAME, in render order.
    *
+   * Scopes child selectors directly within each tile locator (avoiding global index drift)
+   * and scrolls each tile into view so off-screen elements render their text properly.
    * Name is read as TEXT, never counted, because the element is always present and is empty
    * for a component that has no distinct name (trap 4). A nameless component yields
    * `{ type: "Unit Progress Test", name: "" }` — which is exactly what TST_UMBP_TC_3 checks,
    * so the empty string is a meaningful result rather than a read failure.
-   *
-   * Counts here are small (12–15), so a per-tile read is cheap; the Library tab's one-shot
-   * container trick is not needed and would only make the type/name split harder.
    *
    * @returns {{tileCount: number, components: Array<{index: number, type: string, name: string}>}}
    */
   getData_components: async function () {
     await logger.logInto(await stackTrace.get(), "reading the component tiles");
     var tileCount = await action.getElementCount(this.componentTile);
-    if (typeof tileCount != "number") return { tileCount: -1, components: [] };
+    if (typeof tileCount != "number" || tileCount <= 0) return { tileCount: tileCount || -1, components: [] };
     var components = [];
     for (var i = 0; i < tileCount; i++) {
-      var typeEl = await action.getKthElement(this.componentType, i);
-      var nameEl = await action.getKthElement(this.componentName, i);
-      var type = typeEl ? await action.getText(typeEl) : null;
-      var name = nameEl ? await action.getText(nameEl) : null;
+      var tile = await action.getKthElement(this.componentTile, i);
+      if (!tile) continue;
+      await action.scrollIntoView(tile);
+      var typeLoc = tile.locator(this.tileType);
+      var nameLoc = tile.locator(this.tileName);
+      var typeCount = await typeLoc.count();
+      var nameCount = await nameLoc.count();
+      var rawType = typeCount > 0 ? await action.getText(typeLoc) : "";
+      var rawName = nameCount > 0 ? await action.getText(nameLoc) : "";
+      var typeStr = (typeof rawType === "string" && !rawType.message) ? rawType.trim() : "";
+      var nameStr = (typeof rawName === "string" && !rawName.message) ? rawName.trim() : "";
+      // Fallback to textContent if innerText was empty due to layout / fold rendering quirks
+      if (!typeStr && typeCount > 0) {
+        var tc = await typeLoc.first().textContent();
+        typeStr = tc ? tc.trim() : "";
+      }
+      if (!nameStr && nameCount > 0) {
+        var ntc = await nameLoc.first().textContent();
+        nameStr = ntc ? ntc.trim() : "";
+      }
       components.push({
         index: i,
-        type: typeof type == "string" ? String(type).trim() : "",
-        name: typeof name == "string" ? String(name).trim() : ""
+        type: typeStr,
+        name: nameStr
       });
     }
     await logger.logInto(await stackTrace.get(), "read " + components.length + " component tiles");
