@@ -1,0 +1,154 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Generic - shell chrome: language, Spanish, Help, tutorials (ASHL) | testt1, My school accounts",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_ASHL_TC_100", "description": "Open My school accounts and restore English if a previous case left Spanish", "testFile": "./test/ExperienceApp/adminShell.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.ashl" }] }
+    ],
+    "Test": [
+      { "id": "TST_ASHL_TC_1", "description": "Verify the language control offers English and Español with the active language marked as selected", "testFile": "./test/ExperienceApp/adminShell.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.ashl" }] },
+      { "id": "TST_ASHL_TC_3", "description": "Verify the admin header Help menu exposes Help centre and Tutorials when it is opened", "testFile": "./test/ExperienceApp/adminShell.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.ashl" }] },
+      { "id": "TST_ASHL_TC_4", "description": "Verify the Tutorials submenu lists all five tutorial topics when it is expanded", "testFile": "./test/ExperienceApp/adminShell.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.ashl" }] },
+      { "id": "TST_ASHL_TC_2", "description": "Verify the admin interface renders in Spanish when Español is selected (runs last in the suite - it changes the language and restores English)", "testFile": "./test/ExperienceApp/adminShell.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.ashl" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite2": {
+    "Name": "Admin App | Generic - admin footer: seven links, internal destinations (FOOT 10/11) | testt1, My school accounts",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_FOOT_TC_100", "description": "Open My school accounts before each footer case", "testFile": "./test/ExperienceApp/adminFooter.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.foot" }] }
+    ],
+    "Test": [
+      { "id": "TST_FOOT_TC_10", "description": "Verify the admin footer renders seven links and omits Site Feedback", "testFile": "./test/ExperienceApp/adminFooter.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.foot" }] },
+      { "id": "TST_FOOT_TC_11", "description": "Verify every admin footer link opens its intended destination", "testFile": "./test/ExperienceApp/adminFooter.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.foot" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite3": {
+    "Name": "Admin App | Generic - My profile / Manage profile (MYPR 1-4) | testt1",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_MYPR_TC_100", "description": "Open My school accounts before each profile case", "testFile": "./test/ExperienceApp/myProfile.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.mypr" }] }
+    ],
+    "Test": [
+      { "id": "TST_MYPR_TC_1", "description": "Verify the Manage profile page opens with both tabs when My profile is selected from the header menu", "testFile": "./test/ExperienceApp/myProfile.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.mypr" }] },
+      { "id": "TST_MYPR_TC_2", "description": "Verify the Personal info tab shows the four account fields pre-filled with the current values", "testFile": "./test/ExperienceApp/myProfile.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.mypr" }] },
+      { "id": "TST_MYPR_TC_3", "description": "Verify the Password tab shows the three password fields when it is selected", "testFile": "./test/ExperienceApp/myProfile.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.mypr" }] },
+      { "id": "TST_MYPR_TC_4", "description": "Verify Back returns to the previous page without saving when it is clicked", "testFile": "./test/ExperienceApp/myProfile.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.mypr" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite4": {
+    "Name": "Admin App | Generic - organisation context and Administrator/Teacher toggle (SADB 3/5) | testt1",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_SADB_TC_100", "description": "Return to Administrator view and open My school accounts", "testFile": "./test/ExperienceApp/adminOrgContext.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.sadb" }] }
+    ],
+    "Test": [
+      { "id": "TST_SADB_TC_3", "description": "Verify switching between organisations loads each one independently when the admin manages several", "testFile": "./test/ExperienceApp/adminOrgContext.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.sadb" }] },
+      { "id": "TST_SADB_TC_5", "description": "Verify the administrator can switch to the teacher dashboard and back again", "testFile": "./test/ExperienceApp/adminOrgContext.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.sadb" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite5": {
+    "Name": "Admin App | Generic - Set up a school account wizard gates every step (SRQS 3) - NEVER SUBMITS | testt1",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_SRQS_TC_3", "description": "Verify each wizard step blocks progress until its required input is supplied", "testFile": "./test/ExperienceApp/setupSchoolWizard.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.srqs" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite6": {
+    "Name": "Admin App | Generic - School settings and the Change school key warning (SKEY 1/2/4) | KNF-XRD-QVE ONLY - never FCN-CHZ-PDA",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_SKEY_TC_100", "description": "Open KNF-XRD-QVE by key and refuse to continue unless the displayed key matches the configured one", "testFile": "./test/ExperienceApp/changeSchoolKey.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.skey" }] }
+    ],
+    "Test": [
+      { "id": "TST_SKEY_TC_1", "description": "Verify the School settings menu exposes Change school key alongside the grading options", "testFile": "./test/ExperienceApp/changeSchoolKey.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.skey" }] },
+      { "id": "TST_SKEY_TC_2", "description": "Verify an irreversible-action warning is shown when Change school key is selected", "testFile": "./test/ExperienceApp/changeSchoolKey.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.skey" }] },
+      { "id": "TST_SKEY_TC_4", "description": "Verify the school key is unchanged when the warning dialog is cancelled", "testFile": "./test/ExperienceApp/changeSchoolKey.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.skey" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+
+  "Suite7": {
+    "Name": "Admin App | Generic - notifications bell and panel (INVI 7-12) - runs LAST: TC_12 marks one notification read | testt1",
+    "TestCaseRepo": ["./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_INVI_TC_100", "description": "Open My school accounts with the notifications panel closed", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] }
+    ],
+    "Test": [
+      { "id": "TST_INVI_TC_7", "description": "Verify the notifications bell badge and its accessible name report the same unread count", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] },
+      { "id": "TST_INVI_TC_8", "description": "Verify the notifications panel opens with a heading, time-grouped rows and a close control", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] },
+      { "id": "TST_INVI_TC_9", "description": "Verify the panel renders only the five most recent notifications when many are unread", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] },
+      { "id": "TST_INVI_TC_10", "description": "Verify recent notifications show a relative date and older ones show an absolute date", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] },
+      { "id": "TST_INVI_TC_11", "description": "Verify report-ready notifications describe the Reports destination consistently", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] },
+      { "id": "TST_INVI_TC_12", "description": "Verify clicking a notification opens its target and clears it from the unread count (MUTATES - marks one read)", "testFile": "./test/ExperienceApp/adminNotifications.test.js", "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGenericData.json", "jsonPath": "C1.adminGeneric.invi" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}
