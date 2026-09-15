@@ -58,6 +58,11 @@ jobs:
         run: npm install nodemailer
         working-directory: ${{ env.WORKING_DIR }}  
 
+      # Install Playwright browser binaries and system libraries for local execution profiles (e.g. desktop-chrome-1920)
+      - name: Install Playwright Browsers & OS Dependencies
+        run: npx playwright install --with-deps chromium
+        working-directory: ${{ env.WORKING_DIR }}  
+
       # ── 4. Detect Environment and App Type ───────────────────────────────────
       #    Auto-detects --testEnv and --appType from the selected npm script in
       #    package.json at runtime.
