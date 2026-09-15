@@ -1047,8 +1047,11 @@ new. Captured with DOM reads and JS clicks — see the MCP note at the end.*
   educativos*; language trigger *Idioma del sitio, Español*; toggle *Interruptor
   Administrador/Profesor: …*.
   **Untranslated (i18n defects):** the footer link *Our approach*; the bell's aria-label
-  *Notifications (N unread notifications)*. **Inconsistent:** *Clases (10)* has a space before the
-  count, the other four tabs do not. The tab labels embed live counts — never assert them as copy.
+  *Notifications (N unread notifications)*. ~~**Inconsistent:** *Clases (10)* has a space before the
+  count, the other four tabs do not.~~ **Correction [2026-09-15] — NOT a defect.** A live framework
+  read of all five Spanish tabs returned one identical format each: `CLASES\n(10)`, `ALUMNOS\n(15)`,
+  `PERSONAL\n(12)`, `BIBLIOTECA\n(974)`, `INFORMES\n(0)` — label and count on separate lines. The
+  earlier claim did not reproduce (user report). The tab labels embed live counts — never assert them as copy.
 - **My profile — the active tab IS identifiable**: the parent `li` gets class `selected`
   (`details-tab … selected` / `password-tab … selected`). Corrects §A9's "no attribute at all".
 - **My profile — Cancel has TWO qids**: `c-mp-btn-2` on Personal info, `c-mp-btn-4` on Password.

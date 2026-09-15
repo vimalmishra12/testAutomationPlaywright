@@ -180,6 +180,22 @@ not chased; the removal check is the proof, not the screenshot.
 **Final: runs 6 and 7 — 21/21 passing, twice in a row (2026-09-15).** Phase 2 ✅. All diagnostic
 logging removed; temp exec file deleted. Phase 3 (visual) and `SADB_TC_7` remain.
 
+**Phase 3 deferred [user decision, 2026-09-15].**
+
+**Correction [2026-09-15] — "Clases (10)" spacing is NOT a defect** (claimed in §2 above). The user
+could not reproduce it; a framework run read all five Spanish tabs live and they share one format —
+`CLASES\n(10)`, `ALUMNOS\n(15)`, `PERSONAL\n(12)`, `BIBLIOTECA\n(974)`, `INFORMES\n(0)`. Corrected in
+`admin-shared.md` §A12 and `authoring-status.md`. Lesson: a finding copied from a grounding note must be
+re-verified before it is reported to a person as a defect.
+
+**Correction [2026-09-15] — "teacher Create-class Cancel lands on the admin dashboard" NOT reproduced**
+(claimed in §2, grounded only with a synthetic JS click while MCP real input was dead). Framework run
+with REAL clicks: teacher dashboard → `a.create-class` (8 matches; first used) → `/dashboard/teacher/create-class`,
+Cancel `t-cc-cd-btn-1` visible → click returned true → **8 s later still on `/create-class`**, and later
+reads timed out. Neither the original claim nor "Cancel is inert" is established — one run, possible
+slow page. Dropped from the product-issue list. Relevant to `SADB_TC_7`'s design (handoff §6), which
+assumed the Cancel destination.
+
 Knowledge promoted: `admin-shared.md` §A12 "Phase 2 findings". Diagnostic runs consumed **no** extra
 notifications (the failing TC_12 click hit an already-read row; the later diag runs excluded TC_12). Temp exec file
 `adminGenericFixTemp.json` created and deleted — never committed.

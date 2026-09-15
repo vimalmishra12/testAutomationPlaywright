@@ -712,4 +712,4 @@ npm script `adminGenericTest_thor`; exec file `adminGeneric.json` (7 suites, INV
 
 **Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design in the handoff §6, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
 
-**Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) and "Clases (10)" spacing; wizard summary omits school type and number of teachers; teacher Create-class Cancel lands in the admin view.
+**Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) — the "Clases (10)" spacing claim was checked live 2026-09-15 and is NOT a defect; wizard summary omits school type and number of teachers. ~~Teacher Create-class Cancel lands in the admin view~~ — **NOT reproduced [2026-09-15]**: a real click on Cancel stayed on `/dashboard/teacher/create-class` for 8 s (the claim came from a synthetic JS click); unresolved, not a reportable defect.
