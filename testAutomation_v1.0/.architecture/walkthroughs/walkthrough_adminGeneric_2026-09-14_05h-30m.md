@@ -143,3 +143,43 @@ None of the AGENTS.md protected list. `package.json` script added with explicit 
 Resolved by this run: a **real** Cancel click closes the change-key dialog with the key unchanged (SKEY_TC_4);
 a report-ready notification lands on the Reports destination (INVI_TC_12). No side effects: KNF key, English
 language and testt1's first name all asserted unchanged by passing cases.
+
+---
+
+## Session 2 — Phase 2 run & fix (2026-09-14, worktree `admin-remaining-test-cases-6f12a4`)
+
+Started from `HANDOFF_adminGeneric_20260914_v2.md`; branch `claude/admin-generic-handoff-963b3c`
+fast-forwarded to `cc26449`. Root causes taken from the first run's Playwright call logs (report.json),
+then one diagnostic run per unknown, instrumented with temporary logging (removed afterwards).
+
+| Case | Root cause (evidence) | Fix |
+|---|---|---|
+| `MYPR_TC_1` | Menu opened twice; 2nd trigger click intercepted by `.dropdown-menu.show` (call log) | `click_myProfile` opens the menu only if My profile is not displayed |
+| `INVI_TC_8` | `.close-dummy`'s × inside `.notification-body` intercepts the click on `.close` (call log; both visible — diag) | `closeBtn` → `[qid="ntf-2"].close-dummy` |
+| `SADB_TC_5` | Single visible switch, correct label, click returned true, no navigation; with a 3 s settle it navigated (diag) — handler bound after render | `TOGGLE_SETTLE_MS` 3000 (BUDGET — unmeasured) before the single click |
+| `INVI_TC_12` (new, diag run) | Re-clicked the row the first run had read: 92 → 92. Read rows remain listed; unread rows carry `.mark-read-circle` (child dump) | New selector `unreadRow`; the case picks the oldest UNREAD report-ready row |
+
+| `SRQS_TC_3` (intermittent — passed runs 0/1, failed run 2) | Intro Next click returned true, wizard stayed on intro (screenshot: Next visible, no loader) — handler not yet bound | `open()` waits the loader out + `INTRO_SETTLE_MS` 2000 (BUDGET) before the single click |
+
+Runs: fix-verify run (MYPR/SADB/INVI) 11/12 → full run 1 **22/22** → full run 2 21/22 (SRQS_TC_3) →
+run 3 18/22 (MYPR suite's shared login step `TST_NEMO24306_TC_LOGIN` timed out at 30 s — Thor, not
+our code) → run 4 **22/22** → run 5 21/22 (`INVI_TC_12`: no unread report-ready row left).
+
+**`INVI_TC_12` removed from `adminGeneric.json` [user decision, 2026-09-15].** Runs 1, 3 and 4 each
+consumed one unread row; the panel shows only the 5 newest, and by run 5 all were read. The
+`.mark-read-circle` marker was confirmed by that failure (0 matches when none are unread). The case
+stays written + registered (ORPHAN by intent); re-add it as Suite7's last step once a fresh
+"report is ready" notification exists.
+
+**Evidence audit (run 4 screenshots, all 22 walked):** every case shows what it asserts, with one
+oddity — `INVI_TC_8`'s end-of-test image shows the panel still open although its close check passed.
+A diagnostic run (2026-09-15) proved the close is real: immediately after it, the heading and row
+counts are **0** (the panel is removed from the DOM). The image mismatch is unexplained and recorded,
+not chased; the removal check is the proof, not the screenshot.
+
+**Final: runs 6 and 7 — 21/21 passing, twice in a row (2026-09-15).** Phase 2 ✅. All diagnostic
+logging removed; temp exec file deleted. Phase 3 (visual) and `SADB_TC_7` remain.
+
+Knowledge promoted: `admin-shared.md` §A12 "Phase 2 findings". Diagnostic runs consumed **no** extra
+notifications (the failing TC_12 click hit an already-read row; the later diag runs excluded TC_12). Temp exec file
+`adminGenericFixTemp.json` created and deleted — never committed.

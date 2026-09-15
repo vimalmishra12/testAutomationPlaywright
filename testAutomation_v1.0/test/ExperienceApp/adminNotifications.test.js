@@ -128,8 +128,13 @@ module.exports = {
 
   /**
    * TC_12 — clicking a notification opens its target and reduces the unread count by one.
-   * 🚨 MUTATES: marks the oldest visible report-ready notification read, permanently.
-   * The landing destination is still [ASSUMED] — the first real run grounds it.
+   * 🚨 MUTATES: marks the oldest visible UNREAD report-ready notification read, permanently.
+   *
+   * ⚠️ NOT IN adminGeneric.json [user decision, 2026-09-15]. Each run consumes one unread
+   * notification, and the panel shows only the 5 newest rows — by the fifth run of 2026-09-14 all five
+   * were read, so the case could only fail. It stays written and registered (it shows as an ORPHAN in
+   * tooling/tcMap.js, intended). Run it by hand once a fresh "report is ready" notification exists
+   * (generate a report on the Reports tab), by re-adding it as the LAST step of Suite7.
    */
   TST_INVI_TC_12: async function (testdata) {
     var before = await adminNotifications.getData_bell();

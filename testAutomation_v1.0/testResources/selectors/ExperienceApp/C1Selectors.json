@@ -1621,13 +1621,14 @@
         "teacherCreateClassBtn": "[qid=\"tDashboard-ncls-btn-1\"]"
       },
       "adminNotifications": {
-        "_comment": "Admin App notifications bell + panel (module INVI extension, TC_7..12). Captured live 2026-09-14, admin-shared.md §A9/§A12. WARNINGS: (1) the panel is built lazily by tippy.js — nothing to read until the bell is clicked (the §B2 pre-render rule does NOT apply). (2) .notification-dropdown is the 56px bell WRAPPER, not the panel — never use it as the panel selector. (3) two VISIBLE elements share qid ntf-2 (.close and .close-dummy) — closeBtn targets .close. (4) row qids are positional and based at 30 (ntf-30..ntf-34). (5) only 5 rows render regardless of the unread total; the panel does not scroll. (6) opening the panel does NOT change the unread count; clicking a row marks it read and cannot be undone.",
+        "_comment": "Admin App notifications bell + panel (module INVI extension, TC_7..12). Captured live 2026-09-14, admin-shared.md §A9/§A12. WARNINGS: (1) the panel is built lazily by tippy.js — nothing to read until the bell is clicked (the §B2 pre-render rule does NOT apply). (2) .notification-dropdown is the 56px bell WRAPPER, not the panel — never use it as the panel selector. (3) two VISIBLE elements share qid ntf-2 (.close and .close-dummy) — closeBtn targets .close-dummy — it overlays .close and receives the real click (verified 2026-09-14). (4) row qids are positional and based at 30 (ntf-30..ntf-34). (5) only 5 rows render regardless of the unread total; the panel does not scroll. (6) opening the panel does NOT change the unread count; clicking a row marks it read and cannot be undone.",
         "bell": "#tippyDropdownMenuButton",
         "panelHeading": ".notification-heading h2",
         "panelReadCount": ".notification-heading .readCount",
         "timeGroupTitle": "p.time-related-title",
         "row": "button.tippy-dropdown-item",
-        "closeBtn": "[qid=\"ntf-2\"].close",
+        "unreadRow": "button.tippy-dropdown-item:has(.mark-read-circle)",
+        "closeBtn": "[qid=\"ntf-2\"].close-dummy",
         "seeOlderLink": "a[qid=\"ntf-4\"]"
       },
       "myProfile": {

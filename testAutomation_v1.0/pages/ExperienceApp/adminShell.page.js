@@ -53,6 +53,9 @@ var LANGUAGE_TIMEOUT = 45000;
 
 var POLL_MS = 200;
 
+/** Settle before clicking the role toggle. BUDGET — unmeasured; 3 s worked where 0 s failed (2026-09-14). */
+var TOGGLE_SETTLE_MS = 3000;
+
 module.exports = {
   pageLoader: sh.pageLoader,
   htmlRoot: sh.htmlRoot,
@@ -167,8 +170,13 @@ module.exports = {
 
   /** Opens My profile from the header menu and confirms Manage profile rendered. */
   click_myProfile: async function () {
-    var menu = await this.getData_profileMenu();
-    if (true != menu.opened) return menu.opened;
+    // Open the menu only if it is not already open: a second click on the trigger is intercepted by
+    // the open dropdown (Playwright: "dropdown-menu … show subtree intercepts pointer events") —
+    // TST_MYPR_TC_1 reads the menu first, then calls this (first run 2026-09-14).
+    if (true != (await action.isDisplayed(this.myProfileItem))) {
+      var menu = await this.getData_profileMenu();
+      if (true != menu.opened) return menu.opened;
+    }
     var res = await action.click(this.myProfileItem);
     if (true != res) return res;
     var onUrl = await this.waitForUrlFragment("/dashboard/my-profile");
@@ -318,6 +326,12 @@ module.exports = {
   click_roleToggle: async function (to) {
     var clear = await this.waitForLoaderGone();
     if (true != clear) return clear;
+    // The switch renders (and the loader clears) before its click handler is bound: on the first run
+    // a click in the teacher view returned true and changed nothing; with a settle the same click
+    // navigated (diagnostic run 2026-09-14 — one element, visible, correct aria-label both times).
+    // Handler binding is not observable (admin-shared §B6, cf. the Filter panel X close), so a settle
+    // precedes the SINGLE click — never a retry-click, which would toggle twice.
+    await browser.pause(TOGGLE_SETTLE_MS);
     var res = await action.click(this.roleToggleSwitchAny);
     if (true != res) return res;
     var onUrl = await this.waitForUrlFragment(to === "teacher" ? "/dashboard/teacher" : "/admin/admin/");

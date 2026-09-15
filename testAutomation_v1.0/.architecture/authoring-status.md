@@ -698,4 +698,18 @@ qid on the teacher class page, but that is a hypothesis, not a finding.
 
 **⚠️ Brittle by necessity:** `TST_UMBP_TC_1/2/3/9` locate products BY TITLE, and both belong to another team (one was renamed once already). Titles live in `adminSchoolLibraryData.json`; a rename is a one-line fix there.
 
-**NOT in this entry — the Generic/shell batch** (`test/Manual/C1App/AdminApp-Generic/`) is not started: 28 of 41 cases in Phase 1 scope, 5 Blocked (`SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`).
+**NOT in this entry — the Generic/shell batch** — see its own block below.
+
+## adminGeneric — shell chrome, footer, profile, org context, wizard, school key, notifications (ExperienceApp, thor)
+Modules **ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI** — one TC-repository module per test file.
+Manual source: `test/Manual/C1App/AdminApp-Generic/` (41 cases; 13 `[EXTRA — Phase 1 exclusion]`; 5 Blocked).
+npm script `adminGenericTest_thor`; exec file `adminGeneric.json` (7 suites, INVI last).
+- Phase 1 (build):   ✅ 2026-09-14 — 22 cases registered (ASHL 1–4 · FOOT 10–11 · MYPR 1–4 · SADB 3, 5 · SRQS 3 · SKEY 1, 2, 4 · INVI 7–12) + 6 BeforeEach housekeeping TCs, all `visualTest: false`. Executed: first run **19 passing / 3 failing**. Visual candidates: none flagged.
+- Phase 2 (run/fix): ✅ 2026-09-15 — **21/21 passing, 2 consecutive clean runs** (runs 6 and 7). Five defects, all in our code: MYPR_TC_1 (menu opened twice), INVI_TC_8 (`.close-dummy` overlays `.close`), SADB_TC_5 and SRQS_TC_3 (click before the handler was bound — settle before a single click, both BUDGET-unmeasured), INVI_TC_12 (clicked an already-read row → `unreadRow` selector). Evidence audit done on run 4 (all 22 screenshots); one unexplained image mismatch on INVI_TC_8, close proven by DOM removal instead. Detail: walkthrough `walkthrough_adminGeneric_2026-09-14_05h-30m.md` Session 2; knowledge `admin-shared.md` §A12.
+- Phase 3 (visual):  ⬜ pending — expected "no candidates" (§B10), still formally owed.
+
+**⚠️ `TST_INVI_TC_12` is NOT in the exec file [user decision, 2026-09-15].** It consumes one unread notification per run and the panel shows only the 5 newest; all five were read by run 5. Written + registered (tcMap ORPHAN by intent). Re-add as Suite7's last step once a fresh "report is ready" notification exists.
+
+**Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design in the handoff §6, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
+
+**Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) and "Clases (10)" spacing; wizard summary omits school type and number of teachers; teacher Create-class Cancel lands in the admin view.

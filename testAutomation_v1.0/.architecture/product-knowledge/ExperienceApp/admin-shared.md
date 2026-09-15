@@ -1117,6 +1117,26 @@ delivered **zero** trusted events to document-level capture listeners, while JS 
 is §B11's stale-MCP issue. **No product behaviour above was inferred from an inert real click**; where
 only a synthetic click was possible (the dialog's Cancel), the result is marked unverified.
 
+### Phase 2 findings — framework runs, real clicks `[2026-09-14, later session]`
+
+- **Notifications Close: `.close-dummy` overlays `.close`.** Both `[qid=ntf-2]` elements are visible,
+  but a real click on `.close` is intercepted by the `×` of `.close-dummy` inside `.notification-body`.
+  Target `[qid="ntf-2"].close-dummy` — clicking it closes the panel. Resolves the §A9 "two visible
+  elements share this qid" open point.
+- **Notifications — read rows stay in the panel.** The 5 rendered rows mix read and unread. An
+  **unread** row contains `span.circle.mark-read-circle`; a read row does not (no class, colour or
+  font-weight difference on the row itself). **Clicking a READ row navigates but does not change the
+  unread count** — a "count drops by one" case must pick `button.tippy-dropdown-item:has(.mark-read-circle)`.
+- **Role toggle — the click handler binds after the switch renders.** In the teacher view the switch
+  was visible, correctly labelled, the loader cleared, and a real click returned success yet did
+  nothing; with a 3 s settle the same single click navigated back. Binding is not observable
+  (cf. §B6 Filter panel X close) — settle, then click once; never retry-click (it would toggle twice).
+- **Setup-school wizard — the intro Next also renders before it responds.** 1 run in 3: the click
+  returned success and the wizard stayed on the intro (Next visible, no loader in the screenshot).
+  Same shape as the role toggle — wait out `#loader-container .loader`, settle, click once.
+- **Profile menu — a second click on the trigger while open is intercepted** by the open
+  `.dropdown-menu.show`. Open the menu only if its item is not already displayed.
+
 ## Sources
 
 Promoted [2026-08-21] from the Phase 1 admin programme records. Consult these only for the story

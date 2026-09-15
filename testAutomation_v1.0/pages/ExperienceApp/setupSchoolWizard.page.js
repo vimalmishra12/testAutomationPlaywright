@@ -48,6 +48,9 @@ var STATE_TIMEOUT = 3000;
 
 var POLL_MS = 150;
 
+/** Settle before the intro Next click. BUDGET — unmeasured; failure seen once in 3 runs with none. */
+var INTRO_SETTLE_MS = 2000;
+
 /** Next buttons in order. `click_next` accepts only these — never the summary's Send Request. */
 var STEP_NEXT_KEYS = [
   "introNextBtn", "schoolTypeNextBtn", "teacherCountNextBtn", "schoolNameNextBtn",
@@ -91,7 +94,15 @@ module.exports = {
     if (true != shown) return shown;
     var res = await action.click(this.entrySetupSchoolAccountBtn);
     if (true != res) return res;
-    return await action.waitForDisplayed(this.introNextBtn, STEP_TIMEOUT * 3);
+    var intro = await action.waitForDisplayed(this.introNextBtn, STEP_TIMEOUT * 3);
+    if (true != intro) return intro;
+    // The intro Next renders before it responds: on 1 of 3 runs (2026-09-14) its click returned true
+    // and the wizard stayed on the intro (screenshot: Next visible, no loader). Wait out the loader
+    // overlay, then settle before the caller's SINGLE click — never a retry-click (it could skip a step).
+    var clear = await action.waitForDisplayed(this.pageLoader, STEP_TIMEOUT * 3, true);
+    if (true != clear) return clear;
+    await browser.pause(INTRO_SETTLE_MS);
+    return true;
   },
 
   /** Returns true/false for a Next button's enabled state (trap 2). */

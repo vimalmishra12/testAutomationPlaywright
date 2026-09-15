@@ -47,6 +47,7 @@ module.exports = {
   panelReadCount: an.panelReadCount,
   timeGroupTitle: an.timeGroupTitle,
   row: an.row,
+  unreadRow: an.unreadRow,
   closeBtn: an.closeBtn,
   seeOlderLink: an.seeOlderLink,
 
@@ -121,8 +122,13 @@ module.exports = {
    * for the test to assert, never assumed.
    */
   close_panel: async function () {
+    // closeBtn targets `.close-dummy`: both ntf-2 elements are visible, but the `.close-dummy` ×
+    // inside .notification-body sits on top of `.close` and receives the real click (Playwright:
+    // "subtree intercepts pointer events"). Clicking it closes the panel — verified run 2026-09-14.
     var res = await action.click(this.closeBtn);
     if (true != res) return res;
+    // Closing REMOVES the panel from the DOM (heading and row counts drop to 0 — diagnostic run
+    // 2026-09-15), so the hidden wait here is a truthful signal, not an opacity false green (§B2).
     return await action.waitForDisplayed(this.panelHeading, PANEL_TIMEOUT, true);
   },
 
@@ -130,26 +136,29 @@ module.exports = {
    * TST_INVI_TC_12 ONLY — clicks the OLDEST visible report-ready notification, which marks it read
    * permanently [user decision, 2026-09-14: accept one per run].
    *
-   * "Oldest visible" = the LAST rendered row whose title ends "report is ready", so repeated runs
-   * consume the stale end of the list first. Returns the row's text and the URL it navigated to.
+   * "Oldest" = the LAST rendered UNREAD row whose title ends "report is ready", so repeated runs
+   * consume the stale end of the list first. The panel lists READ rows too, and clicking one does
+   * not change the count — so the row must carry the unread marker `.mark-read-circle` (second run
+   * 2026-09-14 re-clicked the row the first run had read: 92 → 92). Returns the row's text and the
+   * URL it navigated to.
    */
   click_oldestReportReadyRow: async function () {
     var opened = await this.open_panel();
     if (true != opened) return { clicked: opened };
-    var rowCount = await action.getElementCount(this.row);
+    var rowCount = await action.getElementCount(this.unreadRow);
     var target = -1;
     var lines = [];
     for (var i = (typeof rowCount == "number" ? rowCount : 0) - 1; i >= 0; i--) {
-      var re = await action.getKthElement(this.row, i);
+      var re = await action.getKthElement(this.unreadRow, i);
       var t = re ? await action.getText(re) : "";
       var split = typeof t == "string" ? t.split("\n").map(function (s) { return s.trim(); }).filter(Boolean) : [];
       if (split.length && /report is ready$/i.test(split[0])) { target = i; lines = split; break; }
     }
     if (target < 0) {
-      return { clicked: new Error("no report-ready notification is visible in the panel") };
+      return { clicked: new Error("no UNREAD report-ready notification is visible in the panel") };
     }
     var before = await browser.getUrl();
-    var el = await action.getKthElement(this.row, target);
+    var el = await action.getKthElement(this.unreadRow, target);
     var res = await action.click(el);
     if (true != res) return { clicked: res, rowLines: lines };
 
