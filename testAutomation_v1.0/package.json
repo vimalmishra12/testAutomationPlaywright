@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Use a feature script, e.g. npm run loginFeatureTest_thor (Playwright+Mocha). See core/runner/run.js\"",
     "register": "node tooling/xlsxRegister.js",
+    "dashboard": "node tooling/dashboard/generateDashboard.js",
+    "dashboard:watch": "node tooling/dashboard/watchDashboard.js",
     "poc:smoke": "mocha",
     "//─────────── ExperienceApp · thor ───────────": "",
     "landingFeatureTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=landingTest.json --browserCapability=desktop-chrome-1920",
@@ -97,6 +99,8 @@
     "createNewClassTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=createNewClassWithStudent.json --browserCapability=lambdatest-chrome-1920",
     "deleteClassTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=activeClass.json --browserCapability=lambdatest-chrome-1920",
     "eBookHotLinkTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=player.json --browserCapability=lambdatest-chrome-1920",
+    "P1Adminclassworkflow_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=lambdatest-chrome-1920",
+    "P1AdminclassValidation_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassValidation.json --browserCapability=lambdatest-chrome-1920",
     "loginFeatureTest_LTmobile": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-android-samsungS24",
     "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920",
     "//─────────── Builder · thor ───────────": "",
