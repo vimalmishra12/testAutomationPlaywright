@@ -1,0 +1,55 @@
+{
+  "title": "Cambridge One · QA Test Automation Dashboard",
+  "outputHtml": "test/Manual/C1App/dashboard.html",
+  "manualBaseDir": "test/Manual/C1App",
+  "modules": [
+    {
+      "folder": "AdminApp-Classes",
+      "enabled": true,
+      "name": "Classes Tab",
+      "badge": "CLST / BCCF / GSCL"
+    },
+    {
+      "folder": "AdminApp-Students",
+      "enabled": true,
+      "name": "Students Tab",
+      "badge": "SLST / SPRF / SBLK"
+    },
+    {
+      "folder": "AdminApp-Staff",
+      "enabled": true,
+      "name": "Staff Tab",
+      "badge": "STFL / STFP / STFB"
+    },
+    {
+      "folder": "AdminApp-Reports",
+      "enabled": true,
+      "name": "Reports Tab",
+      "badge": "MRPT"
+    },
+    {
+      "folder": "AdminApp-Library",
+      "enabled": true,
+      "name": "Library Tab",
+      "badge": "SLIB"
+    },
+    {
+      "folder": "AdminApp-Generic",
+      "enabled": true,
+      "name": "Generic Navigation",
+      "badge": "AGNC"
+    },
+    {
+      "folder": "NEMO-24306",
+      "enabled": false,
+      "name": "NEMO-24306 (CSV Rules)",
+      "badge": "NEMO"
+    },
+    {
+      "folder": "FOC",
+      "enabled": false,
+      "name": "Front of Class (eBooks)",
+      "badge": "FOC / EBOOK"
+    }
+  ]
+}
