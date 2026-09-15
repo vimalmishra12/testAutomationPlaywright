@@ -196,6 +196,11 @@ reads timed out. Neither the original claim nor "Cancel is inert" is established
 slow page. Dropped from the product-issue list. Relevant to `SADB_TC_7`'s design (handoff §6), which
 assumed the Cancel destination.
 
+**Manual register corrected [2026-09-15]** — `TST_ASHL_TC_2` Remarks: the "Clases (10)" claim is
+struck as `[CORRECTED 2026-09-15]` in `_tcdata.js`, then `.md` + `.xlsx` regenerated **into a scratch
+folder first** and diffed against the committed copies: `.md` one line (547), `.xlsx` one cell
+(R3C11), 41 TCs / 42 rows / 14 cols unchanged. The ~1 KB size drop was CRLF→LF only.
+
 Knowledge promoted: `admin-shared.md` §A12 "Phase 2 findings". Diagnostic runs consumed **no** extra
 notifications (the failing TC_12 click hit an already-read row; the later diag runs excluded TC_12). Temp exec file
 `adminGenericFixTemp.json` created and deleted — never committed.
