@@ -2,6 +2,9 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 var argv = require("yargs").argv;
+// Fallback to process.env if not provided as CLI flag
+argv.testEnv = argv.testEnv || process.env.TEST_ENV;
+argv.appType = argv.appType || process.env.APP_TYPE;
 var folder = fs.readdirSync("../../output/reports/");
 var envData = JSON.parse(fs.readFileSync("../../env.json"));
 var errorMailingList =
@@ -81,9 +84,9 @@ async function main() {
         " | Error in sending mail";
       mailingList = errorMailingList;
     } else {
-      var mailObj1, mailObj2, reportUrl, logData;
-      appUrl = envData[argv.appType].environments[argv.testEnv].url;
-      baseurl = envData[argv.appType].environments[argv.testEnv].reportDirRepo;
+      var envEntry = envData[argv.appType] && envData[argv.appType].environments && envData[argv.appType].environments[argv.testEnv];
+      appUrl = envEntry ? envEntry.url : "";
+      baseurl = envEntry && envEntry.reportDirRepo ? envEntry.reportDirRepo : "https://d29cns2xkhqbb2.cloudfront.net";
 
       logData = updateLogDataObj(funcReportDir);
 
