@@ -161,6 +161,23 @@
 - **Sorting does NOT persist** across a page load — unlike the filter and the search, it
   resets. Within a session it does survive between TCs, so a test must not assume the first
   click yields ascending.
+- **⚠ A first+last-name fingerprint cannot detect a sort on this school any more
+  [2026-09-15].** `TST_CLST_TC_7` failed on every run while the product sorted correctly: the
+  first page is dominated by repeated leftover names (`AutoClass_CreateMore` /
+  `AutoClass_CreateOnly` / `BulkCSV_Class1` / `BulkCSV_Class2`, 4–8 copies each), and a real
+  ascending sort left the row count, the first name (`AutoClass_CreateMore`) and the last name
+  (`BulkCSV_Class2`) all **identical**. `readListSignature` in `schoolClasses.page.js` now
+  fingerprints **every visible name in order** (≤ 20 rows). Residual risk: a click that leaves the
+  whole page in the same order (e.g. already sorted that way) still reads as "no change".
+  ⚠️ **Second trap, hit by the first version of that fix:** `action.getText` (Playwright
+  `innerText`) auto-waits **up to 30 s for a missing element**. A search shrinks the grid 20 → 1
+  while the fingerprint is being polled, so reading the vanished rows stalled 19 × 30 s and
+  `TST_CLST_TC_6` / `TC_18` hit mocha's 120 s timeout. **Count each cell before reading it** —
+  `getElementCount` never waits.
+  ⚠️ **Third trap — a detailed fingerprint also sees half-rendered frames.** A row reading
+  missing mid re-render already differs from the before-state, so the wait returned early and
+  `TST_CLST_TC_5` read the OLD unfiltered list. `waitForListChange` now accepts only a **settled**
+  change: different from before, no missing/errored cell, and identical on two consecutive polls.
 - **Collation is by code point**, not locale/case-insensitive: `(` < `A` < `S` < `T` < `c` < `t`,
   so `(14 aug) class 1` < `AutoClass_CreateOnly` < `class_L_…`, and `test Class 14 aug 2` <
   `testClass1` (space before `C`). A `localeCompare` assertion would NOT match the product.
