@@ -84,6 +84,7 @@ async function main() {
         " | Error in sending mail";
       mailingList = errorMailingList;
     } else {
+      var mailObj1, mailObj2, reportUrl, logData;
       var envEntry = envData[argv.appType] && envData[argv.appType].environments && envData[argv.appType].environments[argv.testEnv];
       appUrl = envEntry ? envEntry.url : "";
       baseurl = envEntry && envEntry.reportDirRepo ? envEntry.reportDirRepo : "https://d29cns2xkhqbb2.cloudfront.net";
