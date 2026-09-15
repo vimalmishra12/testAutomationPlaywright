@@ -99,6 +99,8 @@
     "createNewClassTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=createNewClassWithStudent.json --browserCapability=lambdatest-chrome-1920",
     "deleteClassTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=activeClass.json --browserCapability=lambdatest-chrome-1920",
     "eBookHotLinkTest_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=player.json --browserCapability=lambdatest-chrome-1920",
+    "P1Adminclassworkflow_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=lambdatest-chrome-1920",
+    "P1AdminclassValidation_LT": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassValidation.json --browserCapability=lambdatest-chrome-1920",
     "loginFeatureTest_LTmobile": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-android-samsungS24",
     "loginFeatureTest_LT_safari": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=lambdatest-safari-1920",
     "//─────────── Builder · thor ───────────": "",
