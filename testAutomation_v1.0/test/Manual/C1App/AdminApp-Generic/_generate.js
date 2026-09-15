@@ -36,6 +36,9 @@ const rows = TCS.map((tc, i) => ({
   actual: "",
   status: tc.status || "Not Run",
   comments: tc.comments || "",
+  appended: !!tc.appended,
+  actualCell: tc.actualCell,
+  commentsCell: tc.commentsCell,
 }));
 
 const counts = rows.reduce((a, r) => ((a[r.type] = (a[r.type] || 0) + 1), a), {});
@@ -55,7 +58,8 @@ function coverageMap() {
   return REQS.map((req) => {
     const mine = rows.filter((r) => r.req === req);
     const order = { Positive: 0, Edge: 1, Negative: 2 };
-    const sorted = [...mine].sort((a, b) => order[a.type] - order[b.type]);
+    const sorted = [...mine.filter((r) => !r.appended)].sort((a, b) => order[a.type] - order[b.type])
+      .concat(mine.filter((r) => r.appended)); // [2026-09-14] appended cases listed last
     const cell = sorted.map((r) => r.id + suffix(r.type)).join(", ");
     return "| " + req + " | " + (cell || DEFERRED[req] || "none") + " |";
   }).join("\n");
@@ -73,18 +77,26 @@ function tcTable(r) {
     ["Comments / Defect ID", r.comments ? cell(r.comments) : "*(blank in design)*"],
   ];
   return "| Field | Value |\n|---|---|\n"
-    + pairs.map(([k, v]) => "| **" + k + "** | " + cell(v) + " |").join("\n");
+    + pairs.map(([k, v]) => {
+      // [2026-09-14] appended cases keep their committed blank cells verbatim
+      if (r.appended && k === "Actual Result") return "| **" + k + "** |" + (r.actualCell ? " " + r.actualCell + " |" : " |");
+      if (r.appended && k === "Comments / Defect ID") return "| **" + k + "** | " + (r.commentsCell || "") + " |";
+      return "| **" + k + "** | " + cell(v) + " |";
+    }).join("\n");
 }
 
 function testCaseSections() {
   let out = "";
   for (const req of REQS) {
-    const mine = rows.filter((r) => r.req === req);
+    const mine = rows.filter((r) => r.req === req && !r.appended);
     if (!mine.length) continue;
     out += "\n### Requirement " + req + "\n\n";
     out += mine.map(tcTable).join("\n\n---\n\n");
     out += "\n\n---\n";
   }
+  // [2026-09-14] cases appended after the original batch (never renumbered, skill rule 7)
+  const tail = rows.filter((r) => r.appended);
+  if (tail.length) out += "\n---\n\n" + tail.map(tcTable).join("\n\n---\n\n") + "\n\n---";
   return out;
 }
 
@@ -95,8 +107,12 @@ const md = `# Manual Functional Test Cases — Cambridge One Admin App: Generic 
 · **extended** — INVI · FOOT · SADB · LIBR · SRQS (\`schoolRequestSummary.page.js\`)
 **App:** Cambridge One Admin App (NEMO microservice) — \`micro-nemo.comprodls.com\` (Thor)
 **Pages in scope:** the header and footer chrome · \`My school accounts\` · \`Manage profile\` · the school tab strip · School settings
-**Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive || 0} Positive · ${counts.Edge || 0} Edge · ${counts.Negative || 0} Negative) — **all 14 source scenarios covered**; work already automated elsewhere is mapped, not re-written
-**Execution status (${DATE}):** **0 of ${rows.length} TCs automated.** All ${notRun.length} are Not Run.${blocked.length ? " " + blocked.length + " Blocked at design time." : ""}
+**Generated:** 2026-08-27 | **Total TCs:** 41 (24 Positive · 7 Edge · 10 Negative) — **all 14 source scenarios covered**
+> **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's \`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx\`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry \`[ASSUMED]\` expected results pending a live pass, and the design-time blockers are marked \`Blocked\` with their unblock route in Comments. See \`HANDOFF_adminGapAnalysis_2026-09-01.md\`.
+
+> **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **13** of this register's cases are marked **\`[EXTRA — Phase 1 exclusion]\`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in \`Admin_Gap_Analysis.xlsx\` — coverage we hold that the other team's reviewed sheet (\`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx\`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: \`TST_MYPR_TC_5\`, \`TST_MYPR_TC_6\`, \`TST_MYPR_TC_7\`, \`TST_MYPR_TC_8\`, \`TST_ASHL_TC_5\`, \`TST_ASHL_TC_6\`, \`TST_ASHL_TC_7\`, \`TST_SADB_TC_2\`, \`TST_SADB_TC_4\`, \`TST_ASHL_TC_8\`, \`TST_ASHL_TC_9\`, \`TST_ASHL_TC_10\`, \`TST_SADB_TC_6\`.
+; work already automated elsewhere is mapped, not re-written
+**Execution status (2026-09-01):** **0 of 41 TCs automated.** 36 are Not Run. **5 Blocked** at design time (\`TST_SKEY_TC_3\`, \`TST_LIBR_TC_32\`, \`TST_SRQS_TC_2\`, \`TST_LIBR_TC_34\`, \`TST_SADB_TC_8\`).
 
 **Batches:** Batch A — shell chrome (#1, #2, #3, #7, #8, #11) · Batch B — school context (#4, #5, #10, #12) · Batch C — cross-app (#6, #9, #13, #14). **All three complete.**
 
@@ -121,8 +137,8 @@ re-written:**
 
 | Scenario | Already covered by | What this batch adds |
 |---|---|---|
-| #8 — footer link | **\`TST_FOOT_TC_1..9\`** (\`footer.test.js\`) — one case per footer page, plus a footer-data case | Only \`TST_FOOT_TC_10\`, pinning that the **admin** footer renders 7 links and omits Site Feedback |
-| #3 — notifications | **\`TST_INVI_TC_1..6\`** (\`invitationNotification.page.js\`) — the invitation-accept flow through this same bell | \`TST_INVI_TC_7\` (badge/accessible-name agreement) and \`TST_INVI_TC_8\` (the general admin panel) |
+| #8 — footer link | **\`TST_FOOT_TC_1..9\`** (\`footer.test.js\`) — one case per footer page, plus a footer-data case | Only \`TST_FOOT_TC_10\`, pinning that the **admin** footer renders 7 links and omits Site Feedback, TST_FOOT_TC_11 |
+| #3 — notifications | **\`TST_INVI_TC_1..6\`** (\`invitationNotification.page.js\`) — the invitation-accept flow through this same bell | \`TST_INVI_TC_7\` (badge/accessible-name agreement) and \`TST_INVI_TC_8\` (the general admin panel), TST_INVI_TC_12 |
 | #1 — Spanish view | **\`TST_LAND_TC_4\`** — the language dropdown on the **landing** page; plus \`appLangEN.json\` / \`appLangES.json\` | The **admin-app** instance of the control, and admin-app Spanish rendering |
 | #2 — My Profile | **\`appShell.page.js\`** carries \`userDrop_down\` / \`logout_btn\` | Nothing yet — not grounded, see below |
 

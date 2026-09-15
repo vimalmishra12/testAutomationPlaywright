@@ -1019,6 +1019,127 @@ before writing that assertion.
 
 ---
 
+---
+
+## A12. Generic/shell live pass — corrections and findings [2026-09-14]
+
+*Grounded live on Thor (`testt1@mailsac.com`) while building the Generic automation batch. Each item
+below either **corrects** §A9–§A11 (the earlier claim is left in place above; read this first) or is
+new. Captured with DOM reads and JS clicks — see the MCP note at the end.*
+
+### Corrections to §A9 (shell chrome)
+
+- **The language-control qids in §A9 were wrong.** `sp-ldd-cntr` / `sp-ldd-btn-en` / `sp-ldd-btn-es`
+  do **not exist when logged in**. The logged-in control is the footer trigger **`cFooter-7`** (aria
+  `Site language, English`) with options **`cFooter-8-0`** English and **`cFooter-8-1`** Español
+  (`<button>`s). `sp-ldd-*` is presumably the logged-out header control.
+  ⇒ This also corrects §A9's "`cFooter-8` is unused" — it is the language-option family.
+- **The active language is marked by class `active`**, not `selected-item`; its aria-label ends
+  `, selected` / `, seleccionado`.
+- **Language persistence is per-BROWSER, not per-account.** It is stored in localStorage
+  `comprodls.nemo.selected-locale`, so a fresh browser context (every framework suite) starts in
+  English. This resolves §A9's "whether the choice persists per-account server-side is unknown".
+  ⚠️ C1 keeps a **separate** store (`c1_lang` in localStorage and a cookie) that did not change.
+  ⚠️ **en→es re-renders in place; es→en reloads the page** — a restore step must wait for navigation.
+- **Spanish copy is now VERIFIED** (it was entirely `[ASSUMED]`): School settings →
+  *Pautas del centro educativo*; tabs → *Clases · Alumnos · Personal · Biblioteca · Informes*; footer →
+  *Términos de uso · Aviso de privacidad · Accesibilidad · Ayuda*; *Cambridge One para centros
+  educativos*; language trigger *Idioma del sitio, Español*; toggle *Interruptor
+  Administrador/Profesor: …*.
+  **Untranslated (i18n defects):** the footer link *Our approach*; the bell's aria-label
+  *Notifications (N unread notifications)*. ~~**Inconsistent:** *Clases (10)* has a space before the
+  count, the other four tabs do not.~~ **Correction [2026-09-15] — NOT a defect.** A live framework
+  read of all five Spanish tabs returned one identical format each: `CLASES\n(10)`, `ALUMNOS\n(15)`,
+  `PERSONAL\n(12)`, `BIBLIOTECA\n(974)`, `INFORMES\n(0)` — label and count on separate lines. The
+  earlier claim did not reproduce (user report). The tab labels embed live counts — never assert them as copy.
+- **My profile — the active tab IS identifiable**: the parent `li` gets class `selected`
+  (`details-tab … selected` / `password-tab … selected`). Corrects §A9's "no attribute at all".
+- **My profile — Cancel has TWO qids**: `c-mp-btn-2` on Personal info, `c-mp-btn-4` on Password.
+  **Update** is `input[type=submit][value="Update"]` — assert `value`; its text is empty. The labels
+  carry ` *` (visually required) although no field has a `required` attribute. The tabs **swap DOM**
+  (inputs 5–7 are absent on Personal info) and the swap takes more than 1 s.
+- **`.notification-dropdown` is NOT the panel** — it is the 56 px wrapper around the bell. Opening the
+  panel does **not** change the unread count. The *Reports tab* / *Reports page* inconsistency still
+  exists but now sits on different notification types: *Assignments summary* says "on the Reports
+  page", *Aggregated data* says "in the Reports tab". Assert per notification type.
+
+### Corrections to §A10 / §A11
+
+- **The change-school-key dialog is scoped by `#changeSchoolKey`**; its warning icon is
+  `div.warning-heading > i.fa.fa-exclamation-triangle`. Continue and Cancel are **anchors**; Cancel is
+  `a[qid=adEdit-4][data-dismiss="modal"]`.
+  ⚠️ **A synthetic `.click()` on Cancel did NOT close the dialog; Escape did** (fade ≤ 1.5 s). Treat
+  *closed* as `display:none` **and** no `.modal-backdrop` **and** no `body.modal-open` — never the
+  `show` class. A real-click close is still unverified (see the MCP note).
+- **`TST_SKEY_TC_4` verified on `KNF-XRD-QVE`**: open the warning → Cancel → key unchanged.
+  Decision [user, 2026-09-14]: this case runs on `KNF-XRD-QVE`, **never** `FCN-CHZ-PDA`.
+- **Toggling back returns to the admin page it was left from**, not always `/admin/admin/dashboard`,
+  and the document title varies (`Administrator | …` vs `My school accounts | …`). Never assert the title.
+- **Org switch verified** (`SADB_TC_3`): `KNF-XRD-QVE` → `org_perf_testschool_2`, heading
+  *3 July Test School 2*, and the FCN fixture class is absent — a falsifiable no-carry-over check.
+- ⚠️ **Unresolved:** the teacher view listed *3 JULY TEST SCHOOL 1* **twice** among its group headings
+  (9 headings, 7 Create-class buttons). This conflicts with §A11's "collapse into a single group" and is
+  not yet verified either way.
+
+### New — footer destinations, and a security-hygiene finding
+
+- Public pages carry real hrefs, which gives the full map: Terms `/terms`, Privacy `/privacy`,
+  Accessibility `/accessibility`, *Cambridge One for schools* `/institution-request`, and **FAQs and
+  Help → the same external help-centre URL** (a *helptest* host on Thor — environment-specific). All
+  internal destinations render with no 404. The public pages share one generic title — assert the path
+  and the h1.
+- ⚠️ **"Our approach" uses `rel="nopener"` — misspelt** (it should be `noopener`), with
+  `target=_blank` over plain `http://`. The opened tab keeps a live `window.opener`. A minor
+  security-hygiene defect.
+
+### New — institution request wizard (`SRQS_TC_3`), walked to the summary and never submitted
+
+The wizard lives at `/dashboard/teacher/setupschool` and **advances in-page — the URL never changes**.
+Next is **natively disabled** (`disabled` attribute + `.disabled` + `pointer-events:none`) until each
+step is valid, so the "blocks progress" half is assertable with `isEnabled`, not a CSS false green.
+**The Next qid changes per step** (`t-ss-i/t/s/sn-btn-1`, `cn/ad-btn-2`, `cd-btn-1`).
+
+| Step | What enables Next |
+|---|---|
+| School type | any of 7 radios (click the label — the inputs are opacity 0) |
+| Number of teachers | any of 4 radios |
+| School name | non-whitespace text (trimmed — unlike the Library search) |
+| Location | **pre-filled from the account** (India); empty, whitespace or partial ("Ind") all block |
+| Address | Street **and** City required (trimmed); Region and Postal are genuinely optional |
+| Telephone | code (pre-filled 91, `maxlength=6`) **and** a numeric number required; URL optional **but validated** (`example` blocks, `www.example.org` passes) |
+
+No step shows inline error text in a blocked state — the disabled Next is the only signal.
+⚠️ **The summary's primary button is `button.btn-purple[qid=t-ss-as-btn-1]` "Send Request"** — the same
+generic selector every Next matches. A step-looping helper **will submit** at the end. Stop by qid.
+⚠️ **The summary omits school type and number of teachers**, and it has no Edit links.
+
+### MCP grounding note (tooling, not product)
+
+On 2026-09-14 the Playwright-MCP browser's **real input died globally**: a real click on a plain `h1`
+delivered **zero** trusted events to document-level capture listeners, while JS `.click()` worked. This
+is §B11's stale-MCP issue. **No product behaviour above was inferred from an inert real click**; where
+only a synthetic click was possible (the dialog's Cancel), the result is marked unverified.
+
+### Phase 2 findings — framework runs, real clicks `[2026-09-14, later session]`
+
+- **Notifications Close: `.close-dummy` overlays `.close`.** Both `[qid=ntf-2]` elements are visible,
+  but a real click on `.close` is intercepted by the `×` of `.close-dummy` inside `.notification-body`.
+  Target `[qid="ntf-2"].close-dummy` — clicking it closes the panel. Resolves the §A9 "two visible
+  elements share this qid" open point.
+- **Notifications — read rows stay in the panel.** The 5 rendered rows mix read and unread. An
+  **unread** row contains `span.circle.mark-read-circle`; a read row does not (no class, colour or
+  font-weight difference on the row itself). **Clicking a READ row navigates but does not change the
+  unread count** — a "count drops by one" case must pick `button.tippy-dropdown-item:has(.mark-read-circle)`.
+- **Role toggle — the click handler binds after the switch renders.** In the teacher view the switch
+  was visible, correctly labelled, the loader cleared, and a real click returned success yet did
+  nothing; with a 3 s settle the same single click navigated back. Binding is not observable
+  (cf. §B6 Filter panel X close) — settle, then click once; never retry-click (it would toggle twice).
+- **Setup-school wizard — the intro Next also renders before it responds.** 1 run in 3: the click
+  returned success and the wizard stayed on the intro (Next visible, no loader in the screenshot).
+  Same shape as the role toggle — wait out `#loader-container .loader`, settle, click once.
+- **Profile menu — a second click on the trigger while open is intercepted** by the open
+  `.dropdown-menu.show`. Open the menu only if its item is not already displayed.
+
 ## Sources
 
 Promoted [2026-08-21] from the Phase 1 admin programme records. Consult these only for the story

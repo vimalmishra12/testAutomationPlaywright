@@ -1,0 +1,120 @@
+{
+  "C1": {
+    "adminGeneric": {
+      "_comment": "Admin App Generic/shell batch on thor (modules ASHL, FOOT, MYPR, SADB, SRQS, SKEY, INVI). Every value below was verified live on 2026-09-14 — admin-shared.md §A12. NO ABSOLUTE COUNT of shared data appears anywhere: the unread-notification total is live (92 -> 93 in two weeks), so notification cases compare counts within one run (ADR-021 rule 1). Account-specific values (names, pre-filled location) are READ at run time, never stored here.",
+
+      "ashl": {
+        "_comment": "TST_ASHL_TC_1..4. The logged-in language control is cFooter-7 / cFooter-8-* — the register's sp-ldd-* qids do not exist when logged in. Spanish strings are the ones verified live; 'Our approach' and the bell's accessible name are NOT translated in Spanish (i18n defects, §A12) and are deliberately absent from 'spanish'. Tab labels embed live counts and are never asserted as copy.",
+        "languageOptions": ["English", "Español"],
+        "english": {
+          "help": "Help",
+          "languageTriggerAriaLabel": "Site language, English"
+        },
+        "spanish": {
+          "help": "Ayuda",
+          "footerTermsOfUse": "Términos de uso",
+          "footerPrivacyNotice": "Aviso de privacidad",
+          "footerAccessibility": "Accesibilidad",
+          "footerHelp": "Ayuda",
+          "footerCambridgeOneForSchools": "Cambridge One para centros educativos",
+          "languageTriggerAriaLabel": "Idioma del sitio, Español",
+          "roleToggleAriaLabel": "Interruptor Administrador/Profesor: Administrador actualmente activo, activar para ver el panel del Profesor"
+        },
+        "helpMenuItems": ["Help centre", "Tutorials"],
+        "tutorialTopics": [
+          "Understanding codes and keys",
+          "Activating course materials",
+          "Creating a class",
+          "Adding students to a class",
+          "Creating assignments"
+        ]
+      },
+
+      "foot": {
+        "_comment": "TST_FOOT_TC_10/11. Seven links — our register's count was right; the other team's five-link list is incomplete. FAQs and Help both lead to the same external help centre (an environment-specific *helptest* host on thor) and are not navigated. 'Our approach' has rel=\"nopener\" — misspelt, a minor security-hygiene defect recorded in §A12, not asserted as correct.",
+        "footerLinks": ["Terms of use", "Privacy notice", "Accessibility", "Our approach", "FAQs", "Cambridge One for schools", "Help"],
+        "copyrightPattern": "^© Cambridge University Press & Assessment \\d{4}$",
+        "ourApproach": { "href": "http://www.cambridge.org/english" },
+        "internalDestinations": [
+          { "key": "footerTermsOfUse", "pathFragment": "/terms" },
+          { "key": "footerPrivacyNotice", "pathFragment": "/privacy" },
+          { "key": "footerAccessibility", "pathFragment": "/accessibility" },
+          { "key": "footerCambridgeOneForSchools", "pathFragment": "/institution-request" }
+        ]
+      },
+
+      "mypr": {
+        "_comment": "TST_MYPR_TC_1..4 on testt1 — the login for every admin suite. unsavedFirstName is an unmistakable marker typed but NEVER saved; if a run ever finds it saved, the test's safety net restores the original name (read at run time) and fails loudly [user decision, 2026-09-14].",
+        "menu": { "myProfile": "My profile", "logout": "Log out" },
+        "profileUrlFragment": "/dashboard/my-profile",
+        "heading": "Manage profile",
+        "tabs": { "personalInfo": "Personal info", "password": "Password" },
+        "buttons": { "update": "Update", "cancel": "Cancel" },
+        "unsavedFirstName": "AutoTest_UNSAVED_DoNotKeep"
+      },
+
+      "sadb": {
+        "_comment": "TST_SADB_TC_3/5. Schools are addressed by KEY — two schools share the name '3 July Test School 1'. Org slugs are captured values, never constructed (§A10). uniqueClassName is our permanent fixture class on FCN-CHZ-PDA (never-delete list, §A7), used as a falsifiable no-carry-over check. The document title is not stored — it varies with the load path.",
+        "schoolA": {
+          "key": "FCN-CHZ-PDA",
+          "orgSlug": "org_perf_testschool_1",
+          "heading": "3 July Test School 1",
+          "uniqueClassName": "Fixture_GradeSettings_DO_NOT_DELETE"
+        },
+        "schoolB": {
+          "key": "KNF-XRD-QVE",
+          "orgSlug": "org_perf_testschool_2",
+          "heading": "3 July Test School 2"
+        },
+        "toggle": {
+          "adminActive": "Administrator currently active",
+          "teacherActive": "Teacher currently active"
+        },
+        "teacherDashboardFragment": "/dashboard/teacher/dashboard",
+        "adminDashboardFragment": "/admin/admin/dashboard",
+        "teacherGreetingPattern": "^Hi .+!$"
+      },
+
+      "srqs": {
+        "_comment": "TST_SRQS_TC_3. NOTHING HERE IS EVER SUBMITTED — the case stops on the summary. Location and telephone code arrive pre-filled from the account and are read at run time, not stored. partialLocation, nonNumericTelephone and malformedUrl are the blocked-state inputs verified live on 2026-09-14.",
+        "schoolName": "AutoTest_NotSubmitted",
+        "partialLocation": "Ind",
+        "street": "1 Test Street",
+        "city": "Delhi",
+        "nonNumericTelephone": "abcdefg",
+        "telephone": "9876543210",
+        "malformedUrl": "example",
+        "sendRequestLabel": "Send Request"
+      },
+
+      "skey": {
+        "_comment": "TST_SKEY_TC_1/2/4. 🚨 schoolKey is KNF-XRD-QVE and MUST NEVER be FCN-CHZ-PDA [user decision, 2026-09-14] — FCN-CHZ-PDA's key is hardcoded across every admin suite. forbiddenSchoolKey is checked by TST_SKEY_TC_100 as a safety interlock, so an accidental edit of schoolKey cannot silently aim the suite at the primary school.",
+        "schoolKey": "KNF-XRD-QVE",
+        "forbiddenSchoolKey": "FCN-CHZ-PDA",
+        "settingsMenuItems": ["Change school key", "Manage grading categories", "Manage grading scales"],
+        "warning": {
+          "heading": "CAREFUL!",
+          "title": "Changing the school key cannot be undone",
+          "body": "This action is recommended only if your current school key has been compromised",
+          "continueText": "Continue",
+          "cancelText": "Cancel"
+        }
+      },
+
+      "invi": {
+        "_comment": "TST_INVI_TC_7..12. Patterns, not values: the unread count and the dates change daily. reportReadyBodies holds BOTH known phrasings — the 'Reports tab' / 'Reports page' inconsistency is a recorded copy defect, and which report type uses which phrasing moved between captures. TC_12 consumes one unread notification per run [user decision, 2026-09-14]; its landing destination is still [ASSUMED].",
+        "bellAriaPattern": "^Notifications \\((\\d+) unread notifications\\)$",
+        "timeGroups": ["Last Seven days", "Older"],
+        "seeOlderText": "See older notifications",
+        "maxRowsRendered": 5,
+        "relativeDatePattern": "^(a few seconds ago|a minute ago|\\d+ minutes ago|an hour ago|\\d+ hours ago|a day ago|\\d+ days ago|Today|Yesterday)$",
+        "absoluteDatePattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec), \\d{4}$",
+        "reportReadyBodies": [
+          "View your report, available to download in the Reports tab",
+          "View your report, available to download on the Reports page"
+        ],
+        "reportReadyTargetFragment": "/reports"
+      }
+    }
+  }
+}

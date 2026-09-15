@@ -46,6 +46,7 @@
     "adminSchoolReportsTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminSchoolReports.json --browserCapability=desktop-chrome-1920",
     "adminSchoolReportsCreateTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminSchoolReportsCreate.json --browserCapability=desktop-chrome-1920",
     "adminSchoolLibraryTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminSchoolLibrary.json --browserCapability=desktop-chrome-1920",
+    "adminGenericTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=adminGeneric.json --browserCapability=desktop-chrome-1920",
     "P1Adminclassworkflow_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClass.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassValidation_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassValidation.json --browserCapability=desktop-chrome-1920",
     "P1AdminclassBulk_Thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=schoolAdminAddClassBulk.json --browserCapability=desktop-chrome-1920",
