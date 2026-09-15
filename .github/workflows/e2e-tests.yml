@@ -7,23 +7,13 @@ on:
     branches:
       - main
       
-  # Manual trigger — pick npm script (and optionally override environment/app) in the Actions UI
+  # Manual trigger — pick npm script from the Actions UI
   workflow_dispatch:
     inputs:
       npm_script:
         description: 'npm script to run (e.g. loginFeatureTest_LT, eBookFeatureTest_LT, loginFeatureTest_thor)'
         required: true
         default: 'loginFeatureTest_LT'
-        type: string
-      test_env:
-        description: 'Test Environment (leave empty to auto-detect from npm script, or override: production, thor, qa, rel)'
-        required: false
-        default: ''
-        type: string
-      app_type:
-        description: 'App Type (leave empty to auto-detect from npm script, or override: ExperienceApp, Builder, Blackboard)'
-        required: false
-        default: ''
         type: string
 
   # Nightly scheduled run — 9:30 PM IST (4:00 PM UTC)
@@ -70,7 +60,7 @@ jobs:
 
       # ── 4. Detect Environment and App Type ───────────────────────────────────
       #    Auto-detects --testEnv and --appType from the selected npm script in
-      #    package.json at runtime, with fallback to manual inputs or defaults.
+      #    package.json at runtime.
       - name: Detect Environment and App Type
         id: detect_env
         run: |
@@ -83,11 +73,8 @@ jobs:
             const envMatch = scriptCmd.match(/--testEnv[=\s]+([^\s]+)/);
             const appMatch = scriptCmd.match(/--appType[=\s]+([^\s]+)/);
 
-            const inputEnv = (process.env.INPUT_TEST_ENV || "").trim();
-            const inputApp = (process.env.INPUT_APP_TYPE || "").trim();
-
-            const testEnv = inputEnv || (envMatch ? envMatch[1] : "production");
-            const appType = inputApp || (appMatch ? appMatch[1] : "ExperienceApp");
+            const testEnv = envMatch ? envMatch[1] : "production";
+            const appType = appMatch ? appMatch[1] : "ExperienceApp";
 
             console.log("▶ Script Name:       " + scriptName);
             console.log("▶ Script Definition: " + (scriptCmd || "(custom)"));
@@ -104,8 +91,6 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         env:
           SCRIPT: ${{ github.event.inputs.npm_script || env.DEFAULT_NPM_SCRIPT }}
-          INPUT_TEST_ENV: ${{ github.event.inputs.test_env }}
-          INPUT_APP_TYPE: ${{ github.event.inputs.app_type }}
 
       # ── 5. Run E2E tests ─────────────────────────────────────────────────────
       #    continue-on-error: true — test failures must NOT stop the workflow here.
@@ -117,16 +102,7 @@ jobs:
         run: |
           SCRIPT="${{ github.event.inputs.npm_script || env.DEFAULT_NPM_SCRIPT }}"
           echo "▶ Running: npm run $SCRIPT (Environment: ${{ steps.detect_env.outputs.TEST_ENV }}, App: ${{ steps.detect_env.outputs.APP_TYPE }})"
-          
-          # If an explicit environment override was provided in workflow_dispatch, pass it via npm flags
-          if [ -n "${{ github.event.inputs.test_env }}" ]; then
-            CMD="npm run $SCRIPT -- --testEnv=${{ github.event.inputs.test_env }}"
-          else
-            CMD="npm run $SCRIPT"
-          fi
-          
-          echo "▶ Executing: $CMD"
-          if eval $CMD; then
+          if npm run "$SCRIPT"; then
             echo "TEST_RESULT=passed" >> $GITHUB_OUTPUT
           else
             echo "TEST_RESULT=failed" >> $GITHUB_OUTPUT
