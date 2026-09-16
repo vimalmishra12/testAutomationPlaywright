@@ -32,17 +32,25 @@ async function readListSignature() {
   var names = [];
   for (var i = 0; i < count; i++) {
     var cell = sc.rowClassNameByIndex.replace("{{n}}", String(i));
-    // COUNT FIRST, then read. getText (innerText) auto-waits up to 30 s for a MISSING element.
-    // A search shrinks the grid 20 → 1 mid-poll, so reading the vanished rows 1..19 stalled
-    // 19 × 30 s and TST_CLST_TC_6/18 hit mocha's 120 s timeout [2026-09-15]. count() never waits.
+    // BOUNDED READ. getText (innerText) auto-waits up to 30 s for a MISSING element, and a
+    // search shrinks the grid 20 → 1 mid-loop, so rows vanish while this is reading them.
+    // Counting first was the 2026-09-15 fix and it is NOT sufficient — count-then-read is two
+    // operations, and a row lost in the gap still stalled 30 s. That consumed the caller's
+    // entire 20 s budget in ONE poll, so waitForListChange returned false and the four search
+    // TCs (TC_5/6/18/21) failed intermittently while the search had actually worked
+    // [diagnosed live 2026-09-16: a single poll logged at t=30372ms].
+    // getTextIfPresent bounds the wait and reports absence as null, so a vanished row costs
+    // 1 s, not 30 — and "GONE" still marks the signature transient for waitForListChange.
+    //
+    // The count guard stays IN FRONT of it: count() never waits, so an already-gone row costs
+    // ~0 here and only a row lost inside the count→read gap pays the 1 s. Without it, a fully
+    // re-rendering grid could pay 20 × 1 s and still exhaust the caller's budget.
     if ((await action.getElementCount(cell)) < 1) {
       names.push("GONE");
       continue;
     }
-    var name = await action.getText(cell);
-    // getText returns an Error object on failure (ADR-009) — a row can still vanish between the
-    // count and the read. Coerce to a string either way: a changed signature is all we need.
-    names.push(String(name && name.message ? "ERR" : name));
+    var name = await action.getTextIfPresent(cell, 1000);
+    names.push(name === null ? "GONE" : String(name));
   }
   return count + "|" + names.join("|");
 }
