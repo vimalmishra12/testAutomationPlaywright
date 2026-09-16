@@ -67,6 +67,8 @@
       { "id": "TST_SLST_TC_24", "description": "Verify Load more is not offered when a result set fits on one page", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
       { "id": "TST_SLST_TC_13", "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] },
+      { "id": "TST_SLST_TC_26", "description": "Verify a student whose name contains special characters is returned by a name search", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json", "jsonPath": "C1.adminStudentsTab" }] }
     ],
     "AfterEach": [],

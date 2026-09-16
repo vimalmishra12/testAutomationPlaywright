@@ -1174,7 +1174,36 @@
         "activationCodeInput": "input[qid='act-material-2']",
         "activationSubmitBtn": "button[qid='act-material-3']",
         "activationErrorMessage": "div.product-form p.error-message",
-        "activationStudentPanel": "div.user-details"
+        "activationStudentPanel": "div.user-details",
+        "editProfileFirstNameError": "div.form-group:has(input[qid='ed-user-prof-1']) span.error-msg"
+      },
+      "bulkStudents": {
+        "_comment": "Admin App > Manage students: account-type choosers + bulk course-material activation (module SBLK). Captured live on Thor / FCN-CHZ-PDA 2026-09-15 - see .architecture/product-knowledge/ExperienceApp/admin-students-tab.md 9.2 / 9.5. aBulkActions-7 is ALSO the adult create form's Create button - scope by page.",
+        "chooserHeading": "h1",
+        "accountTypeChildRadio": "#child-radio",
+        "accountTypeAdultRadio": "#adult-radio",
+        "accountTypeNextBtn": "button[qid='typeSelect-4']",
+        "adultMethodCreateRadio": "#create-adult",
+        "adultMethodInviteRadio": "#adult-invite-email",
+        "adultMethodNextBtn": "button[qid='adultCreateInvite-4']",
+        "adultMethodBackLink": "a[qid='adultCreateInvite-1']",
+        "bulkActivationHeading": "h1",
+        "bulkBackLink": "a[qid='aBulkActions-29']",
+        "bulkUploadBtn": "button[qid='aBulkActions-2']",
+        "bulkTemplateLink": "a[qid='aBulkActions-30']",
+        "bulkHelpToggle": "button[qid='aBulkActionHelp-1']",
+        "bulkRemoveBtnDisabled": "button.action-item.action-text.disable",
+        "bulkActivationCodeAny": "input[id^='activationCode-']",
+        "bulkRowEmailAll": "input[id^='emailOrUsername-']",
+        "bulkRowRemoveLinkByIndex": "a[qid='aBulkActions-learner-{{n}}-6']",
+        "bulkConfirmRemoveRowModal": "#confirmRemoveRowModal .modal-content",
+        "bulkConfirmRemoveRowYes": "#confirmRemoveRowModal [qid='aBulkActions-9']",
+        "bulkRowEmailOrUsername": "#emailOrUsername-{{n}}",
+        "bulkRowFirstName": "#firstName-{{n}}",
+        "bulkRowLastName": "#lastName-{{n}}",
+        "bulkRowActivationCode": "#activationCode-{{n}}",
+        "bulkActivateBtn": "button[qid='aBulkActions-7']",
+        "bulkRowError": "div.error-rectification-wrapper"
       },
       "schoolStaff": {
         "_comment": "Admin App > Staff tab (module STFL). Captured live on Thor / FCN-CHZ-PDA 2026-09-02 - see .architecture/product-knowledge/ExperienceApp/admin-staff-tab.md. The page-scoping anchor is the <staff> component tag, the sibling of <learner> on the Students tab.",
@@ -1439,7 +1468,11 @@
         "getCsvTemplateLink": "[qid='aBulkActions-30']",
         "inlineErrorText": "div.error-rectification-wrapper",
         "uploadErrorModalTitle": ".error-upload-CSV-modal.show .modal-title.error-text",
-        "uploadErrorModalBody": ".error-upload-CSV-modal.show .modal-body"
+        "uploadErrorModalBody": ".error-upload-CSV-modal.show .modal-body",
+        "_comment_rows": "[2026-09-15] Row inputs render only after a CSV upload; ids are 1-based per row. #password-N and #classKey-N SHARE qid aBulkActions-learner-N-5, so select by id. createAccountsBtn's qid aBulkActions-7 is also bulk activation's Activate button - scope by page.",
+        "rowUsernameByIndex": "#userName-{{n}}",
+        "rowPasswordByIndex": "#password-{{n}}",
+        "createAccountsBtn": "button[qid='aBulkActions-7']"
       },
       "createNewAccountsForChildren": {
         "pageHeading": "h1",

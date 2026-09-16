@@ -5339,6 +5339,12 @@
           "description": "Verify Remove from school account is disabled while no student is selected",
           "tags": "P2",
           "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_12",
+          "description": "Verify a required name field cannot be saved empty",
+          "tags": "P2",
+          "visualTest": false
         }
       ]
     },
@@ -5495,6 +5501,55 @@
           "id": "TST_SLST_TC_13",
           "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list",
           "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_28",
+          "description": "Verify a never-activated code returns a clear no-result state in the activation-code search - EXPECTED TO FAIL, open product defect (activationCodeSearch HTTP 504 redirects to /dashboard/error); deliberately not listed in any execution file",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_26",
+          "description": "Verify a student whose name contains special characters is returned by a name search",
+          "tags": "P2",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Bulk student operations - account-type chooser, bulk activation & adult account CSV validation",
+      "moduleId": "SBLK",
+      "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+      "testcase": [
+        {
+          "id": "TST_SBLK_TC_RESET",
+          "description": "BeforeEach/After housekeeping - return to the Students tab by URL, discarding any typed bulk-activation row (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_6",
+          "description": "Verify the account-type chooser cannot be advanced without a selection",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_7",
+          "description": "Verify the bulk activation page loads with its entry grid and CSV controls",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_8",
+          "description": "Verify the Activate button stays disabled until a row is complete",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_14",
+          "description": "Verify a rule-violating username or password is flagged on its own row during bulk account creation - EXPECTED TO FAIL, open product defect ('Create N account' stays enabled with an invalid row); deliberately not listed in any execution file",
+          "tags": "P1",
           "visualTest": false
         }
       ]

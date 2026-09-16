@@ -36,6 +36,8 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
       { "id": "TST_SPRF_TC_11", "description": "Verify Username and Location are shown but cannot be edited", "testFile": "./test/ExperienceApp/studentProfile.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
+      { "id": "TST_SPRF_TC_12", "description": "Verify a required name field cannot be saved empty (never clicks Update)", "testFile": "./test/ExperienceApp/studentProfile.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
       { "id": "TST_SPRF_TC_15", "description": "Verify Activate stays disabled until an activation code is entered", "testFile": "./test/ExperienceApp/studentProfile.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json", "jsonPath": "C1.adminStudentProfile" }] },
       { "id": "TST_SPRF_TC_16", "description": "Verify an unusable activation code is rejected with an on-screen error", "testFile": "./test/ExperienceApp/studentProfile.test.js",

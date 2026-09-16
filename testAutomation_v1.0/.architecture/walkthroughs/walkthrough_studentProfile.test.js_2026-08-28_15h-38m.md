@@ -154,3 +154,59 @@ confirmed by the user before the edit. No other protected file was modified.
 - **New observation worth raising:** the invalid-code message blames Cambridge for a user-input
   problem, and the back end agrees with it — it returns `PEAS_AUTHENTICATION_ERROR` for a
   malformed code, after 40 seconds.
+
+---
+
+## Session — 2026-09-15 (Group A of the remaining-cases handoff)
+
+Worktree branch `claude/students-tab-automation-ae53ba`. The SBLK work of this session is logged
+in `walkthrough_bulkStudents.test.js_2026-09-15_20h-36m.md`; this entry covers SPRF only.
+
+### Summary
+`TST_SPRF_TC_12` built and passing without ever clicking Update. Grounding for `TST_SPRF_TC_22`
+found that **student removal no longer exists anywhere on the Students tab**, which Blocks the whole
+removal requirement pending product.
+
+### `TST_SPRF_TC_12` — required name field cannot be saved empty
+- Target agreed with the user: **Marvin Jae student** (`nonmqastudent5@mailsac.com`), with a
+  restore-and-fail safety net.
+- Live grounding changed the design: clearing First name + **Tab** shows `This field is required`
+  (`span.error-msg` in the field's `div.form-group`) and **Update blocks itself** — by CSS only
+  (`pointer-events: none`, `tabindex="-1"`, `opacity: 0.5`; no `disabled` attribute, so `isEnabled`
+  would read TRUE). The case therefore **never clicks Update**; its first assertion after the edit is
+  that Update is still blocked, so a submittable form can never be reached. Leaving by URL skips the
+  "Save changes?" guard — nothing saved (verified live).
+
+### Removal is gone — `TST_SPRF_TC_19 / 20 / 21 / 22` Blocked (user decision)
+- The profile renders no `#learnerProfileManage` menu, no `user-profile-5` Remove item and ZERO
+  pre-rendered modals; the only action is `a.manage-learner-profile-btn`.
+- Re-pointing `TC_22` to the list (user's first choice) was impossible: the Students **list** has no
+  row checkboxes, select-all, counter, `rLearner-1` or removal dialogs either.
+- Commit `c5ed7dc` (Ashish, 2026-09-09) had already adapted `TST_SPRF_TC_1`, dropped `TST_SPRF_TC_21`
+  from the exec file and added `isExisting` guards — no knowledge, register or status update, and no
+  product question. Now recorded in `admin-students-tab.md` §9.7. ⚠️ `studentProfile.removeConfirmModal`
+  ends in a bare `.modal-content` (matches the change-school-key dialog) — do not use.
+
+### Changes made
+1. **`pages/ExperienceApp/studentProfile.page.js`** — Modified · Page Object · added
+   `clear_firstNameAndBlur()` and `getData_firstNameValidation()`.
+2. **`test/ExperienceApp/studentProfile.test.js`** — Modified · Test Case · `TST_SPRF_TC_12`.
+3. **`testResources/selectors/ExperienceApp/C1Selectors.json`** — Modified · `studentProfile.editProfileFirstNameError`.
+4. **`testResources/testcaseData/ExperienceApp/thor/adminStudentProfileData.json`** — Modified ·
+   `requiredNameStudentEmail`, `requiredNameOriginalFirstName`, `requiredFieldError`.
+5. **`testResources/testcaseRepository/ExperienceApp/C1TCRepository.json`** — Modified · `TST_SPRF_TC_12` (`visualTest: false`).
+6. **`testResources/testExecutionFiles/ExperienceApp/thor/adminStudentProfile.json`** — Modified · `+TST_SPRF_TC_12`.
+
+### Runs
+- Baseline (before changes): **10/10**.
+- After adding `TC_12`: **11/11** (TC_12 9.2 s). Second confirmation run: *see the SBLK walkthrough run log.*
+- Measured today: Students tab → profile 18.5 s, profile → Manage learner profile 27.6 s (was 3–9 s / ~9 s).
+
+### Protected files touched
+None in this module's changes (the session's only protected edit is the SBLK npm script).
+
+### Pending / follow-up (additions)
+- **Product:** is student removal withdrawn on purpose or regressed? Blocks `TST_SPRF_TC_19–22`
+  and `TST_SLST_TC_1`'s commented-out assertions.
+- `authoring-status.md` SPRF block: correct "11 passing" (TC_21 is in no exec file) — being updated
+  this session with real run output.

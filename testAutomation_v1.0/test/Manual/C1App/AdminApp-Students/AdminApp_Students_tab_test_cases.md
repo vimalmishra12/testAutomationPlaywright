@@ -9,6 +9,8 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **17** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_SLST_TC_1`, `TST_SLST_TC_9`, `TST_SLST_TC_10`, `TST_SLST_TC_11`, `TST_SLST_TC_18`, `TST_SLST_TC_19`, `TST_SLST_TC_24`, `TST_SPRF_TC_4`, `TST_SPRF_TC_5`, `TST_SPRF_TC_6`, `TST_SPRF_TC_7`, `TST_SPRF_TC_13`, `TST_SPRF_TC_20`, `TST_SPRF_TC_21`, `TST_SBLK_TC_9`, `TST_SBLK_TC_10`, `TST_SBLK_TC_12`.
  — **all 23 source scenarios covered**
+**Execution status (2026-09-16):** **38 automated and PASSING** on Thor, each across two consecutive clean runs — SLST 24 (`adminStudentsTabTest_thor`, incl. new `TC_26`), SPRF 11 (`adminStudentProfileTest_thor`, incl. new `TC_12`), SBLK 3 (`adminBulkStudentsTest_thor`, new: `TC_6/7/8`). **6 On Hold — automation paused by open bugs** (written and verified, deliberately kept out of the execution files so no suite stays red): `TST_SLST_TC_28` (code search 504 → error page), `TST_SBLK_TC_14` (Create enabled with an invalid row), `TST_SPRF_TC_7` (profile HTTP 500), `TST_SPRF_TC_19/21/22` (student removal missing). All four bugs are written up in `.architecture/PRODUCT-QUESTIONS_students-tab_2026-09-16.md`. **Blocked:** `TST_SLST_TC_27` (only one username account), `TST_SPRF_TC_20` (needs 51+ students AND removal is missing), plus the design-time blocks `TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SBLK_TC_16`. `TST_SLST_TC_26` was unblocked on 2026-09-16 by a new fixture student and now passes. The 2026-09-01 status below is superseded.
+
 **Execution status (2026-09-01):** **23 of 68 TCs automated and PASSING** (41 Not Run · 4 Blocked) — the whole side-effect-free SLST block, verified on Thor across two consecutive clean runs (`npm run adminStudentsTabTest_thor`). 33 are **Not Run** (SLST TC_25, all 22 SPRF, all 12 SBLK — less the 2 blocked); **3 are Blocked** (`TST_SLST_TC_14`, `TST_SPRF_TC_3`, `TST_SPRF_TC_20`).
 - **SLST: 23 of 25 Pass.** Remaining: `TC_14` (Blocked - needs a redeemed activation code) and `TC_25` (creates real data; targets Cqa Test Ashish School 1 / VED-NEH-KVU).
 - **SPRF: 0 of 22 automated.** **SBLK: 0 of 12 automated** (7 CSV fixtures still unwritten).
@@ -646,9 +648,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Adult learner: "Learner us", testps27@mailsac.com |
 | **Expected Result** | The profile opens at /class/teacher/org_perf_testschool_1/profile/<orgUuid>/<userId>. It shows: a "Back" link; the initials avatar "LU"; the heading "us, Learner" (Last name, First name); the identifier line "testps27@mailsac.com"; "Last login Apr, 2025"; a "Manage account" dropdown; a "Course materials (N)" section grouped by umbrella; and a "Classes (N)" section. |
 | **Remarks** | Verified live 2026-08-22. Note the heading format is “Last name, First name”, and for an email-based account the identifier line holds the email. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -663,9 +665,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Adult learner "Learner us" (testps27@mailsac.com) — umbrella "testumbrellabundle" holds all three states |
 | **Expected Result** | Components are grouped under their umbrella name and each shows exactly one of three states: "Code activated" with "Activated: <date>" and "Expires: <date>"; "Code not activated" with no dates; or "Code expired" with "Activated: <date>" and "Expires: <date>" in the past. |
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. “Code expired” was seen only on this account — a fixture worth keeping. The “(N)” in “Course materials (N)” counts UMBRELLAS, not components. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -680,9 +682,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | - |
 | **Expected Result** | The admin returns to /admin/admin/org_perf_testschool_1/learner with the school context intact. |
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -697,9 +699,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | /class/teacher/org_perf_testschool_1/profile/<orgUuid>/<userId> |
 | **Expected Result** | The profile page loads normally. This differs from the Classes tab, where deep-linking to /admin/admin/org_<slug>/class returns /dashboard/error unless the school card was clicked first. |
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22, within a session where the school context had already been set. [ASSUMED] for a cold session with no prior school selection — worth confirming, since the Classes-tab rule suggests it may fail. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -715,8 +717,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | A readable error should be shown and the admin should be able to recover.<br><br>ACTUAL (defect, observed 2026-08-22): the URL collapses to /class/ and the page shows an INFINITE SPINNER forever with no message and no way back other than the browser. The network log shows GET /class/apigateway/org_perf_testschool_1/getUserDetailWithClasses?...&uuid=<uuid>&extUserId=<id> returning HTTP 500. |
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. DEFECT — raise. Two faults in one: the 500 itself (student-specific: other profiles on the same school load fine) and the missing client-side error handling for it. Evidence: screenshot profile-blank.png + console/network trace, Thor 2026-08-22. |
 | **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — open bug: the profile hangs on an empty page because `getUserDetailWithClasses` returns HTTP 500. Asserts the requirement; kept OUT of `adminStudentProfile.json`. Add back when fixed. |
 
 ### Requirement #9 — Verify view profile for a child/adult with username
 
@@ -733,9 +735,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Child account: "child1 test", username cqatestaichild1 |
 | **Expected Result** | The profile opens with avatar "CT", heading "test, child1", identifier line "cqatestaichild1" (the username, not an email) and "Last login Aug 21". "Course materials (2)" and "Classes (2)" are listed. |
 | **Remarks** | Verified live 2026-08-22. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #10 — Verify view profile for a adult with username
 
@@ -788,9 +790,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Weak password: abc |
 | **Expected Result** | The password is NOT changed and the inline error reads, verbatim: "Password does not meet complexity requirements". |
 | **Remarks** | Verified live 2026-08-22 — safe to run, the rejection is client-side and changes nothing. The message does not state WHAT the rules are, which is worth raising as a usability observation. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #12 — Verify update personal info of user: View Profile > Manage account > Edit account details
 
@@ -824,9 +826,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | - |
 | **Expected Result** | Both fields are disabled and reject input. First name and Last name are editable and required; Username and Location are not. |
 | **Remarks** | Verified live 2026-08-22 on the child account: firstName and lastName are required and editable; username and country are disabled. On that account the disabled Location field held the literal string "undefined" rather than a country or a blank — worth raising separately as a display defect. Neither name field carries a maxlength attribute, so any length limit is server-side and unknown; do not write a boundary case until it is measured. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -854,13 +856,13 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Type** | Negative |
 | **Priority** | Medium |
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. The student's View student profile page is open. The "Personal info" tab is open. |
-| **Test Steps** | 1. Clear the First name field.<br>2. Click "Update". |
+| **Test Steps** | 1. Clear the First name field.<br>2. Move focus out of the field (Tab).<br>3. Read the message under First name and the state of "Update". Do not force a submit. |
 | **Test Data** | First name: (empty) |
-| **Expected Result** | [ASSUMED] The update is refused and a required-field validation message is shown against First name. |
+| **Expected Result** | The update cannot be submitted. When the empty First name field is left, the message "This field is required" is shown under it, and "Update" is blocked — greyed to 50% opacity, removed from the tab order and not clickable (`pointer-events: none`). "Update" has **no** `disabled` attribute. Nothing is saved. Verified live 2026-09-15. |
 | **Remarks** | The field carries the HTML required attribute (captured live 2026-08-22) but the message text was not triggered. Capture the verbatim copy during Phase 1. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated. "Update" is never clicked. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). 2 consecutive clean runs on Thor 2026-09-15, on "Marvin Jae student". Resolves the earlier [ASSUMED] result and captures the verbatim copy. Automation note: "Update" is blocked by CSS only, so a native disabled check would wrongly read it as enabled. |
 
 ### Requirement #13 — Verify Activate course material for individual learner
 
@@ -894,9 +896,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | - |
 | **Expected Result** | With the field empty the "Activate" button is disabled. Once the field has content it becomes enabled. The field shows the placeholder "Example: AB2C-DE3F-G4HJ-K5LM". |
 | **Remarks** | Verified live 2026-08-22 — the button is natively disabled, not disabled by CSS class only, so a native disabled assertion is valid here. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
 |---|---|
@@ -911,9 +913,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Unusable code: ZZZZ-ZZZZ-ZZZZ-ZZZZ |
 | **Expected Result** | The code is not activated and an inline error is shown beneath the field reading, verbatim: "Sorry, something went wrong at our end and we couldn’t activate your code. Please try again later" |
 | **Remarks** | Verified live 2026-08-22 (screenshot activate-invalid-code.png). OBSERVATION worth raising: this is a server-fault message shown for what is a user-input problem — an invalid code should say the code is invalid, not that something went wrong at Cambridge’s end. While the request is in flight the page also renders the untranslated key "SCREEN_READER.PROCESSING_MESSAGE" (see TST_SBLK_TC_10 for the same class of defect). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #14 — Verify launch class from view profile page
 
@@ -930,9 +932,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | Child account cqatestaichild1, class "sample class" (key 2D3A-T2kF) |
 | **Expected Result** | The class page opens at /class/teacher/org_<slug>/class/<classUuid>/view/classdata and the browser tab title becomes the class name. |
 | **Remarks** | Verified live 2026-08-22. Each class entry also shows its date range, “Date joined:”, “Class key:” and its course-material state (e.g. “No course material added”). |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #15 — Verify umbrella details page launch from view profile page (click on umbrella name) - clicking Back should return to previous page
 
@@ -969,8 +971,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Step 3 shows a dialog whose checkbox label reads, verbatim: "I confirm that I want to remove students from my school account", with "Cancel" and "Request to remove" buttons. Step 5 shows: "Removing students may take some time" / "We are currently removing N student accounts. You will receive an email report once the accounts have been removed." with "Go back to manage more students". [ASSUMED that the student then leaves the list — the removal was not executed.] |
 | **Remarks** | DESTRUCTIVE and asynchronous, reported by email rather than in-app. All dialog copy was captured free from the pre-rendered DOM 2026-08-22 without triggering anything (admin-shared.md §A6). Never run against a pre-existing student on this shared school. Removal is also reachable from the profile via Manage account. |
 | **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — student removal is missing from the Students tab (profile and list). Awaiting product: withdrawn on purpose, or a regression? See PRODUCT-QUESTIONS issue 1. |
 
 | Field | Value |
 |---|---|
@@ -987,7 +989,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. BLOCKED at design time on FCN-CHZ-PDA — the school holds 26 students, so 51 cannot be selected. The modal copy is nevertheless verified word for word from the pre-rendered DOM (2026-08-22), so this case is short work once a school with 51+ students exists. Unblocked by <SCHOOL_WITH_51_PLUS_STUDENTS>. |
 | **Actual Result** | |
 | **Status** | Blocked |
-| **Comments / Defect ID** | Blocked at design time. The 50-student removal cap needs 51+ students selected; FCN-CHZ-PDA holds 26. Modal copy is already verified word for word from the pre-rendered DOM, so this is short work once a larger school exists. |
+| **Comments / Defect ID** | Blocked. 2026-09-15: student removal is absent from the Students tab entirely (see TST_SPRF_TC_19), awaiting product. Original design-time reason still applies: the 50-student cap needs 51+ students; FCN-CHZ-PDA holds 27. |
 
 | Field | Value |
 |---|---|
@@ -1003,8 +1005,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | The counter reads "0 Selected" and the "Remove from school account" button is disabled. |
 | **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Verified live 2026-08-22 — natively disabled. |
 | **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — the list has no Remove button or selection controls, so there is nothing to assert. Awaiting product; see PRODUCT-QUESTIONS issue 1. |
 
 | Field | Value |
 |---|---|
@@ -1020,8 +1022,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | [ASSUMED] The dialog closes, nothing is submitted, and the student is still listed. |
 | **Remarks** | Not run 2026-08-22 (would require opening a destructive dialog against a real shared account). Also confirm whether the row selection survives the cancel. |
 | **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — no removal confirmation exists to cancel. Awaiting product; see PRODUCT-QUESTIONS issue 1. |
 
 ### Requirement #17 — Verify Bulk feature > Add new students to classes children
 
@@ -1053,11 +1055,11 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Preconditions** | Logged in as school admin (testt1@mailsac.com) on Thor. School "3 July Test School 1" (key FCN-CHZ-PDA) opened from "My school accounts". Students tab is displayed. |
 | **Test Steps** | 1. Click "Manage students" > "Add new students to classes".<br>2. Without selecting Children or Adults, click "Next". |
 | **Test Data** | - |
-| **Expected Result** | [ASSUMED] Next is disabled, or clicking it surfaces a “choose an option” prompt, and the admin stays on the chooser. |
+| **Expected Result** | Neither "Children" nor "Adults" is pre-selected and "Next" is natively disabled (a real `disabled` attribute, plus `.disabled` and `pointer-events: none`), so the admin cannot advance and stays on /learner/select/new. The adult chooser /learner/adult-select/new behaves the same way. Verified live 2026-09-15. |
 | **Remarks** | Not run 2026-08-22 — the radio state on first load was not recorded. Confirm during Phase 1; the same case applies to both downstream choosers. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated. Next is natively disabled with neither option chosen. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. Resolves the earlier [ASSUMED] expected result. |
 
 ### Requirement #18 — Verify Bulk feature > Add new students to classes adult with username
 
@@ -1148,9 +1150,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | - |
 | **Expected Result** | The page /admin/admin/org_<slug>/bulk_activation opens, headed "Activate codes for students in your school" above the school name "3 July Test School 1". It offers "Upload file", "Get CSV template", a "How to use this form" help toggle, a "0 Selected" counter with "Remove", one empty entry row with the columns Email or Username / First name / Last name / Activation code (placeholder "for example ABC4-DE3F-G2HJ-1KLM"), and a disabled "Activate 1 code" button. |
 | **Remarks** | Verified live 2026-08-22 (screenshot bulk-activation-i18n-key.png). The button label counts the rows, so it changes as rows are added. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. NOTE: the grid is a server-side draft kept per admin account, so "one empty entry row" only holds after the grid is emptied; the TC clears it first (admin-students-tab.md §9.5). |
 
 | Field | Value |
 |---|---|
@@ -1180,11 +1182,11 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Preconditions** | The bulk activation page is open with one empty row. |
 | **Test Steps** | 1. Observe "Activate 1 code" with the row empty.<br>2. Fill only the Activation code and observe again.<br>3. Fill every column of the row and observe again. |
 | **Test Data** | One partial row, then one complete row |
-| **Expected Result** | [ASSUMED] The button is disabled until at least one row carries both an identified student and a code, and enabled once a row is complete. |
+| **Expected Result** | With the row empty, and with only an Activation code filled, "Activate 1 code" is disabled, and the row reads "Enter a student’s email or username". Once a known student’s email is entered and the field is left, First name and Last name auto-fill and "Activate 1 code" becomes enabled. Verified live 2026-09-15. |
 | **Remarks** | Only the empty-row disabled state was verified live 2026-08-22; the enabling threshold was not exercised. Confirm during Phase 1. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated. Code only keeps Activate disabled; a known email auto-fills the names and enables Activate (never clicked). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. Resolves the earlier [ASSUMED] enabling threshold. |
 
 | Field | Value |
 |---|---|
@@ -1249,12 +1251,12 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Priority** | Medium |
 | **Preconditions** | On the Students tab of a school containing a student whose first or last name contains special characters. |
 | **Test Steps** | 1. Enter the name containing special characters in the search box. 2. Click **Search**. 3. Read the returned row(s) and the rendered name. |
-| **Test Data** | First name `!^(+)s95` or `&FName` — names present on the shared school per the other team's sheet. Confirm live before running. |
-| **Expected Result** | The matching student is returned. The term is treated as literal text rather than interpreted, and the name is rendered correctly in the result row — not HTML-escaped, truncated or corrupted. `[ASSUMED]` |
+| **Test Data** | First name `cqateststu!^+s95`, last name `&LName` (cqateststu!^+s95@mailsac.com). Search terms: `!^+s95` and `&LName`. |
+| **Expected Result** | Each search returns **exactly one** row — the special characters are matched literally, not as wildcards. The name is rendered character for character in the row (not HTML-escaped, stripped or truncated) and the search banner echoes the term verbatim. Verified live 2026-09-16. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_STU_001, which lists special-character names as fixtures. We already cover special characters in the **email** field (`TST_SLST_TC_7`) but never in a **name** field. SLST is already automated, so this is cheap to add. **Read-only** — no data created. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | As expected — automated. Both the `!^+s95` (first name) and `&LName` (last name) searches returned exactly the one student, names intact. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Unblocked 2026-09-16: the user created "cqateststu!^+s95 &LName" on FCN-CHZ-PDA. Automated (`adminStudentsTabTest_thor`), 2 consecutive clean runs on Thor 2026-09-16 — 24/24 both times. |
 
 ---
 
@@ -1272,8 +1274,8 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Expected Result** | Every account whose username contains the term is returned, not only an exact match. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from the other team's TC_STU_004, whose step 2 searches a partial username. Our `TST_SLST_TC_8` searches a **full** child username only. We already prove partial matching for first name (`TST_SLST_TC_3`), so username was the one identifier left unverified. **Read-only.** |
 | **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Status** | Blocked |
+| **Comments / Defect ID** | Blocked 2026-09-15 (user decision): FCN-CHZ-PDA holds exactly one username account (cqatestaichild1); the case needs two or more sharing a substring. Unblock: Group C SBLK_TC_1/2 creating username accounts. |
 
 ---
 
@@ -1290,9 +1292,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | A syntactically valid but unredeemed 16-character code, e.g. `AAAA-BBBB-CCCC-DDDD`. |
 | **Expected Result** | A clear no-result / empty state is shown, with no error and no stale results left from the previous query. `[ASSUMED]` — exact copy not captured. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_STU_005, step 2. Our `TST_SLST_TC_13` only toggles the checkbox and `TST_SLST_TC_14` (**Blocked**, needs a known redeemed code) covers the success path, so the failure path was entirely unverified. **This case is cheaper than TC_14 and can run today** — it needs no seeded redemption. **Read-only.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | DEFECT: no no-result state. `activationCodeSearch` returns HTTP 504 and the admin is redirected to `/dashboard/error` ("Sorry! Something went wrong") — after 61.9 s on the automated run. |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — open bug: the activation-code search returns HTTP 504 and redirects to `/dashboard/error`. Written, registered and verified, but kept OUT of the execution files so the suite is not permanently red. See `.architecture/PRODUCT-QUESTIONS_students-tab_2026-09-16.md` issue 3. Returns to `adminStudentsTab.json` when fixed. |
 
 ---
 
@@ -1347,9 +1349,9 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Test Data** | One valid adult row; one row with a rule-violating username and a rule-violating password. |
 | **Expected Result** | The offending row is flagged (no green tick), the message identifies **which** field is wrong, the valid row is unaffected, and the submit control stays unavailable while any row is invalid. `[ASSUMED]` — the username and password rules must be read from the form's own help text before this case is finalised. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_STU_017_N1. Companion to `TST_SBLK_TC_13` on the adult path. **Capture the stated rules verbatim** on the first live pass — inventing them would breach golden rule 2. **Side-effect free** provided the form is never submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Rows flagged correctly ("This must start with a letter" / "See password guidance in the info section at the top"; valid row clean) — but DEFECT: "Create 2 account" stays enabled (no disabled attribute, pointer-events auto); label also reads "2 account". |
+| **Status** | On Hold |
+| **Comments / Defect ID** | **On Hold in automation** — open bug: "Create N account" stays enabled while a row is invalid (the rows themselves are flagged correctly). Written, registered and verified, kept OUT of the execution files; Create is never clicked. See PRODUCT-QUESTIONS issue 2. |
 
 ---
 

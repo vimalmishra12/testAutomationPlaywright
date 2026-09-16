@@ -519,6 +519,22 @@ one root cause. Always wait on the thing that actually changed, never on its ann
   A `catch` that never runs is not evidence of success — it hid a 20 s stall for three green runs.
 - **Suites that create data live apart from side-effect-free suites.** The bulk suite creates
   nothing; the workflow suite creates 2 real classes per run. Keep that separation when adding TCs.
+- **Server-side FORM DRAFTS are a pattern on admin screens, not a one-off** `[2026-09-15]`.
+  Verified on two screens so far: the Create-new-classes bulk form (§A4) and **Students → bulk
+  course-material activation** (`admin-students-tab.md` §9.5). The draft is kept **per admin
+  account on the server** — it survives a full `goto` AND a completely separate browser context, and
+  nothing is in local/session storage. Consequences for any TC that types into such a form:
+  - "Empty on load" is not a property of the page — it is whatever the last visitor to this
+    account left. Clear the form in the TC's **setup**, not by assumption.
+  - **Leaving by URL does not discard what was typed.** A TC that fills the form must clear it
+    before the suite moves on (in `BeforeEach` / suite `After`, per ADR-019) — otherwise the next
+    run inherits it, and on bulk activation that inheritance is a **submittable row** (student +
+    code) on a shared account.
+  - Live grounding in the MCP browser pollutes the SAME draft the framework run reads — the first
+    SBLK run failed on a row typed during grounding hours earlier. **Clear what you typed while
+    grounding.**
+  - Check any new admin form for this in the §B1 reconnaissance sweep: type a value, reload, and
+    see whether it comes back.
 
 ## B8. Measured timings — never re-guess these
 

@@ -33,7 +33,13 @@
         "- Activate course materials for students"
       ],
       "activationHelperLine1": "This search can take up to 1 minute to complete, please be patient.",
-      "activationHelperLine2": "A user activation code usually has 16 characters, both letters and numbers."
+      "activationHelperLine2": "A user activation code usually has 16 characters, both letters and numbers.",
+      "activationCodeNeverRedeemed": "AAAA-BBBB-CCCC-DDDD",
+      "searchBySpecialCharName": "!^+s95",
+      "searchBySpecialCharLastNameTerm": "&LName",
+      "searchBySpecialCharNameExpectedFirst": "cqateststu!^+s95",
+      "searchBySpecialCharNameExpectedLast": "&LName",
+      "searchBySpecialCharNameExpectedEmail": "cqateststu!^+s95@mailsac.com"
     }
   }
 }

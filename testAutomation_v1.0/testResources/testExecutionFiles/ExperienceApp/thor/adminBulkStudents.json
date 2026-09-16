@@ -1,0 +1,38 @@
+{
+  "Suite1": {
+    "Name": "Admin App | Bulk student operations — Req #17 (account-type chooser) + Req #21 (bulk course-material activation) | 3 July Test School 1 (FCN-CHZ-PDA) — side-effect free, never submits",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] },
+      { "id": "TST_SLST_TC_NAV", "description": "Navigate from the Classes tab to the Students tab", "testFile": "./test/ExperienceApp/adminStudentsTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] }
+    ],
+    "BeforeEach": [
+      { "id": "TST_SBLK_TC_RESET", "description": "Return to the Students tab by URL so this TC starts there and any typed bulk-activation row is discarded unsubmitted", "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] }
+    ],
+    "Test": [
+      { "id": "TST_SBLK_TC_6", "description": "Verify the account-type chooser cannot be advanced without a selection", "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] },
+      { "id": "TST_SBLK_TC_7", "description": "Verify the bulk activation page loads with its entry grid and CSV controls", "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] },
+      { "id": "TST_SBLK_TC_8", "description": "Verify the Activate button stays disabled until a row is complete (never clicks Activate)", "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] }
+    ],
+    "AfterEach": [],
+    "After": [
+      { "id": "TST_SBLK_TC_RESET", "description": "Return to the Students tab once at suite end (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so leaving the page there would erase every case's evidence)", "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminBulkStudentsData.json", "jsonPath": "C1.adminBulkStudents" }] }
+    ]
+  }
+}

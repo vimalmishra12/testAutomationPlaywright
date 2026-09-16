@@ -376,6 +376,63 @@ module.exports = {
     };
   },
 
+  // ── Manage learner profile — required-name validation (TST_SPRF_TC_12) ───────────
+
+  /**
+   * Empties First name and blurs it with Tab. NEVER clicks Update.
+   *
+   * [2026-09-15] Verified live on Marvin Jae's profile: the `This field is required` message
+   * renders on BLUR, and an invalid form blocks Update by itself — so the requirement can be
+   * proven without ever submitting, and no student is renamed (admin-students-tab.md §9.8).
+   *
+   * Returns the ORIGINAL value too, so the TC can prove it opened the intended student before
+   * asserting anything about the form.
+   */
+  clear_firstNameAndBlur: async function () {
+    await logger.logInto(await stackTrace.get());
+    var original = await action.getValue(this.editProfileFirstName);
+    var clickStatus = await action.click(this.editProfileFirstName);
+    if (true !== clickStatus) return { clickStatus: clickStatus, originalValue: original };
+    var clearStatus = await action.clearValue(this.editProfileFirstName);
+    var keyStatus = await action.pressKey(this.editProfileFirstName, "Tab");
+    return {
+      clickStatus: clickStatus,
+      clearStatus: clearStatus,
+      keyStatus: keyStatus,
+      originalValue: original && original.message ? null : original,
+      // Client-side validation — it painted immediately live; 5 s fails fast on purpose.
+      errorStatus: await action.waitForDisplayed(sp.editProfileFirstNameError, 5000)
+    };
+  },
+
+  /**
+   * First name's validation state and HOW Update is blocked.
+   *
+   * ⚠️ Update is blocked by CSS ONLY: it keeps class `btn save-btn` and has NO `disabled`
+   * attribute, but gains `tabindex="-1"`, `opacity: 0.5` and `pointer-events: none`
+   * (verified 2026-09-15). `isEnabled` therefore reports TRUE on a blocked button — a
+   * guaranteed false green (admin-shared.md §B4) — so the CSS and tabindex are what get read.
+   * `updateEnabledAttr` is returned only so a TC can document that trap, never assert on it.
+   */
+  getData_firstNameValidation: async function () {
+    await logger.logInto(await stackTrace.get());
+    var css = async function (sel, prop) {
+      var r = await action.getCSSProperty(sel, prop);
+      return r && !r.message && r.value !== undefined && r.value !== null ? String(r.value) : null;
+    };
+    var errPresent = await action.isExisting(sp.editProfileFirstNameError);
+    var value = await action.getValue(this.editProfileFirstName);
+    return {
+      firstNameValue: value && value.message ? null : value,
+      errorDisplayed: errPresent ? await action.isDisplayed(sp.editProfileFirstNameError) : false,
+      errorText: errPresent ? String(await action.getText(sp.editProfileFirstNameError)).trim() : null,
+      updateEnabledAttr: await action.isEnabled(this.editProfileUpdate),
+      updateTabindex: await action.getAttribute(this.editProfileUpdate, "tabindex"),
+      updatePointerEvents: await css(this.editProfileUpdate, "pointer-events"),
+      updateOpacity: await css(this.editProfileUpdate, "opacity")
+    };
+  },
+
   // ── Manage learner profile — Password (Gigya screen-set) ─────────────────────────
 
   /**

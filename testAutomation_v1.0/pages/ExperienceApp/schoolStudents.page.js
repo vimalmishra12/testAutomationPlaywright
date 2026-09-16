@@ -625,6 +625,80 @@ module.exports = {
     return { pageStatus: (await this.isInitialized()).pageStatus };
   },
 
+  // ── Manage students ▾ (SBLK entry points) ────────────────────────────────────────
+
+  /**
+   * Manage students ▾ → one of its items, confirming the destination loaded.
+   *
+   * [2026-09-15] Added for the SBLK batch. The Students tab owns this menu, so the hop lives
+   * here and the destination's initializer lives in bulkStudents.page.js (lazy require — ADR-004).
+   *
+   * The menu items are pre-rendered and hidden until the dropdown opens (§7.1), so the item is
+   * waited on for VISIBILITY before it is clicked — a presence check would pass while closed.
+   *
+   * @param {string} option - "addNew" (→ account-type chooser) | "activate" (→ /bulk_activation)
+   */
+  click_manageStudentsOption: async function (option) {
+    await logger.logInto(await stackTrace.get(), "option:" + option);
+    var map = { addNew: this.addNewStudentsLink, activate: this.activateCourseMaterialsLink };
+    if (!map[option]) return { clickStatus: "UNKNOWN_OPTION:" + option };
+    var clickStatus = await action.click(this.manageStudentsDropdown);
+    if (true !== clickStatus) return { clickStatus: clickStatus };
+    var shown = await action.waitForDisplayed(map[option], 10000); // BUDGET — the menu opens synchronously
+    if (true !== shown) return { clickStatus: shown };
+    clickStatus = await action.click(map[option]);
+    if (true !== clickStatus) return { clickStatus: clickStatus };
+    var bulkStudents = require("./bulkStudents.page.js"); // lazy — avoids a require cycle
+    var init = option === "activate"
+      ? await bulkStudents.isInitialized_bulkActivation()
+      : await bulkStudents.isInitialized_accountType();
+    return { clickStatus: clickStatus, pageStatus: init.pageStatus, url: await browser.getUrl() };
+  },
+
+  /**
+   * Searches an ACTIVATION CODE (the checkbox must already be ticked) and reports what the
+   * product did — TST_SLST_TC_28.
+   *
+   * Does NOT reuse search_student(): that waits for the ROW FINGERPRINT to change, and a code
+   * search can end in three very different ways, one of which leaves this page entirely:
+   *   - NO_RESULTS  — `div.no-records` renders (the requirement)
+   *   - ROWS        — matching students listed with the search banner's Clear link
+   *   - ERROR_PAGE  — the app redirects to /dashboard/error. OBSERVED TWICE on 2026-09-15 for a
+   *                   never-activated code: `activationCodeSearch` returns HTTP 504 and the admin
+   *                   bundle bounces the admin out (admin-students-tab.md §9.6 — open defect).
+   *
+   * Budget 90 s: the product itself warns the search "can take up to 1 minute", and the 504
+   * arrived after ~20 s and ~109 s on the two live runs. 90 s stays under mocha's 120 s timeout
+   * so this method's own outcome, not a generic runner timeout, is what gets reported
+   * (admin-shared.md §B8).
+   */
+  search_activationCode: async function (code) {
+    var ACTIVATION_SEARCH_TIMEOUT = 90000;
+    await logger.logInto(await stackTrace.get(), "code:" + code);
+    await action.clearValue(this.searchInput);
+    var setStatus = await action.addValue(this.searchInput, code);
+    if (true !== setStatus) return { outcome: "TYPE_FAILED", setStatus: setStatus };
+    var started = Date.now();
+    var clickStatus = await action.click(this.searchBtn);
+    if (true !== clickStatus) return { outcome: "CLICK_FAILED", clickStatus: clickStatus };
+    while (Date.now() - started < ACTIVATION_SEARCH_TIMEOUT) {
+      var url = String(await browser.getUrl());
+      if (url.indexOf("/dashboard/error") >= 0) {
+        return { outcome: "ERROR_PAGE", elapsedMs: Date.now() - started, url: url };
+      }
+      if (await action.isExisting(this.noRecordsMessage)) {
+        return { outcome: "NO_RESULTS", elapsedMs: Date.now() - started, url: url };
+      }
+      // Clear only renders once a search has been APPLIED, so rows + Clear means a real result
+      // set rather than the untouched full list that was already on screen.
+      if ((await action.isExisting(this.clearSearchLink)) && (await action.getElementCount(this.studentRow)) > 0) {
+        return { outcome: "ROWS", elapsedMs: Date.now() - started, url: url };
+      }
+      await browser.pause(500); // polling interval — a server search with no progress signal
+    }
+    return { outcome: "NO_OUTCOME", elapsedMs: Date.now() - started, url: String(await browser.getUrl()) };
+  },
+
   /** Navigates back to the Students tab after a TC has left it. */
   return_toStudentsTab: async function () {
     await logger.logInto(await stackTrace.get());

@@ -1,0 +1,28 @@
+{
+  "C1": {
+    "adminBulkStudents": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "studentsUrlFragment": "/learner",
+
+      "accountTypeUrlFragment": "/learner/select/new",
+      "accountTypeHeading": "Are the students children or adults?",
+
+      "bulkActivationUrlFragment": "/bulk_activation",
+      "bulkActivationHeading": "Activate codes for students in your school",
+      "activationCodePlaceholder": "for example ABC4-DE3F-G2HJ-1KLM",
+      "activateLabelOneRow": "Activate 1 code",
+      "unredeemedActivationCode": "AAAA-BBBB-CCCC-DDDD",
+      "missingStudentMessage": "Enter a student’s email or username",
+      "knownStudentEmail": "nonmqastudent5@mailsac.com",
+      "knownStudentFirstName": "Marvin Jae",
+      "knownStudentLastName": "student",
+
+      "adultCreateRelPath": "admin/admin/org_perf_testschool_1/username-adult/new_csv",
+      "tc14CsvPath": "./test/Manual/C1App/AdminApp-Students/TST_SBLK_TC_14_invalid_username_password.csv",
+      "tc14ValidRow": 1,
+      "tc14InvalidRow": 2,
+      "tc14UsernameError": "This must start with a letter",
+      "tc14PasswordError": "See password guidance in the info section at the top"
+    }
+  }
+}
