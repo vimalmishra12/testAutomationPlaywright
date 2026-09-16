@@ -97,11 +97,33 @@ function collectCoded() {
  * from passing, and recording it as Pass is exactly the drift this whole exercise exists to
  * remove.
  */
+const RUNS_PER_SUITE = 2;
+
 function collectRunResults() {
   const dir = path.join(ROOT, "output", "reports", "auditRuns");
   const byId = new Map();
   if (!fs.existsSync(dir)) return byId;
-  for (const file of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+
+  // Only the most recent RUNS_PER_SUITE reports per suite count, newest first by mtime.
+  //
+  // Otherwise a verdict can never recover: a case that was genuinely flaky, was then FIXED and
+  // now passes twice would still read "Flaky" forever, because the pre-fix failure sits in the
+  // archive for good. Two latest runs is also exactly the bar this repo already uses to call a
+  // suite good ("2 consecutive clean runs"), so the verdict answers the question people
+  // actually ask of the register: is it green NOW.
+  const chosen = [];
+  const bySuite = new Map();
+  for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+    const suite = path.basename(f, ".json").split("__")[0];
+    if (!bySuite.has(suite)) bySuite.set(suite, []);
+    bySuite.get(suite).push({ file: f, mtime: fs.statSync(path.join(dir, f)).mtimeMs });
+  }
+  for (const list of bySuite.values()) {
+    list.sort((a, b) => b.mtime - a.mtime);
+    for (const e of list.slice(0, RUNS_PER_SUITE)) chosen.push(e.file);
+  }
+
+  for (const file of chosen) {
     const [suite, passLabel] = path.basename(file, ".json").split("__");
     let doc;
     try {

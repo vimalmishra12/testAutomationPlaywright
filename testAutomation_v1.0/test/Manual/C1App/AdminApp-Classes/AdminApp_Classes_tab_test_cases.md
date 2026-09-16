@@ -18,12 +18,12 @@
 
 | Execution Status | Cases |
 |---|---|
-| Pass | 63 |
-| Flaky | 1 |
+| Pass | 64 |
 | Blocked | 3 |
 | Not Run | 25 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
+
 
 
 
@@ -464,9 +464,9 @@ for the label TCs).
 | **Expected Result** | No classes are listed and the no-results state is shown (no error/crash), reading exactly: **No classes that match your search &lt;term&gt;** (the term echoed in bold). CONFIRMED live 2026-08-17. |
 | **Remarks** | Record the no-results copy so it can be asserted when automated. |
 | **Actual Result** | PASS. Searching 'zzz-no-such-class-9999' returned 0 classes and displayed the no-results state with no error. CAPTURED COPY: 'No classes that match your search zzz-no-such-class-9999' - the searched term is echoed back in bold. |
-| **Status** | Flaky |
+| **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminClassesTab | 2026-09-16: Flaky across 2 runs | Error: Class list did not update after searching 'zzz-no-such-class-9999' [expected false == true] |
+| **Automation Evidence** | Suite: adminClassesTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-08-17: 12/12 passing. |
 
 ---

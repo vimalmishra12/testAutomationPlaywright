@@ -323,6 +323,36 @@ module.exports = {
         }
     },
 
+    /**
+     * Bounded, non-throwing text read — returns the visible text, or `null` when the element
+     * is not there within `timeoutMs` (default 1000).
+     *
+     * WHY this exists alongside getText [2026-09-16]. getText's innerText() auto-waits the
+     * default 30 s for a missing element. That is right for a stable page and catastrophic
+     * while a list is re-rendering underneath the read: schoolClasses.readListSignature()
+     * fingerprints a 20-row grid row by row, and a search shrinks that grid mid-loop. Any
+     * row that vanishes between the count check and the read stalled the caller for 30 s,
+     * which blew the whole 20 s change-detection budget in a single poll and made the four
+     * Classes search TCs intermittently report "list did not update" when the search had in
+     * fact worked. Count-then-read narrows that window but cannot close it — it is two
+     * operations. A short budget closes it.
+     *
+     * Absence is a RESULT here, not an error, so this returns `null` rather than the Error
+     * object of the `true`/`Error` contract (ADR-007): callers fingerprinting a live list
+     * need "not there right now" as an ordinary value to record.
+     */
+    getTextIfPresent: async function (selector, timeoutMs) {
+        message = "element:" + selector;
+        try {
+            res = await el(selector).innerText({ timeout: timeoutMs || 1000 });
+            await logger.logInto(await stackTrace.get(), message + ":" + res);
+            return res;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), message + ": absent within " + (timeoutMs || 1000) + "ms");
+            return null;
+        }
+    },
+
     getAttribute: async function (selector, attributeValue) {
         try {
             res = await el(selector).getAttribute(attributeValue);
