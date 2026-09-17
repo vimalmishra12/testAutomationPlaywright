@@ -251,7 +251,35 @@
       "notes": {
         "teacher": {
           "eBookNotesHeadingTxt": "My notes & links",
-          "eBookSaveNotesBtn": "Test Note1"
+          "eBookSaveNotesBtn": "Test Note1",
+          "hyperlink": "https://www.google.co.in",
+          "hyperlinkExpectedPart": "google.co.in",
+          "page20Note": "Page 20 Persistent Note",
+          "reopenNote1": "Reopen Persistent Note 1",
+          "reopenNote2": "Reopen Persistent Note 2",
+          "specialChars": "Notes #123 @ Test & Cambridge! [2026] $50% (A+B)=C",
+          "longContent": "LongNote0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+",
+          "editOriginal": "Original Note Content",
+          "editUpdated": "Original Note Content - Updated Version"
+        },
+        "hyperlinkNote": {
+          "eBookSaveNotesBtn": "https://google.com",
+          "hyperlinkExpectedPart": "google"
+        },
+        "page20Note": {
+          "eBookSaveNotesBtn": "Page 20 Persistent Note"
+        },
+        "reopenNote1": {
+          "eBookSaveNotesBtn": "Reopen Persistent Note 1",
+          "expectedNotesCount": 1
+        },
+        "reopenNote2": {
+          "eBookSaveNotesBtn": "Reopen Persistent Note 2",
+          "expectedNotesCount": 2
+        },
+        "editNote": {
+          "eBookSaveNotesBtn": "Initial Note For Editing",
+          "editUpdated": "Initial Note For Editing - Updated Version"
         }
       },
       "eBookViewerControls": {

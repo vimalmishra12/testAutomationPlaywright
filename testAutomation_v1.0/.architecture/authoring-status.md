@@ -39,6 +39,12 @@ Built but not yet executed (blocked):
 
 ---
 
+## notesFeatureTest (ExperienceApp, thor)
+Module **NOTE** — Additional scenarios for Notes feature (Hyperlinks, Page Navigation Persistence, Enhanced Reopening Multi-Note Persistence, Special Characters, Edit Note).
+- Phase 1 (build):   ✅ 2026-09-17 — TST_NOTE_TC_10..15, 18 registered and mapped; visual candidates: none (all visualTest: false).
+- Phase 2 (run/fix): ⬜ pending
+- Phase 3 (visual):  ⬜ pending
+
 ## schoolAdminAddClassValidation (ExperienceApp, thor)
 Scenario #3 (bulk class-creation form) — Edge/Negative validation, extending the existing
 `CCLS` module (create flow already covered by `schoolAdminAddClass` / `P1Adminclassworkflow_Thor`).
