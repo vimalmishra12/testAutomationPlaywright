@@ -4717,6 +4717,12 @@
           "visualTest": false
         },
         {
+          "id": "TST_CLST_TC_24",
+          "description": "Verify a Class status and Class label filter applied together return only classes matching both",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
           "id": "TST_CLST_TC_5",
           "description": "Verify search by class name returns the matching class",
           "tags": "P1",

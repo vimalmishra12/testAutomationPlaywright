@@ -30,6 +30,8 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_4", "description": "Verify filtering by a Class label returns only classes with that label", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
+      { "id": "TST_CLST_TC_24", "description": "Verify a Class status and Class label filter applied together return only classes matching both", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_5", "description": "Verify search by class name returns the matching class", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminClassesTabData.json", "jsonPath": "C1.adminClassesTab" }] },
       { "id": "TST_CLST_TC_6", "description": "Verify search by class key returns the matching class", "testFile": "./test/ExperienceApp/adminClassesTab.test.js",

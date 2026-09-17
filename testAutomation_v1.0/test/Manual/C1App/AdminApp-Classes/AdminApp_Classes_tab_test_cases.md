@@ -10,16 +10,16 @@
 
 | Automation Status | Cases |
 |---|---|
-| Automated | 66 |
-| Blocked | 3 |
+| Automated | 67 |
+| Blocked | 2 |
 | Excluded - Phase 1 | 5 |
 | Not Automated | 18 |
 | **Total** | **92** |
 
 | Execution Status | Cases |
 |---|---|
-| Pass | 64 |
-| Blocked | 3 |
+| Pass | 65 |
+| Blocked | 2 |
 | Not Run | 25 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
@@ -37,8 +37,8 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
 
-**Execution status (2026-09-01):** **64 of 92 TCs automated and passing.** 25 Not Run · 3 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`, `TST_CLST_TC_24`).
-- Module **CLST** (`TST_CLST_TC_1–23`, 23 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21).
+**Execution status (2026-09-17):** **65 of 92 TCs automated and passing.** 25 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
+- Module **CLST** (`TST_CLST_TC_1–24`, 24 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21; `TC_24` added 2026-09-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
 - Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
@@ -2047,16 +2047,16 @@ for the label TCs).
 | **Linked Requirement** | #2 — Verify filter functionality is working fine |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | On the Classes tab. At least one **Active** class carries a known label, and at least one class carrying that same label is **not** Active. |
-| **Test Steps** | 1. Open **Filter**. 2. Select Class status `Active`. 3. In **Class labels**, type the label into "Find a label" and select it. 4. Click **Apply**. 5. Expand each returned row and read its label and status. |
-| **Test Data** | Status: `Active` + Label: `<LABEL_ON_AN_ACTIVE_CLASS>` — must be a label confirmed to sit on at least one Active class. |
-| **Expected Result** | Only classes that are **both** Active **and** carry the selected label are listed. Every returned row satisfies both conditions, and classes carrying the label but not Active are **absent**. The **Active classes (n)** heading updates to the filtered total and the page-level **Clear** link appears. `[ASSUMED]` — not yet run against a populated combination. |
-| **Remarks** | Positive counterpart to `TST_CLST_TC_22`, which pairs a status and a label that match **zero** classes. TC_22 cannot distinguish AND from OR: if the filters were ORed, a zero-match pair would still return zero and TC_22 would still pass. This case is the only one that proves the AND. Added 2026-09-01 from the other team's TC_CLS_002, whose expected result states "Combined filters apply as an AND condition". |
-| **Actual Result** | |
-| **Status** | Blocked |
-| **Automation Status** | Blocked |
-| **Automation Evidence** | BLOCKED - see Comments for the blocker and its unblock route |
-| **Comments / Defect ID** | Blocked at design time (skill rule 4). `TST_CLST_TC_4`'s Actual Result records that label `VM1` matches no ACTIVE class on `3 July Test School 1`. Unblock by applying an existing label to a known Active class on the target school, or by identifying a label/Active-class pair live; then ground the expected result and clear the `[ASSUMED]`. |
+| **Preconditions** | On the Classes tab. At least one **Active** class (`New Auto Test Class DND`) carries label `A11y test`, and at least one Active class does not carry that label. |
+| **Test Steps** | 1. Click **Filter** to open the modal. 2. Under **Class status**, select checkbox `Active`. 3. Under **Class labels**, type `A11y test` into "Find a label" and select it. 4. Click **Apply**. 5. Observe the page-level **Clear** link and the **Active classes (n)** heading count. 6. Verify each returned class row is Active and carries label `A11y test` (`New Auto Test Class DND`), while classes not carrying the label are excluded. |
+| **Test Data** | Status: `Active` + Label: `A11y test` (Target Active class: `New Auto Test Class DND`) |
+| **Expected Result** | The filter modal closes, the page-level **Clear** link appears, and the **Active classes (n)** heading count updates to match the count of returned rows. Only classes that are **both** Active **and** carry the selected label are listed (`New Auto Test Class DND`). Classes without the label and non-active classes are excluded. |
+| **Remarks** | Positive counterpart to `TST_CLST_TC_22`, which pairs a status and a label that match zero classes. TC_22 cannot distinguish AND from OR: if the filters were ORed, a zero-match pair would still return zero and TC_22 would still pass. This case is the only one that proves the AND. Added 2026-09-01 from the other team's TC_CLS_002, whose expected result states "Combined filters apply as an AND condition". Unblocked after tagging `New Auto Test Class DND` with `A11y test`. |
+| **Actual Result** | PASS. Combined filter (status Active + label A11y test) applied successfully; the page-level Clear link appeared, the 'Active classes (1)' heading updated, and exactly 1 matching class row (New Auto Test Class DND) was returned. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Suite: adminClassesTab | 2026-09-17: Pass across 1 run |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-09-17: 24/24 passing. |
 
 ---
 

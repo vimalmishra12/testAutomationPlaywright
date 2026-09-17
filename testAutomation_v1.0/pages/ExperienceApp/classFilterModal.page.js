@@ -117,31 +117,32 @@ module.exports = {
     // Also note the suggestion list only populates from REAL keystrokes — setting .value
     // programmatically does not fire Angular's search (confirmed live), which is why this
     // uses addValue/pressSequentially (Invariant 6).
+    var chipSelector = this.selectedLabelChip.replace(/{{label}}/g, label);
+    if ((await action.getElementCount(chipSelector)) > 0) {
+      return true;
+    }
+
     for (var attempt = 1; attempt <= 3; attempt++) {
-      // Click the input before typing. The Angular combobox opens its suggestion dropdown off
-      // a focus/click on the field, and the modal (and this input) PERSIST in the DOM between
-      // TCs — so on the second and later select_label calls the field is often still focused,
-      // no fresh focus event fires, and the dropdown never opens no matter what is typed.
-      // That is what made the first label selection of a run succeed and later ones fail with
-      // an empty suggestion list (diagnosed 2026-08-15; every manual repro clicked the field
-      // first, which is why it never reproduced by hand).
       await action.click(this.labelSearchInput);
       await action.clearValue(this.labelSearchInput);
-      // addValue = pressSequentially, which APPENDS — clearing first keeps a repeat
-      // call from typing e.g. "VM1VM1", which matches nothing.
       res = await action.addValue(this.labelSearchInput, label);
       if (true != res) {
         await logger.logInto(await stackTrace.get(), res + " label search input NOT set", "error");
         return res;
       }
-      if (true == (await action.waitForDisplayed(optionSelector, 5000))) {
+      var isOptionDisplayed = await action.waitForDisplayed(optionSelector, 5000);
+      if (true == isOptionDisplayed) {
         await action.waitForClickable(optionSelector, 5000);
         res = await action.click(optionSelector);
-        // Confirm the label actually became a selected chip before reporting success.
-        var chipSelector = this.selectedLabelChip.replace(/{{label}}/g, label);
-        if (true == res && (await action.getElementCount(chipSelector)) > 0) {
-          return true;
+        if (true == res) {
+          var chipAdded = await action.waitForDisplayed(chipSelector, 5000);
+          if (true === chipAdded || (await action.getElementCount(chipSelector)) > 0) {
+            return true;
+          }
         }
+      }
+      if ((await action.getElementCount(chipSelector)) > 0) {
+        return true;
       }
       await logger.logInto(
         await stackTrace.get(),
