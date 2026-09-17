@@ -650,16 +650,21 @@ module.exports = {
     return res;
   },
 
-  /** Everything TST_GSCL_TC_6 asserts about the details page. */
+  /** Everything TST_GSCL_TC_6 and TST_GSCL_TC_15 assert about the details page. */
   getData_detailsPage: async function () {
     await logger.logInto(await stackTrace.get());
+    var bandsCount = await action.getElementCount(this.bandsToggle);
+    var hasBands = typeof bandsCount === "number" && bandsCount > 0;
+    var noClassesCount = await action.getElementCount(this.detailsNoClassesBox);
+    var hasNoClasses = typeof noClassesCount === "number" && noClassesCount > 0;
     return {
       heading: await readText(this.detailsHeading),
-      bandsToggleDisplayed: (await action.isDisplayed(this.bandsToggle)) === true,
-      bandsExpanded: await action.getAttribute(this.bandsToggle, "aria-expanded"),
+      bandsToggleCount: typeof bandsCount === "number" ? bandsCount : -1,
+      bandsToggleDisplayed: hasBands ? (await action.isDisplayed(this.bandsToggle)) === true : false,
+      bandsExpanded: hasBands ? await action.getAttribute(this.bandsToggle, "aria-expanded") : null,
       classesHeading: await readText(this.detailsClassesHeading),
-      noClassesDisplayed: (await action.isDisplayed(this.detailsNoClassesBox)) === true,
-      noClassesText: await readText(this.detailsNoClassesBox),
+      noClassesDisplayed: hasNoClasses ? (await action.isDisplayed(this.detailsNoClassesBox)) === true : false,
+      noClassesText: hasNoClasses ? await readText(this.detailsNoClassesBox) : "",
       pageStatus: true
     };
   },

@@ -34,6 +34,8 @@
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
       { "id": "TST_GSCL_TC_12", "description": "Verify expanding the grading scale bands shows the bands", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
+      { "id": "TST_GSCL_TC_15", "description": "Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
       { "id": "TST_GSCL_TC_10", "description": "Verify deleting a grading scale can be cancelled", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminGradingScalesData.json", "jsonPath": "C1.adminGradingScales" }] },
       { "id": "TST_GSCL_TC_9", "description": "Verify a grading scale is deleted after confirmation", "testFile": "./test/ExperienceApp/adminGradingScales.test.js",

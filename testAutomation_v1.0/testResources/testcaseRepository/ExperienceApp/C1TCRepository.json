@@ -4981,6 +4981,18 @@
           "description": "BeforeEach — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales",
           "tags": "P3",
           "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_14",
+          "description": "Verify a grading scale that is applied to a class cannot be deleted without warning",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_15",
+          "description": "Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section",
+          "tags": "P2",
+          "visualTest": false
         }
       ]
     },

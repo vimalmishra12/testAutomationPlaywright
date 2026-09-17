@@ -10,17 +10,17 @@
 
 | Automation Status | Cases |
 |---|---|
-| Automated | 67 |
+| Automated | 68 |
 | Blocked | 2 |
 | Excluded - Phase 1 | 5 |
-| Not Automated | 18 |
+| Not Automated | 17 |
 | **Total** | **92** |
 
 | Execution Status | Cases |
 |---|---|
-| Pass | 66 |
+| Pass | 67 |
 | Blocked | 2 |
-| Not Run | 24 |
+| Not Run | 23 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -37,15 +37,15 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
 
-**Execution status (2026-09-17):** **66 of 92 TCs automated and passing.** 24 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
+**Execution status (2026-09-17):** **68 of 92 TCs automated and passing.** 22 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
 - Module **CLST** (`TST_CLST_TC_1–24`, 24 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21; `TC_24` added 2026-09-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9, 11`, 8 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_11` added 2026-09-17).
-- Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
+- Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 15`, 11 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_15` added 2026-09-17).
 - Module **CGST** (`TST_CGST_TC_1–6`, 6 TCs) — Requirement **#22 class grade settings** — via `npm run P1AdminClassGradeSettings_Thor` on **thor** (2026-08-20, 2 consecutive clean runs). The suite **owns its data**: it creates a throwaway class with course material, runs against it, and deletes it afterwards.
-- **`TST_GSCL_TC_7` + `TST_GCAT_TC_7`** (2 TCs) — Requirements **#13** and **#7**, launching class grade settings from a scale's / category's details page. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20, 2 consecutive clean runs, 21/21).
+- **`TST_GSCL_TC_7` + `TST_GSCL_TC_14` + `TST_GCAT_TC_7`** (3 TCs) — Requirements **#13**, **#15** and **#7**, launching class grade settings from a scale's / category's details page and verifying in-use scale deletion warning. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20; `TC_14` added 2026-09-17).
 
-The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
+The remaining **14 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
 
 **[2026-08-21] `TST_CLST_TC_23` is NEW** — the Filter panel's X close, split out of `TST_CLST_TC_2` so each TC's screenshot carries its own evidence. CLST is now **23 TCs**. The same session also removed the X-close `// WORKAROUND` retry after re-diagnosing it as an automation timing issue rather than a product defect — see TC_2 Comments.
 
@@ -90,7 +90,7 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | **#3 — Verify bulk class creation form is working fine** | TST_BCCF_TC_1..12, TC_13–14 (E), TC_15–16 (N), TST_BCCF_TC_17, TST_BCCF_TC_18, TST_BCCF_TC_19, TST_BCCF_TC_20, TST_BCCF_TC_21 |
 | **#10 — Verify manage grading scales page** | TST_GSCL_TC_1 |
 | **#11 — Verify Create grading scale** | TST_GSCL_TC_2, TC_3, TC_4 (E), TC_5 (N) |
-| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_13 |
+| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_15 |
 | **#13 — Launch class grade setting page from view details page of grading scale** | TST_GSCL_TC_7 |
 | **#14 — Verify set as default for a grading scale** | TST_GSCL_TC_8 |
 | **#15 — Verify deleting a grading scale** | TST_GSCL_TC_9, TC_10 (E), TC_11 (N), TST_GSCL_TC_14 (N) |
@@ -2084,7 +2084,7 @@ for the label TCs).
 | Field | Value |
 |---|---|
 | **S.No.** | 85 |
-| **Test Case ID** | TST_GSCL_TC_13 |
+| **Test Case ID** | TST_GSCL_TC_15 |
 | **Title** | Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section |
 | **Linked Requirement** | #12 — Verify view details page of grading scale |
 | **Type** | Positive |
@@ -2092,13 +2092,13 @@ for the label TCs).
 | **Preconditions** | On the Grading scales page. The system scale "Cambridge One grading scale" carries the **default** badge. |
 | **Test Steps** | 1. Open the **Open drop down** menu on "Cambridge One grading scale". 2. Click **View details**. 3. Read the page: heading, classes list, any notice, and whether a bands section is present. |
 | **Test Data** | The system scale "Cambridge One grading scale". |
-| **Expected Result** | The details page shows the scale name, the linked **Classes (n)** list (or "No classes yet") and the pre-27-July-2023 notice. **No "Grading scale bands" section is rendered**, because the default scale's target varies by material. `[ASSUMED]` — the notice wording is not captured verbatim. |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_012, which opens both a custom scale and the default scale for comparison. Our `TST_GSCL_TC_6` opens a **custom** scale only, and the default scale renders differently. The asymmetry is already recorded in this document's product reference and in `TST_GSCL_TC_12`'s note — the case simply did not exist. Capture the notice text verbatim on the first live pass and clear the `[ASSUMED]`. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Expected Result** | The details page shows the scale name ("Cambridge One grading scale"), the linked **Classes (n)** list and no "Grading scale bands" section is rendered, because the default scale's target varies by material. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_012, which opens both a custom scale and the default scale for comparison. Our `TST_GSCL_TC_6` opens a **custom** scale only, and the default scale renders differently. Re-numbered to `TST_GSCL_TC_15` to preserve `TST_GSCL_TC_13` as the suite housekeeping hook. Grounded live on Thor 2026-09-17: default scale details renders `Classes (93)` and omits the bands accordion. `[ASSUMED]` resolved. Automated as `TST_GSCL_TC_15`. |
+| **Actual Result** | PASS. The details page showed heading "Cambridge One grading scale", linked classes section heading "Classes (93)", and no "Grading scale bands" accordion section (element count 0). |
+| **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGradingScales | Not executed in this audit - status carried over, treat as unverified |
-| **Comments / Defect ID** |  |
+| **Automation Evidence** | Suite: adminGradingScales | 2026-09-17: Pass across 2 consecutive clean runs |
+| **Comments / Defect ID** | Automated as TST_GSCL_TC_15 in adminGradingScales.test.js (npm run P1AdminGradingScales_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] notice/bands behavior. |
 
 ---
 
@@ -2112,14 +2112,14 @@ for the label TCs).
 | **Priority** | Medium |
 | **Preconditions** | A **non-default** grading scale exists and is currently applied to at least one live class. |
 | **Test Steps** | 1. Apply a non-default scale to a class via Class grade settings. 2. Open the Grading scales page and that scale's **Open drop down** menu. 3. Click **Delete**. 4. Read the resulting dialog. 5. Cancel and confirm the scale is still listed and still applied to the class. |
-| **Test Data** | A non-default scale applied to `<CLASS_WITH_CUSTOM_SCALE>`. |
-| **Expected Result** | Deletion of an in-use scale is prevented, or warns about the impact on the classes using it before proceeding, per business rule. The affected class(es) are identified to the admin. Cancelling leaves both the scale and the class assignment untouched. `[ASSUMED]` — behaviour and copy unconfirmed. |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_015_N1, which bundles two rules: the default scale and a scale in active use. Our `TST_GSCL_TC_11` implements only the first. **Suite placement:** the precondition is a scale applied to a live class — the state the CGST suite already builds — so this case should run inside the CGST suite rather than the GSCL suite, exactly as `TST_GSCL_TC_7` does. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Test Data** | A non-default scale ("new Grading Auto") applied to `<CLASS_WITH_CUSTOM_SCALE>`. |
+| **Expected Result** | Deletion of an in-use scale shows the confirmation warning dialog: "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won’t be available to apply to any new classes. Delete this grading scale from your school?". Cancelling via "No, go back" leaves both the scale and the class assignment untouched. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_015_N1, which bundles two rules: the default scale and a scale in active use. Our `TST_GSCL_TC_11` implements only the first. **Suite placement:** the precondition is a scale applied to a live class — the state the CGST suite already builds — so this case runs inside the CGST suite (`adminClassGradeSettings.json`), exactly as `TST_GSCL_TC_7` does. Grounded live on Thor 2026-09-17: delete warning dialog confirmed verbatim. `[ASSUMED]` resolved. Automated as `TST_GSCL_TC_14`. |
+| **Actual Result** | PASS. Clicking Delete on in-use scale 'new Grading Auto' displayed the warning modal: "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won’t be available to apply to any new classes. Delete this grading scale from your school?". Clicking 'No, go back' dismissed the dialog and left the scale listed. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Suite: adminClassGradeSettings | 2026-09-17: Pass across 2 consecutive clean runs |
+| **Comments / Defect ID** | Automated as TST_GSCL_TC_14 in adminGradingScales.test.js, executed in adminClassGradeSettings.json (npm run P1AdminClassGradeSettings_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] in-use deletion warning. |
 
 ---
 
