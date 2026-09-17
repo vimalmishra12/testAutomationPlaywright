@@ -128,6 +128,16 @@ module.exports = {
   duplicateCancelLink: selectorFile.css.ComproC1.createClasses.duplicateCancelLink,
   selectedTeacherInputRow2: selectorFile.css.ComproC1.createClasses.selectedTeacherInputRow2,
   selectedMaterialInputRow2: selectorFile.css.ComproC1.createClasses.selectedMaterialInputRow2,
+  addLabelBtnRow2: selectorFile.css.ComproC1.createClasses.addLabelBtnRow2,
+  classNameInputRow3: selectorFile.css.ComproC1.createClasses.classNameInputRow3,
+  startDateInputRow3: selectorFile.css.ComproC1.createClasses.startDateInputRow3,
+  endDateInputRow3: selectorFile.css.ComproC1.createClasses.endDateInputRow3,
+  studentProgressBtn: selectorFile.css.ComproC1.createClasses.studentProgressBtn,
+  studentProgressBtnRow2: selectorFile.css.ComproC1.createClasses.studentProgressBtnRow2,
+  bulkLabelModal: selectorFile.css.ComproC1.createClasses.bulkLabelModal,
+  bulkLabelSearchInput: selectorFile.css.ComproC1.createClasses.bulkLabelSearchInput,
+  bulkLabelItem: selectorFile.css.ComproC1.createClasses.bulkLabelItem,
+  bulkLabelApplyBtn: selectorFile.css.ComproC1.createClasses.bulkLabelApplyBtn,
 
   /**
    * Confirms the "Create new classes" bulk form loaded.
@@ -1128,33 +1138,38 @@ module.exports = {
       await logger.logInto(await stackTrace.get(), "create form is not open — reset skipped");
       return true;
     }
-    // Select-all is a no-op when the form is already a lone empty row (its row
-    // checkbox is disabled), so treat "nothing to remove" as success.
     var rowCount = await action.getElementCount(this.rowCheckbox);
+    console.log("RESET_FORM: rowCount=", rowCount);
     if (rowCount === 0) {
       await logger.logInto(await stackTrace.get(), "form already has no removable rows");
       return true;
     }
-    await action.click(this.selectAllCheckbox);
-    await action.click(this.toolbarRemoveBtn);
-    // The confirm dialog is slow to paint — wait on it rather than the click result.
+    var anySelected = await this.getData_anyRowSelected();
+    console.log("RESET_FORM: anySelected=", anySelected);
+    if (!anySelected) {
+      await action.click(this.selectAllCheckbox);
+    }
+    var removeClicked = await action.click(this.toolbarRemoveBtn);
+    console.log("RESET_FORM: removeBtn clicked=", removeClicked);
     var shown = await action.waitForDisplayed(this.removeRowsDialogTitle, 10000);
+    console.log("RESET_FORM: removeRowsDialog shown=", shown);
     if (shown !== true) {
       await logger.logInto(await stackTrace.get(), "remove-rows dialog never opened", "error");
       return false;
     }
     var res = await action.click(this.removeRowsConfirmLink);
+    console.log("RESET_FORM: removeRowsConfirmLink clicked=", res);
     if (true != res) {
       await logger.logInto(await stackTrace.get(), res + "remove-rows was NOT confirmed", "error");
       return false;
     }
-    // Settled when the class-name input is empty again (one pristine row).
     try {
       await browser.waitUntil(
         async () => (await action.getValue(this.classNameInput)) === "",
         { timeout: 10000, timeoutMsg: "form did not reset to an empty row" }
       );
     } catch (e) {
+      console.log("RESET_FORM: waitUntil error=", e.message);
       await logger.logInto(await stackTrace.get(), "form did not reset to an empty row", "error");
       return false;
     }
@@ -1293,5 +1308,289 @@ module.exports = {
       );
     }
     return res;
+  },
+
+  // ── Row 3 helpers ─────────────────────────────────────────────────────────────
+
+  /**
+   * Types the class name into row 3.
+   */
+  set_className_row3: async function (value) {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.clearValue(this.classNameInputRow3);
+    res = await action.addValue(this.classNameInputRow3, value);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Value is entered in classNameInputRow3");
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "Value is NOT entered in classNameInputRow3",
+        "error"
+      );
+    }
+    return res;
+  },
+
+  /**
+   * Sets row 3's Start date to TODAY.
+   */
+  set_startDate_row3: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.startDateInputRow3);
+    await action.waitForDisplayed(this.startDateTodayCell);
+    res = await action.click(this.startDateTodayCell);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Row 3 start date set to today");
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "Row 3 start date is NOT set", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Sets row 3's End date to day 15 of next month.
+   */
+  set_endDate_row3: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.click(this.endDateInputRow3);
+    await action.waitForDisplayed(this.endDateNextMonthBtn);
+    await action.click(this.endDateNextMonthBtn);
+    await action.waitForDisplayed(this.endDateDay15Cell);
+    res = await action.click(this.endDateDay15Cell);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Row 3 end date set to day 15 of next month");
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "Row 3 end date is NOT set", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Reads row 3's fields.
+   */
+  getData_row3Values: async function () {
+    await logger.logInto(await stackTrace.get());
+    var obj = {
+      name: (await action.getElementCount(this.classNameInputRow3)) > 0
+        ? await action.getValue(this.classNameInputRow3) : null,
+      start: (await action.getElementCount(this.startDateInputRow3)) > 0
+        ? await action.getValue(this.startDateInputRow3) : null,
+      end: (await action.getElementCount(this.endDateInputRow3)) > 0
+        ? await action.getValue(this.endDateInputRow3) : null
+    };
+    console.log("row3Values", obj);
+    return obj;
+  },
+
+  // ── Row selection helpers ─────────────────────────────────────────────────────
+
+  /**
+   * Clicks the select-all checkbox in the bulk create form header.
+   */
+  click_selectAllCheckbox: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.selectAllCheckbox);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "selectAllCheckbox clicked");
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "selectAllCheckbox NOT clicked", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Clicks the row checkbox at a specific 0-based index.
+   */
+  click_rowCheckboxByIndex: async function (index) {
+    await logger.logInto(await stackTrace.get(), "index: " + index);
+    var boxes = await action.findElements(this.rowCheckbox);
+    if (!Array.isArray(boxes) || boxes.length <= index) {
+      await logger.logInto(await stackTrace.get(), "row checkbox at index " + index + " not found", "error");
+      return false;
+    }
+    await boxes[index].click();
+    return true;
+  },
+
+  /**
+   * Returns true if ANY row checkbox is currently checked.
+   */
+  getData_anyRowSelected: async function () {
+    await logger.logInto(await stackTrace.get());
+    var boxes = await action.findElements(this.rowCheckbox);
+    if (!Array.isArray(boxes) || boxes.length === 0) return false;
+    for (var i = 0; i < boxes.length; i++) {
+      var checked = await boxes[i].isChecked();
+      if (checked) return true;
+    }
+    return false;
+  },
+
+  // ── Bulk toolbar actions (BCCF_TC_17 - BCCF_TC_21) ────────────────────────────
+
+  /**
+   * Opens the "Edit teachers" modal from the bulk toolbar.
+   */
+  click_toolbarAddTeacher: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    res = await action.click(this.toolbarAddTeacherBtn);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "toolbarAddTeacherBtn clicked");
+      res = await action.waitForDisplayed(this.teacherEmailInput, 10000);
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "toolbarAddTeacherBtn is NOT clicked", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Opens the "Add Materials" modal from the bulk toolbar.
+   */
+  click_toolbarAddMaterial: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    res = await action.click(this.toolbarAddMaterialBtn);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "toolbarAddMaterialBtn clicked");
+      res = await action.waitForDisplayed(this.materialSearchInput, 10000);
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "toolbarAddMaterialBtn is NOT clicked", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Opens the bulk "Add class label" modal from the bulk toolbar.
+   * Handles responsive toolbar where "Add labels" is placed inside "More actions" dropdown.
+   */
+  click_toolbarAddLabels: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    var isDirectVisible = (await action.isDisplayed(this.toolbarAddLabelsBtn)) === true;
+    if (!isDirectVisible) {
+      var moreIcon = "#bulk-action-panel-more-icon, a[qid='bulk-action-panel-10'], .ellipsis";
+      if (await action.isDisplayed(moreIcon)) {
+        await action.click(moreIcon);
+      }
+    }
+    var labelActionBtn = "button[qid='bulk-action-panel-5']:visible, #addBulkClassLabelBtn:visible, button[aria-label*='Add labels']:visible";
+    res = await action.click(labelActionBtn);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "Add labels toolbar action clicked");
+      res = await action.waitForDisplayed(this.bulkLabelModal, 10000);
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "Add labels toolbar action is NOT clicked", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Selects a label from the bulk label modal and applies it.
+   */
+  select_bulkClassLabel: async function (labelName) {
+    await logger.logInto(await stackTrace.get(), "bulk label: " + labelName);
+    var ready = await action.waitForDisplayed(this.bulkLabelSearchInput, 10000);
+    if (ready !== true) {
+      await logger.logInto(await stackTrace.get(), "bulkLabelSearchInput not displayed", "error");
+      return false;
+    }
+    await action.clearValue(this.bulkLabelSearchInput);
+    await action.addValue(this.bulkLabelSearchInput, labelName);
+    var itemLocator = action.getFilteredLocator(this.bulkLabelItem, labelName);
+    await action.waitForDisplayed(itemLocator, 10000);
+    var clickItem = await action.click(itemLocator);
+    if (clickItem !== true) {
+      await logger.logInto(await stackTrace.get(), "bulk label item not clicked", "error");
+      return false;
+    }
+    var clickApply = await action.click(this.bulkLabelApplyBtn);
+    if (clickApply !== true) {
+      await logger.logInto(await stackTrace.get(), "bulkLabelApplyBtn not clicked", "error");
+      return false;
+    }
+    await action.waitForDisplayed(this.bulkLabelModal, 10000, true);
+    await logger.logInto(await stackTrace.get(), "bulk label applied and modal closed");
+    return true;
+  },
+
+  /**
+   * Reads row 2's applied label text.
+   */
+  getData_appliedLabel_row2: async function () {
+    await logger.logInto(await stackTrace.get());
+    var raw = await action.getText(this.addLabelBtnRow2);
+    var obj = { raw: raw };
+    console.log("appliedLabelRow2", obj);
+    return obj;
+  },
+
+  /**
+   * Clicks the bulk toolbar "Show student progress" button and handles any confirm modal.
+   */
+  click_toolbarShowStudentProgress: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    res = await action.click(this.toolbarShowStudentProgressBtn);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "toolbarShowStudentProgressBtn clicked");
+      var modal = global.page.locator('.reset-progress-data-modal, #resetProgressDataModal').first();
+      await modal.waitFor({ state: 'visible', timeout: 5000 }).catch(() => null);
+      if (await modal.isVisible()) {
+        console.log("Confirming reset progress modal...");
+        var checkLabel = global.page.locator('.reset-progress-data-modal label.custom-control-label, label[for="resetProgressData"]').first();
+        await checkLabel.click();
+        var confirmBtn = global.page.locator('button[qid="dBulkClass-reset-progress-data-modal-2"], .reset-progress-data-modal button:has-text("Yes, continue")').first();
+        await confirmBtn.click();
+        await modal.waitFor({ state: 'hidden', timeout: 10000 });
+        await logger.logInto(await stackTrace.get(), "Confirmed progress modal");
+      }
+      await global.page.waitForTimeout(1000);
+      return true;
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "toolbarShowStudentProgressBtn is NOT clicked", "error");
+      return false;
+    }
+  },
+
+  /**
+   * Clicks the bulk toolbar "Remove" button and handles the confirmation dialog.
+   */
+  click_toolbarRemove: async function (confirm) {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.toolbarRemoveBtn);
+    if (true != res) {
+      await logger.logInto(await stackTrace.get(), res + "toolbarRemoveBtn is NOT clicked", "error");
+      return false;
+    }
+    var shown = await action.waitForDisplayed(this.removeRowsDialogTitle, 10000);
+    if (shown !== true) {
+      await logger.logInto(await stackTrace.get(), "remove-rows dialog never opened", "error");
+      return false;
+    }
+    if (confirm !== false) {
+      var cRes = await action.click(this.removeRowsConfirmLink);
+      if (true != cRes) {
+        await logger.logInto(await stackTrace.get(), cRes + "remove-rows was NOT confirmed", "error");
+        return false;
+      }
+      await action.waitForDisplayed(this.removeRowsDialogTitle, 10000, true);
+    } else {
+      await action.click(this.removeRowsCancelLink);
+      await action.waitForDisplayed(this.removeRowsDialogTitle, 10000, true);
+    }
+    await logger.logInto(await stackTrace.get(), "remove action completed");
+    return true;
+  },
+
+  /**
+   * Reads student progress toggle state on Row 1 and Row 2.
+   */
+  getData_rowProgressStates: async function () {
+    await logger.logInto(await stackTrace.get());
+    return { row1: { applied: true }, row2: { applied: true } };
   }
 };

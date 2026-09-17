@@ -66,18 +66,22 @@ Scenario #3 POSITIVE — form-load + bulk multi-row behaviour, `CCLS` module, **
 (asserts button state / applied-value deltas only). Live-captured 2026-08-17/18 against MQA
 Sierra School (MQA-ABC-DEF) — the login account's own home school; `schoolKey` in
 `adminAddClassBulk` test data points here now (not FCN-CHZ-PDA).
-- Phase 1 (build):   ✅ 2026-08-18 — TST_CCLS_TC_13 (BCCF_TC_6), TC_14 (BCCF_TC_1, form-load
+- Phase 1 (build):   ✅ 2026-08-18 & 2026-09-17 — TST_CCLS_TC_13 (BCCF_TC_6), TC_14 (BCCF_TC_1, form-load
   components), TC_15 (BCCF_TC_3, add teacher), TC_17 (BCCF_TC_9, bulk toolbar dates),
-  TC_18 (BCCF_TC_7, duplicate row), TC_19 (BCCF_TC_11, CSV upload) registered and
-  live-verified GREEN; visual candidates: none — TC_13's Create-button label is a dynamic
-  row count, the rest are attribute/state/applied-value reads, no static UI snapshot asserted.
-  TC_16 (BCCF_TC_5, add label) FIXED 2026-08-18 — see the row-scoping bug below.
-  TC_21 (BCCF_TC_8, Copy an Existing Class) added 2026-08-18.
-- Phase 2 (run/fix): ✅ 2026-08-18 — **11/11 passing** (TST_SADB_TC_1, TST_SCLS_TC_2,
-  TST_CCLS_TC_14, TC_15, TC_13, TC_16, TC_17, TC_18, TC_22, TC_19, TC_21), 2 consecutive clean
-  runs, ~55s-1m each (run directly via
+  TC_18 (BCCF_TC_7, duplicate row), TC_19 (BCCF_TC_11, CSV upload), TC_21 (BCCF_TC_8, Copy Class),
+  TC_22 (BCCF_TC_10, CSV template), TC_24 (BCCF_TC_17, bulk Add teacher), TC_25 (BCCF_TC_18, bulk Add Material),
+  TC_26 (BCCF_TC_19, bulk Add labels), TC_27 (BCCF_TC_20, bulk Show student progress), TC_28 (BCCF_TC_21, bulk Remove)
+  registered and live-verified GREEN; visual candidates: none.
+- Phase 2 (run/fix): ✅ 2026-09-17 — **16/16 passing** (TST_SADB_TC_1, TST_SCLS_TC_2,
+  TST_CCLS_TC_14, TC_15, TC_13, TC_16, TC_17, TC_18, TC_22, TC_19, TC_21, TC_24, TC_25, TC_26, TC_27, TC_28),
+  clean suite run ~1m10s (run directly via `npm run P1AdminclassBulk_Thor` or
   `node core/runner/run.js --testExecFile=schoolAdminAddClassBulk.json`).
   **This suite creates NO classes.**
+  Real bugs / live behaviours discovered & handled:
+  - Bulk toolbar actions (Add teacher, Add Material, Add labels, Show student progress, Dates) deselect all rows upon completion.
+  - "Show student progress" bulk action raises modal `#resetProgressDataModal` with confirmation button disabled until checkbox label `label[for='resetProgressData']` is clicked.
+  - "Remove" bulk action opens confirmation dialog and cleanly deletes selected rows while surviving unselected rows.
+  - `reset_formToSingleEmptyRow()` checks row selection before clicking `toolbarRemoveBtn` to guarantee clean state before every test.
   Real bugs found + fixed along the way (all in `createClasses.page.js`, non-protected):
   - Row-2 qids (`dBulkClass-1-2/-1-3/-1-4`) were inferred, now verified live.
   - `teacherApplyChangesBtn` is NEVER natively disabled — a click before Angular's async

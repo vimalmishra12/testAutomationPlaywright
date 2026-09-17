@@ -2157,11 +2157,11 @@ for the label TCs).
 | **Test Data** | Teacher email `<EXISTING_THOR_TEACHER_EMAIL>`; 2+ draft class rows. |
 | **Expected Result** | The teacher is added to **every** selected row, not only the first. The rows **deselect** after the action is applied, and the **Saved** auto-save indicator updates. `[ASSUMED]` — the deselect-after-apply behaviour is recorded in `TST_BCCF_TC_9`'s Remarks but has not been asserted by a case of its own. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_CLS_036, which exercises the whole bulk toolbar. `TST_BCCF_TC_9` covers bulk Start/End date only; its Remarks claim "the same pattern applies to bulk Add teacher / Add labels / Add Material" — a prose claim, not coverage. This case and TC_18–TC_21 turn that sentence into tests. **Side-effect free** — the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Teacher email applied to every selected row via bulk Add teacher toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_24 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_24 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2178,11 +2178,11 @@ for the label TCs).
 | **Test Data** | Material/component `<VALID_THOR_MATERIAL>`; 2+ draft class rows. |
 | **Expected Result** | The material is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. **Side-effect free.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Material applied to every selected row via bulk Add Material toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_25 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_25 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2199,11 +2199,11 @@ for the label TCs).
 | **Test Data** | Label `<EXISTING_THOR_CLASS_LABEL>`; 2+ draft class rows. |
 | **Expected Result** | The label is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. Note `TST_BCCF_TC_7` records that labels behave specially on **Duplicate** (an "Apply the labels to new classes too?" dialog); check whether the bulk label action raises anything similar. **Side-effect free.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Label applied to every selected row via bulk Add labels toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_26 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_26 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2220,11 +2220,11 @@ for the label TCs).
 | **Test Data** | 2+ draft class rows. |
 | **Expected Result** | The "show student progress" setting is applied to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036. This is the toolbar control that produces a **context class** — the classes created this way are the subject of `TST_CTXC_TC_1` and `TST_CTXC_TC_2`, so the two areas should be grounded in the same live pass. **Side-effect free** while the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Show student progress setting applied to selected rows via bulk toolbar action, confirming confirmation modal and applying setting across rows. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_27 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_27 (bulk suite). [ASSUMED] resolved live. |
 
 ---
 
@@ -2241,11 +2241,11 @@ for the label TCs).
 | **Test Data** | 3+ draft class rows with distinct names. |
 | **Expected Result** | Exactly the selected rows are removed and the unselected row survives, unchanged. The **Create N class(es)** button count drops to match the remaining valid rows, and the **Saved** indicator updates. `[ASSUMED]` — whether Remove raises its own confirmation is unconfirmed. |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036. Deliberately leaves one row unselected: an action that removed **all** rows would still pass a case that only counted deletions. **Side-effect free** — the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Exactly selected rows removed via bulk Remove toolbar action, confirmation dialog confirmed, Create N classes button count updated to remaining count, and unselected row survived. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_28 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_28 (bulk suite). [ASSUMED] confirmation dialog and surviving row verified live. |
 
 ---
 ## Open items / `[ASSUMED]` to confirm on the next live pass

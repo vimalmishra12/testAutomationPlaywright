@@ -4678,6 +4678,36 @@
           "description": "Housekeeping | Reset the create form to a single empty row (the form restores an auto-saved draft)",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_24",
+          "description": "BCCF_TC_17 (Pos) | Bulk toolbar Add teacher applies teacher to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_25",
+          "description": "BCCF_TC_18 (Pos) | Bulk toolbar Add Material applies material to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_26",
+          "description": "BCCF_TC_19 (Pos) | Bulk toolbar Add labels applies label to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_27",
+          "description": "BCCF_TC_20 (Pos) | Bulk toolbar Show student progress applies progress setting to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_28",
+          "description": "BCCF_TC_21 (Pos) | Bulk toolbar Remove deletes exactly the selected rows while unselected rows survive",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
