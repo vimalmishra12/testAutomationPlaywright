@@ -140,6 +140,7 @@ module.exports = {
   rowRemoveByIndex: mgc.rowRemoveByIndex,
   createModal: mgc.createModal,
   createModalTitle: mgc.createModalTitle,
+  createModalError: mgc.createModalError,
   categoryNameInput: mgc.categoryNameInput,
   saveBtn: mgc.saveBtn,
   cancelBtn: mgc.cancelBtn,
@@ -304,6 +305,21 @@ module.exports = {
   getData_createModalDisplayed: async function () {
     await logger.logInto(await stackTrace.get());
     return { displayed: (await action.isDisplayed(this.createModal)) === true, pageStatus: true };
+  },
+
+  /** Reads any validation error text displayed on the create category modal. */
+  getData_createModalError: async function () {
+    await logger.logInto(await stackTrace.get());
+    var displayed = false;
+    var text = "";
+    if (this.createModalError) {
+      displayed = (await action.isDisplayed(this.createModalError)) === true;
+      if (displayed) {
+        var t = await action.getText(this.createModalError);
+        text = t && t.message ? "" : String(t).trim();
+      }
+    }
+    return { displayed: displayed, text: text, pageStatus: true };
   },
 
   /**

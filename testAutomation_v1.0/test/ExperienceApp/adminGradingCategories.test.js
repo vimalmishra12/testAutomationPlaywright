@@ -48,6 +48,7 @@ var DETAILS_NO_CLASSES_MESSAGE = "The category has not been added to any active 
 var SAVE_ENABLED_PROBE = "A";
 
 var CLASS_GRADE_SETTINGS_HEADING = "Class grade settings";
+var ERROR_DUPLICATE_NAME = "This name already exists";
 
 /** Collapses runs of whitespace so multi-element copy compares as one line. */
 function squash(s) {
@@ -419,6 +420,97 @@ module.exports = {
     await assertion.assertEqual(
       squash(page.className), testdata.className,
       "The grade settings page opened for the wrong class"
+    );
+  },
+
+  /**
+   * TST_GCAT_TC_11 - Req #5: Verify a grading category cannot be created with a name that already exists.
+   * testdata: { namePrefix }
+   *
+   * Creates its own category first so the duplicate name check is self-contained and deterministic.
+   * Then attempts to create a second category with the identical name.
+   * Asserts that:
+   *   1. The duplicate name is blocked / rejected (Save is disabled or error is shown / creation fails).
+   *   2. The total category count does not increase.
+   *   3. The name appears exactly once in the category list.
+   *
+   * Closes the modal at the end, leaving the list clean for subsequent tests.
+   */
+  TST_GCAT_TC_11: async function (testdata) {
+    var name = uniqueName(testdata.namePrefix, "dup");
+
+    // 1. Create the first category with the unique name
+    sts = await manageGradingCategories.create_category(name);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Precondition failed: could not create the initial category '" + name + "'"
+    );
+
+    var listBefore = await manageGradingCategories.getData_categoryNames();
+    await assertion.assertEqual(
+      listBefore.names.indexOf(name) !== -1, true,
+      "Created initial category '" + name + "' was not found in the categories list"
+    );
+    var countBefore = listBefore.count;
+
+    // 2. Open the Create modal and type the exact same name
+    sts = await manageGradingCategories.click_createCategory();
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Create a grading category modal did not open for duplicate attempt"
+    );
+
+    sts = await manageGradingCategories.set_categoryName(name);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Could not type the duplicate name into the name field (field held '" + sts.readBack + "')"
+    );
+
+    // Give form validation a moment to settle
+    await browser.pause(500);
+
+    // 3. Check duplicate rejection signals
+    var saveState = await manageGradingCategories.getData_saveEnabled();
+    var errState = await manageGradingCategories.getData_createModalError();
+    console.log("TC_11 duplicate validation check →", {
+      saveEnabled: saveState.enabled,
+      errorDisplayed: errState.displayed,
+      errorText: errState.text
+    });
+
+    await assertion.assertEqual(
+      saveState.enabled, false,
+      "Save button remained enabled when a duplicate grading category name was entered"
+    );
+    await assertion.assertEqual(
+      errState.displayed, true,
+      "Inline validation error was not displayed when a duplicate category name was entered"
+    );
+    await assertion.assertEqual(
+      errState.text, ERROR_DUPLICATE_NAME,
+      "Inline duplicate error text did not match expected copy ('" + ERROR_DUPLICATE_NAME + "')"
+    );
+
+    // Cancel / close the create modal
+    var modalDisplayed = await manageGradingCategories.getData_createModalDisplayed();
+    if (modalDisplayed.displayed) {
+      await manageGradingCategories.click_cancelCreate();
+    }
+
+    // 4. Verify the category list: count unchanged, name appears exactly once
+    var listAfter = await manageGradingCategories.getData_categoryNames();
+    console.log("TC_11 list after duplicate attempt →", listAfter.names);
+
+    await assertion.assertEqual(
+      listAfter.count, countBefore,
+      "Category count increased after attempting to create a duplicate name. Expected: " +
+        countBefore + ", actual: " + listAfter.count
+    );
+
+    var occurrences = listAfter.names.filter(function (n) { return n === name; }).length;
+    await assertion.assertEqual(
+      occurrences, 1,
+      "Category '" + name + "' appeared " + occurrences + " times in the list; expected exactly 1"
     );
   },
 

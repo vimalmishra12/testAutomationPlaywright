@@ -18,9 +18,9 @@
 
 | Execution Status | Cases |
 |---|---|
-| Pass | 65 |
+| Pass | 66 |
 | Blocked | 2 |
-| Not Run | 25 |
+| Not Run | 24 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -37,10 +37,10 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
 
-**Execution status (2026-09-17):** **65 of 92 TCs automated and passing.** 25 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
+**Execution status (2026-09-17):** **66 of 92 TCs automated and passing.** 24 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
 - Module **CLST** (`TST_CLST_TC_1–24`, 24 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21; `TC_24` added 2026-09-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
-- Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
+- Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9, 11`, 8 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_11` added 2026-09-17).
 - Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
 - Module **CGST** (`TST_CGST_TC_1–6`, 6 TCs) — Requirement **#22 class grade settings** — via `npm run P1AdminClassGradeSettings_Thor` on **thor** (2026-08-20, 2 consecutive clean runs). The suite **owns its data**: it creates a throwaway class with course material, runs against it, and deletes it afterwards.
 - **`TST_GSCL_TC_7` + `TST_GCAT_TC_7`** (2 TCs) — Requirements **#13** and **#7**, launching class grade settings from a scale's / category's details page. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20, 2 consecutive clean runs, 21/21).
@@ -83,7 +83,7 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | #29 — Verify class launch from ended classes section | TST_CLST_TC_16 |
 | #20 — Verify load more classes in classes tab | TST_CLST_TC_17, TC_20 (E) |
 | **#4 — Verify manage grading category page** | TST_GCAT_TC_1 |
-| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_10 (N) |
+| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_11 (N) |
 | **#6 — Verify see details page of a grading category** | TST_GCAT_TC_6 |
 | **#7 — Launch class grade setting page from see details page of grading category** | TST_GCAT_TC_7 |
 | **#8 — Verify delete grading category** | TST_GCAT_TC_8, TC_9 (E) |
@@ -2063,21 +2063,21 @@ for the label TCs).
 | Field | Value |
 |---|---|
 | **S.No.** | 84 |
-| **Test Case ID** | TST_GCAT_TC_10 |
+| **Test Case ID** | TST_GCAT_TC_11 |
 | **Title** | Verify a grading category cannot be created with a name that already exists |
 | **Linked Requirement** | #5 — Verify create grading category |
 | **Type** | Negative |
 | **Priority** | Medium |
 | **Preconditions** | On the Manage grading categories page, with at least one existing category whose name is known. |
-| **Test Steps** | 1. Note an existing category name and the current category count. 2. Click **Create a grading category**. 3. Enter the **exact** existing name. 4. Click **Save**. 5. Return to the list and re-count. |
-| **Test Data** | The name of a category already present in the school. |
-| **Expected Result** | The duplicate name is not accepted: creation is blocked or warned per business rule, and the category count is unchanged. `[ASSUMED]` — the rule itself is unconfirmed; the other team's sheet also leaves it open ("handled per business rule"). |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_005. We cover the empty name (`TST_GCAT_TC_5`) and the 50-character boundary (`TST_GCAT_TC_3`) but never re-use an existing name. **Automation note:** the GCAT suite deliberately generates names as `AutoCat_create_<epoch-ms>` to avoid collisions, so this case needs a fixed name plus a housekeeping step to remove it. **Confirm the rule with the product owner before finalising the expected result** — "blocked" and "warned but allowed" are different products. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Test Steps** | 1. Note an existing category name and the current category count. 2. Click **Create a grading category**. 3. Enter the **exact** existing name. 4. Observe Save button state and validation message. 5. Return to the list and re-count. |
+| **Test Data** | The name of a category already present in the school (`AutoCat_dup_<epoch-ms>`). |
+| **Expected Result** | The duplicate name is not accepted: the Save button is disabled and an inline validation message reading "This name already exists" is displayed below the input field. The category count remains unchanged and no duplicate category is created. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_005. We cover the empty name (`TST_GCAT_TC_5`) and the 50-character boundary (`TST_GCAT_TC_3`). Grounded live on Thor 2026-09-17: entering a duplicate name displays the inline validation error "This name already exists" and keeps Save disabled. `[ASSUMED]` resolved. Automated as `TST_GCAT_TC_11`. |
+| **Actual Result** | PASS. Entering a duplicate category name disabled the Save button and displayed the inline validation message 'This name already exists'. The category count remained unchanged and the category name appeared exactly once in the list. |
+| **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGradingCategories | Not executed in this audit - status carried over, treat as unverified |
-| **Comments / Defect ID** |  |
+| **Automation Evidence** | Suite: adminGradingCategories | 2026-09-17: Pass across 2 runs |
+| **Comments / Defect ID** | Automated as TST_GCAT_TC_11 in adminGradingCategories.test.js (npm run P1AdminGradingCategories_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] duplicate behavior. |
 
 ---
 

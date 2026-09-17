@@ -121,6 +121,7 @@ The banner and the list update in the **same tick** — neither leads the other.
 | Create success banner | `Grading category successfully created` |
 | Remove success banner | `Grading category successfully removed` |
 | Remove confirmation | *"…will not affect classes currently using it…"* → **No, go back** / **Yes, remove** |
+| Create modal duplicate error | `This name already exists` |
 | Details `h1` / tab title | the category name |
 | Details `h2` (new category) | `Active classes (0)` |
 | Details empty state | `The category has not been added to any active classes` |
@@ -128,6 +129,7 @@ The banner and the list update in the **same tick** — neither leads the other.
 ## Product behaviour (for manual test design)
 
 - Name field `maxlength="50"`; Save is disabled while the name is empty.
+- **Duplicate category name (`TST_GCAT_TC_11` / Req #5):** When an existing category name is entered, the form's async check displays the inline validation error message **`This name already exists`** below the field, and keeps the **Save button disabled**. Creation of duplicate category names is rejected.
 - **The details page counts ACTIVE classes only** — and this is why every category on this school
   read `Active classes (0)` for weeks. Not because no category had ever been applied, but because
   every class it had been applied to was since **soft-deleted**. *The evidence erases itself.*
