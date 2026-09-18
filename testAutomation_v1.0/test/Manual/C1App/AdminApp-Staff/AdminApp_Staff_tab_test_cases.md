@@ -1394,11 +1394,11 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Test Data** | Teacher: `cqatesttea18sept@mailsac.com` (password: `Compro11`) · Admin: `testt1@mailsac.com` (password: `Compro11`) · School key: `FCN-CHZ-PDA` |
 | **Expected Result** | After the grant, the profile role updates to `Administrator/Teacher`. When signing in as `cqatesttea18sept@mailsac.com`, the user reaches the admin console for the school and can access all five admin tabs (`Classes`, `Students`, `Staff`, `Library`, `Reports`) with full administrative privileges. After teardown revocation, the account cleanly reverts to `Teacher` role. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_STF_009, whose step 3 is "log in as that user and confirm admin console access". Our `TST_STFP_TC_10` stops at the role **label** changing in the UI — which a grant that updated the display but not the permission would also satisfy. This is the same shape as the Students password gap (`TST_SPRF_TC_23`): we verify the UI acknowledged the change, not that the change took effect. **Mutates a real account** — uses dedicated disposable fixture `cqatesttea18sept@mailsac.com` (password: `Compro11`), and explicitly revokes the rights in Step 9 as housekeeping to restore baseline. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** | |
+| **Actual Result** | Promoted teacher successfully accessed Admin Console (Classes and Staff tabs) on Thor, and admin rights were cleanly revoked in teardown. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Suite: adminStaffProfile (Suite2) \| 2026-09-18: Pass |
+| **Comments / Defect ID** | *(blank in design)* |
 
 ---
 
