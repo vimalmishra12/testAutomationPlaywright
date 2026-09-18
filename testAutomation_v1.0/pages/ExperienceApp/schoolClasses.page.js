@@ -8,9 +8,15 @@ var sc = selectorFile.css.ComproC1.schoolClasses;
 var classesTabUrl = null;
 
 /**
- * Reads a cheap fingerprint of the currently listed classes: row count + the first and
- * last class name. Used to detect that the grid has actually re-rendered after a search
- * or a sort.
+ * Reads a fingerprint of the currently listed classes: row count + EVERY visible class name,
+ * in order. Used to detect that the grid has actually re-rendered after a search or a sort.
+ *
+ * WHY every name, not just first + last [2026-09-15]: TST_CLST_TC_7 failed on every run although
+ * the sort worked. The shared school's first page is now dominated by repeated leftover names
+ * (AutoClass_CreateMore / AutoClass_CreateOnly / BulkCSV_Class1 / BulkCSV_Class2, 4-8 each), and
+ * a real ascending sort left count, first ("AutoClass_CreateMore") and last ("BulkCSV_Class2")
+ * IDENTICAL — so a first+last fingerprint never changed and the wait burned its 20 s budget.
+ * The page holds at most 20 rows (page size), so reading all names stays cheap.
  *
  * WHY a fingerprint rather than waiting on a UI flag — measured live 2026-08-17:
  * the sort header's own status label ("sorted ascending"/"sorted descending") flips in
@@ -23,12 +29,30 @@ async function readListSignature() {
   var count = await action.getElementCount(sc.classRow);
   if (typeof count !== "number") return "UNREADABLE";
   if (count === 0) return "EMPTY:0";
-  var first = await action.getText(sc.rowClassNameByIndex.replace("{{n}}", "0"));
-  var last = await action.getText(sc.rowClassNameByIndex.replace("{{n}}", String(count - 1)));
-  // getText returns an Error object on failure (ADR-009) — a row can vanish mid-poll while
-  // the grid re-renders. Coerce to a string either way: a changed signature is all we need.
-  return count + "|" + String(first && first.message ? "ERR" : first) +
-    "|" + String(last && last.message ? "ERR" : last);
+  var names = [];
+  for (var i = 0; i < count; i++) {
+    var cell = sc.rowClassNameByIndex.replace("{{n}}", String(i));
+    // BOUNDED READ. getText (innerText) auto-waits up to 30 s for a MISSING element, and a
+    // search shrinks the grid 20 → 1 mid-loop, so rows vanish while this is reading them.
+    // Counting first was the 2026-09-15 fix and it is NOT sufficient — count-then-read is two
+    // operations, and a row lost in the gap still stalled 30 s. That consumed the caller's
+    // entire 20 s budget in ONE poll, so waitForListChange returned false and the four search
+    // TCs (TC_5/6/18/21) failed intermittently while the search had actually worked
+    // [diagnosed live 2026-09-16: a single poll logged at t=30372ms].
+    // getTextIfPresent bounds the wait and reports absence as null, so a vanished row costs
+    // 1 s, not 30 — and "GONE" still marks the signature transient for waitForListChange.
+    //
+    // The count guard stays IN FRONT of it: count() never waits, so an already-gone row costs
+    // ~0 here and only a row lost inside the count→read gap pays the 1 s. Without it, a fully
+    // re-rendering grid could pay 20 × 1 s and still exhaust the caller's budget.
+    if ((await action.getElementCount(cell)) < 1) {
+      names.push("GONE");
+      continue;
+    }
+    var name = await action.getTextIfPresent(cell, 1000);
+    names.push(name === null ? "GONE" : String(name));
+  }
+  return count + "|" + names.join("|");
 }
 
 /**
@@ -38,8 +62,16 @@ async function readListSignature() {
  */
 async function waitForListChange(previous, timeoutMs) {
   var deadline = Date.now() + (timeoutMs || 20000);
+  var last = null;
   while (Date.now() < deadline) {
-    if ((await readListSignature()) !== previous) return true;
+    var current = await readListSignature();
+    // SETTLED CHANGE ONLY [2026-09-15]. With every name in the fingerprint, a half-rendered grid
+    // (a row reading GONE/ERR mid re-render) already differs from `previous` — returning on that
+    // handed TST_CLST_TC_5 the OLD unfiltered 20-row list. So require: different from `previous`,
+    // no transient GONE/ERR cell, and the same signature on two consecutive polls.
+    var transient = current === "UNREADABLE" || /\|(GONE|ERR)(\||$)/.test(current);
+    if (current !== previous && !transient && current === last) return true;
+    last = transient ? null : current;
     await browser.pause(250); // polling interval — nothing observable to wait on between polls
   }
   return false;

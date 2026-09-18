@@ -84,6 +84,60 @@ module.exports = {
   },
 
   /**
+   * Whether one uploaded row's Username and Password cells are flagged invalid.
+   *
+   * [2026-09-15] Added for TST_SBLK_TC_14. Reads Angular's own `ng-invalid` class on each input
+   * rather than inferring the row from the message list: getData_uploadErrors returns messages
+   * page-wide with no row attached, so it cannot prove the flag sits on the OFFENDING row and
+   * not on the valid one — which is the case's whole claim. Verified live on two uploads.
+   *
+   * @param {number} n - 1-based row number (inputs are `#userName-<n>` / `#password-<n>`)
+   */
+  getData_rowFieldValidity: async function (n) {
+    await logger.logInto(await stackTrace.get(), "row:" + n);
+    var ca = selectorFile.css.ComproC1.createAdultStudentAccounts;
+    var cls = async function (sel) {
+      var c = await action.getAttribute(sel, "class");
+      return c && !c.message ? String(c) : "";
+    };
+    var userCls = await cls(ca.rowUsernameByIndex.replace("{{n}}", String(n)));
+    var passCls = await cls(ca.rowPasswordByIndex.replace("{{n}}", String(n)));
+    return {
+      usernameClass: userCls,
+      passwordClass: passCls,
+      usernameInvalid: /\bng-invalid\b/.test(userCls),
+      passwordInvalid: /\bng-invalid\b/.test(passCls)
+    };
+  },
+
+  /**
+   * The "Create N account" button's availability, read three ways.
+   *
+   * [2026-09-15] Added for TST_SBLK_TC_14. The admin app blocks buttons in more than one way —
+   * a native `disabled` attribute, a `.disabled` class, or CSS `pointer-events: none` with no
+   * attribute at all (admin-shared.md §B4; Manage learner profile's Update does the last one).
+   * `available` is TRUE only if NONE of the three blocks it, so the assertion cannot be fooled
+   * by whichever mechanism this page happens to use. NEVER clicks it.
+   */
+  getData_createButtonState: async function () {
+    await logger.logInto(await stackTrace.get());
+    var sel = selectorFile.css.ComproC1.createAdultStudentAccounts.createAccountsBtn;
+    var text = await action.getText(sel);
+    var cls = await action.getAttribute(sel, "class");
+    var pe = await action.getCSSProperty(sel, "pointer-events");
+    var enabled = await action.isEnabled(sel);
+    var classStr = cls && !cls.message ? String(cls) : "";
+    var pointerEvents = pe && !pe.message && pe.value !== undefined ? String(pe.value) : null;
+    return {
+      text: text && text.message ? null : String(text).trim(),
+      disabledAttr: enabled !== true,
+      disabledClass: /\bdisabled\b/.test(classStr),
+      pointerEvents: pointerEvents,
+      available: enabled === true && !/\bdisabled\b/.test(classStr) && pointerEvents !== "none"
+    };
+  },
+
+  /**
    * Returns an array of non-empty inline validation error texts after CSV upload.
    * Errors render in div.error-rectification-wrapper (one per invalid field per row).
    * Used to assert both presence (negative TCs) and absence (positive/edge TCs).

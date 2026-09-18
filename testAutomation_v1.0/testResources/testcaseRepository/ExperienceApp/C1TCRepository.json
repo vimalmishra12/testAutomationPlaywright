@@ -5381,6 +5381,12 @@
           "description": "Verify Remove from school account is disabled while no student is selected",
           "tags": "P2",
           "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_12",
+          "description": "Verify a required name field cannot be saved empty",
+          "tags": "P2",
+          "visualTest": false
         }
       ]
     },
@@ -5537,6 +5543,55 @@
           "id": "TST_SLST_TC_13",
           "description": "Verify the activation checkbox switches search mode and reveals its helper text without filtering the list",
           "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_28",
+          "description": "Verify a never-activated code returns a clear no-result state in the activation-code search - EXPECTED TO FAIL, open product defect (activationCodeSearch HTTP 504 redirects to /dashboard/error); deliberately not listed in any execution file",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SLST_TC_26",
+          "description": "Verify a student whose name contains special characters is returned by a name search",
+          "tags": "P2",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Bulk student operations - account-type chooser, bulk activation & adult account CSV validation",
+      "moduleId": "SBLK",
+      "testFile": "./test/ExperienceApp/bulkStudents.test.js",
+      "testcase": [
+        {
+          "id": "TST_SBLK_TC_RESET",
+          "description": "BeforeEach/After housekeeping - return to the Students tab by URL, discarding any typed bulk-activation row (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_6",
+          "description": "Verify the account-type chooser cannot be advanced without a selection",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_7",
+          "description": "Verify the bulk activation page loads with its entry grid and CSV controls",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_8",
+          "description": "Verify the Activate button stays disabled until a row is complete",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SBLK_TC_14",
+          "description": "Verify a rule-violating username or password is flagged on its own row during bulk account creation - EXPECTED TO FAIL, open product defect ('Create N account' stays enabled with an invalid row); deliberately not listed in any execution file",
+          "tags": "P1",
           "visualTest": false
         }
       ]
@@ -6070,6 +6125,223 @@
         {
           "id": "TST_UMBP_TC_9",
           "description": "Verify the component list renders correctly for products with differing component counts",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Shell chrome - language control, Spanish rendering, Help menu, tutorials (ASHL Phase 1). Logged-in language qids are cFooter-7 / cFooter-8-*, not the register's sp-ldd-* (admin-shared.md A12).",
+      "moduleId": "ASHL",
+      "testFile": "./test/ExperienceApp/adminShell.test.js",
+      "testcase": [
+        {
+          "id": "TST_ASHL_TC_100",
+          "description": "BeforeEach housekeeping - open My school accounts and restore English if a previous case left Spanish (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ASHL_TC_1",
+          "description": "Verify the language control offers English and Español with the active language marked as selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ASHL_TC_2",
+          "description": "Verify the admin interface renders in Spanish when Español is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ASHL_TC_3",
+          "description": "Verify the admin header Help menu exposes Help centre and Tutorials when it is opened",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ASHL_TC_4",
+          "description": "Verify the Tutorials submenu lists all five tutorial topics when it is expanded",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Admin footer - seven links, no Site Feedback, internal destinations (FOOT extension, TC_10/11). Separate test file from footer.test.js (TC_1..9) so both modules resolve.",
+      "moduleId": "FOOT",
+      "testFile": "./test/ExperienceApp/adminFooter.test.js",
+      "testcase": [
+        {
+          "id": "TST_FOOT_TC_100",
+          "description": "BeforeEach housekeeping - open My school accounts before each footer case (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_FOOT_TC_10",
+          "description": "Verify the admin footer renders seven links and omits Site Feedback",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_FOOT_TC_11",
+          "description": "Verify every admin footer link opens its intended destination",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | My profile / Manage profile - menu entry, Personal info, Password tab, leave without saving (MYPR Phase 1). /dashboard/my-profile is the SHARED C1 profile page; nothing is saved except the TC_4 safety-net restore.",
+      "moduleId": "MYPR",
+      "testFile": "./test/ExperienceApp/myProfile.test.js",
+      "testcase": [
+        {
+          "id": "TST_MYPR_TC_100",
+          "description": "BeforeEach housekeeping - open My school accounts before each profile case (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MYPR_TC_1",
+          "description": "Verify the Manage profile page opens with both tabs when My profile is selected from the header menu",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MYPR_TC_2",
+          "description": "Verify the Personal info tab shows the four account fields pre-filled with the current values",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MYPR_TC_3",
+          "description": "Verify the Password tab shows the three password fields when it is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MYPR_TC_4",
+          "description": "Verify Back returns to the previous page without saving when it is clicked",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Organisation context and Administrator/Teacher toggle (SADB extension, TC_3/5). Separate test file from schoolAdminAddClass.test.js (TST_SADB_TC_1) so both modules resolve.",
+      "moduleId": "SADB",
+      "testFile": "./test/ExperienceApp/adminOrgContext.test.js",
+      "testcase": [
+        {
+          "id": "TST_SADB_TC_100",
+          "description": "BeforeEach housekeeping - return to Administrator view and open My school accounts (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SADB_TC_3",
+          "description": "Verify switching between organisations loads each one independently when the admin manages several",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SADB_TC_5",
+          "description": "Verify the administrator can switch to the teacher dashboard and back again",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Set up a school account wizard - every step blocks progress until valid (SRQS extension, TC_3). NEVER submits: stops on the summary. Separate test file from schoolRequestSummary.test.js (TST_SRQS_TC_1).",
+      "moduleId": "SRQS",
+      "testFile": "./test/ExperienceApp/setupSchoolWizard.test.js",
+      "testcase": [
+        {
+          "id": "TST_SRQS_TC_3",
+          "description": "Verify each wizard step blocks progress until its required input is supplied",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | School settings menu and the IRREVERSIBLE Change school key warning (SKEY Phase 1: TC_1/2/4). Runs on KNF-XRD-QVE, NEVER FCN-CHZ-PDA [user decision 2026-09-14]; nothing confirms a key change. TC_3 is Blocked and not registered.",
+      "moduleId": "SKEY",
+      "testFile": "./test/ExperienceApp/changeSchoolKey.test.js",
+      "testcase": [
+        {
+          "id": "TST_SKEY_TC_100",
+          "description": "BeforeEach housekeeping - open KNF-XRD-QVE by key and refuse to continue if the displayed key is not the configured one (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SKEY_TC_1",
+          "description": "Verify the School settings menu exposes Change school key alongside the grading options",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SKEY_TC_2",
+          "description": "Verify an irreversible-action warning is shown when Change school key is selected",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SKEY_TC_4",
+          "description": "Verify the school key is unchanged when the warning dialog is cancelled",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Admin App | Notifications bell and panel (INVI extension, TC_7..12). Separate test file from invitationNotification.test.js (TC_1..6). TC_12 marks one notification read per run [user decision 2026-09-14].",
+      "moduleId": "INVI",
+      "testFile": "./test/ExperienceApp/adminNotifications.test.js",
+      "testcase": [
+        {
+          "id": "TST_INVI_TC_100",
+          "description": "BeforeEach housekeeping - open My school accounts with the notifications panel closed (not a functional test)",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_7",
+          "description": "Verify the notifications bell badge and its accessible name report the same unread count",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_8",
+          "description": "Verify the notifications panel opens with a heading, time-grouped rows and a close control",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_9",
+          "description": "Verify the panel renders only the five most recent notifications when many are unread",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_10",
+          "description": "Verify recent notifications show a relative date and older ones show an absolute date",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_11",
+          "description": "Verify report-ready notifications describe the Reports destination consistently",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_12",
+          "description": "Verify clicking a notification opens its target and clears it from the unread count",
           "tags": "P1",
           "visualTest": false
         }

@@ -25,6 +25,26 @@ Within a feature's set, **list and number test cases in this order**:
 `S.No.` and the `TC` number both follow this sequence (so `TST_<MODULE>_TC_1` is the first positive case).
 **Priority is independent of position** — a high-priority negative case still sorts last but is marked `High`. (For a bug-specific ticket, the headline defect is captured here and flagged `High` in Priority even though it sits in the negative block.)
 
+## Status values
+
+`Not Run` | `Pass` | `Fail` | `Blocked` | `On Hold`
+
+| Status | Meaning |
+|---|---|
+| **Not Run** | Not executed yet. |
+| **Pass** | Executed, behaved as the Expected Result says. |
+| **Fail** | Executed, did not behave as expected. Raise or link a defect in Comments. |
+| **Blocked** | Cannot be executed — a precondition is missing (test data, a fixture, an environment). Record the reason AND what would unblock it. |
+| **On Hold** | `[2026-09-16]` **Automated and verified, but parked because of an OPEN BUG.** The case is written, registered and has met the real application, yet is deliberately kept OUT of every execution file so no suite stays permanently red. It asserts the REQUIREMENT, never the defect, so it starts passing by itself the day the product is fixed. Comments must name the bug and where it is written up. |
+
+> **Blocked vs On Hold.** Blocked means *we cannot run it* (something is missing on our side).
+> On Hold means *we could run it, and it would fail because the product is broken* — so it is
+> parked rather than left red. Blocked waits on data or an environment; On Hold waits on a fix.
+
+> **If the register is an `.xlsx`, extend the Status dropdown before writing the value.** Each
+> Status cell carries its own data-validation list, so writing `On Hold` into a cell whose list
+> holds only the original four makes Excel treat it as an invalid entry.
+
 ## Type values
 `Positive` | `Edge` | `Negative`  — treat boundary cases as `Edge`.
 
@@ -44,7 +64,7 @@ Within a feature's set, **list and number test cases in this order**:
 | 10 | **Expected Result** | Designer | What should happen — the thing checked |
 | 11 | **Remarks** | Designer | Caveats, specifics, `[ASSUMED]` notes |
 | 12 | **Actual Result** | Tester | Blank in design |
-| 13 | **Status** | Tester | Not Run / Pass / Fail / Blocked |
+| 13 | **Status** | Tester | Not Run / Pass / Fail / Blocked / **On Hold** — see below |
 | 14 | **Comments / Defect ID** | Tester | Blank in design |
 
 ## Data rules
@@ -124,7 +144,7 @@ Scenario Description | Type | Mapped TC ID | TC Title`
 
 **Tab 2 / Section 2 — Test Cases**
 Standard 14 columns (S.No. first; Test Case ID = compound ID).
-Status column has a data-validation dropdown: `Not Run / Pass / Fail / Blocked`.
+Status column has a data-validation dropdown: `Not Run / Pass / Fail / Blocked / On Hold`.
 Header fill = Cambridge purple `#3D1A66`, white bold text. Freeze header row.
 
 ### Test data file naming (traceability)

@@ -299,3 +299,86 @@ reminder that **a suspicious duration is evidence**.
    **product decision** before it can be automated.
 6. **Nothing is committed.** All of the above is uncommitted in worktree
    `admin-classes-automation-4711b5`.
+
+---
+
+## Session — 2026-09-15 (Group A of the remaining-cases handoff)
+
+Worktree branch `claude/students-tab-automation-ae53ba`. The SBLK work of this session is logged
+in full in `walkthrough_bulkStudents.test.js_2026-09-15_20h-36m.md`; this entry covers SLST only.
+
+### Summary
+Baseline re-confirmed green, the three remaining side-effect-free SLST cases grounded live, and
+one of them built as a defect case. The other two are Blocked for want of shared-school data.
+
+### Cases
+| Case | Outcome | Why |
+|---|---|---|
+| `TST_SLST_TC_26` (special-character NAME search) | **Blocked** (user decision) | All 27 students read live — no first or last name contains special characters; only an email does (already `TC_7`). Not creating students on FCN (ADR-021 rule 7). |
+| `TST_SLST_TC_27` (partial username, ≥2 matches) | **Blocked** (user decision) | Exactly ONE username account exists (`cqatestaichild1`). Unblocked by Group C creating username accounts on VED-NEH-KVU. |
+| `TST_SLST_TC_28` (never-activated code → no-result state) | **Built as a defect case**, registered, **kept out of `adminStudentsTab.json`** | Reproduced twice (once via direct URL, once via the dashboard card): `activationCodeSearch` → HTTP 504, then redirect to `/dashboard/error`. Asserts the requirement, like `TST_SPRF_TC_7`. |
+
+### Changes made
+1. **`test/ExperienceApp/adminStudentsTab.test.js`** — Modified · Test Case · appended `TST_SLST_TC_28`.
+2. **`pages/ExperienceApp/schoolStudents.page.js`** — Modified · Page Object · added
+   `click_manageStudentsOption(option)` (SBLK entry, lazy-requires `bulkStudents`) and
+   `search_activationCode(code)` — polls for NO_RESULTS / ROWS / ERROR_PAGE within 90 s rather than
+   reusing `search_student`, whose row-fingerprint wait cannot see a redirect off the page.
+3. **`testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json`** — Modified · `activationCodeNeverRedeemed`.
+4. **`testResources/testcaseRepository/ExperienceApp/C1TCRepository.json`** — Modified · `TST_SLST_TC_28` (`visualTest: false`).
+
+### Runs
+- Baseline: first attempt failed at login (Gigya box not shown in 30 s), re-run alone **23/23** — transient.
+- After the page-object additions: **23/23** (regression check). Second confirmation run: *see the SBLK walkthrough run log.*
+
+### Found on the way — recorded, not fixed here
+- **No student-removal path remains on the Students tab** (no row checkboxes, select-all, counter,
+  Remove button or removal dialogs). `TST_SLST_TC_1`'s select-all / Remove assertions were commented
+  out by commit `c5ed7dc` (2026-09-09) with no product question raised. Left as-is pending product —
+  written up in `admin-students-tab.md` §9.7.
+- The child fixture's first name is now `child1 updated` (someone else changed it).
+
+---
+
+## Session — 2026-09-16 (TST_SLST_TC_26 unblocked)
+
+### Summary
+The user created the missing fixture student, so the case Blocked yesterday for want of data is now
+automated and passing. No product defect involved.
+
+### Fixture (created by the user, on FCN-CHZ-PDA)
+`cqateststu!^+s95` `&LName` — cqateststu!^+s95@mailsac.com. Recorded in
+`admin-students-tab.md` §6; yesterday's "no such student exists" note is struck through there.
+⚠️ The school now holds **28** students (was 27) — nothing asserts a count.
+
+### What the case does
+Two searches, because the two names carry different characters: `!^+s95` (first name) and `&LName`
+(last name). Each asserts **exactly one** row — that is what proves the characters are matched
+**literally rather than as wildcards** — plus the name rendered character for character and the
+banner echoing the term verbatim. The search is **cleared between the two**: `search_student()`
+waits for the row fingerprint to CHANGE, and both searches return the same single student, so
+going straight from one to the other would burn the full 20 s budget (the `TST_SLST_TC_11` trap).
+
+### Changes made
+1. **`test/ExperienceApp/adminStudentsTab.test.js`** — Modified · Test Case · appended `TST_SLST_TC_26`.
+2. **`testResources/testcaseData/ExperienceApp/thor/adminStudentsTabData.json`** — Modified · 5 keys
+   (`searchBySpecialCharName`, `searchBySpecialCharLastNameTerm`, and the three expected values).
+3. **`testResources/testcaseRepository/ExperienceApp/C1TCRepository.json`** — Modified · registered
+   `TST_SLST_TC_26` (`visualTest: false`).
+4. **`testResources/testExecutionFiles/ExperienceApp/thor/adminStudentsTab.json`** — Modified · added it to the Test list.
+5. Records: register `.md` + `.xlsx` (Blocked → **Pass**, verified expected result, new summary line),
+   `authoring-status.md`, and `admin-students-tab.md` §6/§9.1.
+
+### Runs
+- `npm run adminStudentsTabTest_thor`: **24/24 passing** (266 s), then **24/24** again (144 s) —
+  two consecutive clean runs. `TST_SLST_TC_26` took 14.4 s then 2.1 s.
+- No page-object change was needed: the existing `search_student` / `getData_studentRows` /
+  `clear_search` methods covered it.
+
+### Note on grounding
+The Playwright-MCP session had expired and Claude cannot type passwords, so this case was grounded
+**through the framework** instead of the browser (AGENTS.md: "a blocked browser is not a blocked
+framework"). The run itself is the live verification.
+
+### Protected files touched
+None.

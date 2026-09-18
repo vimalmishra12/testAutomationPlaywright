@@ -744,5 +744,94 @@ module.exports = {
       "Unticking should REMOVE the helper text from the DOM");
     await assertion.assertEqual(await schoolStudents.getData_visibleRowCount(), rowsBefore,
       "The list should still be unchanged after unticking");
+  },
+
+  /**
+   * TST_SLST_TC_28 — a never-activated code returns a clear no-result state in code search.
+   *
+   * ⚠️ EXPECTED TO FAIL AGAINST THE CURRENT PRODUCT and deliberately NOT in the execution file
+   * (decision taken with the user, 2026-09-15). Reproduced twice: the search does not show a
+   * no-result state — `activationCodeSearch` returns HTTP 504 and the app redirects the admin to
+   * /dashboard/error ("Sorry! Something went wrong"), admin-students-tab.md §9.6. Add this case to
+   * adminStudentsTab.json the day that is fixed. It asserts the REQUIREMENT, never the defect.
+   *
+   * The empty-state COPY for a code search has never been observed, so no verbatim string is
+   * asserted — only that a no-result state (not an error page, not rows) is what renders.
+   */
+  TST_SLST_TC_28: async function (testdata) {
+    sts = await schoolStudents.click_activationCheckbox();
+    await assertion.assertEqual(sts.clickStatus, true, "Ticking the activation checkbox should succeed");
+    var mode = await schoolStudents.getData_activationSearchMode();
+    await assertion.assertEqual(mode.checked, true, "Precondition: the search is in activation-code mode");
+
+    sts = await schoolStudents.search_activationCode(testdata.activationCodeNeverRedeemed);
+    await assertion.assertEqual(sts.outcome !== "ERROR_PAGE", true,
+      "A never-activated code must not crash the admin out to the error page — OPEN DEFECT (2026-09-15): " +
+      "redirected to " + sts.url + " after " + sts.elapsedMs + " ms (activationCodeSearch HTTP 504)");
+    await assertion.assertEqual(sts.outcome, "NO_RESULTS",
+      "A never-activated code should produce a no-result state — got outcome " + sts.outcome + " after " + sts.elapsedMs + " ms");
+
+    var empty = await schoolStudents.getData_noResultsState();
+    await assertion.assertEqual(empty.messageDisplayed, true, "A no-result message should be visible");
+    await assertion.assertEqual(empty.rowCount, 0, "No stale student rows should remain from the previous list");
+  },
+
+  /**
+   * TST_SLST_TC_26 — a student whose NAME contains special characters is returned by a name search.
+   *
+   * Unblocked 2026-09-16: the user created "cqateststu!^+s95 &LName"
+   * (cqateststu!^+s95@mailsac.com) on FCN-CHZ-PDA. Until then no student on this school had
+   * special characters in a name and the case was Blocked (all 27 checked live 2026-09-15).
+   *
+   * This is about the NAME fields — TST_SLST_TC_7 already covers special characters in an EMAIL.
+   * Two searches, because the two names carry different characters: "!^+" in the first name and
+   * a bare "&" in the last. Each must be matched LITERALLY, never as a wildcard, which is what
+   * "exactly one row" proves — a wildcard reading would return more.
+   *
+   * The list is CLEARED between the two searches on purpose. search_student() waits for the row
+   * fingerprint to CHANGE, and both searches return the same single student, so going straight
+   * from one to the other cannot move the fingerprint and would burn the whole 20s budget
+   * (the same trap TST_SLST_TC_11 documents).
+   */
+  TST_SLST_TC_26: async function (testdata) {
+    // ── Search 1: the first name, which holds ! ^ + ──
+    sts = await schoolStudents.search_student(testdata.searchBySpecialCharName);
+    await assertion.assertEqual(sts.clickStatus, true, "Search button click should succeed");
+
+    var rows = await schoolStudents.getData_studentRows();
+    await assertion.assertEqual(rows.length, 1,
+      "Exactly one student should match '" + testdata.searchBySpecialCharName + "' — got " + rows.length +
+      ". More than one would mean the characters were treated as wildcards.");
+    // The name must come back CHARACTER FOR CHARACTER — not HTML-escaped, truncated or stripped.
+    await assertion.assertEqual(rows[0].firstName, testdata.searchBySpecialCharNameExpectedFirst,
+      "First name should be rendered exactly as stored, special characters intact");
+    await assertion.assertEqual(rows[0].lastName, testdata.searchBySpecialCharNameExpectedLast,
+      "Last name should be rendered exactly as stored");
+    await assertion.assertEqual(rows[0].emailOrUsername, testdata.searchBySpecialCharNameExpectedEmail,
+      "The matched row should be the special-character account");
+
+    var banner = await schoolStudents.getData_searchBanner();
+    await assertion.assertEqual(banner.echoedTerm, testdata.searchBySpecialCharName,
+      "The banner should echo the special characters verbatim, unescaped and unstripped");
+
+    // Clear first — see the note above about the row fingerprint.
+    sts = await schoolStudents.clear_search();
+    await assertion.assertEqual(sts.clickStatus, true, "Clearing the first search should succeed");
+
+    // ── Search 2: the last name, which holds a bare & ──
+    sts = await schoolStudents.search_student(testdata.searchBySpecialCharLastNameTerm);
+    await assertion.assertEqual(sts.clickStatus, true, "Second search button click should succeed");
+
+    rows = await schoolStudents.getData_studentRows();
+    await assertion.assertEqual(rows.length, 1,
+      "Exactly one student should match '" + testdata.searchBySpecialCharLastNameTerm + "' — got " + rows.length);
+    await assertion.assertEqual(rows[0].firstName, testdata.searchBySpecialCharNameExpectedFirst,
+      "The same student should be returned when searching the last name");
+    await assertion.assertEqual(rows[0].lastName, testdata.searchBySpecialCharNameExpectedLast,
+      "Last name should be rendered exactly as stored, the & intact");
+
+    banner = await schoolStudents.getData_searchBanner();
+    await assertion.assertEqual(banner.echoedTerm, testdata.searchBySpecialCharLastNameTerm,
+      "The banner should echo the & verbatim");
   }
 };

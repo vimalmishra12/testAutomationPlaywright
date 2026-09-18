@@ -337,6 +337,51 @@ module.exports = {
   },
 
   /**
+   * TST_SPRF_TC_12 — a required name field cannot be saved empty.
+   *
+   * [2026-09-15] Grounded live on this exact student. Emptying First name and blurring it
+   * shows `This field is required` and blocks Update BY ITSELF, so the case never clicks
+   * Update and cannot rename a real student on the shared school.
+   *
+   * SAFETY NET (agreed with the user): the first assertion after the edit is that Update is
+   * still blocked. If the product ever lets Update through on an invalid form, the case fails
+   * right there — before anything could be submitted — and nothing in this case ever clicks
+   * it. The unsaved edit is discarded by the BeforeEach reset, which leaves by URL and so
+   * skips the "Save changes?" prompt (verified live).
+   *
+   * ⚠️ Update is blocked by CSS only (no `disabled` attribute), so `isEnabled` would say TRUE
+   * — the pointer-events / tabindex read is the honest one (admin-shared.md §B4).
+   */
+  TST_SPRF_TC_12: async function (testdata) {
+    sts = await schoolStudents.click_viewStudentProfile(testdata.requiredNameStudentEmail);
+    await assertion.assertEqual(sts.pageStatus, true, "The student profile page should load");
+
+    sts = await studentProfile.click_editAccountDetails();
+    await assertion.assertEqual(sts.clickStatus, true, "Clicking 'Manage learner profile' should succeed");
+    await assertion.assertEqual(sts.pageStatus, true, "The Manage learner profile page should load");
+
+    sts = await studentProfile.clear_firstNameAndBlur();
+    // Prove the intended student is open BEFORE judging the form.
+    await assertion.assertEqual(sts.originalValue, testdata.requiredNameOriginalFirstName,
+      "Precondition: this should be '" + testdata.requiredNameOriginalFirstName + "' — got: " + sts.originalValue);
+    await assertion.assertEqual(sts.clearStatus, true, "Clearing First name should succeed");
+    await assertion.assertEqual(sts.keyStatus, true, "Tabbing out of First name should succeed");
+
+    var v = await studentProfile.getData_firstNameValidation();
+    // SAFETY NET — first, so nothing below can be reached with a submittable form.
+    await assertion.assertEqual(v.updatePointerEvents, "none",
+      "SAFETY NET: 'Update' must be blocked while First name is empty. It was NOT clicked and the " +
+      "student was NOT changed — got pointer-events: " + v.updatePointerEvents);
+    await assertion.assertEqual(v.updateTabindex, "-1",
+      "'Update' should be taken out of the tab order while the form is invalid");
+
+    await assertion.assertEqual(v.firstNameValue, "", "First name should now be empty");
+    await assertion.assertEqual(v.errorDisplayed, true, "A required-field message should be shown against First name");
+    await assertion.assertEqual(normaliseCopy(v.errorText), testdata.requiredFieldError,
+      "The message should read verbatim: '" + testdata.requiredFieldError + "'");
+  },
+
+  /**
    * TST_SPRF_TC_15 — Activate stays disabled until an activation code is entered.
    *
    * A NATIVE disabled check is valid on this button: it carries a real `disabled`

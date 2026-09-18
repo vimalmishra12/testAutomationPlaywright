@@ -235,6 +235,7 @@ bulk error dialog; and the invalid-activation-code error blaming the server rath
 | Adult with umbrellas incl. **Code expired** | `Learner us` · testps27@mailsac.com |
 | Child with username, 2 umbrellas, 2 classes | `child1 test` · cqatestaichild1 |
 | Profile that returns HTTP 500 (defect fixture) | `Vandna Garg` · vandna.garg+11student@comprotechnologies.com |
+| **Special characters in the NAME fields** `[2026-09-16]` | `cqateststu!^+s95 &LName` · cqateststu!^+s95@mailsac.com — created by the user to unblock `TST_SLST_TC_26`. First name `cqateststu!^+s95`, last name `&LName` |
 
 **26 students at capture: 25 adults with email addresses and exactly 1 child with a username.**
 
@@ -490,3 +491,158 @@ While the request is in flight the button renders the untranslated key
 | §5 #2 — profile hangs on HTTP 500 (`Vandna Garg`) | **STILL OPEN.** Re-confirmed: URL collapses to `/class/`, the page renders **nothing at all** — zero headings, zero buttons, empty body — and `getUserDetailWithClasses` returns HTTP 500 |
 | §5 #4 — `SCREEN_READER.PROCESSING_MESSAGE` on the activation page | **STILL OPEN**, confirmed live |
 | Location field showing the literal `undefined` on the child fixture | **STILL PRESENT**, confirmed live |
+
+---
+
+## 9. Phase 1 grounding — remaining Group A cases `[2026-09-15]`
+
+Captured live on Thor · `FCN-CHZ-PDA` (`testt1@mailsac.com`) via Playwright MCP, driven with
+JS-dispatched clicks and real keystrokes. **Every finding below was observed live; the two defects
+were each reproduced twice before being recorded.**
+
+### 9.1 Shared-school data — fixtures that do NOT exist
+
+- **27 students** (26 adults with email, **1** child with username). The child fixture's first name
+  has been changed by someone else: `child1` → **`child1 updated`** (data files already carry it).
+- ~~**No student NAME contains special characters** → `TST_SLST_TC_26` **Blocked**.~~
+  **Superseded `[2026-09-16]`** — the user created `cqateststu!^+s95 &LName`
+  (cqateststu!^+s95@mailsac.com), so `TST_SLST_TC_26` is **automated and passing**. Verified live
+  through the framework: searching `!^+s95` (first name) and `&LName` (last name) each returns
+  **exactly one** row, so the characters are matched **literally, not as wildcards**, and the name
+  renders character for character in the row — not escaped, stripped or truncated. The search
+  banner echoes each term verbatim. (`TST_SLST_TC_7` still covers special characters in an EMAIL.)
+  ⚠️ The school now holds **28** students, not 27 — another reason never to assert a count.
+- **Exactly one username account** → `TST_SLST_TC_27` (≥ 2 shared-substring usernames) **Blocked**
+  (user decision). Unblocked by Group C creating username accounts on `VED-NEH-KVU`.
+
+### 9.2 Add new students — choosers (`SBLK` → `bulkStudents`)
+
+| Screen | URL | Heading | Radios | Next |
+|---|---|---|---|---|
+| Account type | `/learner/select/new` | `Are the students children or adults?` | `#child-radio` `typeSelect-2` · `#adult-radio` `typeSelect-3` | `button[qid='typeSelect-4']` |
+| Adult method | `/learner/adult-select/new` | `Create accounts or invite students` | `#create-adult` `adultCreateInvite-2` · `#adult-invite-email` `adultCreateInvite-3` | `button[qid='adultCreateInvite-4']` |
+
+- **Next is NATIVELY disabled** with no selection on both screens (`disabled` attribute + `.disabled`
+  + `pointer-events-none`) — so `isEnabled` is a truthful assertion here (not a §B4 CSS-only case).
+  A click on it leaves the admin on the same URL. Selecting a radio enables it.
+- Neither radio is pre-selected on load. **Zero modals** on either chooser.
+- Back on the adult chooser is `a[qid='adultCreateInvite-1']`.
+
+### 9.3 Create adult student accounts is UPLOAD-ONLY
+
+`/username-adult/new_csv` has **no typed rows** — only `Upload file` (`aBulkActions-2`) and
+`Get CSV template`. A rule-violation case therefore needs a **CSV fixture**. Stated rules, verbatim:
+
+> `Usernames must start with a lower-case letter and be 3-30 characters long. They can contain lowercase letters, numbers, hyphens and underscores.`
+> `Passwords must contain at least 8 characters including at least one letter and at least one number or special character.`
+> `Your CSV file can have up to 200 records.`
+
+After uploading a CSV the rows render as inputs `#firstName-N` `#lastName-N` `#userName-N`
+`#password-N` `#classKey-N`; invalid fields gain `ng-invalid`, and the message sits in
+`div.error-rectification-wrapper` (one wrapper per field, EMPTY for valid fields — filter out blanks).
+Observed for `9B` / `abc`: `This must start with a letter` · `See password guidance in the info section at the top`.
+
+⚠️ **`#password-N` and `#classKey-N` share one qid** (`aBulkActions-learner-N-5`) — select by id.
+
+**11 pre-rendered modals**, two of which render **raw translation keys**:
+`ADMIN.LEARNER.CREATE_ADULT_FORM.SUCCESS_MODAL_INFO_1/2/3` and
+`ADMIN.LEARNER.CREATE_ADULT_FORM.FORM_UPLOAD_ERROR_HEADING / _INFO / _CLOSE` — same defect family as §5 #3.
+
+### 9.4 🐞 DEFECT — "Create N account" stays ENABLED while a row is invalid
+
+Reproduced on **two separate uploads** of `TST_SBLK_TC_14_invalid_username_password.csv`: row 2 is
+flagged invalid on username AND password, yet `button[qid='aBulkActions-7']` reads **`Create 2 account`**
+with **no** `disabled` attribute, **no** `.disabled` class, `pointer-events: auto`, `opacity: 1`.
+Also a copy defect: *"2 account"* (singular). **Never clicked** — it may create real accounts.
+User decision: `TST_SBLK_TC_14` asserts the REQUIREMENT (Create unavailable) and is kept **out of the
+exec file**, like `TST_SPRF_TC_7`.
+
+### 9.5 Bulk activation (`/bulk_activation`) — verified
+
+- Deep-linkable within a session whose school context is set. Heading
+  `Activate codes for students in your school` above `3 July Test School 1`.
+- Row 1 inputs: `#emailOrUsername-1` (`aBulkActions-learner-1-2`), `#firstName-1`, `#lastName-1`,
+  `#activationCode-1` (placeholder `for example ABC4-DE3F-G2HJ-1KLM`). **No `maxlength` anywhere.**
+- `Activate 1 code` = `button[qid='aBulkActions-7']` — **natively disabled** + `.disabled` +
+  `pointer-events: none` on load (⚠️ the same qid as the adult form's Create button — scope by URL).
+- **Enabling threshold (resolves `TST_SBLK_TC_8`'s `[ASSUMED]`):**
+  - code only → still disabled, and the row shows `Enter a student’s email or username` (curly apostrophe).
+  - **typing a KNOWN student's email + blur auto-fills First/Last name** (`Marvin Jae` / `student`)
+    within ~4 s, and **Activate becomes enabled**. The name fields stay editable.
+  - ⚠️ At that point one click would consume a code. Automation must never click it.
+- Remove (bulk-row) is `button.action-item` natively disabled at 0 selected, no qid.
+  ⚠️ **`button.action-item.action-text` matches TWO buttons** — the visible disabled one
+  (class `… disable`) and a hidden enabled twin (class `… active`). An unscoped selector makes
+  `isEnabled` return a strict-mode Error. Found by the first framework run.
+- **11** hidden modals; the sr-only `ADMIN.LEARNER.BULK_ACTIVATION.SELECT_STUDENT` key is still live (§5 #4).
+
+> 🚨 **The bulk-activation grid is a SERVER-SIDE DRAFT, per admin account** `[2026-09-15]`.
+> Rows typed on `/bulk_activation` are **restored on every later load** — after a full `goto`,
+> and **in a completely separate browser context** (the framework run inherited a row typed in the
+> MCP browser hours earlier). Nothing is kept in localStorage or sessionStorage, so the store is
+> server-side. The same family of behaviour as the Create-classes form draft (`admin-shared.md` §A4).
+>
+> Consequences — each one hit on the first run:
+> - **"The grid is empty on load" is not a fact about the page** — it depends on what the last
+>   visitor to this account left. `TST_SBLK_TC_7` / `TC_8` both failed on a restored complete row,
+>   which ENABLES `Activate 1 code` (the button was correctly disabled on a genuinely empty grid).
+> - **Leaving by URL does NOT discard a typed row.** Any case that fills the grid pollutes the
+>   next run — and leaves a submittable row (student + code) waiting on a shared admin account.
+> - Clearing is per row: `a[qid='aBulkActions-learner-N-6']` (aria-label **"Remove student"** —
+>   misleading: it removes the GRID ROW only) raises `#confirmRemoveRowModal`
+>   *"Remove row? This will delete the selected row"* → `aBulkActions-9` *Yes, remove* /
+>   `aBulkActions-8` *No, keep*. The last (empty) row's link is disabled (`link-disabled`).
+> - A completed row auto-appends an empty row after it (a second row appeared under the typed one).
+> - ⚠️ **Row ids are NOT renumbered in-page.** Removing row 1 of two left one row whose ids end
+>   in **`-2`** (`#emailOrUsername-2`, `#activationCode-2`). A **full reload renumbers** the
+>   surviving row back to `-1` (verified). So never anchor a page on `#activationCode-1` — use
+>   `input[id^='activationCode-']`, and reload after clearing if a TC needs "row 1".
+> - Cleared on 2026-09-15 (user-approved): the leftover row typed during grounding was removed via
+>   `#confirmRemoveRowModal`; a reload then showed ONE empty row `-1` with Activate natively
+>   disabled — so the draft store does persist an emptied grid.
+
+### 9.6 🐞 DEFECT — activation-code search with an unredeemed code crashes to the error page
+
+With **Who activated the code in my school?** ticked, searching `AAAA-BBBB-CCCC-DDDD` does **not**
+show a no-result state. `…/admin/apigateway/org_perf_testschool_1/activationCodeSearch` returns
+**HTTP 504**, the admin bundle logs `ERROR Ie`, and the app redirects to **`/dashboard/error`**
+(*Sorry! Something went wrong*). Reproduced **twice** — once reached by direct URL, once through the
+dashboard card (so it is not a lost-context artefact). Time to the 504 varied (~20 s / ~109 s after
+page load). User decision: `TST_SLST_TC_28` asserts the REQUIREMENT and stays **out of the exec file**.
+
+### 9.7 ⚠️ The student profile NO LONGER offers removal — corrects §2, §8.1, §8.8
+
+On 2026-09-15 Marvin Jae's profile renders **no `#learnerProfileManage` menu, no
+`a[qid='user-profile-5']` Remove item, and ZERO pre-rendered modals**. The only action is a direct
+`a.manage-learner-profile-btn` ("Manage learner profile", **no qid**). The profile's singular removal
+dialog recorded in §8.8 is gone. ~~Removal survives only as the **bulk** action on the Students
+list.~~ **Correction (same session, verified live):** removal is gone from the **list too** — no row
+checkboxes (the only checkbox under `<learner>` is `#activationCheckbox`), no select-all, no
+`N Selected` counter, no `button[qid='rLearner-1']`, no `[qid^='rLearner']` at all, and only ONE
+`.modal` (`#changeSchoolKey`). The three removal dialogs of §3 / §7.6 are no longer rendered.
+**There is currently no student-removal path anywhere on the Students tab.**
+`studentProfile.page.js`'s `manageAccountEditDetails` fallback list already tolerated this.
+
+> ⚠️ **This change was noticed on 2026-09-09 and silently worked around, not recorded.** Commit
+> `c5ed7dc` ("fix Admin Students Tab and Student Profile tests on thor") commented out
+> `TST_SLST_TC_1`'s select-all / `0 Selected` / Remove assertions, replaced `TST_SPRF_TC_1`'s
+> Manage-account assertions with a Manage-learner-profile one, dropped `TST_SPRF_TC_21` from the exec
+> file, and gave the page objects `isExisting` guards — with no note in this file, the register or
+> `authoring-status.md`, and no product question raised. Whether the removal feature was withdrawn on
+> purpose or regressed is **unknown** (Invariant 14 — it needs a product answer, not a quieter test).
+⚠️ `css.ComproC1.studentProfile.removeConfirmModal` ends in a **bare `.modal-content`** — it would
+match the change-school-key dialog on any admin page. Do not use it.
+User decision: `TST_SPRF_TC_22` is **re-pointed to the Students-list bulk removal dialog** (Cancel only).
+Measured today: Students tab → profile **18.5 s**, profile → Manage learner profile **27.6 s** (was 3–9 s / ~9 s).
+
+### 9.8 Manage learner profile — required-name validation (`TST_SPRF_TC_12`)
+
+- On load: First name `Marvin Jae`, Last name `student`, both `required`, Update enabled.
+- Clearing First name (Ctrl+A, Backspace, **Tab**) → inline **`This field is required`** in
+  `span.error-msg` inside that field's `div.form-group`, rendered on blur.
+- **Update is blocked by CSS only**: `button[qid='ed-user-prof-6']` keeps class `btn save-btn`, has
+  **no `disabled` attribute**, but gains **`tabindex="-1"`, `opacity: 0.5`, `pointer-events: none`**.
+  `isEnabled` would report TRUE — a guaranteed false green (§B4). Assert the CSS / tabindex.
+- ⇒ **The case needs no Update click at all**, so it cannot rename the student. The safety net stays
+  as a guard in case the product ever re-enables Update on an invalid form.
+- Leaving by direct URL (`goto`) bypasses the `Save changes?` guard — nothing was saved.

@@ -461,6 +461,20 @@ Scope of this entry: the **side-effect-free SPRF block only** (11 of 22 SPRF cas
   these are all ❌ rows, so `visualTest: false` stands with no promotion prompt owed
   (Invariant 12). This is consistent with the settled admin-app precedent in
   `admin-shared.md` §B10 — and confirmed here rather than inherited.
+- **Update 2026-09-15** (Group A of `HANDOFF_adminStudents_remaining_20260915.md`):
+  - ⚠️ **Correction to the 2026-08-28 lines above.** `TST_SPRF_TC_21` was never wired into the run,
+    so "11 passing" was really **10** — and commit `c5ed7dc` (2026-09-09) then removed `TC_21` from
+    `adminStudentProfile.json` outright. Baseline re-run today: **10 passing / 0 failing**.
+  - **`TST_SPRF_TC_12` added** — a required name field cannot be saved empty. It **never clicks
+    Update**: grounding showed that an empty First name blocks Update by itself (CSS only —
+    `pointer-events: none`, `tabindex="-1"`, no `disabled` attribute), so no student can be renamed.
+    **Executed: 11 passing / 0 failing across two consecutive clean runs** of
+    `npm run adminStudentProfileTest_thor` (174 s, 188 s).
+  - **Blocked, awaiting product: `TST_SPRF_TC_19 / 20 / 21 / 22`.** Student removal no longer exists
+    anywhere on the Students tab — no profile menu item, no list selection controls, no removal
+    dialogs (verified live). `admin-students-tab.md` §9.7.
+  - Phase 3 (visual) for `TST_SPRF_TC_12`: ⬜ **not yet assessed** (the user deferred visual
+    assessment for recent batches — ask before doing it).
 
 **NOT in this entry — still outstanding for SPRF:**
 - `TST_SPRF_TC_7` — **written, registered, and deliberately NOT in the execution file**
@@ -481,6 +495,24 @@ Scope of this entry: the **side-effect-free SPRF block only** (11 of 22 SPRF cas
   (require typing into the name fields and leaving the form), `TC_14` (consumes a real
   activation code), `TC_19`/`TC_22` (remove a student). These want the dedicated
   **Cqa Test Ashish School 1 (VED-NEH-KVU)** account already agreed for `TST_SLST_TC_25`.
+
+## adminStudentsTab — update 2026-09-15 (SLST)
+- Baseline and post-change: **23 passing / 0 failing across two consecutive clean runs**.
+- `TST_SLST_TC_26` — **UNBLOCKED and passing [2026-09-16]**: the user created a fixture student
+  (`cqateststu!^+s95 &LName`, cqateststu!^+s95@mailsac.com) on FCN-CHZ-PDA. Now in
+  `adminStudentsTab.json`; **24 passing / 0 failing across two consecutive clean runs**. It searches
+  both names, and "exactly one row" is what proves the characters are literal, not wildcards.
+- `TST_SLST_TC_27` — **Blocked** (user decision): only one username account on FCN-CHZ-PDA.
+- `TST_SLST_TC_28` — **written + registered, NOT in any exec file** (open defect): executed once via a temp exec file → fails as designed — redirected to `/dashboard/error` after 61.9 s (`activationCodeSearch` HTTP 504). Add to `adminStudentsTab.json` when fixed.
+- Follow-up: SLST TC_5/6/12 now take ~31–61 s (were ~1 s) — likely a 30 s wait on a missing element; green, not investigated.
+- Phase 3 (visual): ⬜ still pending.
+
+## adminBulkStudents (ExperienceApp, thor)
+Admin App **bulk student operations**, module **SBLK** → `pages/ExperienceApp/bulkStudents.page.js` (+ reused `createAdultStudentAccounts.page.js`). Exec `adminBulkStudents.json`, npm `adminBulkStudentsTest_thor`.
+- Phase 1 (build):   ✅ 2026-09-15 — `TST_SBLK_TC_6/7/8` + `TC_RESET` in the exec file; `TST_SBLK_TC_14` registered, NOT in any exec file (open defect). All `visualTest: false`. Grounded live (admin-students-tab.md §9).
+- Phase 2 (run/fix): ✅ 2026-09-15 — first run 1/3: the bulk-activation grid is a **server-side draft per account** and a row typed during grounding enabled Activate; plus the Remove selector matched two buttons. Fixed with `clear_bulkGrid` (setup + reset) and scoped selectors. Then **3/3 across two consecutive clean runs** (45 s, 53 s). `TC_14` executed once: fails as designed — "Create 2 account" enabled with an invalid row (rows themselves flagged correctly).
+- Phase 3 (visual):  ⬜ pending — ask the user first.
+- Not in scope / outstanding: Group B (`TC_11`, `TC_17`), Group C (VED-NEH-KVU data-owning suite), Group D (`TC_15`, `SPRF_TC_14/18`).
 
 ## adminStaffTab (ExperienceApp, thor)
 Admin App **Staff tab**, module **STFL** → `pages/ExperienceApp/schoolStaff.page.js`.
@@ -704,4 +736,18 @@ qid on the teacher class page, but that is a hypothesis, not a finding.
 
 **⚠️ Brittle by necessity:** `TST_UMBP_TC_1/2/3/9` locate products BY TITLE, and both belong to another team (one was renamed once already). Titles live in `adminSchoolLibraryData.json`; a rename is a one-line fix there.
 
-**NOT in this entry — the Generic/shell batch** (`test/Manual/C1App/AdminApp-Generic/`) is not started: 28 of 41 cases in Phase 1 scope, 5 Blocked (`SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`).
+**NOT in this entry — the Generic/shell batch** — see its own block below.
+
+## adminGeneric — shell chrome, footer, profile, org context, wizard, school key, notifications (ExperienceApp, thor)
+Modules **ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI** — one TC-repository module per test file.
+Manual source: `test/Manual/C1App/AdminApp-Generic/` (41 cases; 13 `[EXTRA — Phase 1 exclusion]`; 5 Blocked).
+npm script `adminGenericTest_thor`; exec file `adminGeneric.json` (7 suites, INVI last).
+- Phase 1 (build):   ✅ 2026-09-14 — 22 cases registered (ASHL 1–4 · FOOT 10–11 · MYPR 1–4 · SADB 3, 5 · SRQS 3 · SKEY 1, 2, 4 · INVI 7–12) + 6 BeforeEach housekeeping TCs, all `visualTest: false`. Executed: first run **19 passing / 3 failing**. Visual candidates: none flagged.
+- Phase 2 (run/fix): ✅ 2026-09-15 — **21/21 passing, 2 consecutive clean runs** (runs 6 and 7). Five defects, all in our code: MYPR_TC_1 (menu opened twice), INVI_TC_8 (`.close-dummy` overlays `.close`), SADB_TC_5 and SRQS_TC_3 (click before the handler was bound — settle before a single click, both BUDGET-unmeasured), INVI_TC_12 (clicked an already-read row → `unreadRow` selector). Evidence audit done on run 4 (all 22 screenshots); one unexplained image mismatch on INVI_TC_8, close proven by DOM removal instead. Detail: walkthrough `walkthrough_adminGeneric_2026-09-14_05h-30m.md` Session 2; knowledge `admin-shared.md` §A12.
+- Phase 3 (visual):  ⏭️ **DEFERRED by user decision, 2026-09-15** — skipped for now, not done. All TCs stay `visualTest: false` (the required default), so nothing about the suite changes; no `visualAcceptance_*` script exists or should be added. The §B10 "no candidates" outcome is an expectation, not a finding. To pick it up: `.agent/skills/c1-test-authoring/phases/3-visual.md`.
+
+**⚠️ `TST_INVI_TC_12` is NOT in the exec file [user decision, 2026-09-15].** It consumes one unread notification per run and the panel shows only the 5 newest; all five were read by run 5. Written + registered (tcMap ORPHAN by intent). Re-add as Suite7's last step once a fresh "report is ready" notification exists.
+
+**Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design in the handoff §6, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
+
+**Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) — the "Clases (10)" spacing claim was checked live 2026-09-15 and is NOT a defect; wizard summary omits school type and number of teachers. ~~Teacher Create-class Cancel lands in the admin view~~ — **NOT reproduced [2026-09-15]**: a real click on Cancel stayed on `/dashboard/teacher/create-class` for 8 s (the claim came from a synthetic JS click); unresolved, not a reportable defect.

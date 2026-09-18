@@ -28,7 +28,11 @@
       "activationHeading": "Activate an access code",
       "activationPlaceholder": "Example: AB2C-DE3F-G4HJ-K5LM",
       "invalidActivationCode": "ZZZZ-ZZZZ-ZZZZ-ZZZZ",
-      "invalidCodeError": "Sorry, something went wrong at our end and we couldn't activate your code. Please try again later"
+      "invalidCodeError": "Sorry, something went wrong at our end and we couldn't activate your code. Please try again later",
+
+      "requiredNameStudentEmail": "nonmqastudent5@mailsac.com",
+      "requiredNameOriginalFirstName": "Marvin Jae",
+      "requiredFieldError": "This field is required"
     }
   }
 }
