@@ -6071,6 +6071,12 @@
           "description": "Verify the staff member is retained when the removal confirmation is cancelled",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_STFP_TC_19",
+          "description": "Verify a newly promoted administrator can actually open the admin console (grant promotion, login verification, teardown revocation)",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },

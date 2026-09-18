@@ -367,5 +367,51 @@ module.exports = {
     if (true !== clickStatus) return { clickStatus: clickStatus };
     var schoolStaff = require("./schoolStaff.page.js"); // lazy — avoids a require cycle
     return { clickStatus: clickStatus, pageStatus: (await schoolStaff.isInitialized()).pageStatus };
+  },
+
+  /**
+   * Manage account → "Grant admin rights".
+   * Promotes the teacher to Administrator/Teacher.
+   */
+  click_grantAdminRights: async function () {
+    await logger.logInto(await stackTrace.get());
+    var grantPresent = await action.isExisting(this.manageAccountGrantAdmin);
+    var grantDisplayed = grantPresent ? await action.isDisplayed(this.manageAccountGrantAdmin) : false;
+    if (!grantDisplayed) {
+      await this.click_manageAccount();
+    }
+    if (!(await action.isExisting(this.manageAccountGrantAdmin))) {
+      return { clickStatus: "GRANT_ADMIN_NOT_OFFERED" };
+    }
+    var clickStatus = await action.click(this.manageAccountGrantAdmin);
+    if (true !== clickStatus) return { clickStatus: clickStatus };
+    await action.waitForDocumentLoad();
+    await browser.pause(2500);
+    return {
+      clickStatus: clickStatus
+    };
+  },
+
+  /**
+   * Manage account → "Remove admin rights" → confirms on modal with "Yes, remove admin rights".
+   * Mutating revocation used for teardown housekeeping.
+   */
+  click_confirmRemoveAdminRights: async function () {
+    await logger.logInto(await stackTrace.get());
+    var revokePresent = await action.isExisting(this.manageAccountRemoveAdmin);
+    var revokeDisplayed = revokePresent ? await action.isDisplayed(this.manageAccountRemoveAdmin) : false;
+    if (!revokeDisplayed) {
+      await this.click_manageAccount();
+    }
+    var openSts = await this.click_removeAdminRights();
+    if (true !== openSts.clickStatus) return openSts;
+    var confirmStatus = await action.click(this.removeAdminModalConfirmBtn);
+    if (true !== confirmStatus) return { clickStatus: confirmStatus };
+    await action.waitForDisplayed(this.removeAdminModal, DIALOG_TIMEOUT, true);
+    await action.waitForDocumentLoad();
+    await browser.pause(2500);
+    return {
+      clickStatus: confirmStatus
+    };
   }
 };
