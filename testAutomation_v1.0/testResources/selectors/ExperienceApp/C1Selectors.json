@@ -474,13 +474,24 @@
       "notes": {
         "eBookNotesHeadingTxt": "div.notes-title",
         "eBookAddNotesBtn": "button.add-note-button",
-        "eBookAddNotesTextarea": "textarea[placeholder='Type here...']",
+        "eBookAddNotesTextarea": "textarea[placeholder='Type here...']:not([readonly])",
+        "savedNoteTextarea": "textarea[placeholder='Type here...'][readonly]",
         "eBookSaveNotesBtn": "button[class=\"save-note\"]",
         "eBookDeleteNotesBtn": "button[class=\"cancel-note-button ng-star-inserted\"]",
         "eBookNotesViewMoreBtn": ".nemo-font.menu-btn",
         "eBookViewMoreDeleteNotestBtn": ".dropdown-menu a.dropdown-item:last-of-type",
         "eBookNoteModalDeleteButton": "button.deleteSingleNoteModalDeleteButton",
-        "notesCloseBtn": "button#notes-close-btn"
+        "notesCloseBtn": "button#notes-close-btn",
+        "eBookViewMoreEditNoteBtn": ".dropdown-menu a.dropdown-item:first-of-type",
+        "noteHyperlink": "a.hyperlink, .highlighted-text a, .single-note-body a, a:has-text('google')",
+        "savedNoteText": "div.note-description, div.note-content, p.note-text, textarea[placeholder='Type here...'][readonly], .notes-title ~ * p",
+        "savedNoteCards": ".note-item, div[class*='note-card'], div.single-note",
+        "saveNotesBtnDisabled": "button.save-note[disabled], button.save-note.disabled",
+        "eBookPinNoteBtn": "button.go-to-page-button, button:has-text('Pin note to page'), [qid*='notes-'][qid$='-15']",
+        "readerPageSurface": "#reader-container-wrapper, #readerpagedivA, .reader-container",
+        "pinnedNoteIcon": "div[role='button'][title='Note'], [qid*='note-pin'], .note-pin-icon",
+        "pinnedNotePopover": "div[class*='note-popover'], div[class*='note-dialog'], .popover-content, .notes-popover",
+        "pinnedNoteLink": "a.hyperlink, .highlighted-text a, .single-note-body a, a:has-text('google')"
       },
       "classDrawer": {
         "classDrawerHeader": "[data-tid=text-drawerHeaderTitle]",

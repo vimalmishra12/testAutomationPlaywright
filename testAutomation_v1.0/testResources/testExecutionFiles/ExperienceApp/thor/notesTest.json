@@ -79,13 +79,13 @@
     "Test": [
       {
         "id": "TST_NOTE_TC_1",
-        "description": "",
+        "description": "Click Add Notes button",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": []
       },
       {
         "id": "TST_NOTE_TC_3",
-        "description": "Add note desciption",
+        "description": "Add plain text note description",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": [
           {
@@ -96,7 +96,7 @@
       },
       {
         "id": "TST_NOTE_TC_4",
-        "description": "",
+        "description": "Save note",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": [
           {
@@ -107,53 +107,7 @@
       },
       {
         "id": "TST_NOTE_TC_9",
-        "description": "",
-        "testFile": "./test/ExperienceApp/notes.test.js",
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
-            "jsonPath": "C1.appContent.notes.teacher"
-          }
-        ]
-      },
-      {
-        "id": "TST_EBOO_TC_5",
-        "description": "",
-        "testFile": "./test/ExperienceApp/eBook.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_DASH_TC_5",
-        "description": "",
-        "testFile": "./test/ExperienceApp/dashboard.test.js",
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
-            "jsonPath": "C1.login.user.validStudent1"
-          }
-        ]
-      },
-      {
-        "id": "TST_EBOO_TC_1",
-        "description": "",
-        "testFile": "./test/ExperienceApp/eBook.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_EBOO_TC_3",
-        "description": "",
-        "testFile": "./test/ExperienceApp/eBook.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_EBOO_TC_8",
-        "description": "",
-        "testFile": "./test/ExperienceApp/eBook.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_NOTE_TC_9",
-        "description": "",
+        "description": "Verify saved note content",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": [
           {
@@ -164,25 +118,255 @@
       },
       {
         "id": "TST_NOTE_TC_6",
-        "description": "",
+        "description": "Open notes 3-dots menu",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": []
       },
       {
         "id": "TST_NOTE_TC_7",
-        "description": "",
+        "description": "Click Delete Note option",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": []
       },
       {
         "id": "TST_NOTE_TC_8",
-        "description": "",
+        "description": "Confirm Delete in modal",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Click Add Notes button for Hyperlink test",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Add note containing hyperlink URL",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.hyperlinkNote"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Save hyperlink note",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_10",
+        "description": "Click hyperlink, verify URL opens in new tab, and refocus eBook",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.hyperlinkNote"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_6",
+        "description": "Open notes menu for hyperlink note deletion",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_7",
+        "description": "Click Delete option",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_8",
+        "description": "Confirm note deletion",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Click Add Notes button for page navigation persistence",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Add note for page navigation persistence",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.page20Note"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Save note for page navigation persistence",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_11",
+        "description": "Verify notes persistence after navigating between pages",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_12",
+        "description": "Delete note and verify it does not reappear after navigation",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Click Add Notes button before closing eBook",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Add note 1 before closing eBook",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.reopenNote1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Save note 1",
         "testFile": "./test/ExperienceApp/notes.test.js",
         "testData": []
       },
       {
         "id": "TST_EBOO_TC_5",
-        "description": "",
+        "description": "Click Home button to exit eBook to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_5",
+        "description": "Reopen eBook from dashboard",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Verify eBook re-initialized",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_3",
+        "description": "Open Tools drawer after reopening",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_8",
+        "description": "Open Notes panel after reopening",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_13",
+        "description": "Verify note 1 persisted after reopening eBook",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.reopenNote1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Add note 2 on the same page",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Set note 2 text",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.reopenNote2"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Save note 2",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_13",
+        "description": "Verify both notes are displayed correctly on same page",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.reopenNote2"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_14",
+        "description": "Delete both notes and verify removal",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_15",
+        "description": "Validate note with special characters and numbers",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_14",
+        "description": "Clean up special characters note",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_18",
+        "description": "Edit existing note and verify updated persistence",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.editNote"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_14",
+        "description": "Clean up notes after edit test",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Click Home button to conclude suite",
         "testFile": "./test/ExperienceApp/eBook.test.js",
         "testData": []
       }

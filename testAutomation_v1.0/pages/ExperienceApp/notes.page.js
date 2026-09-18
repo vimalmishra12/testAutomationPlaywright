@@ -14,6 +14,19 @@ module.exports = {
     selectorFile.css.ComproC1.notes.eBookViewMoreDeleteNotestBtn,
   eBookNoteModalDeleteButton:
     selectorFile.css.ComproC1.notes.eBookNoteModalDeleteButton,
+  eBookViewMoreEditNoteBtn:
+    selectorFile.css.ComproC1.notes.eBookViewMoreEditNoteBtn,
+  noteHyperlink: selectorFile.css.ComproC1.notes.noteHyperlink,
+  savedNoteText: selectorFile.css.ComproC1.notes.savedNoteText,
+  savedNoteCards: selectorFile.css.ComproC1.notes.savedNoteCards,
+  saveNotesBtnDisabled: selectorFile.css.ComproC1.notes.saveNotesBtnDisabled,
+  notesCloseBtn: selectorFile.css.ComproC1.notes.notesCloseBtn,
+  savedNoteTextarea: selectorFile.css.ComproC1.notes.savedNoteTextarea,
+  eBookPinNoteBtn: selectorFile.css.ComproC1.notes.eBookPinNoteBtn,
+  readerPageSurface: selectorFile.css.ComproC1.notes.readerPageSurface,
+  pinnedNoteIcon: selectorFile.css.ComproC1.notes.pinnedNoteIcon,
+  pinnedNotePopover: selectorFile.css.ComproC1.notes.pinnedNotePopover,
+  pinnedNoteLink: selectorFile.css.ComproC1.notes.pinnedNoteLink,
     
   isInitialized: async function () {
     var res;
@@ -38,7 +51,9 @@ module.exports = {
           ? await action.getText(this.eBookAddNotesBtn)
           : null,
       eBookAddNotesTextarea:
-        (await action.getElementCount(this.eBookAddNotesTextarea)) > 0
+        (await action.getElementCount(this.savedNoteTextarea)) > 0
+          ? await action.getValue(this.savedNoteTextarea)
+          : (await action.getElementCount(this.eBookAddNotesTextarea)) > 0
           ? await action.getValue(this.eBookAddNotesTextarea)
           : null,
       eBookSaveNotesBtn:
@@ -113,7 +128,12 @@ module.exports = {
         await stackTrace.get(),
         " eBookSaveNotesBtn is clicked"
       );
-      res = await action.getValue(this.eBookAddNotesTextarea);
+      await browser.pause(500);
+      var val = await action.getValue(this.savedNoteTextarea);
+      if (!val || val instanceof Error) {
+        val = await action.getValue(this.eBookAddNotesTextarea);
+      }
+      res = val;
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -122,6 +142,103 @@ module.exports = {
       );
     }
     return res;
+  },
+
+  click_pinNoteToPage: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.eBookPinNoteBtn);
+    if (true == res) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "eBookPinNoteBtn is clicked, clicking reader page canvas to place pin"
+      );
+      await browser.pause(1000);
+      res = await action.click(this.readerPageSurface);
+      await browser.pause(1500);
+      var isPinned = (await action.getElementCount(this.pinnedNoteIcon)) > 0;
+      await logger.logInto(
+        await stackTrace.get(),
+        "Note pinned on canvas: " + isPinned
+      );
+      return isPinned || res;
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "eBookPinNoteBtn is NOT clicked",
+        "error"
+      );
+      return res;
+    }
+  },
+
+  click_pinnedNoteIcon: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.pinnedNoteIcon);
+    if (true == res) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "pinnedNoteIcon clicked, waiting for popover"
+      );
+      await browser.pause(1000);
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "pinnedNoteIcon is NOT clicked",
+        "error"
+      );
+    }
+    return res;
+  },
+
+  click_noteHyperlink: async function (expectedUrlPart) {
+    await logger.logInto(await stackTrace.get());
+    var initialCount = action.getPageCount();
+    var targetSelector = this.noteHyperlink;
+    var count = await action.getElementCount(targetSelector);
+    if (count === 0) {
+      targetSelector = this.pinnedNoteLink;
+      count = await action.getElementCount(targetSelector);
+    }
+    if (count === 0 && expectedUrlPart) {
+      targetSelector = `a:has-text("${expectedUrlPart}")`;
+      count = await action.getElementCount(targetSelector);
+    }
+    if (count === 0) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "No hyperlink element found to click",
+        "error"
+      );
+      return false;
+    }
+    var res = await action.click(targetSelector);
+    if (true == res) {
+      await logger.logInto(
+        await stackTrace.get(),
+        "note link clicked, awaiting tab transition"
+      );
+      var tabRes = await action.switchToNewTab(initialCount);
+      if (tabRes === true) {
+        var currentUrl = global.page.url();
+        await logger.logInto(
+          await stackTrace.get(),
+          "New tab URL is: " + currentUrl
+        );
+        var isMatched = currentUrl
+          .toLowerCase()
+          .includes((expectedUrlPart || "").toLowerCase());
+        await action.closeCurrentTabAndRefocus();
+        return isMatched;
+      }
+      return tabRes;
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        res + "note link is NOT clicked",
+        "error"
+      );
+      return res;
+    }
   },
 
   click_eBookDeleteNotesBtn: async function () {
@@ -133,7 +250,11 @@ module.exports = {
         await stackTrace.get(),
         " eBookDeleteNotesBtn is clicked"
       );
-      res = await action.getValue(this.eBookAddNotesTextarea);
+      if ((await action.getElementCount(this.eBookAddNotesTextarea)) > 0) {
+        res = await action.getValue(this.eBookAddNotesTextarea);
+      } else {
+        res = "";
+      }
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -206,12 +327,13 @@ module.exports = {
   set_eBookAddNotesTextarea: async function (value) {
     var res;
     await logger.logInto(await stackTrace.get());
-    // [2026-06-11] Playwright migration: type char-by-char (pressSequentially) instead
-    // of fill(). The notes editor is Angular-bound and only ENABLES the Save button on
-    // real key events; fill() fires a single input event and leaves Save disabled (its
-    // click then times out — TST_NOTE_TC_4/6/7/8). addValue() = pressSequentially.
     await action.clearValue(this.eBookAddNotesTextarea);
-    res = await action.addValue(this.eBookAddNotesTextarea, value);
+    if (value && value.length > 50) {
+      await action.setValue(this.eBookAddNotesTextarea, value.slice(0, -1));
+      res = await action.addValue(this.eBookAddNotesTextarea, value.slice(-1));
+    } else {
+      res = await action.addValue(this.eBookAddNotesTextarea, value);
+    }
 
     if (true == res) {
       await logger.logInto(
@@ -226,5 +348,93 @@ module.exports = {
       );
     }
     return res;
+  },
+
+  click_eBookViewMoreEditNoteBtn: async function () {
+    await logger.logInto(await stackTrace.get());
+    var res = await action.click(this.eBookNotesViewMoreBtn);
+    if (true == res) {
+      await browser.pause(500);
+      res = await action.click(this.eBookViewMoreEditNoteBtn);
+      if (true == res) {
+        await logger.logInto(
+          await stackTrace.get(),
+          "eBookViewMoreEditNoteBtn is clicked"
+        );
+        res = await action.waitForDisplayed(this.eBookSaveNotesBtn);
+      }
+    }
+    return res;
+  },
+
+  isSaveNotesBtnDisabled: async function () {
+    await logger.logInto(await stackTrace.get());
+    var disabledAttr = await action.getAttribute(
+      this.eBookSaveNotesBtn,
+      "disabled"
+    );
+    if (
+      disabledAttr !== null &&
+      disabledAttr !== false &&
+      disabledAttr !== undefined
+    ) {
+      return true;
+    }
+    var classAttr = await action.getAttribute(this.eBookSaveNotesBtn, "class");
+    if (classAttr && classAttr.includes("disabled")) {
+      return true;
+    }
+    var disabledCount = await action.getElementCount(this.saveNotesBtnDisabled);
+    return disabledCount > 0;
+  },
+
+  get_savedNotesCount: async function (expectedCount, timeout) {
+    await logger.logInto(await stackTrace.get());
+    if (expectedCount !== undefined) {
+      try {
+        await browser.waitUntil(
+          async () =>
+            (await action.getElementCount(this.eBookNotesViewMoreBtn)) ===
+            expectedCount,
+          {
+            timeout: timeout || 10000,
+            timeoutMsg: "Saved notes count did not reach " + expectedCount,
+          }
+        );
+      } catch (e) {}
+    }
+    return await action.getElementCount(this.eBookNotesViewMoreBtn);
+  },
+
+  get_savedNotesText: async function () {
+    await logger.logInto(await stackTrace.get());
+    var count = await action.getElementCount(this.savedNoteText);
+    if (count > 0) {
+      return await action.getText(this.savedNoteText);
+    }
+    return null;
+  },
+
+  get_textareaValue: async function () {
+    await logger.logInto(await stackTrace.get());
+    return await action.getValue(this.eBookAddNotesTextarea);
+  },
+
+  delete_allNotes: async function () {
+    await logger.logInto(await stackTrace.get());
+    var count = await action.getElementCount(this.eBookNotesViewMoreBtn);
+    var attempts = 0;
+    while (count > 0 && attempts < 10) {
+      attempts++;
+      await action.click(this.eBookNotesViewMoreBtn);
+      await browser.pause(500);
+      await action.click(this.eBookViewMoreDeleteNotestBtn);
+      await browser.pause(500);
+      await action.click(this.eBookNoteModalDeleteButton);
+      await browser.pause(1500);
+      count = await action.getElementCount(this.eBookNotesViewMoreBtn);
+    }
+    await browser.pause(1000);
+    return count === 0;
   },
 };

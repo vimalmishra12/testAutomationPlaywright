@@ -1172,6 +1172,48 @@
           "description": "Validate the user Added Notes content matches the expected data",
           "tags": "P3",
           "visualTest": true
+        },
+        {
+          "id": "TST_NOTE_TC_10",
+          "description": "Validate hyperlink inside notes opens expected URL in new tab and refocuses eBook",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_11",
+          "description": "Validate notes persistence on original page after navigating between eBook pages",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_12",
+          "description": "Validate deleted note does not reappear after navigating away and returning",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_13",
+          "description": "Validate multiple notes are displayed correctly on the same page",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_14",
+          "description": "Validate clean removal of all notes on the page",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_15",
+          "description": "Validate notes containing special characters and numbers persist verbatim",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NOTE_TC_18",
+          "description": "Validate editing an existing note and verifying updated content persistence",
+          "tags": "P3",
+          "visualTest": false
         }
       ]
     },
