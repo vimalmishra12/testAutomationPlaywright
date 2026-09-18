@@ -46,5 +46,32 @@
       { "id": "TST_STFP_TC_RESET", "description": "Return to the Staff tab once at suite end so nothing leaks into the next run (ADR-019: NOT AfterEach — the report screenshot is taken after AfterEach, so navigating back there would replace every profile case's evidence with a picture of the staff list)", "testFile": "./test/ExperienceApp/staffProfile.test.js",
         "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
     ]
+  },
+  "Suite2": {
+    "Name": "Admin App | Staff profile — TST_STFP_TC_19 Grant Admin Rights, Dual-Login Access Verification & Teardown Revocation | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL (micro-nemo)", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] },
+      { "id": "TST_STFL_TC_NAV", "description": "Navigate from the Classes tab to the Staff tab", "testFile": "./test/ExperienceApp/adminStaffTab.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_STFP_TC_19", "description": "Verify a newly promoted administrator can actually open the admin console (grant promotion, login verification, teardown revocation)", "testFile": "./test/ExperienceApp/staffProfile.test.js",
+        "timeout": 240000,
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/adminStaffProfileData.json", "jsonPath": "C1.adminStaffProfile" }] }
+    ],
+    "AfterEach": [],
+    "After": []
   }
 }

@@ -33,7 +33,13 @@
       "removalDialogBody": "This staff member will no longer have access to your school account or any of its classes. They can still use their account independently from your school",
       "removalCheckboxLabel": "I confirm I want to remove this staff member from my school account",
       "removalCancelBtn": "No, cancel",
-      "removalConfirmBtn": "Yes, remove"
+      "removalConfirmBtn": "Yes, remove",
+
+      "_promotionComment": "TST_STFP_TC_19. Dedicated promotion fixture cqatesttea18sept@mailsac.com with known password Compro11. Mutating test with mandatory teardown revocation.",
+      "promotionTeacherEmail": "cqatesttea18sept@mailsac.com",
+      "promotionTeacherPassword": "Compro11",
+      "adminUser": "testt1@mailsac.com",
+      "adminPassword": "Compro11"
     }
   }
 }

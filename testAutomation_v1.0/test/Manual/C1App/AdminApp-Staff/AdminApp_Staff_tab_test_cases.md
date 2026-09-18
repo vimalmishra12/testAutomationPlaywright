@@ -172,6 +172,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | Purpose | Staff member |
 |---|---|
 | **Teacher fixture (team-nominated)** | `ln, teacher17aug2026` · teacher17aug2026@mailsac.com |
+| **Disposable teacher fixture (promotion / dual-login, TST_STFP_TC_19)** | `cqatesttea18sept@mailsac.com` (password: `Compro11`) |
 | Teacher, no classes | `gg, teacher19oct` · teacher19oct@mailsac.com |
 | Administrator/Teacher, no classes | `gg, testteacher18` · testteacher18oct@mailsac.com |
 | Administrator/Teacher **with 3 classes** | `T1, Test` · testt1@mailsac.com — **this is the login account itself** |
@@ -1388,16 +1389,16 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Linked Requirement** | #9 — Verify Grant admin rights |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | A disposable teacher account exists whose password the tester controls, currently without admin rights. |
-| **Test Steps** | 1. As an administrator, open the teacher's staff profile > **Manage account** > **Grant admin rights** and confirm. 2. Verify the role now reads Administrator/Teacher. 3. Sign out. 4. Sign in as that user. 5. Open the school and confirm the admin console and its tabs are reachable. |
-| **Test Data** | Disposable teacher `<DISPOSABLE_STAFF_ACCOUNT>` on the target school. |
-| **Expected Result** | After the grant, the user can sign in and reach the admin console for that school, seeing the administrator tabs. `[ASSUMED]` |
-| **Remarks** | Added 2026-09-01 from the other team's TC_STF_009, whose step 3 is "log in as that user and confirm admin console access". Our `TST_STFP_TC_10` stops at the role **label** changing in the UI — which a grant that updated the display but not the permission would also satisfy. This is the same shape as the Students password gap (`TST_SPRF_TC_23`): we verify the UI acknowledged the change, not that the change took effect. **Mutates a real account** — data-mutating suite, and revoke the rights afterwards as housekeeping. |
+| **Preconditions** | Logged in as school admin `testt1@mailsac.com` (password: `Compro11`) on Thor (`micro-nemo.comprodls.com`). School `FCN-CHZ-PDA` ("3 July Test School 1") opened by key from "My school accounts". Disposable teacher fixture `cqatesttea18sept@mailsac.com` (password: `Compro11`) exists on the school with initial role `Teacher`. |
+| **Test Steps** | 1. Navigate to the Staff tab at `/admin/admin/org_perf_testschool_1/staff`.<br>2. Search `cqatesttea18sept@mailsac.com` and verify the role is `Teacher`.<br>3. Open the row menu and click `View profile`.<br>4. Click `Manage account` and select `Grant admin rights` (and confirm if a dialog is prompted).<br>5. Verify the profile role updates to `Administrator/Teacher`.<br>6. Sign out of the admin account `testt1@mailsac.com`.<br>7. Sign in as `cqatesttea18sept@mailsac.com` with password `Compro11`.<br>8. Open school `FCN-CHZ-PDA` from "My school accounts" and verify the Admin Console loads, displaying all five administrative tabs (`Classes`, `Students`, `Staff`, `Library`, `Reports`).<br>9. **Teardown / Housekeeping:** Sign out of `cqatesttea18sept@mailsac.com`, sign back in as admin `testt1@mailsac.com`, navigate to `cqatesttea18sept@mailsac.com`'s profile > `Manage account` > `Remove admin rights`, and confirm with `Yes, remove admin rights` to restore baseline state.<br>10. Verify the profile role is restored to `Teacher`. |
+| **Test Data** | Teacher: `cqatesttea18sept@mailsac.com` (password: `Compro11`) · Admin: `testt1@mailsac.com` (password: `Compro11`) · School key: `FCN-CHZ-PDA` |
+| **Expected Result** | After the grant, the profile role updates to `Administrator/Teacher`. When signing in as `cqatesttea18sept@mailsac.com`, the user reaches the admin console for the school and can access all five admin tabs (`Classes`, `Students`, `Staff`, `Library`, `Reports`) with full administrative privileges. After teardown revocation, the account cleanly reverts to `Teacher` role. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_STF_009, whose step 3 is "log in as that user and confirm admin console access". Our `TST_STFP_TC_10` stops at the role **label** changing in the UI — which a grant that updated the display but not the permission would also satisfy. This is the same shape as the Students password gap (`TST_SPRF_TC_23`): we verify the UI acknowledged the change, not that the change took effect. **Mutates a real account** — uses dedicated disposable fixture `cqatesttea18sept@mailsac.com` (password: `Compro11`), and explicitly revokes the rights in Step 9 as housekeeping to restore baseline. |
 | **Actual Result** | |
 | **Status** | Not Run |
 | **Automation Status** | Not Automated |
 | **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Comments / Defect ID** | |
 
 ---
 
