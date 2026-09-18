@@ -109,6 +109,17 @@ would have renumbered 79 rows in two files for no gain (user decision, 2026-08-2
 **9. Roll up the summary.** The header's execution-status block drifts silently — it once read
 "55 of 81" for a whole session while per-row statuses had moved on. Recount from the rows.
 
+**10. Check new TC ids for collisions against real case rows only.** A plain grep of a register for
+`TST_..._TC_\d+` also returns ids cited in prose ("already covered by `TST_FOOT_TC_1..9`") and
+reports false collisions. Match case rows only —
+`^\|\s*\*\*Test Case ID\*\*\s*\|\s*(TST_[A-Z0-9]+_TC_\d+)` — and check **every** register that
+shares the module (e.g. `LIBR` is split across Library and Generic).
+
+**11. A generated register (`_tcdata.js` + `_generate.js`) is only drift-proof while everyone
+regenerates.** Diff the generator's output against the committed `.md` **before** running it —
+hand edits made to the `.md`/`.xlsx` are otherwise silently deleted (it removed 4 Generic cases
+once). Back-port hand edits into `_tcdata.js` first.
+
 ---
 
 ## Step 1 — GROUND

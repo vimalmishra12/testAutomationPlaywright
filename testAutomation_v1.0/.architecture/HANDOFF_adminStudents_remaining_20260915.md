@@ -1,7 +1,11 @@
 # HANDOFF — Admin App Students tab: automate the remaining cases
 
-**Written:** 2026-09-15 · **Owner:** Vimal Mishra
-**Start from:** `main` at `bbe5dd3` (or later). Nothing for this work is in flight — no branch, no uncommitted files.
+**Written:** 2026-09-15 · **Owner:** Vimal Mishra · **Trimmed:** 2026-09-18
+**Start from:** latest `main`.
+
+> **Status [2026-09-18]:** Group A is DONE (commit `ff17661`) and the register was reconciled
+> (`dc5ab6b`). Live results live in `authoring-status.md` (`adminStudentsTab`, `adminStudentProfile`,
+> `adminBulkStudents`). This file now holds only the **remaining** work: Groups B, C, D.
 
 > **Give this file to Claude at the start of a new session with no other context.**
 > Everything needed to plan and build the remaining Students-tab automation is below.
@@ -40,60 +44,21 @@
 
 ---
 
-## 1. Current state (verified 2026-09-15)
-
-| Suite | npm script | Exec file | Cases | Last result |
-|---|---|---|---|---|
-| Students list (SLST) | `adminStudentsTabTest_thor` | `adminStudentsTab.json` | 23 | **✅ 23/23 passing** (2026-09-15, 101 s) |
-| Student profile (SPRF) | `adminStudentProfileTest_thor` | `adminStudentProfile.json` | 10 | **✅ 10/10 passing** (2026-09-15, 173 s) |
-| Bulk operations (SBLK) | — | — | 0 | not started |
-
-- Automated SLST: TC_1–13, 15–24 (all but 14 Blocked and 25). School `FCN-CHZ-PDA`, login `testt1@mailsac.com`.
-- Automated SPRF (in the exec file): TC_1, 2, 4, 5, 6, 9, 11, 15, 16, 17.
-  - `TST_SPRF_TC_7` is written + registered but **deliberately NOT in the exec file** — it asserts the
-    requirement and the product hangs on HTTP 500 (`Vandna Garg` profile). Add it the day that is fixed.
-  - `TST_SPRF_TC_21` is written + registered but **also not in any exec file**. It is `[EXTRA — Phase 1
-    exclusion]`, so this is acceptable — but `authoring-status.md` claims SPRF has "11 passing" including
-    it. **Correct that record.**
-- Code: `pages/ExperienceApp/schoolStudents.page.js`, `studentProfile.page.js`;
-  `test/ExperienceApp/adminStudentsTab.test.js`, `studentProfile.test.js`;
-  data `testcaseData/ExperienceApp/thor/adminStudentsTabData.json`, `adminStudentProfileData.json`.
+## 1. Current state
+See `authoring-status.md` for the live counts. What still matters for the remaining work:
 - **Reusable existing page objects** (from the NEMO-24306 CSV work — reuse, do not duplicate):
-  `createAdultStudentAccounts.page.js` (isInitialized, navigateTo, upload_csvFile, getData_uploadErrors,
-  Get CSV template link) and `createNewAccountsForChildren.page.js`.
-- **No page object exists yet** for: the Manage students account-type choosers
-  (`/learner/select/new`, `/learner/adult-select/new`, `/learner/select/existing`) or bulk activation
-  (`/bulk_activation`). The knowledge file names the future page object `bulkStudents` (module SBLK).
-- **No SBLK CSV fixture exists** in the repo.
-
-### Register records are stale — fix as part of this work
-- The register `.md` header and `.xlsx` still show **all SPRF cases as "Not Run"** although 10 pass.
-- The `.md` header says "SPRF: 0 of 22 automated". Update both files together (`npm run register`).
+  `createAdultStudentAccounts.page.js` and `createNewAccountsForChildren.page.js`.
+- `bulkStudents.page.js` now exists (choosers + bulk activation). The only SBLK CSV fixture so far is
+  `TST_SBLK_TC_14_invalid_username_password.csv`.
 
 ---
 
 ## 2. Scope — what is left
 
-68 register cases: SLST 28 · SPRF 23 · SBLK 17.
-**Not in scope:** the 17 `[EXTRA — Phase 1 exclusion]` cases, and the 4 **Blocked** cases
-(`SLST_TC_14` redeemed activation code · `SPRF_TC_3` no adult-with-username account ·
-`SPRF_TC_20` needs 51+ students (also EXTRA) · `SBLK_TC_16` email report).
+**Not in scope:** the `[EXTRA — Phase 1 exclusion]` cases and the **Blocked** ones (see
+`authoring-status.md`). Student removal is gone from the product, so `SPRF_TC_19–22` wait on the
+Jira answer (`admin-students-tab.md` §5 / §9.7). Group A (9 cases) is **done**.
 
-**Remaining to automate: 25 cases**, in four groups by what they need.
-
-### Group A — side-effect free, build on `FCN-CHZ-PDA` now (9)
-
-| Case | Checks | Notes |
-|---|---|---|
-| `SLST_TC_26` | Name search with special characters | Register fixtures `!^(+)s95` / `&FName` come from another team's sheet — **confirm they exist live first**; if not, ask the user (do not create students on FCN) |
-| `SLST_TC_27` | Partial username returns every containing account | Only one child username account is known (`cqatestaichild1`) — verify enough data exists |
-| `SLST_TC_28` | Never-activated code → clear no-result state in code search | Code search takes up to ~1 min (§7.5 of students knowledge) |
-| `SPRF_TC_12` | Required name field cannot be saved empty | ⚠️ Clicks **Update**. Needs a **safety net**: if the empty name is accepted, restore the original and fail loudly (pattern: `TST_MYPR_TC_4` in `test/ExperienceApp/myProfile.test.js`). Capture the verbatim validation copy |
-| `SPRF_TC_22` | Cancel on the removal confirmation leaves the student | Opens a destructive dialog — **never click Remove / Request to remove**. Singular dialog on the profile vs plural on the list (§8.8) |
-| `SBLK_TC_6` | Account-type chooser cannot advance without a selection | New `bulkStudents` page object |
-| `SBLK_TC_7` | Bulk activation page loads (grid, Upload file, Get CSV template, How to use) | 11 pre-rendered hidden modals there |
-| `SBLK_TC_8` | Activate stays disabled until a row is complete | Check native vs CSS-only disabled (§B4) |
-| `SBLK_TC_14` | Rule-violating username/password flagged on its own row | Adult create form. **Never submit.** Capture the stated rules verbatim first |
 
 ### Group B — side-effect free, but need CSV fixtures first (2)
 
@@ -137,35 +102,23 @@ existing students by username — modifies class membership) · `SBLK_TC_5` (inv
 
 ## 3. Suggested order
 
-1. Re-run both existing suites (read-only) and confirm green before changing anything.
-2. **Group A** — live-ground the new screens first (choosers, bulk activation, adult create form):
-   capture selectors, `maxlength`, pre-rendered modals (§B1 reconnaissance sweep), then build.
-   Extend `schoolStudents` / `studentProfile`; create `bulkStudents`. One TC-repository module per test
-   file (the runner resolves the FIRST module matching a `testFile`).
-3. **Group B** — download templates, write fixtures, confirm upload is side-effect free.
-4. **Group C** — only after the user confirms school, npm script and data creation.
-5. **Group D** — do not start.
-6. After each group: 2 consecutive clean runs, evidence audit of screenshots (Phase 2 exit checklist),
+1. **Group B** — download templates, write fixtures, confirm upload is side-effect free.
+2. **Group C** — only after the user confirms school, npm script and data creation.
+3. **Group D** — do not start.
+4. After each group: 2 consecutive clean runs, evidence audit of screenshots (Phase 2 exit checklist),
    update `authoring-status.md`, the register (`.md` + `.xlsx`), `admin-students-tab.md`, and a
    walkthrough under `.architecture/walkthroughs/` (name = test file + date-time).
-7. Phase 3 (visual): the user deferred visual assessment for recent batches — ask before doing it.
+5. Phase 3 (visual): the user deferred visual assessment for recent batches — ask before doing it.
 
 ---
 
 ## 4. Questions to ask the user (one at a time, in this order)
 
-1. **Group A go-ahead:** build the 9 side-effect-free cases on `FCN-CHZ-PDA` now?
-2. **`SPRF_TC_12`:** it clicks Update on a real student — OK with the restore-and-fail safety net, and
-   which student to use (e.g. `Marvin Jae student` · nonmqastudent5@mailsac.com)?
-3. **`SLST_TC_26`** if the special-character name fixtures do not exist on FCN: skip, mark Blocked, or
-   provide a school that has one?
-4. **Group B:** OK to download the CSV templates and commit generated fixtures under
+1. **Group B:** OK to download the CSV templates and commit generated fixtures under
    `test/Manual/C1App/AdminApp-Students/`?
-5. **Group C:** confirm `VED-NEH-KVU` for the data-owning Students suite (with the MRPT never-touch
+2. **Group C:** confirm `VED-NEH-KVU` for the data-owning Students suite (with the MRPT never-touch
    list), the new npm script name, and that `SBLK_TC_3/5` may send real invite emails.
-6. **Group D:** is the activation-code environment back, and has product decided on `SPRF_TC_18`?
-7. **Records:** OK to update the register statuses (SPRF 10 cases → Pass) and correct the
-   `authoring-status.md` SPRF "11 passing" claim?
+3. **Group D:** is the activation-code environment back, and has product decided on `SPRF_TC_18`?
 
 ---
 
