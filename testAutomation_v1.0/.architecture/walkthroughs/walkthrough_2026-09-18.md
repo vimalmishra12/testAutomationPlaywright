@@ -74,3 +74,47 @@ None. No protected files were modified.
 - The untracked original `HANDOFF-adminstaff-automation.md` in the main checkout can be deleted by the user after merge.
 - Next de-dup topics: `authoring-status.md` (61 KB), `admin-shared.md` (80 KB), AGENTS.md vs system.md vs
   handoff copies of the protected-file list (`package.json` ambiguity), skills vs AGENTS.md, walkthroughs.
+
+---
+
+## Session 2: `authoring-status.md` compaction (same day)
+
+### Summary
+Applied the file's own header rules: "History lives in the walkthroughs, never here" and "Remove a
+block when Phase 3 completes". The file went from 755 lines / 61 KB to 176 lines / 13 KB. Before any
+line was removed, it was checked against the knowledge files, and any lesson not already recorded
+there was promoted first.
+
+### Changes Made
+
+#### 1. `.architecture/archive/authoring-status_2026-09-18.md` (new)
+- **Type:** Created. Full pre-compaction snapshot, so no detail is lost.
+
+#### 2. `.architecture/authoring-status.md`
+- **Type:** Modified (755 → 176 lines)
+- **What changed:** Each block now holds its phase status, pass count, npm script and knowledge link,
+  plus open items (Blocked / On Hold / Not built / user decisions / follow-ups). The debugging
+  narratives were removed. The three Grading blocks (GSCL, the TC_7 pair, CGST) were removed
+  entirely because all their phases were ✅, and a pointer note replaces them. Students (4 blocks) and
+  Staff (2 blocks) were merged into one block per tab. Stale lines were dropped ("MQA Sierra
+  school", "TC_7 unwritten", "SPRF 11 of 22", "SBLK not started"). A self-contradiction in the
+  `SADB_TC_7` design (where Cancel lands) was corrected.
+- **Kept as OPEN:** the Classes suites have not been re-run since the 2026-08-19 `TST_CCLS_TC_23`
+  refactor; the STFP `TC_RESET` race fix is awaiting confirmation; the LIBRARY tab click is
+  intermittently inert; MRAC (teacher side) is failing 0/2.
+
+#### 3. `.architecture/product-knowledge/ExperienceApp/admin-shared.md`
+- **Type:** Modified. §A7 gained the `seedAdminFixtures` follow-up. §B12 gained two notes: an
+  ordering assertion must first prove there is something to order (`isGroupedBefore`), and prefer
+  a substring URL poll over a glob `waitForURL`.
+
+#### 4. `.architecture/product-knowledge/ExperienceApp/admin-students-tab.md`
+- **Type:** Modified. §4 gained a note that the last-name cell also holds the avatar initials
+  (read `span.item-text`).
+
+### Protected Files Touched
+None. No protected files were modified.
+
+### Pending / Follow-up
+- The skill `c1-test-authoring` still describes the old long block format in places. Check it against
+  the compact format in the next topic.

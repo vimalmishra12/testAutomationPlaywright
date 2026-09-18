@@ -205,6 +205,8 @@ success-dialog keys in §5 were found *before* anyone ran a bulk activation.
   appeared unprompted during this session and **intercepted the school-card click**, failing it with
   "intercepts pointer events". Any admin suite that starts at `/dashboard` needs to dismiss or
   tolerate it. `[2026-08-22]`
+- **The last-name cell also holds the avatar initials** — `#learner-cell-last-name-{{n}}` wraps the
+  checkbox, a `span.item-name` badge ("MS") and the name. Read `… span.item-text`. `[2026-08-28]`
 - **`schoolStudents.getData_studentRows()` is expensive** — ~80 sequential logged action calls to
   read 20 rows, and it dominates every TC that reads rows. A bulk `evaluate`-based read would need a
   new `baseActionLibrary` method (protected file — confirm first). `[2026-08-28]`

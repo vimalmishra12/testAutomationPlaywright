@@ -39,717 +39,138 @@ Built but not yet executed (blocked):
 
 ---
 
-## schoolAdminAddClassValidation (ExperienceApp, thor)
-Scenario #3 (bulk class-creation form) — Edge/Negative validation, extending the existing
-`CCLS` module (create flow already covered by `schoolAdminAddClass` / `P1Adminclassworkflow_Thor`).
-- Phase 1 (build):   ✅ 2026-08-14 — TST_CCLS_TC_9..12 registered; visual candidates: none — no
-  static UI snapshot asserted (attribute/enabled-state/disabled-cell-count reads only).
-  ⚠️ Selectors authored WITHOUT live Playwright-MCP capture (server not connected this session).
-  `endDateDisabledCell` (`.owl-dt-calendar-cell-disabled`) is from the manual doc's live capture,
-  not re-verified — confirm in Phase 2.
-- Phase 2 (run/fix): ✅ 2026-08-14 — all 6 passing, 2 consecutive clean runs
-  (`P1AdminclassValidation_Thor`, headed/system-Chrome). Inferred selector
-  `endDateDisabledCell` (`.owl-dt-calendar-cell-disabled`) VERIFIED live (18 disabled cells).
-  TC_9 fix: the create form restores an auto-saved draft (not empty on load), so TC_9 now
-  clears the class name first (`clear_className()`) to guarantee an incomplete row before
-  asserting Create is disabled.
-- Phase 3 (visual):  ⬜ pending
-
-**Deferred (need live capture before authoring):** scenario-#3 POSITIVE cases not yet done —
-BCCF_TC_7 (duplicate), TC_8 (copy existing class), TC_10 (CSV template download),
-TC_11 (CSV upload), TC_12 "Create more classes" leg, and the enriched TC_1 toolbar assertions
-(TC_1 form-load itself is now covered — see below).
-(BCCF_TC_2/4/12-back-to-dashboard already covered by TST_CCLS_TC_1..8; BCCF_TC_6/1/3 done below.)
-
-## schoolAdminAddClassBulk (ExperienceApp, thor)
-Scenario #3 POSITIVE — form-load + bulk multi-row behaviour, `CCLS` module, **creates no class**
-(asserts button state / applied-value deltas only). Live-captured 2026-08-17/18 against MQA
-Sierra School (MQA-ABC-DEF) — the login account's own home school; `schoolKey` in
-`adminAddClassBulk` test data points here now (not FCN-CHZ-PDA).
-- Phase 1 (build):   ✅ 2026-08-18 — TST_CCLS_TC_13 (BCCF_TC_6), TC_14 (BCCF_TC_1, form-load
-  components), TC_15 (BCCF_TC_3, add teacher), TC_17 (BCCF_TC_9, bulk toolbar dates),
-  TC_18 (BCCF_TC_7, duplicate row), TC_19 (BCCF_TC_11, CSV upload) registered and
-  live-verified GREEN; visual candidates: none — TC_13's Create-button label is a dynamic
-  row count, the rest are attribute/state/applied-value reads, no static UI snapshot asserted.
-  TC_16 (BCCF_TC_5, add label) FIXED 2026-08-18 — see the row-scoping bug below.
-  TC_21 (BCCF_TC_8, Copy an Existing Class) added 2026-08-18.
-- Phase 2 (run/fix): ✅ 2026-08-18 — **11/11 passing** (TST_SADB_TC_1, TST_SCLS_TC_2,
-  TST_CCLS_TC_14, TC_15, TC_13, TC_16, TC_17, TC_18, TC_22, TC_19, TC_21), 2 consecutive clean
-  runs, ~55s-1m each (run directly via
-  `node core/runner/run.js --testExecFile=schoolAdminAddClassBulk.json`).
-  **This suite creates NO classes.**
-  Real bugs found + fixed along the way (all in `createClasses.page.js`, non-protected):
-  - Row-2 qids (`dBulkClass-1-2/-1-3/-1-4`) were inferred, now verified live.
-  - `teacherApplyChangesBtn` is NEVER natively disabled — a click before Angular's async
-    validation settles silently no-ops with no thrown error. Fixed with a single click + a
-    generous (15s) wait for the observable result (NOT retry-clicking — re-clicking risks
-    double-applying if the first click is still processing).
-  - The teacher-email field can silently DROP the last keystroke of `pressSequentially`
-    (observed `...mailsac.co` instead of `...mailsac.com`). Fixed in `set_teacherEmail` by
-    reading the value back after typing and retrying (clear + retype, up to 3x) until it matches.
-  - The bulk-toolbar Start/End-date buttons are ALSO CSS-class-only disabled (no native
-    `disabled` attribute) — same "single click + longer wait" pattern applied.
-  - **The "Add class label" dropdown is rendered PER ROW** — `#class-label-list-modal-<rowIndex>`,
-    each containing a full copy of every label (~87). So an unscoped
-    `input[placeholder='Create or find a label']` matches ONE PER ROW (Playwright raises a
-    strict-mode violation on it), and the search text can land in a hidden row's box, leaving
-    row 1's list unfiltered so the item click never resolves. **This was the true root cause of
-    TC_16's repeated "label was not selected" timeouts** — an earlier `:visible` tweak treated a
-    symptom (a real hidden duplicate) but not the cause. Fixed by scoping BOTH `labelSearchInput`
-    and `classLabelItem` to `#class-label-list-modal-0` (row 1), consistent with the row-0 qids
-    used elsewhere. Verified live: typing "temp" filters 87 → 1 and the click applies the label.
-  - **Bootstrap custom-control checkboxes must be clicked via their `<label>`** — the
-    `label.custom-control-label` overlays the input and intercepts pointer events, so clicking the
-    input times out ("<label …> intercepts pointer events"). Applies to the copy-options
-    checkboxes (`copyTeachersLabel` / `copyMaterialsLabel`).
-  - **"Copy an Existing Class" is a 2-STEP wizard** sharing ONE Continue selector
-    (`dBulkClass-copy-from-modal-4`) across both steps — each transition must be waited on via
-    that step's own controls. Step 2's options are enabled only when the SOURCE class has items of
-    that kind (labels show counts, e.g. "Teachers [1]" vs disabled "Assignments [0]"). The copy
-    does NOT overwrite the row's own name/dates; it fills teachers/materials and records the
-    source in a "Copied from a class" cell (`dBulkClass-copied-class-data-<row>-9`).
-  - **Row checkbox ids are POSITIONAL and re-issued** (`checkbox-1`, `checkbox-2`, …) as rows are
-    added/removed, so the first row's checkbox is NOT reliably `#checkbox-1`. This was the root
-    cause of the recurring "row checkbox is not clicked" failures in BOTH TC_17 and TC_18. Fixed
-    by matching structurally: `input[type=checkbox][name^='checkbox-']`.
-  - **Applying a bulk toolbar date CLEARS the row selection** ("All selected" → "0 Selected"),
-    re-disabling the toolbar — so a row must be RE-SELECTED between consecutive bulk actions.
-    This was why TC_17's end-date leg failed after its start-date leg succeeded. Expect the same
-    for the not-yet-automated bulk Add teacher / Add labels / Add Material actions.
-  - **CSV upload POPULATES THE FORM — it does NOT create classes** (probed live 2026-08-18 with a
-    one-row throwaway CSV; nothing was created). Creation still requires clicking "Create N
-    classes", so TC_19 uploads, asserts the rows, and stops — zero side effects. The hidden
-    `input[qid='dBulkClass-54']` (`accept=".csv"`, `class="d-none"`) takes files directly via
-    `action.setInputFiles` — no need to click "Upload file" first, same as the NEMO uploader.
-  - **CSV template format** (from "Get CSV template", captured 2026-08-18 — this resolves
-    BCCF_TC_10's `[ASSUMED]` even though TC_10 itself is not automated): 14 columns, UTF-8 BOM —
-    `Class name, Start date DD/MM/YYYY, End date DD/MM/YYYY, Teacher 1..10 (optional),
-    Student progress data`, plus one sample row. Dates go in as `DD/MM/YYYY` and the form
-    displays them as e.g. `Tue, Sep 15, 2026` — assert the DISPLAY form, not the input form.
-  - **`reset_formToSingleEmptyRow()` added** (select-all → Remove → confirm "Yes, remove rows").
-    The draft-restore made every row-index and row-count assertion non-deterministic ACROSS RUNS
-    — e.g. TC_18's duplicate persisted into the next run and broke TC_13, because re-filling an
-    already-complete row adds no class. TC_13/TC_17/TC_18 all now reset first. **Any future TC
-    that asserts on a row index or row count MUST call this first.**
-- Phase 3 (visual):  ⬜ pending
-
-## schoolAdminAddClass — workflow suite (ExperienceApp, thor) — TC_20 added
-Scenario #3 BCCF_TC_12 "Create more classes" leg, added to the EXISTING workflow suite
-(`P1Adminclassworkflow_Thor`) rather than the bulk suite, because it must CREATE A REAL CLASS
-and the bulk suite is deliberately side-effect free.
-- Phase 1 (build):   ✅ 2026-08-18 — TST_CCLS_TC_20 registered; visual candidates: none.
-  Selector `createMoreClassesLink` (`a[qid='dBulkClass-48']`) captured from the success modal's
-  markup, which is present-but-hidden in the DOM — so capture cost ZERO created classes.
-- Phase 2 (run/fix): ✅ 2026-08-18 — 13/13 passing on **FCN-CHZ-PDA**, run twice (the 2nd run
-  carried the tightened assertion). Suite now creates **2 classes per run**
-  (`AutoClass_CreateOnly` + `AutoClass_CreateMore`).
-  ⚠️ Deviation from the strict "2 consecutive clean runs with final code": only ONE run carries
-  the final tightened assertion (the prior run passed with a looser one). Accepted deliberately
-  because each extra run creates 2 more real classes; the other 11 TCs in this suite are
-  long-stable. Re-run if a stronger guarantee is wanted.
-- Phase 3 (visual):  ⬜ pending
-- **FCN-CHZ-PDA verified working** — the whole workflow suite (incl. material selection) ran
-  green against it, so the "issue" reported earlier was not this school. Likely the thor 503
-  outage seen the same day.
-- **Product finding:** "Create more classes" returns a **completely empty** form
-  (`rowName/rowStart/rowEnd` all ""). This is the ONLY known path that does not restore the
-  auto-saved draft — everywhere else the form repopulates.
-
-**✅ SCENARIO #3 IS FULLY AUTOMATED — all 16 BCCF manual cases covered (2026-08-18).**
-Coverage map **(revised 2026-08-19 — see the reset refactor below)**: bulk suite =
-BCCF_TC_1/6/7/8/9/10/11 (creates nothing) · workflow suite = BCCF_TC_2/4/12 **+ 3 (teacher)
-+ 5 (label)** (creates 2 classes/run) · validation suite = BCCF_TC_13/14/15/16.
-
-### Reset extracted to its own TC — `TST_CCLS_TC_23` (2026-08-19, ⚠️ NOT YET EXECUTED)
-
-`reset_formToSingleEmptyRow()` was duplicated inline at the top of **seven** TCs
-(`TC_12/13/16/17/18/19/21`). That mixed housekeeping into TCs whose titles promised one thing,
-and it made `TC_16` impossible to compose into a class-creating flow: its reset would delete the
-row the surrounding TCs were building. Extracted to `TST_CCLS_TC_23` (registered,
-`visualTest: false`) and removed from all seven bodies.
-
-Placement is now the **execution file's** choice, and it differs per suite by necessity:
-- **bulk + validation suites → `BeforeEach`.** Every TC there is independent, so each gets its
-  own clean form. `BeforeEach`, never `AfterEach` (ADR-019).
-- **workflow suite → ONCE in the `Test` list**, right after the form opens. Its TCs deliberately
-  ACCUMULATE onto one row (name → dates → label → teacher → material → Create); a per-test reset
-  would delete the half-built class before every step.
-
-That per-suite split is the whole payoff — it is only expressible once the reset is its own
-composable unit.
-
-`TST_CCLS_TC_16` is now **label-only** (no reset, no `set_className`) and REQUIRES a preceding
-`TC_23` in its suite: a restored draft can arrive with the label already applied, and
-re-selecting it would toggle it OFF. `TST_CCLS_TC_15` (teacher) needed no change.
-
-**Guard added to `reset_formToSingleEmptyRow()`** (page object, non-protected): it now returns
-early unless the form's own `classNameInput` is present. Needed because as a `BeforeEach` step it
-also fires on the school dashboard and Classes tab, where `rowCheckbox` (`name^='checkbox-'`) is a
-structural match that could hit another page's row checkboxes — the select-all/Remove ids are
-form-specific, so a false positive would have stalled for the dialog's full 10 s timeout and
-failed the hook.
-
-**Workflow suite (`P1Adminclassworkflow_Thor`) order is now:**
-`TST_SADB_TC_1 → SCLS_TC_1 → SCLS_TC_2 → CCLS_TC_23 (reset) → TC_1 (name) → TC_2 (start) →
-TC_3 (end) → TC_16 (label) → TC_15 (teacher) → TC_5/6/7 (material) → TC_4 (Create) → TC_8 →
-SCLS_TC_2 → TC_20`. The created class now carries a label and a teacher. Teacher email for this
-suite is `teacher17aug2026@mailsac.com` (`C1.adminAddClass`); the bulk suite keeps
-`autotest.teacher@mailsac.com`.
-
-⚠️ **All three suites are UNVERIFIED since this refactor — none has been executed.** Per the ⚠️
-rule at the top of this file, treat every placement decision above as an untested hypothesis until
-a run confirms it. Verify bulk + validation first (they create nothing); the workflow suite costs
-2 real classes per run.
-
-**Protected-file change made (confirmed by user, 2026-08-18):** `downloadFile(selector, saveDir,
-timeout)` added to `core/actionLibrary/baseActionLibrary.js` — the library had NO download
-handling. Purely additive; no existing method touched. Awaits the click and the page's `download`
-event together via `Promise.all` (a listener attached after the click misses fast downloads);
-listens on `global.page` because the event never fires on a FrameLocator, while the click still
-goes through `el()` so iframe scoping is preserved. Returns
-`{ downloaded, fileName, filePath }` per the ADR-009 getter exception. Files default to
-`output/downloads/` (already gitignored). Note `acceptDownloads` is NOT set anywhere, so
-Playwright's default (true) applies — no change to `playwright.setup.js` was needed.
-
-**npm script added (confirmed by user, 2026-08-18):** `P1AdminclassBulk_Thor` in `package.json`,
-alongside the other `P1Adminclass*` scripts. Verified by running the suite THROUGH the script
-(11/11 passing, 58s). No `visualAcceptance_*` counterpart — every TC is `visualTest: false`, so
-AGENTS.md Rule B's dual-script requirement does not apply yet (revisit if Phase 3 promotes any).
-
-**Pending / follow-up:**
-- **TC_21 data dependency:** `copySourceClass` = "cqa test class 17aug2026 1" must exist in the
-  target school AND have ≥1 teacher and ≥1 course material (copy options are disabled otherwise).
-  It has a dated name so it may eventually be cleaned up — swap the value in
-  `schoolAdminAddClassData.json` if the test starts failing on "source class could not be selected".
-
-## adminGradingScales (ExperienceApp, thor)
-Module **GSCL** — Requirements #10, #11, #12, #14, #15, #16. New suite `P1AdminGradingScales_Thor`.
-- Phase 1 (build):   ✅ 2026-08-19 — TST_GSCL_TC_1/2/3/5/6/8/9/10/11/12 registered (10 of 12);
-  executed: 4 passing / 6 failing on first run. TC_4 (max-scales limit) is BLOCKED on the shared
-  school and TC_7 is deferred to CGST — neither is registered anywhere.
-- Phase 2 (run/fix): ✅ 2026-08-19 — **10/10 passing, 2 consecutive clean runs (~58 s)**.
-  Three fix rounds: (1) the title field's `maxlength="20"` truncated every generated name —
-  switched to a base36 timestamp and added a length guard plus a fail-fast in `set_title`
-  (run time 3 min → 58 s); (2) Save stayed disabled because the last field was never blurred and
-  the target radio was never actually clicked; (3) copy assertions compared through `squash()`
-  after the product turned out to render blank lines between heading and body.
-  School state verified clean after the run: default back on "Cambridge One grading scale",
-  zero `AutoScale_*` leftovers, `new Grading Auto` untouched.
-- Phase 3 (visual):  ✅ 2026-08-19 — assessed; **all 10 TCs stay `visualTest: false`.**
-  9 of 10 carry ❌-row data (timestamps / live shared list) and stay false with no prompt
-  (Invariant 12). `TST_GSCL_TC_5` is the first genuine ✅-row candidate this page family has
-  produced — it ends on the **create form**, which does not frame the shared mutable list, and
-  all its data is fixed. It was raised with the user under AGENTS.md §8 Rule A, and the user
-  **declined promotion for now** (2026-08-19), so it stays `false`.
-  Re-open only if visual coverage is wanted later; the one unverified risk is whether a banner
-  from BeforeEach's sweep can linger onto the form — never probed.
-
-**Follow-ups (not blocking):** no boundary manual TC exists for the 20-character title limit
-(GCAT has one for its 50-char field); an NPS survey popup can render a full-viewport overlay with
-no close control — never hit during a run, so no workaround was built; the Playwright-MCP browser
-delivers no real input events in this environment (JS evaluation works), which also corrects the
-2026-08-18 GCAT note that blamed Angular.
-
-## adminGradingScales / adminGradingCategories — TC_7 pair (ExperienceApp, thor)
-Requirements **#13** (GSCL) and **#7** (GCAT) — `TST_GSCL_TC_7` + `TST_GCAT_TC_7`. These are
-GSCL/GCAT test cases that **run inside the CGST suite** (`P1AdminClassGradeSettings_Thor`),
-because their precondition is a scale/category applied to a LIVE class, which only the CGST
-suite produces. They are registered in their own module files so ownership follows the page
-object (AGENTS.md Rule 6), and listed in `adminClassGradeSettings.json` after `TST_CGST_TC_6`
-and before the `After` block's `TST_CGST_TC_9` (the delete).
-- Phase 1 (build):   ✅ 2026-08-20 — both registered, `visualTest: false`. Executed: first run
-  **19 passing / 2 failing**, both new TCs failing at the same call; fixed; **21/21 passing**.
-- Phase 2 (run/fix): ✅ 2026-08-20 — **21/21 passing.** One defect, one fix round:
-  `search_class()` is NOT idempotent (it waits for the class list to CHANGE) and the search term
-  PERSISTS SERVER-SIDE. `TST_CGST_TC_8` had already searched the same class name and never
-  cleared it, so re-searching it changed nothing and the wait burned its full 20 s budget —
-  reported as "The class search did not settle" while the search had in fact worked.
-  Fix: `clear_search()` before `search_class()` in both TCs — the documented remedy (handoff
-  trap 4) and the pattern TC_8/TC_9 already use. Cleanup verified after the run: class deleted
-  by URL, sweep removed 0, search cleared.
-- Phase 3 (visual):  ✅ 2026-08-20 — assessed; **both TCs stay `visualTest: false`.**
-  Each ends on the Class grade settings page of a class **created fresh in the same run**, so its
-  class key and dates differ every time, and each passes through a details page listing the
-  shared school's live class set — which for the scale page grows by one soft-deleted row per
-  run. That is AGENTS.md §8 ❌-row data on both counts, so they stay false with no prompt needed
-  (Invariant 12). No borderline candidate; no `visualAcceptance_*` script required (Rule B
-  applies only once a TC is true).
-
-**What the live capture resolved.** Both manual cases carried `[ASSUMED]` expected results
-because every scale/category anyone had ever opened had ZERO classes, so the populated layout
-had never been seen. Captured live 2026-08-20; full detail in
-`product-knowledge/ExperienceApp.md`. Two corrections to the manual cases:
-- The step "click a listed class" is **wrong** — the class name is plain text; the row's only
-  control is a dedicated "Class grade settings" link.
-- The two pages are **not** symmetric: the scale page reads `Classes (N)` and **includes
-  deleted classes**; the category page reads `Active classes (N)` and does not. That is why
-  GCAT_TC_7 looked blocked for weeks — every category read `Active classes (0)` purely because
-  the classes they had been applied to were since soft-deleted.
-
-**New permanent fixture on thor:** `Fixture_GradeSettings_DO_NOT_DELETE` (key `62k3-AXm6`,
-FCN-CHZ-PDA, start Aug 20 2026, end **Dec 31 2036**, course material + category `some` applied,
-grade settings saved at 70/30). Created with explicit user approval so this DOM can be
-re-captured without re-deriving the state. **It is not used by any test** — both TCs use the
-class the CGST suite creates and deletes. Do not delete it; no sweep prefix matches it.
-
-**Follow-up (agreed with the user, not started):** a `seedAdminFixtures_<env>.json` seeding
-exec file, to make the fixture reproducible when porting to qa/rel/production. Blocked on a
-real gap rather than effort: `createClasses.set_endDate()` is hardcoded to "day 15 of next
-month", so a seeded fixture would expire inside a month and lose the whole point. Needs an
-**additive** data-driven end-date method on `createClasses.page.js` (shared by four green
-suites — add alongside `set_endDate`, never modify it) plus datepicker selectors for the
-period button and the year/month cells. Note the product caps the year picker at **2036**.
-
-## adminClassGradeSettings (ExperienceApp, thor)
-Module **CGST** — Requirement #22. New suite `P1AdminClassGradeSettings_Thor`.
-- Phase 1 (build):   ✅ 2026-08-20 — `TST_CGST_TC_1..9` registered, all `visualTest: false`.
-  First run 13 passing / 6 failing; **final run 19/19 passing in 97 s**.
-  Visual candidates: none assessed yet — that is Phase 3's job.
-- Phase 2 (run/fix): ✅ 2026-08-20 — **19/19 passing.** Nine runs, six distinct defects fixed
-  (see below). A second confirmation run was executed; school state verified clean after each
-  (Active back to 21, no `AutoClass_CGST`, search cleared).
-- Phase 3 (visual):  ✅ 2026-08-20 — assessed; **all 9 TCs stay `visualTest: false`.**
-  Every one of them frames either a class created fresh in the same run (so its name, dates and
-  key differ every time) or the shared school's live Classes list — AGENTS.md §8 ❌-row data, which
-  means they stay false with no prompt needed (Invariant 12). Unlike GSCL, this module produced
-  **no borderline candidate at all**: even `TST_CGST_TC_1`, the most static-looking screen, prints
-  the run's own class name under its heading. The user elected to skip visual promotion
-  (2026-08-20); the assessment reaches the same answer independently, so nothing is deferred.
-  No `visualAcceptance_*` npm script is required (AGENTS.md Rule B applies only once a TC is true).
-
-**Manual register updated 2026-08-20** — `TST_CGST_TC_1..6` set to **Pass** in BOTH
-`AdminApp_Classes_tab_test_cases.md` and the `.xlsx` (via `npm run register`, which verified no
-other cell changed). Register now **61 Pass / 18 Not Run**; the 2 max-limit TCs remain absent by
-design. The 3 helper TCs (`TC_7/8/9`) have no manual counterpart and are not in the register.
-
-**The suite owns its data** (agreed with the user): it creates `AutoClass_CGST` with a course
-material in the `Test` list, runs CGST against it, and deletes it in the suite-level `After`.
-`TST_CGST_TC_7` also sweeps leftovers BEFORE creating, so a crashed run self-heals next time.
-
-**Six real defects found and fixed — all but one were in the new code:**
-
-1. **The teacher score-override toggle raises a confirmation dialog** that nothing closed. An
-   unclosed modal is a full overlay that blocks every later click **while every read keeps
-   working**, so four unrelated TCs failed with individually plausible symptoms. Cost 1 run.
-2. **A successful Save opens `#changesSavedConfirmationModal`** — same failure mode, cost 1 run.
-   `click_saveChanges` now waits for that dialog (a stronger success signal than a disabled
-   button) and closes it via the X, never "Back to class data" (which navigates away).
-3. **`isInitialized` returned before the Angular form state settled**, so a pristine page briefly
-   reported Save as ENABLED and `TST_CGST_TC_1` failed its "pristine form cannot be saved" check.
-4. **`search_class()` is NOT idempotent** — it waits for the class list to CHANGE, so calling it
-   twice with the same term waits out its full budget and reports failure even though the search
-   worked. This broke the TC_8 poll AND the cleanup sweep. Every call site now clears first.
-5. **Cleanup depended on the very path that breaks it.** `TST_CGST_TC_9` re-found the class by
-   searching; when search failed, cleanup failed and a real class was left on a SHARED school
-   (happened three times, hand-cleaned each time). TC_8 now records the created class's URL and
-   TC_9 deletes via that URL directly — no search, no row matching. The sweep remains a fallback.
-6. **`select_material` typed before the material catalogue had loaded** (the one fix in shared,
-   pre-existing code). See the product-knowledge entry: the modal's loading state renders the
-   words **"No search results"**, identical to a genuine empty result, so the failure looked like
-   a product bug for five runs. Now: wait for the catalogue (`waitForExist`, 60 s) → type and
-   **read the value back** → wait for the filtered match (5 s, because filtering is client-side
-   and measured at 1 ms).
-
-**Two timeout mistakes worth not repeating:** a poll budget set to exactly mocha's `timeout`
-(120000) is killed at the same instant it expires, so the failure surfaces as a generic runner
-timeout instead of the TC's own message. Made twice — once in `CLASS_APPEAR_TIMEOUT`, once by
-stacking a 90 s wait and the click's own 30 s default.
-
-**Shared-file changes (all strictly more tolerant, nothing that passed can start failing):**
-- `createClasses.page.js` → `select_material` hardened (catalogue wait + type-verify + fail fast).
-  Shared by the workflow, bulk and BulkCreateCSV suites.
-- `activeClass.page.js` → ADDED `click_classGradeSettings()` and `delete_class()`; no existing
-  method touched. `delete_class` tolerates the confirmation dialog being ABSENT — verified live
-  that deleting a freshly created class with no students raises no confirmation at all.
-- `C1Selectors.json` → new `css.ComproC1.classGradeSettings` block (61 keys, every one verified
-  live) + `activeClass.classGradeSettingsLink`; `createClasses.materialItem` scoped to the modal
-  (it was page-wide and matched the header profile menu — up to 885 elements).
-
-**Pending / follow-up:**
-- **`CLASS_APPEAR_TIMEOUT` is at 100000, close to its practical ceiling.** Class creation was
-  measured at ~24 s on a responsive Thor but exceeded 90 s on a loaded one. If it regularly needs
-  more, the answer is NOT a bigger number — it is raising mocha's timeout (PROTECTED file, needs
-  confirmation) or splitting the wait and the launch into two TCs so each gets its own budget.
-- **`SAVE_TIMEOUT` (20 s) is still a budget, not a measurement** — Phase 2 never logged the real
-  save round-trip. Worth replacing with a measured figure.
-- **Thor throughput varies ~4x** (97 s to 12.5 min for the same suite). Do not tighten any timeout
-  on the strength of one fast run.
-- `TST_GSCL_TC_7` and `TST_GCAT_TC_7` are now genuinely unblocked — CGST proves a scale and a
-  category can be applied to a class. They remain unwritten (deliberately out of this batch).
-- The manual register has NOT been updated to Pass yet — awaiting the user's call, given how much
-  timing variance Thor showed today.
-
----
-
-## adminStudentsTab (ExperienceApp, thor)
-Admin App **Students tab**, module **SLST** → `pages/ExperienceApp/schoolStudents.page.js`.
-Manual source: `test/Manual/C1App/AdminApp-Students/` (59 TCs across SLST/SPRF/SBLK).
-Scope of this entry: the **side-effect-free SLST block only** (23 of 25 SLST cases).
-
-- Phase 1 (build):   ✅ 2026-08-28 — TST_SLST_TC_1..24 (less TC_14/TC_25) registered, plus
-  TC_NAV and TC_RESET housekeeping. **Executed: 23 passing / 0 failing**, across two
-  consecutive clean runs of `npm run adminStudentsTabTest_thor`.
-  Selectors were captured LIVE (scripted recon against Thor / FCN-CHZ-PDA) rather than
-  inferred from documentation — see `product-knowledge/ExperienceApp/admin-students-tab.md` §7.
-  Visual candidates: **none identified so far** — every SLST case reads dynamic, shared-school
-  data (row content, counts, sort order) and this school is actively mutated by other teams.
-  Phase 3 must still confirm this rather than inherit it.
-- Phase 2 (run/fix): ✅ 2026-08-28 — folded into Phase 1 (the suite was run and fixed to green
-  in the same session). Four defects were found and fixed, all MINE, none in the product:
-    1. **Every assertion was missing `await`.** The framework convention is
-       `await assertion.assertEqual(...)` (see `adminClassesTab.test.js`); `assertEqual` is
-       async and throws, so unawaited calls left the rejection unhandled and **the suite
-       reported 23/23 green while asserting nothing**. All 163 assertions were corrected.
-       *This masked defects 2-4 completely.* Check this first on any new test file.
-    2. `rowLastNameByIndex` returned the AVATAR INITIALS as well as the surname —
-       `#learner-cell-last-name-{{n}}` wraps the checkbox, the `span.item-name` initials
-       badge and the name. Fixed to `… span.item-text`.
-    3. **Sort and user-guide state leak between TCs.** Sort persists within the session and
-       there is no reset control other than a reload; TC_RESET now collapses the user guide,
-       and TC_18/TC_19/TC_23 reload first so they do not inherit a predecessor's state
-       (ADR-011). TC_21 was costing **60.3s** — two stacked 30s Playwright timeouts clicking
-       a collapsed-state toggle that TC_20 had already replaced; now 0.3s.
-    4. `userGuidePanelBullets` matched the panel TITLE as well as the bullet list
-       (`.collapseUserGuide .mx-4` hits both a `<p>` and a `<div>`). Fixed to `div.mx-4`.
-- Phase 3 (visual):  ⬜ pending
-
-**NOT in this entry — still outstanding for the Students tab as a whole:**
-- `TST_SLST_TC_14` — **Blocked**: needs a 16-char activation code already redeemed by a known
-  student. The code-issuing environment is down. (Block reason CORRECTED this session — the
-  old "the checkbox has no observable effect" reason was wrong; see admin-students-tab.md §7.5.)
-- `TST_SLST_TC_25` — not written. Creates real data; agreed to target
-  **Cqa Test Ashish School 1 (VED-NEH-KVU)** via a new `schoolAdminAutomation` login entry
-  (`cqatestashish_admin@mailsac.com`), which is **not yet added to logindata.json**.
-- **SPRF — 11 of 22 automated and passing [2026-08-28]**; see the `adminStudentProfile` entry
-  below for what is done, blocked and deliberately excluded. **SBLK (12 TCs) — not started**,
-  and additionally needs 7 CSV fixtures that do not exist. `TST_SPRF_TC_18` needs a product
-  decision before it can be automated.
-
-## adminStudentProfile (ExperienceApp, thor)
-Admin App **student profile / Manage learner profile / individual activation**, module **SPRF**
-→ `pages/ExperienceApp/studentProfile.page.js`.
-Manual source: `test/Manual/C1App/AdminApp-Students/` (59 TCs across SLST/SPRF/SBLK).
-Scope of this entry: the **side-effect-free SPRF block only** (11 of 22 SPRF cases, run).
-
-- Phase 1 (build):   ✅ 2026-08-28 — TST_SPRF_TC_1, 2, 4, 5, 6, 9, 11, 15, 16, 17, 21 registered
-  and run, plus TC_RESET housekeeping. **Executed: 11 passing / 0 failing**, across two
-  consecutive clean runs of `npm run adminStudentProfileTest_thor`. `npm run
-  adminStudentsTabTest_thor` re-run afterwards as a regression check on the shared
-  `schoolStudents` page object: **23 passing / 0 failing**.
-  Selectors were captured LIVE (seven scripted recon passes against Thor / FCN-CHZ-PDA) —
-  see `product-knowledge/ExperienceApp/admin-students-tab.md` §8.
-- Phase 2 (run/fix): ✅ 2026-08-28 — folded into Phase 1. **One defect, mine, none in the
-  product:** `activationStudentPanel` was pointed at `div.px-0.col-md-6.col-lg-4`, which is the
-  FORM column, not the block naming the target student; repointed to `div.user-details`.
-  First run was 10/11.
-  Two traps were caught during recon rather than during the run, which is why the first run was
-  as clean as it was (both are written up in §8.5 / §8.6):
-    1. The Gigya password form cannot be submitted by CLICKING its Update button — it renders at
-       `opacity: 0.5` and the click times out after the full 30 s default. It is submitted with
-       **Enter** instead.
-    2. The invalid-activation-code round trip takes **40.3 s**. A 30 s probe saw nothing and
-       looked exactly like "the product never shows an error".
-- Phase 3 (visual):  ✅ 2026-08-28 — assessed, **no candidates**. Every one of the 11 cases
-  frames live shared-school data (a real student's materials with activation dates, a moving
-  "Last login", opaque per-learner URLs, the mutable student list). Per AGENTS.md §8 Rule A
-  these are all ❌ rows, so `visualTest: false` stands with no promotion prompt owed
-  (Invariant 12). This is consistent with the settled admin-app precedent in
-  `admin-shared.md` §B10 — and confirmed here rather than inherited.
-- **Update 2026-09-15** (Group A of `HANDOFF_adminStudents_remaining_20260915.md`):
-  - ⚠️ **Correction to the 2026-08-28 lines above.** `TST_SPRF_TC_21` was never wired into the run,
-    so "11 passing" was really **10** — and commit `c5ed7dc` (2026-09-09) then removed `TC_21` from
-    `adminStudentProfile.json` outright. Baseline re-run today: **10 passing / 0 failing**.
-  - **`TST_SPRF_TC_12` added** — a required name field cannot be saved empty. It **never clicks
-    Update**: grounding showed that an empty First name blocks Update by itself (CSS only —
-    `pointer-events: none`, `tabindex="-1"`, no `disabled` attribute), so no student can be renamed.
-    **Executed: 11 passing / 0 failing across two consecutive clean runs** of
-    `npm run adminStudentProfileTest_thor` (174 s, 188 s).
-  - **Blocked, awaiting product: `TST_SPRF_TC_19 / 20 / 21 / 22`.** Student removal no longer exists
-    anywhere on the Students tab — no profile menu item, no list selection controls, no removal
-    dialogs (verified live). `admin-students-tab.md` §9.7.
-  - Phase 3 (visual) for `TST_SPRF_TC_12`: ⬜ **not yet assessed** (the user deferred visual
-    assessment for recent batches — ask before doing it).
-
-**NOT in this entry — still outstanding for SPRF:**
-- `TST_SPRF_TC_7` — **written, registered, and deliberately NOT in the execution file**
-  (decision taken with the user, 2026-08-28). It asserts the REQUIREMENT (the profile loads or
-  a readable error is shown); the product currently hangs on an empty page because
-  `getUserDetailWithClasses` returns HTTP 500, so running it today would mean a permanently red
-  suite. It shows in `tooling/tcMap.js --findings` as an ORPHAN, which is the intended state.
-  **Add it to `adminStudentProfile.json` the day the defect is fixed.**
-- `TST_SPRF_TC_3` — **Blocked**: no adult-with-username account exists on FCN-CHZ-PDA.
-  Unblocked by `TST_SBLK_TC_2` creating one, or by a school that already has one.
-- `TST_SPRF_TC_20` — **Blocked**: the 50-student removal cap needs 51+ students; this school
-  holds 27. Modal copy is already verified verbatim, so it is short work once unblocked.
-- `TST_SPRF_TC_18` — needs a **product decision** before it can be automated: the umbrella name
-  is a plain span with no link anywhere in its ancestry, so the scenario as written cannot be
-  performed. Missing link (defect) or scenario error?
-- **Mutating cases NOT automated by design** — each changes a REAL account on a shared school
-  (ADR-021 rule 7): `TC_8` (set a learner password), `TC_10` (update names), `TC_12`/`TC_13`
-  (require typing into the name fields and leaving the form), `TC_14` (consumes a real
-  activation code), `TC_19`/`TC_22` (remove a student). These want the dedicated
-  **Cqa Test Ashish School 1 (VED-NEH-KVU)** account already agreed for `TST_SLST_TC_25`.
-
-## adminStudentsTab — update 2026-09-15 (SLST)
-- Baseline and post-change: **23 passing / 0 failing across two consecutive clean runs**.
-- `TST_SLST_TC_26` — **UNBLOCKED and passing [2026-09-16]**: the user created a fixture student
-  (`cqateststu!^+s95 &LName`, cqateststu!^+s95@mailsac.com) on FCN-CHZ-PDA. Now in
-  `adminStudentsTab.json`; **24 passing / 0 failing across two consecutive clean runs**. It searches
-  both names, and "exactly one row" is what proves the characters are literal, not wildcards.
-- `TST_SLST_TC_27` — **Blocked** (user decision): only one username account on FCN-CHZ-PDA.
-- `TST_SLST_TC_28` — **written + registered, NOT in any exec file** (open defect): executed once via a temp exec file → fails as designed — redirected to `/dashboard/error` after 61.9 s (`activationCodeSearch` HTTP 504). Add to `adminStudentsTab.json` when fixed.
-- Follow-up: SLST TC_5/6/12 now take ~31–61 s (were ~1 s) — likely a 30 s wait on a missing element; green, not investigated.
-- Phase 3 (visual): ⬜ still pending.
-
-## adminBulkStudents (ExperienceApp, thor)
-Admin App **bulk student operations**, module **SBLK** → `pages/ExperienceApp/bulkStudents.page.js` (+ reused `createAdultStudentAccounts.page.js`). Exec `adminBulkStudents.json`, npm `adminBulkStudentsTest_thor`.
-- Phase 1 (build):   ✅ 2026-09-15 — `TST_SBLK_TC_6/7/8` + `TC_RESET` in the exec file; `TST_SBLK_TC_14` registered, NOT in any exec file (open defect). All `visualTest: false`. Grounded live (admin-students-tab.md §9).
-- Phase 2 (run/fix): ✅ 2026-09-15 — first run 1/3: the bulk-activation grid is a **server-side draft per account** and a row typed during grounding enabled Activate; plus the Remove selector matched two buttons. Fixed with `clear_bulkGrid` (setup + reset) and scoped selectors. Then **3/3 across two consecutive clean runs** (45 s, 53 s). `TC_14` executed once: fails as designed — "Create 2 account" enabled with an invalid row (rows themselves flagged correctly).
-- Phase 3 (visual):  ⬜ pending — ask the user first.
-- Not in scope / outstanding: Group B (`TC_11`, `TC_17`), Group C (VED-NEH-KVU data-owning suite), Group D (`TC_15`, `SPRF_TC_14/18`).
-
-## adminStaffTab (ExperienceApp, thor)
-Admin App **Staff tab**, module **STFL** → `pages/ExperienceApp/schoolStaff.page.js`.
-Manual source: `test/Manual/C1App/AdminApp-Staff/` (57 TCs across STFL/STFP/STFB).
-Scope of this entry: the **side-effect-free STFL block, minus the Phase 1 exclusions** —
-19 of the 26 STFL cases.
-
-**Scope arithmetic, so the gaps are not mistaken for oversights.** STFL holds 26 live cases
-(`TC_1..27`, `TC_22` retired). Six are marked `[EXTRA — Phase 1 exclusion]` in the register
-because they are coverage the other team's reviewed sheet does not hold and the team decided
-not to automate them in Phase 1: `TC_1, 5, 7, 10, 21, 26`. One more, `TC_27`, needs an
-invited teacher to accept and therefore mutates real data. That leaves the **19** automated
-here: `TC_2, 3, 4, 6, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24, 25`.
-
-- Phase 1 (build):   ✅ 2026-09-02 — 19 STFL cases registered, plus `TC_NAV` and `TC_RESET`
-  housekeeping (21 entries in `C1TCRepository.json`, all `visualTest: false`).
-  **Executed: 19 passing / 0 failing**, green on the FIRST run and again on a second
-  consecutive run of `npm run adminStaffTabTest_thor` (77.1 s then 76.3 s, headed Chrome,
-  Thor / `FCN-CHZ-PDA`). No fix cycle was needed — the live selector capture is why.
-  Selectors were captured **LIVE** via Playwright MCP (the user signed in; Claude cannot type
-  passwords), not inferred from documentation — full capture, three newly-found traps and the
-  measured transitions are written up in
-  `product-knowledge/ExperienceApp/admin-staff-tab.md` §7.
-  Visual candidates: **none identified** — every case reads dynamic, shared-school data (row
-  content, counts, sort order, echoed search terms) and `FCN-CHZ-PDA` is actively mutated by
-  other teams (the Staff heading moved 23 → 22 between 2026-08-24 and 2026-09-02).
-  Phase 3 must still confirm this rather than inherit it.
-- Phase 2 (run/fix): ✅ 2026-09-02 — **all 19 passing, 4 runs total, the last 2 consecutive
-  and clean on the changed code.** No product-side failure ever occurred, so there was no
-  fix cycle; the phase's value here was the two audits.
-    - **Evidence audit done.** All 19 per-TC screenshots extracted from `report.json` and
-      walked. They show what the cases assert — TC_11 shows the banner, echoed term, Clear
-      and the empty-state copy; TC_12 shows the expanded guide's six lines; TC_17 shows
-      Administrator/Teacher grouped first; TC_24's capture is **scrolled to the bottom** of
-      the exhausted list, showing the last row and no `Load more ...` beneath it (which also
-      evidences TC_20's code-point tail). **No ADR-019 violation** — `AfterEach` is empty and
-      the reset lives in `BeforeEach` + suite-level `After`; TC_11 still showing its search
-      term is the proof.
-      *Noted, not a defect:* TC_13 photographs a collapsed guide, indistinguishable from one
-      that never opened. It is NOT split, because its assertions already stand without the
-      image — it asserts the panel was open BEFORE the click, that one click sufficed, and
-      that the panel was REMOVED.
-    - **Falsifiability audit found one real hole, fixed with the user's approval.**
-      `isGroupedBefore()` returns true when only one role group is present, so on a school
-      that ever held only `Teacher` rows, TC_17 and TC_18 would have passed while asserting
-      nothing (Invariant 13). Both cases now assert **both** role values are present before
-      asserting the ordering. The helper was left alone — it is a correct pure predicate; the
-      guard belongs in the cases. Re-run twice after the change: 19/19 both times, and the
-      guard passes on real data rather than being skipped.
-    - **Step 0b traps table re-checked against the shipped code** — every "applies here" row
-      has a real handler. No trap turned out to apply and to have been missed.
-    - ⚠️ **Runtime is drifting upward and should be watched.** The same 19 cases took 77 s,
-      76 s, 117 s and 229 s across the four runs. The slowdown is **uniform across every
-      case, including ones that do no network work** (the user-guide case went 198 ms →
-      3.7 s), so it is environmental — Thor and/or the local machine — not a suite
-      regression. But it has eaten the safety margin: the slowest case is now 12.9 s against
-      the page object's 20 s poll budget, ~1.5x headroom where the measurement gave ~5x. If
-      Thor degrades further the budget will start to bite, and it should be re-measured
-      rather than simply raised.
-- Phase 3 (visual):  ⏭️ **DEFERRED by user decision, 2026-09-02** — deliberately skipped for
-  this batch, not overlooked and not done. Recorded here rather than marked ✅ so nobody
-  later reads it as completed work.
-    - **What this means in practice:** all 19 TCs remain `visualTest: false`, which is the
-      required default for new TCs anyway (Invariant 12). Phase 3 only ever *promotes* cases
-      to `true`, so skipping it changes nothing about how the suite runs and adds no risk of
-      a wrong visual baseline. There is no `visualAcceptance_adminStaffTab_thor` script and
-      none should be added until the assessment happens.
-    - **What is genuinely lost:** nobody has run the AGENTS.md §8 Rule A static-vs-dynamic
-      assessment over these cases, so "no visual candidates here" is an *expectation*, not a
-      finding. The expectation is well-founded — every case reads shared-school data that
-      drifts (row content, counts, sort order, echoed search terms) and `FCN-CHZ-PDA` is
-      actively mutated by other teams — but it has not been tested.
-    - **To pick it up later:** read `.agent/skills/c1-test-authoring/phases/3-visual.md` and
-      run the assessment over the 19 registered TCs. Nothing needs undoing first.
-
-**Traps handled (Step 0b), for Phase 2 to re-check:** positional row ids resolved by content
-(`findRowIndexByText`); the aria row number's off-by-two never mapped onto an index; the
-user-guide toggle treated as two distinct elements with a removal wait; sort waits poll a row
-fingerprint, never the optimistic header label; code-point collation, with `TC_20` additionally
-asserting a `localeCompare` ordering would DIFFER so the case cannot pass on ambiguous data;
-`Load more ...` asserted ABSENT, never disabled; the school opened by KEY because two schools
-share the display name.
-
-**Three traps found in this sweep and now in product knowledge §7.2:** the sort qids are not
-in visual column order (First name `aAdmin-3`, Last name `aAdmin-4`); the sort-status id's
-`-a` suffix is NOT the direction (`sortStatus-staff-roles-a` reads "sorted descending" after
-a second click — read the text, and note the column key is `roles`, plural); and the Clear
-link carries a Classes-tab qid, `aClass-99`, so the selector uses `staff h2 small a.clear-search`.
-
-**NOT in this entry — still outstanding for the Staff tab:**
-- **STFP (staff profile, 17 cases)** — 5 marked `[EXTRA — Phase 1 exclusion]`. The read-only
-  half is the natural next batch: profile layout for both roles, Back, class launch, the
-  role-conditional menu, and both dialogs' CANCEL paths (non-mutating and already verified).
-  ⚠️ A staff profile URL is **not deep-linkable** — reach it through the list, always.
-- **STFB (invitation form, 12 cases)** — 6 marked `[EXTRA — Phase 1 exclusion]`. Leave until
-  last: it needs a data-owning suite, `TC_10` sends real email, and the form auto-restores a
-  shared draft so it is never empty on load.
-- **Mutating cases NOT automated by design** — `STFL_TC_27`, `STFP_TC_10` (grant),
-  `TC_13` (revoke), `TC_18` (removal), `STFB_TC_3/9/10`. Never revoke rights from or remove a
-  staff member the suite did not create, and never confirm either against
-  `testt1@mailsac.com` — it is the login for every admin suite.
-- **`TST_STFB_TC_11` remains Blocked** — the upload-error condition has still not been
-  reproduced; root cause (three missing `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_*`
-  translation keys) is known and needs no repro to fix.
-- **`TST_STFL_TC_26` (heading count vs rendered rows) is a live, unexplained product defect** —
-  22 vs 21 on 2026-09-02, down from 23 vs 21 but NOT closed. It is Phase-1-excluded, so no
-  automated case asserts the two match.
-- **Two open questions from the design handoff are still unanswered** and neither blocked this
-  batch: whether a different/larger school is coming for the Staff tab, and whether an admin
-  revoking their own rights is by design.
-
-## adminStaffProfile (ExperienceApp, thor)
-Admin App **staff profile**, module **STFP** → `pages/ExperienceApp/staffProfile.page.js`.
-Manual source: `test/Manual/C1App/AdminApp-Staff/` (57 TCs across STFL/STFP/STFB).
-Scope of this entry: the **read-only STFP block** — 9 of the 19 live STFP cases.
-
-**Scope arithmetic, so the gaps are not mistaken for oversights.** STFP holds 19 live cases
-(`TC_1..TC_20`, `TC_5` retired). Five are marked `[EXTRA — Phase 1 exclusion]` in the
-register (`TC_3, 4, 6, 8, 14`), leaving 14. Of those 14, four **mutate real data** and are
-deferred to a data-owning suite (`TC_10` grant, `TC_13` revoke-confirmed, `TC_18`
-removal-confirmed, `TC_19` which depends on `TC_10`), and `TC_20` is **Blocked** (it needs a
-school with exactly one administrator; `FCN-CHZ-PDA` cannot be reduced to one without
-breaking every other admin suite mid-run). That leaves the **9** automated here:
-`TC_1, 2, 7, 9, 11, 12, 15, 16, 17`.
-
-- Phase 1 (build):   ✅ 2026-09-07 — 9 STFP cases registered plus `TC_RESET` housekeeping
-  (10 entries in `C1TCRepository.json`, all `visualTest: false`).
-  **Executed: 9 passing / 0 failing**, green on the FIRST run and again on two further
-  consecutive runs of `npm run adminStaffProfileTest_thor` (2m, 3m, 2m; headed Chrome,
-  Thor / `FCN-CHZ-PDA`). No fix cycle was needed — the live selector capture is why, for
-  the second batch running.
-  Selectors were captured **LIVE** via the Chrome MCP (the user signed in; Claude cannot
-  type passwords), not inferred from documentation. Full capture, the corrections to §2/§4
-  and the measured transitions are written up in
-  `product-knowledge/ExperienceApp/admin-staff-tab.md` §8.
-  Visual candidates: **none identified** — every case frames the shared school's data
-  (class lists, counts, last-login dates, row content) and `FCN-CHZ-PDA` is actively
-  mutated by other teams. Phase 3 must still confirm this rather than inherit it.
-- Phase 2 (run/fix): ⬜ pending
-- Phase 3 (visual):  ⬜ pending
-
-**⚠️ SAFETY — the defining constraint of this suite.** Six of the nine cases OPEN a mutating
-dialog and then leave it (`TC_9`, `TC_11`, `TC_12`, `TC_15`, `TC_16`, `TC_17`). They are
-side-effect free **only** because they never confirm. "Never click the confirm button" is a
-hard rule here, not a preference. Nothing in the suite creates, changes or removes anything,
-and the fixtures are shared accounts this suite did not create.
-
-**Traps handled (Step 0b), for Phase 2 to re-check:** pre-rendered dialogs checked with
-`isDisplayed`, never a count; `Yes, remove` asserted on its **CSS class**, with the native
-`disabled` pinned as unchanged so the trap itself is documented; positional row ids resolved
-by content via `schoolStaff.findRowIndexByText`; the whole row treated as the menu toggle;
-the profile reached only through the list because its URL is not deep-linkable; the
-`admin` → `class` crossing waited on with `waitForUrl` + `waitForDocumentLoad`; the
-checkbox clicked via its `<label>`; no absolute school-wide count asserted; reset in
-`BeforeEach` + suite-level `After`, never `AfterEach` (ADR-019).
-
-**Five findings new to this sweep, now in product knowledge §8:** the class NAME anchor has
-no qid (`user-profile-6-<n>` is the chevron); `a.class-details` matches ~2 elements per row
-(129 for 43 classes); class rows reuse the Staff tab's `.list-items` class; `h6.class-count`
-is absent entirely when a staff member has no classes; and the Manage account items are
-**absent from the DOM**, not hidden, when they do not apply — which is what makes the
-"not offered" assertions falsifiable.
-
-**Fixture correction:** `admin-staff-tab.md` §6's claim that the login account is the only
-staff member with classes is out of date — `teacher17aug2026@mailsac.com` held `Classes (43)`
-on 2026-09-07, so `TC_7` runs against a real teacher. Only `testClass1 17aug` is uniquely
-named among those 43, so the case **asserts uniqueness** before launching it.
-
-**⚠️ Open item for Phase 2 — a same-term search can burn the full 20 s poll.**
-`search_staff` waits for the row fingerprint to CHANGE. When a case searches a term the list
-is already filtered to, the fingerprint cannot change and the wait runs its full 20 s budget
-before continuing anyway. Nothing fails; it is a pure time cost.
-
-- **Fixed in `TST_STFP_TC_17`** `[2026-09-07, user-approved]` — its second search (after
-  `click_back`, for the same term) now passes `{ expectListChange: false }`, which waits on
-  the search **banner** instead. Measured effect: **39.3 s → 6.7 s**.
-- ⚠️ **But the slowness MOVED, not vanished** — in the same run `TST_STFP_TC_16` went
-  5.2 s → 37.1 s. So the root cause is **not** `click_back`: it is that
-  `TST_STFP_TC_RESET` returns to the tab and clears the search without waiting for the
-  UNFILTERED list to finish rendering, so the next case's first search can fingerprint the
-  stale filtered list. `TC_15`, `TC_16` and `TC_17` all search the same teacher, so
-  whichever case follows another same-term case pays the 20 s.
-- **The durable fix is in the reset, not in the cases**: have `TST_STFP_TC_RESET` wait until
-  the list is genuinely unfiltered (row count back to the page size / the Clear link gone)
-  before returning. That removes the race for every case instead of patching them one at a
-  time. **Not applied — proposed, awaiting confirmation** (Golden Rule 6).
-
-**⚠️ Pre-existing, unrelated: the `MRAC` suite is failing 0/2.** `npm run manageReportsTest_thor`
-(teacher class page → Manage Reports → Download button accessibility) fails both cases with
-`locator.waitFor: Timeout 30000ms exceeded` waiting for `button[qid^="aReport-2-"]`.
-**Confirmed failing BEFORE this session's rename** — a baseline run was taken first precisely
-so the rename could not be blamed, and the failures are identical after it. Not investigated
-by user decision `[2026-09-07]`; recorded here so it is not lost. Likely a moved or renamed
-qid on the teacher class page, but that is a hypothesis, not a finding.
-
-**NOT in this entry — still outstanding for the Staff tab:**
-- **STFP mutating** (`TC_10`, `TC_13`, `TC_18`, `TC_19`) — needs a data-owning suite that
-  creates its own staff member under the `AutoStaff_` prefix. Never run against shared
-  accounts, and never confirm either action against `testt1@mailsac.com`.
-- **`TST_STFP_TC_20` remains Blocked** — needs a school with exactly one administrator.
-- **STFB (invitation form, 12 cases)** — leave until last: 6 are Phase-1-excluded, `TC_3`
-  downloads a file, `TC_9` uploads one, `TC_10` sends real email, and the form auto-restores
-  a shared draft so it is never empty on load.
-- **`TST_STFB_TC_11` remains Blocked** — the upload-error condition is still not reproduced;
-  root cause (three missing `ADMIN.LEARNER.ADULT_INVITE.FORM_UPLOAD_ERROR_*` keys) is known.
-- **`TST_STFL_TC_26`** (heading count vs rendered rows) is still a live, unexplained product
-  defect — `Staff (22)` over 21 rows on 2026-09-07, unchanged from 2026-09-02. Phase-1-
-  excluded, so no automated case asserts the two match.
-
-
----
-
-## schoolLibrary + umbrellaProduct (ExperienceApp, thor) — modules LIBR / UMBP
-- Phase 1 (build):   ✅ 2026-09-14 — TST_LIBR_TC_2, 3, 4, 10, 11, 12, 20, 23, 25, 33 + TST_UMBP_TC_1, 2, 3, 9 registered (plus housekeeping TST_LIBR_TC_100/101); all `visualTest: false`. npm script `adminSchoolLibraryTest_thor`. Executed: first real run 9 passing / 5 failing; **14 / 14 passing** after fixes (238 s). Visual candidates: none flagged — every case frames the shared 974-row catalogue or live licence/component data (admin-shared.md §B10 precedent).
-- Phase 2 (run/fix): ✅ 2026-09-14 — folded into the same session. Five bugs, all in our code, none in the product: (1) LIBR and UMBP shared one `testFile` — the runner takes the FIRST matching module and breaks, so UMBP was unreachable; **`tooling/tcMap.js` reported 0 MISFILED and did not catch it**; (2) glob `waitForURL` gave no URL on failure → substring poll; (3) `getText` on the list container, which is REMOVED in the no-results state (30 s stall); (4) the `#loader-container .loader` overlay swallowed clicks on visible elements; (5) product pages live on the TEACHER route and discard school context → return path re-selects the school by key.
-- Phase 3 (visual):  ⬜ pending — expected outcome "no candidates" (§B10), still formally owed.
-
-**Scope:** 14 of 42 register cases. The other 28 carry `[EXTRA — Phase 1 exclusion]` and are deliberately not automated.
-
-**⚠️ OPEN — the LIBRARY tab click is intermittently inert.** It navigated in most runs; twice it reported success while the browser stayed on `/class`, once with the loader overlay already waited out — so the overlay is NOT its cause. Root cause unknown. The BeforeEach recovery path avoids it (direct navigation after re-selecting the school); `TST_LIBR_TC_101` still uses it. Needs a live browser session to diagnose.
-
-**⚠️ Brittle by necessity:** `TST_UMBP_TC_1/2/3/9` locate products BY TITLE, and both belong to another team (one was renamed once already). Titles live in `adminSchoolLibraryData.json`; a rename is a one-line fix there.
-
-**NOT in this entry — the Generic/shell batch** — see its own block below.
-
-## adminGeneric — shell chrome, footer, profile, org context, wizard, school key, notifications (ExperienceApp, thor)
-Modules **ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI** — one TC-repository module per test file.
-Manual source: `test/Manual/C1App/AdminApp-Generic/` (41 cases; 13 `[EXTRA — Phase 1 exclusion]`; 5 Blocked).
-npm script `adminGenericTest_thor`; exec file `adminGeneric.json` (7 suites, INVI last).
-- Phase 1 (build):   ✅ 2026-09-14 — 22 cases registered (ASHL 1–4 · FOOT 10–11 · MYPR 1–4 · SADB 3, 5 · SRQS 3 · SKEY 1, 2, 4 · INVI 7–12) + 6 BeforeEach housekeeping TCs, all `visualTest: false`. Executed: first run **19 passing / 3 failing**. Visual candidates: none flagged.
-- Phase 2 (run/fix): ✅ 2026-09-15 — **21/21 passing, 2 consecutive clean runs** (runs 6 and 7). Five defects, all in our code: MYPR_TC_1 (menu opened twice), INVI_TC_8 (`.close-dummy` overlays `.close`), SADB_TC_5 and SRQS_TC_3 (click before the handler was bound — settle before a single click, both BUDGET-unmeasured), INVI_TC_12 (clicked an already-read row → `unreadRow` selector). Evidence audit done on run 4 (all 22 screenshots); one unexplained image mismatch on INVI_TC_8, close proven by DOM removal instead. Detail: walkthrough `walkthrough_adminGeneric_2026-09-14_05h-30m.md` Session 2; knowledge `admin-shared.md` §A12.
-- Phase 3 (visual):  ⏭️ **DEFERRED by user decision, 2026-09-15** — skipped for now, not done. All TCs stay `visualTest: false` (the required default), so nothing about the suite changes; no `visualAcceptance_*` script exists or should be added. The §B10 "no candidates" outcome is an expectation, not a finding. To pick it up: `.agent/skills/c1-test-authoring/phases/3-visual.md`.
-
-**⚠️ `TST_INVI_TC_12` is NOT in the exec file [user decision, 2026-09-15].** It consumes one unread notification per run and the panel shows only the 5 newest; all five were read by run 5. Written + registered (tcMap ORPHAN by intent). Re-add as Suite7's last step once a fresh "report is ready" notification exists.
-
-**Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design below, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
-
-**`SADB_TC_7` design** (grounded read-only 2026-09-14, nothing created; moved here from the archived Generic handoff):
+> **Compacted 2026-09-18.** Blocks now hold status + open items only. The pre-compaction file is
+> `archive/authoring-status_2026-09-18.md`; debugging narrative lives in the walkthroughs; the
+> lessons are in the product-knowledge files.
+
+## schoolAdminAddClassValidation (ExperienceApp, thor) — `P1AdminclassValidation_Thor`
+Module `CCLS` (bulk class-creation form, validation) · knowledge: `admin-create-classes-form.md`
+- Phase 1 ✅ 2026-08-14 — `TST_CCLS_TC_9..12`; visual candidates: none
+- Phase 2 ✅ 2026-08-14 — 6/6 passing, 2 consecutive clean runs
+- Phase 3 ⬜ pending
+
+## schoolAdminAddClassBulk (ExperienceApp, thor) — `P1AdminclassBulk_Thor`
+Module `CCLS` (bulk form: load, multi-row, toolbar, duplicate, copy, CSV) · **creates no class** ·
+knowledge: `admin-create-classes-form.md`
+- Phase 1 ✅ 2026-08-18 — `TST_CCLS_TC_13..19, 21, 22`; visual candidates: none
+- Phase 2 ✅ 2026-08-18 — 11/11 passing, 2 consecutive clean runs
+- Phase 3 ⬜ pending
+- Data dependency: `TC_21` needs source class "cqa test class 17aug2026 1" (≥1 teacher, ≥1 material)
+  on the school — swap `copySourceClass` in `schoolAdminAddClassData.json` if it disappears.
+
+## schoolAdminAddClass — workflow suite (ExperienceApp, thor) — `P1Adminclassworkflow_Thor`
+Module `CCLS` (create a real class end to end, incl. "Create more classes") · **creates 2 classes
+per run** (`AutoClass_CreateOnly`, `AutoClass_CreateMore`) on `FCN-CHZ-PDA`
+- Phase 1 ✅ 2026-08-18 — `TST_CCLS_TC_1..8, 15, 16, 20`; visual candidates: none
+- Phase 2 ✅ 2026-08-18 — 13/13 passing (only ONE run carries the final assertion — accepted, since
+  each run creates 2 real classes)
+- Phase 3 ⬜ pending
+- `TC_16` (label) REQUIRES a preceding `TST_CCLS_TC_23` in the suite — a restored draft can already
+  carry the label, and re-selecting it toggles it OFF.
+
+**Scenario #3 coverage:** all 16 BCCF manual cases automated across the three `CCLS` suites (map in
+`admin-create-classes-form.md` "Automation coverage").
+
+⚠️ **OPEN — not re-run since the 2026-08-19 `TST_CCLS_TC_23` refactor** (reset moved out of seven
+TCs; placement rule in `admin-create-classes-form.md`). Only the CSV suite has executed `TC_23`
+since. Re-run bulk + validation first (they create nothing); the workflow suite costs 2 classes.
+
+> **Completed and removed 2026-09-18** (all three phases ✅ — the header rule): `adminGradingScales`
+> (GSCL, `P1AdminGradingScales_Thor`, 10/10), the GSCL/GCAT `TC_7` pair (runs inside CGST), and
+> `adminClassGradeSettings` (CGST, `P1AdminClassGradeSettings_Thor`, 19/19 → 21/21 with the pair).
+> Open items live in the knowledge files: `TST_GSCL_TC_4` / `TST_GCAT_TC_4` Blocked (ADR-021, dedicated
+> school); `TST_GSCL_TC_5` visual promotion declined 2026-08-19 (`admin-grading-scales.md`); fixture +
+> seeding follow-up in `admin-shared.md` §A7. Full blocks: `archive/authoring-status_2026-09-18.md`.
+
+## Admin Students tab (ExperienceApp, thor) — modules SLST / SPRF / SBLK
+Manual register `test/Manual/C1App/AdminApp-Students/` · knowledge `admin-students-tab.md` ·
+remaining work (Groups B/C/D) `HANDOFF_adminStudents_remaining_20260915.md` · school `FCN-CHZ-PDA`
+
+### adminStudentsTab — SLST — `adminStudentsTabTest_thor`
+- Phase 1 ✅ 2026-08-28 · Phase 2 ✅ — **24/24 passing**, 2 consecutive clean runs (2026-09-16, `TC_26` added)
+- Phase 3 ⬜ pending — expected "no candidates" (shared, mutable data)
+- **On Hold:** `TC_28` — unused-code search → HTTP 504 → error page (Jira; knowledge §9.6)
+- **Blocked:** `TC_14` (needs a redeemed 16-char code + its student) · `TC_27` (only one username
+  account on FCN — unblocked by Group C)
+- **Not built:** `TC_25` (creates a student → Group C, `VED-NEH-KVU`)
+- Follow-up: `TC_5/6/12` now take ~31–61 s (were ~1 s) — likely a 30 s wait on a missing element; green, not investigated.
+
+### adminStudentProfile — SPRF — `adminStudentProfileTest_thor`
+- Phase 1 ✅ 2026-08-28 · Phase 2 ✅ — **11/11 passing**, 2 consecutive clean runs (2026-09-15, `TC_12` added)
+- Phase 3 ✅ 2026-08-28 (no candidates) — `TC_12` ⬜ not yet assessed (user deferred; ask first)
+- **On Hold:** `TC_7` — profile hangs on HTTP 500 (`Vandna Garg`); add to the exec file when fixed
+- **Blocked:** `TC_19–22` (student removal gone from the product — Jira; §9.7) · `TC_3` (no
+  adult-with-username account) · `TC_18` (product decision: umbrella name is not a link) · `TC_14`
+  (consumes a real code)
+- **Not built:** `TC_8`, `TC_10`, `TC_13` (mutate a real account → Group C)
+- Note: an earlier "11 passing" (2026-08-28) was really 10 — `TC_21` was never wired into the run.
+
+### adminBulkStudents — SBLK — `adminBulkStudentsTest_thor`
+- Phase 1 ✅ 2026-09-15 · Phase 2 ✅ — **3/3 passing** (`TC_6/7/8` + `TC_RESET`), 2 consecutive clean runs
+- Phase 3 ⬜ pending — ask the user first
+- **On Hold:** `TC_14` — "Create N account" enabled with an invalid row (Jira; §9.4)
+- **Not built:** Group B (`TC_11`, `TC_17`), Group C, Group D — see the handoff
+
+## Admin Staff tab (ExperienceApp, thor) — modules STFL / STFP / STFB
+Manual register `test/Manual/C1App/AdminApp-Staff/` (57 TCs) · knowledge `admin-staff-tab.md` ·
+school `FCN-CHZ-PDA`
+
+### adminStaffTab — STFL — `adminStaffTabTest_thor`
+- Phase 1 ✅ 2026-09-02 · Phase 2 ✅ 2026-09-02 — **19/19 passing**, 2 consecutive clean runs
+  (`TC_2, 3, 4, 6, 8, 9, 11–20, 23, 24, 25`; `TC_1, 5, 7, 10, 21, 26` are Phase-1 EXTRA; `TC_22` retired)
+- Phase 3 ⏭️ **DEFERRED by user decision** — not done; expected "no candidates", not yet assessed
+- **Not built:** `TC_27` (needs an invited teacher to accept → data-owning suite)
+- Watch: runtime drifted 77 s → 229 s across four runs (uniform, environmental); slowest case
+  12.9 s against the 20 s poll budget — re-measure rather than raise if it starts to bite.
+
+### adminStaffProfile — STFP — `adminStaffProfileTest_thor`
+- Phase 1 ✅ 2026-09-07 — **9/9 passing** on three consecutive runs (`TC_1, 2, 7, 9, 11, 12, 15, 16, 17`)
+- Phase 2 ⬜ pending · Phase 3 ⬜ pending
+- 🔒 Six cases OPEN a mutating dialog and leave it — **never click confirm** in this suite.
+- **Open for Phase 2 (proposed, awaiting confirmation):** `TST_STFP_TC_RESET` clears the search
+  without waiting for the unfiltered list, so the next same-term search burns the full 20 s poll
+  (`TC_16`/`TC_17`). Fix it in the reset (wait for the Clear link to go), not per case.
+- **Blocked:** `TC_20` (needs a school with exactly one administrator)
+- **Not built:** `TC_10` grant, `TC_13` revoke, `TC_18` removal, `TC_19` → data-owning suite with
+  `AutoStaff_` staff; never confirm against `testt1@mailsac.com`.
+
+### STFB (invitation form) — not started
+- Leave until last: `TC_3` downloads, `TC_9` uploads, `TC_10` sends real email; the form restores a
+  shared draft. **Blocked:** `TC_11` (upload-error condition not reproduced; root cause known).
+
+**Open product items:** `TST_STFL_TC_26` heading count ≠ rendered rows (22 vs 21, unexplained) ·
+unanswered: a larger school for Staff? · is self-revocation of admin rights by design?
+**Unrelated, found here:** `manageReportsTest_thor` (MRAC, teacher side) fails 0/2 on
+`button[qid^="aReport-2-"]` — pre-existing, not investigated `[2026-09-07]`.
+
+## Admin Library tab (ExperienceApp, thor) — modules LIBR / UMBP — `adminSchoolLibraryTest_thor`
+Manual register `test/Manual/C1App/AdminApp-Library/` (42; 28 Phase-1 EXTRA) · knowledge `admin-library-tab.md`
+- Phase 1 ✅ 2026-09-14 · Phase 2 ✅ 2026-09-14 — **14/14 passing** (`LIBR_TC_2, 3, 4, 10, 11, 12, 20, 23, 25, 33`
+  + `UMBP_TC_1, 2, 3, 9`; housekeeping `LIBR_TC_100/101`)
+- Phase 3 ⬜ pending — expected "no candidates" (§B10), still owed
+- ⚠️ **OPEN:** the LIBRARY tab click is intermittently inert (reports success, browser stays on
+  `/class`; not the loader). BeforeEach recovery avoids it; `TST_LIBR_TC_101` still uses the click.
+  Needs a live browser session to diagnose.
+- Brittle by necessity: `UMBP_TC_1/2/3/9` find another team's products BY TITLE — a rename is a
+  one-line fix in `adminSchoolLibraryData.json`.
+
+## Admin Generic / shell (ExperienceApp, thor) — ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI — `adminGenericTest_thor`
+Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · knowledge `admin-shared.md`
+§A9–§A12 · exec `adminGeneric.json` (7 suites, INVI last; SKEY runs on `KNF-XRD-QVE`, never FCN)
+- Phase 1 ✅ 2026-09-14 · Phase 2 ✅ 2026-09-15 — **21/21 passing**, 2 consecutive clean runs
+- Phase 3 ⏭️ **DEFERRED by user decision** — not done; "no candidates" is an expectation, not a finding
+- **Parked:** `TST_INVI_TC_12` — registered, NOT in the exec file (consumes an unread notification;
+  all five were read). Re-add as Suite 7's last step once a fresh "report is ready" notification exists.
+- **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`
+- **Not built:** `SADB_TC_7` — creates a real class → own data-owning suite on `KNF-XRD-QVE` + own
+  npm script (ask first). Design below.
+- **Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish
+  strings ("Our approach", bell aria-label); wizard summary omits school type and number of teachers.
+
+**`SADB_TC_7` design** (grounded read-only 2026-09-14, nothing created):
 - Do NOT use the per-school "Create class" (`a[qid=tDashboard-ncls-btn-1]`) — it exists only while the teacher has no class in that school.
-- Use the global `a.create-class` (beside "Active classes") → `/dashboard/teacher/create-class` "Enter class details": name `t-cc-cd-inpt-1` (**maxlength 50**) · start `t-cc-cd-inpt-2` · end `t-cc-cd-inpt-3` · school `#selected-school-dropdown[qid=t-cc-cd-inpt-4]` (**readonly**; focus opens `li.dropdown-item`; match by startsWith "3 July Test School 2" — exactly 1 item; **never click "Add a school / Join using a school key"**) · Cancel `t-cc-cd-btn-1` · Next `t-cc-cd-btn-2` (natively disabled). Cancel lands on the ADMIN dashboard.
+- Use the global `a.create-class` (beside "Active classes") → `/dashboard/teacher/create-class` "Enter class details": name `t-cc-cd-inpt-1` (**maxlength 50**) · start `t-cc-cd-inpt-2` · end `t-cc-cd-inpt-3` · school `#selected-school-dropdown[qid=t-cc-cd-inpt-4]` (**readonly**; focus opens `li.dropdown-item`; match by startsWith "3 July Test School 2" — exactly 1 item; **never click "Add a school / Join using a school key"**) · Cancel `t-cc-cd-btn-1` · Next `t-cc-cd-btn-2` (natively disabled). Where Cancel lands is unresolved (a synthetic click reached the admin dashboard; a real click stayed put) — do not rely on it.
 - Later steps (materials → "Add later" → success) are NOT grounded — the first run grounds them.
 - Reuse `createNewClass.page.js` `click_next_btn` / `click_addLater_Btn` / `getData_successfullyCreated`, but NOT `set_startDate` / `set_endDate` (hardcoded 2024 dates) or `set_enterYourSchool` (types into a readonly field).
 - Name `AutoClass_TeacherView_<RUN_ID>`. Verify in KNF's admin Classes tab by polling (creation is async, ~24 s to >90 s). Cleanup: CGST's `sweepClassesNamed` pattern (`adminClassGradeSettings.test.js`) — sweep BEFORE creating, bounded loop, assert every step.
 - Own exec file (e.g. `adminGenericCreate.json`) + own npm script (needs user confirmation).
-
-**Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) — the "Clases (10)" spacing claim was checked live 2026-09-15 and is NOT a defect; wizard summary omits school type and number of teachers. ~~Teacher Create-class Cancel lands in the admin view~~ — **NOT reproduced [2026-09-15]**: a real click on Cancel stayed on `/dashboard/teacher/create-class` for 8 s (the claim came from a synthetic JS click); unresolved, not a reportable defect.

@@ -310,6 +310,11 @@ Two constraints found while creating it: **2036 is the product's ceiling** for t
 picker, and **the start date must stay in the past** — a future start makes the class `Not started`,
 and the category details page counts *active* classes only, so the fixture would silently stop working.
 
+> **Follow-up (agreed, not started):** a `seedAdminFixtures_<env>.json` exec file to recreate this
+> fixture on qa/rel/production. Blocked because `createClasses.set_endDate()` is hardcoded to "day 15
+> of next month" — it needs an **additive** data-driven end-date method (never modify the existing
+> one; four suites share it) plus year/month datepicker selectors. `[2026-08-20]`
+
 **Never delete — these belong to other people:**
 `Cambridge One grading scale` (the platform default) · `new Grading Auto` ·
 `new catagory` · `new Grading Category` · `some`
@@ -684,6 +689,12 @@ modal with no live list in frame**. Everything else is a ❌ row, which per Inva
   poll that burns its whole budget (e.g. `schoolStudents.waitForListChange`, ~20 s) usually means
   the list *could not* change — and that helper returns `false` instead of throwing, so it fails
   **silently**. Pass `{ expectListChange: false }` when the result set cannot move. `[2026-08-28]`
+- **An ordering assertion must first prove there is something to order.** `isGroupedBefore()`
+  returns true when only one role group is present, so the Staff "admins listed first" cases would
+  pass on a teachers-only school while asserting nothing (Invariant 13). Assert both groups exist,
+  then the order — keep the guard in the case, not the pure helper. `[2026-09-02]`
+- **Prefer a substring URL poll to a glob `waitForURL`** — a failed glob wait reports no URL, so
+  the failure cannot say where the browser actually landed. `[2026-09-14, Library]`
 - ⚠️ **The run log prints the login password in plaintext** at `TST_LOGI_TC_1` — pre-existing
   framework behaviour. Do not paste run logs into tickets or chats unredacted, and mask it before
   logs reach CI. A fix (masking in core, protected-file change) is tracked as a separate task.
