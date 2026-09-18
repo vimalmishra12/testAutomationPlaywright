@@ -59,6 +59,7 @@ Read `admin-shared.md`, then the file(s) for the screen your task actually touch
 | **Bulk staff invitations** — Add new teachers to classes | `STFB` | `STFB` | [`admin-staff-tab.md`](ExperienceApp/admin-staff-tab.md) |
 | **Library tab** — list, sort, search, School licence section | `LIBR` | `LIBR` | [`admin-library-tab.md`](ExperienceApp/admin-library-tab.md) |
 | **Product materials view** — "See materials", components, Add to a class | `UMBP` | `UMBP` | [`admin-library-tab.md`](ExperienceApp/admin-library-tab.md) |
+| **Generic / shell** — header, footer, language, notifications, My profile, school key, organisations, teacher view, setup wizard | `ASHL` `FOOT` `MYPR` `SADB` `SRQS` `SKEY` `INVI` | same | [`admin-generic-shell.md`](ExperienceApp/admin-generic-shell.md) |
 | **Reports tab** — list, empty state, Create report flow | `MRPT` | `MRPT` | [`admin-reports-tab.md`](ExperienceApp/admin-reports-tab.md) |
 | Class grade settings | `CGST` | `CGST` | [`admin-class-grade-settings.md`](ExperienceApp/admin-class-grade-settings.md) |
 | Grading scale / category **details** pages | — | `GSCL` / `GCAT` | [`admin-grading-details-pages.md`](ExperienceApp/admin-grading-details-pages.md) |
