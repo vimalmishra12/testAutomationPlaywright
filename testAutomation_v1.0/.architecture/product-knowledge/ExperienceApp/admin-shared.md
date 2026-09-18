@@ -103,7 +103,7 @@ Login  →  My school accounts  (/admin/admin/dashboard)
 | **Staff tab** (list, search, sort, user guide, load more) | `STFL` | `STFL` | [`admin-staff-tab.md`](admin-staff-tab.md) |
 | **Staff profile / admin rights / removal** | `STFP` | `STFP` | [`admin-staff-tab.md`](admin-staff-tab.md) |
 | **Bulk staff invitations** (Add new teachers to classes) | `STFB` | `STFB` | [`admin-staff-tab.md`](admin-staff-tab.md) |
-| **Library tab** (list, sort, search, School licence section) | `LIBR` | `LIBR` | [`admin-library-tab.md`](admin-library-tab.md) |
+| **Library tab** (list, sort, search, School licence section) | `LIBR` | `LIBR` | [`admin-library-tab.md`](admin-library-tab.md) — ⚠️ `LIBR` numbers are **split across two registers**: Library `1–31, 33`, Generic `32, 34`. Never renumber; check both registers for the next free number |
 | **Product materials view** ("See materials", components, Add to a class) | `UMBP` | `UMBP` | [`admin-library-tab.md`](admin-library-tab.md) |
 | Classes tab (list, search, sort, filter, expand, user guide, load more) | `CLST` | `CLST` | [`admin-classes-tab.md`](admin-classes-tab.md) |
 | **Reports tab** (list, Create report flow, report types) | `MRPT` | `MRPT` | [`admin-reports-tab.md`](admin-reports-tab.md) |
@@ -673,6 +673,22 @@ modal with no live list in frame**. Everything else is a ❌ row, which per Inva
   > recommended adding the rule. **That fix has since landed** — the rule is in place. The carried-
   > forward warning is resolved. Still stage explicitly rather than `git add -A`.
 
+## B12. Authoring and run hygiene `[promoted 2026-09-17 from the archived Students handoffs]`
+
+- **Edit the big JSON files as TEXT, never via `JSON.stringify`.** Rewriting `C1Selectors.json` or
+  `C1TCRepository.json` reformats the whole file (1,336- and 4,594-line deletion diffs). Insert the
+  new block as text, keep **CRLF** and indentation, and check `git diff --numstat` shows additions
+  only. `[2026-08-28]`
+- **A TC's duration is evidence — read it.** ~0 ms = it inherited an exhausted state and asserted
+  nothing; ~60 s = two stacked 30 s Playwright timeouts on an element that no longer exists; a
+  poll that burns its whole budget (e.g. `schoolStudents.waitForListChange`, ~20 s) usually means
+  the list *could not* change — and that helper returns `false` instead of throwing, so it fails
+  **silently**. Pass `{ expectListChange: false }` when the result set cannot move. `[2026-08-28]`
+- ⚠️ **The run log prints the login password in plaintext** at `TST_LOGI_TC_1` — pre-existing
+  framework behaviour. Do not paste run logs into tickets or chats unredacted, and mask it before
+  logs reach CI. A fix (masking in core, protected-file change) is tracked as a separate task.
+  `[2026-08-18]`
+
 ---
 
 ## A9 / B11. Shell chrome — header, footer, language, notifications `[2026-08-27]`
@@ -918,6 +934,16 @@ Controls: **Continue** `adEdit-3` · **Cancel** `adEdit-4`.
 > hardcoded as `schoolKey` in `schoolAdminAddClassData.json` — changing it would break
 > **every admin suite simultaneously**, with no way back. `TST_SKEY_TC_3` is Blocked at design
 > time for exactly this reason (§A5, golden rule 4). Unblocking needs a dedicated disposable school.
+
+> 🔒 **Safety guards baked into the Generic suite's code — never weaken them** `[2026-09-14]`:
+> - `changeSchoolKey.page.js` has **no method that clicks Continue** (`adEdit-3`). The SKEY
+>   BeforeEach (`TST_SKEY_TC_100`) stops the suite unless the displayed key equals `schoolKey`
+>   (`KNF-XRD-QVE`) and is not `forbiddenSchoolKey` (`FCN-CHZ-PDA`).
+> - `setupSchoolWizard.click_next` refuses any key not in its Next list, so **Send Request**
+>   (`t-ss-as-btn-1`) is unreachable — old wizard modules' `button.btn-purple` also matches it.
+> - `myProfile.restore_firstName` is the ONLY save path, used only if Back unexpectedly saved.
+> - If `TST_SKEY_TC_4` fails on "dialog did not close" while the key is unchanged, that is a
+>   **finding** — report it; do not add an Escape fallback (Invariant 14).
 
 School key format across all 7 schools: **three uppercase triplets**, `XXX-XXX-XXX`. On the
 dashboard the key is **display text** (`span.school-code`) beside a **Copy** button — **not an
@@ -1170,6 +1196,6 @@ behind a fact — the fact itself belongs here.
 - `walkthroughs/walkthrough_adminGradingScales.test.js_2026-08-19_12h-04m.md`
 - `walkthroughs/walkthrough_adminClassGradeSettings.test.js_2026-08-20_15h-00m.md`
 - `walkthroughs/walkthrough_AdminApp_Classes_tab_test_cases_2026-08-14.md` (manual design)
-- `HANDOFF-adminclasses-scenario3.md` §4 — the create-form gotcha list
+- `archive/handoffs/HANDOFF-adminclasses-scenario3.md` §4 — the create-form gotcha list
 - Page-object headers: `manageGradingScales.page.js` (7 traps),
   `manageGradingCategories.page.js` (6 traps), `createClasses.page.js`

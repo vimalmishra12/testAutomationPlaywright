@@ -742,6 +742,14 @@ npm script `adminGenericTest_thor`; exec file `adminGeneric.json` (7 suites, INV
 
 **⚠️ `TST_INVI_TC_12` is NOT in the exec file [user decision, 2026-09-15].** It consumes one unread notification per run and the panel shows only the 5 newest; all five were read by run 5. Written + registered (tcMap ORPHAN by intent). Re-add as Suite7's last step once a fresh "report is ready" notification exists.
 
-**Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design in the handoff §6, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
+**Not built:** `SADB_TC_7` (creates a real class — own data-owning suite on KNF-XRD-QVE; design below, needs its own npm script → ask first). **Blocked:** `SKEY_TC_3`, `LIBR_TC_32`, `SRQS_TC_2`, `LIBR_TC_34`, `SADB_TC_8`.
+
+**`SADB_TC_7` design** (grounded read-only 2026-09-14, nothing created; moved here from the archived Generic handoff):
+- Do NOT use the per-school "Create class" (`a[qid=tDashboard-ncls-btn-1]`) — it exists only while the teacher has no class in that school.
+- Use the global `a.create-class` (beside "Active classes") → `/dashboard/teacher/create-class` "Enter class details": name `t-cc-cd-inpt-1` (**maxlength 50**) · start `t-cc-cd-inpt-2` · end `t-cc-cd-inpt-3` · school `#selected-school-dropdown[qid=t-cc-cd-inpt-4]` (**readonly**; focus opens `li.dropdown-item`; match by startsWith "3 July Test School 2" — exactly 1 item; **never click "Add a school / Join using a school key"**) · Cancel `t-cc-cd-btn-1` · Next `t-cc-cd-btn-2` (natively disabled). Cancel lands on the ADMIN dashboard.
+- Later steps (materials → "Add later" → success) are NOT grounded — the first run grounds them.
+- Reuse `createNewClass.page.js` `click_next_btn` / `click_addLater_Btn` / `getData_successfullyCreated`, but NOT `set_startDate` / `set_endDate` (hardcoded 2024 dates) or `set_enterYourSchool` (types into a readonly field).
+- Name `AutoClass_TeacherView_<RUN_ID>`. Verify in KNF's admin Classes tab by polling (creation is async, ~24 s to >90 s). Cleanup: CGST's `sweepClassesNamed` pattern (`adminClassGradeSettings.test.js`) — sweep BEFORE creating, bounded loop, assert every step.
+- Own exec file (e.g. `adminGenericCreate.json`) + own npm script (needs user confirmation).
 
 **Product issues recorded, not yet raised:** `rel="nopener"` on "Our approach"; untranslated Spanish strings ("Our approach", bell aria-label) — the "Clases (10)" spacing claim was checked live 2026-09-15 and is NOT a defect; wizard summary omits school type and number of teachers. ~~Teacher Create-class Cancel lands in the admin view~~ — **NOT reproduced [2026-09-15]**: a real click on Cancel stayed on `/dashboard/teacher/create-class` for 8 s (the claim came from a synthetic JS click); unresolved, not a reportable defect.

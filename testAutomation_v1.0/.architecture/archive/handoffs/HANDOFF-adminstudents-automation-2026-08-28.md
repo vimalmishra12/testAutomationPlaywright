@@ -87,7 +87,7 @@ name "3 July Test School 1" (`FCN-CHZ-PDA` and `ZPB-TWP-AEQ`).
 | | |
 |---|---|
 | School | **Cqa Test Ashish School 1** — key **`VED-NEH-KVU`**, slug `org_cup_j9GskaJJmvDjmQZ9` |
-| Login | `cqatestashish_admin@mailsac.com`, password **`Compro11`** (same as the existing admin — user-confirmed, **not yet exercised**) |
+| Login | `cqatestashish_admin@mailsac.com` — password in `logindata.json` (removed from this archived copy 2026-09-17) |
 
 **This login is NOT yet in `logindata.json`.** Add it as a second entry (e.g.
 `C1.login.user.schoolAdminAutomation`) before writing `TST_SLST_TC_25` or any SBLK case.

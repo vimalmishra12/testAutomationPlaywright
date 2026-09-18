@@ -205,10 +205,19 @@ success-dialog keys in §5 were found *before* anyone ran a bulk activation.
   appeared unprompted during this session and **intercepted the school-card click**, failing it with
   "intercepts pointer events". Any admin suite that starts at `/dashboard` needs to dismiss or
   tolerate it. `[2026-08-22]`
+- **`schoolStudents.getData_studentRows()` is expensive** — ~80 sequential logged action calls to
+  read 20 rows, and it dominates every TC that reads rows. A bulk `evaluate`-based read would need a
+  new `baseActionLibrary` method (protected file — confirm first). `[2026-08-28]`
 
 ---
 
 ## 5. Known defects found during grounding `[2026-08-22]`
+
+> **Raised in Jira `[2026-09]`** — four product issues were filed from this file's findings:
+> student removal missing (§9.7), "Create N account" enabled with an invalid row (§9.4), unused
+> activation-code search → 504 → error page (§9.6), and raw translation keys (§5 #3–4, §9.3).
+> **Ticket numbers: pending — add them here.** The Jira-ready write-ups are archived at
+> `.architecture/archive/handoffs/PRODUCT-QUESTIONS_students-tab_2026-09-16.md`.
 
 All four were found while designing the manual cases, and each is written up as an
 expected-versus-actual case in `test/Manual/C1App/AdminApp-Students/`.
@@ -235,6 +244,7 @@ bulk error dialog; and the invalid-activation-code error blaming the server rath
 | Adult with umbrellas incl. **Code expired** | `Learner us` · testps27@mailsac.com |
 | Child with username, 2 umbrellas, 2 classes | `child1 test` · cqatestaichild1 |
 | Profile that returns HTTP 500 (defect fixture) | `Vandna Garg` · vandna.garg+11student@comprotechnologies.com |
+| Last-name search fixture `[2026-08-28]` | `niharika budhiraja` · learner34@mailsac.com — used by `adminStudentsTabData.json`; not re-verified live since 2026-08-28 |
 | **Special characters in the NAME fields** `[2026-09-16]` | `cqateststu!^+s95 &LName` · cqateststu!^+s95@mailsac.com — created by the user to unblock `TST_SLST_TC_26`. First name `cqateststu!^+s95`, last name `&LName` |
 
 **26 students at capture: 25 adults with email addresses and exactly 1 child with a username.**
@@ -461,6 +471,7 @@ While the request is in flight the button renders the untranslated key
 - **§3 records the activation error with a CURLY apostrophe. The DOM uses a STRAIGHT one** —
   char code 39, read off the live node. A verbatim-copy assertion must normalise the
   apostrophe or it fails on a documentation artefact rather than on the product.
+  Reuse `normaliseCopy()` in `test/ExperienceApp/studentProfile.test.js` rather than writing another.
 - **The weak-password message DOES state the rules**, contradicting `TST_SPRF_TC_9`'s remark
   that it does not. The error says `Password does not meet complexity requirements`, but the
   strength hint above the field says, verbatim:
@@ -608,7 +619,7 @@ show a no-result state. `…/admin/apigateway/org_perf_testschool_1/activationCo
 **HTTP 504**, the admin bundle logs `ERROR Ie`, and the app redirects to **`/dashboard/error`**
 (*Sorry! Something went wrong*). Reproduced **twice** — once reached by direct URL, once through the
 dashboard card (so it is not a lost-context artefact). Time to the 504 varied (~20 s / ~109 s after
-page load). User decision: `TST_SLST_TC_28` asserts the REQUIREMENT and stays **out of the exec file**.
+page load; a third attempt, through the framework, failed at ~62 s). User decision: `TST_SLST_TC_28` asserts the REQUIREMENT and stays **out of the exec file**.
 
 ### 9.7 ⚠️ The student profile NO LONGER offers removal — corrects §2, §8.1, §8.8
 
