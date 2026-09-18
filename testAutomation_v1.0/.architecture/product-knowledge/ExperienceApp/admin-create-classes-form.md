@@ -13,7 +13,7 @@
 >
 > Living document — append, never overwrite. `[Seeded 2026-08-21]` from
 > `walkthrough_2026-08-18.md` (parts 1–7), the `schoolAdminAddClass*` walkthroughs, and
-> `HANDOFF-adminclasses-scenario3.md` §4.
+> `archive/handoffs/HANDOFF-adminclasses-scenario3.md` §4.
 
 ---
 

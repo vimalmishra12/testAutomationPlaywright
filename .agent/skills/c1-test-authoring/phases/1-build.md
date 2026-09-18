@@ -8,6 +8,12 @@ Phase 3.
 `test/Manual/` and the ticket), the target `<App>` and `<env>`, and the per-app product-knowledge
 file (validation rules, error messages, known quirks — do not re-discover or contradict them).
 
+**Treat inputs as claims, not facts.** Verify a handoff's statements (branch, commits, selectors,
+counts) against the repo before building on them — one Reports handoff assumed two missing commits
+and had four wrong selectors. And design against the real **artefact** (a downloaded file, the live
+DOM), not the register's prose — a report test built from the prose would have been wrong three ways
+(one CSV vs a zip, fixed vs per-component header, BOM).
+
 ## Steps
 
 ### Step 0 — Reconnaissance sweep
@@ -106,6 +112,9 @@ re-checks this table against the code that actually shipped.
    Phase 3's job, not yours. While registering, note which TCs *look* like visual candidates
    (fixed/static data per the AGENTS.md §8 decision table) — you will flag them in the exit
    checklist, NOT act on them.
+   **One TC-repository module per test file** — the runner resolves the FIRST module whose
+   `testFile` matches, so a second module sharing that file is unreachable, and
+   `tooling/tcMap.js` does NOT catch it (LIBR/UMBP, 2026-09-14).
 5. **Test data** (`testcaseData/<App>/<env>/*.json`): nested JSON, referenced by `jsonPath`.
    Reuse existing login/launch TCs via the execution file — never redefine an existing TC (ADR-011).
 6. **Execution file** (`testExecutionFiles/<App>/<env>/<name>.json`): Suite with `Before`

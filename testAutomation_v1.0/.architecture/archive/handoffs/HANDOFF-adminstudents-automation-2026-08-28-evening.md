@@ -74,7 +74,7 @@ data or a decision, not on work. Bring as much of this as you can:
 | | |
 |---|---|
 | School | **Cqa Test Ashish School 1** — key **`VED-NEH-KVU`**, slug `org_cup_j9GskaJJmvDjmQZ9` |
-| Login | `cqatestashish_admin@mailsac.com` / `Compro11` |
+| Login | `cqatestashish_admin@mailsac.com` — password in `logindata.json` (removed from this archived copy 2026-09-17) |
 | Status | **Agreed 2026-08-28, but NEVER EXERCISED and NOT in `logindata.json`** |
 
 **What I need:** confirmation these credentials still work, then I add them as
@@ -333,7 +333,7 @@ Verify with `git diff --numstat`: you want **additions only** (`43 0`, `20 0`).
 |---|---|
 | Env | `thor` — `https://micro-nemo.comprodls.com` |
 | **School (read-only suites)** | **`FCN-CHZ-PDA`** = "3 July Test School 1", slug `org_perf_testschool_1` |
-| Login | `testt1@mailsac.com` → `logindata.json` → `C1.login.user.schoolAdmin` (password `Compro11`) |
+| Login | `testt1@mailsac.com` → `logindata.json` → `C1.login.user.schoolAdmin` |
 | Run mode | headed, **system Chrome** |
 
 ⚠️ **Select the school by KEY** — two schools share the display name "3 July Test School 1"
