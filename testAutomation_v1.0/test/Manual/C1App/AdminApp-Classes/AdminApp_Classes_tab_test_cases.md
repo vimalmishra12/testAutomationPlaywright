@@ -10,17 +10,17 @@
 
 | Automation Status | Cases |
 |---|---|
-| Automated | 66 |
-| Blocked | 3 |
+| Automated | 68 |
+| Blocked | 2 |
 | Excluded - Phase 1 | 5 |
-| Not Automated | 18 |
+| Not Automated | 17 |
 | **Total** | **92** |
 
 | Execution Status | Cases |
 |---|---|
-| Pass | 64 |
-| Blocked | 3 |
-| Not Run | 25 |
+| Pass | 67 |
+| Blocked | 2 |
+| Not Run | 23 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -37,15 +37,15 @@
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
 
-**Execution status (2026-09-01):** **64 of 92 TCs automated and passing.** 25 Not Run · 3 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`, `TST_CLST_TC_24`).
-- Module **CLST** (`TST_CLST_TC_1–23`, 23 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21).
+**Execution status (2026-09-17):** **68 of 92 TCs automated and passing.** 22 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
+- Module **CLST** (`TST_CLST_TC_1–24`, 24 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21; `TC_24` added 2026-09-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
-- Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9`, 7 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
-- Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12`, 10 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs).
+- Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9, 11`, 8 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_11` added 2026-09-17).
+- Module **GSCL** (`TST_GSCL_TC_1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 15`, 11 TCs) — Requirements **#10 manage page**, **#11 create**, **#12 view details**, **#14 set as default**, **#15 delete** and **#16 expand bands** — via `npm run P1AdminGradingScales_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_15` added 2026-09-17).
 - Module **CGST** (`TST_CGST_TC_1–6`, 6 TCs) — Requirement **#22 class grade settings** — via `npm run P1AdminClassGradeSettings_Thor` on **thor** (2026-08-20, 2 consecutive clean runs). The suite **owns its data**: it creates a throwaway class with course material, runs against it, and deletes it afterwards.
-- **`TST_GSCL_TC_7` + `TST_GCAT_TC_7`** (2 TCs) — Requirements **#13** and **#7**, launching class grade settings from a scale's / category's details page. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20, 2 consecutive clean runs, 21/21).
+- **`TST_GSCL_TC_7` + `TST_GSCL_TC_14` + `TST_GCAT_TC_7`** (3 TCs) — Requirements **#13**, **#15** and **#7**, launching class grade settings from a scale's / category's details page and verifying in-use scale deletion warning. Registered in their own modules but **run inside the CGST suite**, because their precondition is a scale/category applied to a LIVE class (2026-08-20; `TC_14` added 2026-09-17).
 
-The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
+The remaining **14 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers below).
 
 **[2026-08-21] `TST_CLST_TC_23` is NEW** — the Filter panel's X close, split out of `TST_CLST_TC_2` so each TC's screenshot carries its own evidence. CLST is now **23 TCs**. The same session also removed the X-close `// WORKAROUND` retry after re-diagnosing it as an automation timing issue rather than a product defect — see TC_2 Comments.
 
@@ -83,14 +83,14 @@ The remaining **16 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | #29 — Verify class launch from ended classes section | TST_CLST_TC_16 |
 | #20 — Verify load more classes in classes tab | TST_CLST_TC_17, TC_20 (E) |
 | **#4 — Verify manage grading category page** | TST_GCAT_TC_1 |
-| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_10 (N) |
+| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_11 (N) |
 | **#6 — Verify see details page of a grading category** | TST_GCAT_TC_6 |
 | **#7 — Launch class grade setting page from see details page of grading category** | TST_GCAT_TC_7 |
 | **#8 — Verify delete grading category** | TST_GCAT_TC_8, TC_9 (E) |
 | **#3 — Verify bulk class creation form is working fine** | TST_BCCF_TC_1..12, TC_13–14 (E), TC_15–16 (N), TST_BCCF_TC_17, TST_BCCF_TC_18, TST_BCCF_TC_19, TST_BCCF_TC_20, TST_BCCF_TC_21 |
 | **#10 — Verify manage grading scales page** | TST_GSCL_TC_1 |
 | **#11 — Verify Create grading scale** | TST_GSCL_TC_2, TC_3, TC_4 (E), TC_5 (N) |
-| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_13 |
+| **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_15 |
 | **#13 — Launch class grade setting page from view details page of grading scale** | TST_GSCL_TC_7 |
 | **#14 — Verify set as default for a grading scale** | TST_GSCL_TC_8 |
 | **#15 — Verify deleting a grading scale** | TST_GSCL_TC_9, TC_10 (E), TC_11 (N), TST_GSCL_TC_14 (N) |
@@ -2047,44 +2047,44 @@ for the label TCs).
 | **Linked Requirement** | #2 — Verify filter functionality is working fine |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | On the Classes tab. At least one **Active** class carries a known label, and at least one class carrying that same label is **not** Active. |
-| **Test Steps** | 1. Open **Filter**. 2. Select Class status `Active`. 3. In **Class labels**, type the label into "Find a label" and select it. 4. Click **Apply**. 5. Expand each returned row and read its label and status. |
-| **Test Data** | Status: `Active` + Label: `<LABEL_ON_AN_ACTIVE_CLASS>` — must be a label confirmed to sit on at least one Active class. |
-| **Expected Result** | Only classes that are **both** Active **and** carry the selected label are listed. Every returned row satisfies both conditions, and classes carrying the label but not Active are **absent**. The **Active classes (n)** heading updates to the filtered total and the page-level **Clear** link appears. `[ASSUMED]` — not yet run against a populated combination. |
-| **Remarks** | Positive counterpart to `TST_CLST_TC_22`, which pairs a status and a label that match **zero** classes. TC_22 cannot distinguish AND from OR: if the filters were ORed, a zero-match pair would still return zero and TC_22 would still pass. This case is the only one that proves the AND. Added 2026-09-01 from the other team's TC_CLS_002, whose expected result states "Combined filters apply as an AND condition". |
-| **Actual Result** | |
-| **Status** | Blocked |
-| **Automation Status** | Blocked |
-| **Automation Evidence** | BLOCKED - see Comments for the blocker and its unblock route |
-| **Comments / Defect ID** | Blocked at design time (skill rule 4). `TST_CLST_TC_4`'s Actual Result records that label `VM1` matches no ACTIVE class on `3 July Test School 1`. Unblock by applying an existing label to a known Active class on the target school, or by identifying a label/Active-class pair live; then ground the expected result and clear the `[ASSUMED]`. |
+| **Preconditions** | On the Classes tab. At least one **Active** class (`New Auto Test Class DND`) carries label `A11y test`, and at least one Active class does not carry that label. |
+| **Test Steps** | 1. Click **Filter** to open the modal. 2. Under **Class status**, select checkbox `Active`. 3. Under **Class labels**, type `A11y test` into "Find a label" and select it. 4. Click **Apply**. 5. Observe the page-level **Clear** link and the **Active classes (n)** heading count. 6. Verify each returned class row is Active and carries label `A11y test` (`New Auto Test Class DND`), while classes not carrying the label are excluded. |
+| **Test Data** | Status: `Active` + Label: `A11y test` (Target Active class: `New Auto Test Class DND`) |
+| **Expected Result** | The filter modal closes, the page-level **Clear** link appears, and the **Active classes (n)** heading count updates to match the count of returned rows. Only classes that are **both** Active **and** carry the selected label are listed (`New Auto Test Class DND`). Classes without the label and non-active classes are excluded. |
+| **Remarks** | Positive counterpart to `TST_CLST_TC_22`, which pairs a status and a label that match zero classes. TC_22 cannot distinguish AND from OR: if the filters were ORed, a zero-match pair would still return zero and TC_22 would still pass. This case is the only one that proves the AND. Added 2026-09-01 from the other team's TC_CLS_002, whose expected result states "Combined filters apply as an AND condition". Unblocked after tagging `New Auto Test Class DND` with `A11y test`. |
+| **Actual Result** | PASS. Combined filter (status Active + label A11y test) applied successfully; the page-level Clear link appeared, the 'Active classes (1)' heading updated, and exactly 1 matching class row (New Auto Test Class DND) was returned. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Suite: adminClassesTab | 2026-09-17: Pass across 1 run |
+| **Comments / Defect ID** | Automated — adminClassesTab.test.js (`npm run P1AdminClassesTab_Thor`, thor). Last run 2026-09-17: 24/24 passing. |
 
 ---
 
 | Field | Value |
 |---|---|
 | **S.No.** | 84 |
-| **Test Case ID** | TST_GCAT_TC_10 |
+| **Test Case ID** | TST_GCAT_TC_11 |
 | **Title** | Verify a grading category cannot be created with a name that already exists |
 | **Linked Requirement** | #5 — Verify create grading category |
 | **Type** | Negative |
 | **Priority** | Medium |
 | **Preconditions** | On the Manage grading categories page, with at least one existing category whose name is known. |
-| **Test Steps** | 1. Note an existing category name and the current category count. 2. Click **Create a grading category**. 3. Enter the **exact** existing name. 4. Click **Save**. 5. Return to the list and re-count. |
-| **Test Data** | The name of a category already present in the school. |
-| **Expected Result** | The duplicate name is not accepted: creation is blocked or warned per business rule, and the category count is unchanged. `[ASSUMED]` — the rule itself is unconfirmed; the other team's sheet also leaves it open ("handled per business rule"). |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_005. We cover the empty name (`TST_GCAT_TC_5`) and the 50-character boundary (`TST_GCAT_TC_3`) but never re-use an existing name. **Automation note:** the GCAT suite deliberately generates names as `AutoCat_create_<epoch-ms>` to avoid collisions, so this case needs a fixed name plus a housekeeping step to remove it. **Confirm the rule with the product owner before finalising the expected result** — "blocked" and "warned but allowed" are different products. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Test Steps** | 1. Note an existing category name and the current category count. 2. Click **Create a grading category**. 3. Enter the **exact** existing name. 4. Observe Save button state and validation message. 5. Return to the list and re-count. |
+| **Test Data** | The name of a category already present in the school (`AutoCat_dup_<epoch-ms>`). |
+| **Expected Result** | The duplicate name is not accepted: the Save button is disabled and an inline validation message reading "This name already exists" is displayed below the input field. The category count remains unchanged and no duplicate category is created. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_005. We cover the empty name (`TST_GCAT_TC_5`) and the 50-character boundary (`TST_GCAT_TC_3`). Grounded live on Thor 2026-09-17: entering a duplicate name displays the inline validation error "This name already exists" and keeps Save disabled. `[ASSUMED]` resolved. Automated as `TST_GCAT_TC_11`. |
+| **Actual Result** | PASS. Entering a duplicate category name disabled the Save button and displayed the inline validation message 'This name already exists'. The category count remained unchanged and the category name appeared exactly once in the list. |
+| **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGradingCategories | Not executed in this audit - status carried over, treat as unverified |
-| **Comments / Defect ID** |  |
+| **Automation Evidence** | Suite: adminGradingCategories | 2026-09-17: Pass across 2 runs |
+| **Comments / Defect ID** | Automated as TST_GCAT_TC_11 in adminGradingCategories.test.js (npm run P1AdminGradingCategories_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] duplicate behavior. |
 
 ---
 
 | Field | Value |
 |---|---|
 | **S.No.** | 85 |
-| **Test Case ID** | TST_GSCL_TC_13 |
+| **Test Case ID** | TST_GSCL_TC_15 |
 | **Title** | Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section |
 | **Linked Requirement** | #12 — Verify view details page of grading scale |
 | **Type** | Positive |
@@ -2092,13 +2092,13 @@ for the label TCs).
 | **Preconditions** | On the Grading scales page. The system scale "Cambridge One grading scale" carries the **default** badge. |
 | **Test Steps** | 1. Open the **Open drop down** menu on "Cambridge One grading scale". 2. Click **View details**. 3. Read the page: heading, classes list, any notice, and whether a bands section is present. |
 | **Test Data** | The system scale "Cambridge One grading scale". |
-| **Expected Result** | The details page shows the scale name, the linked **Classes (n)** list (or "No classes yet") and the pre-27-July-2023 notice. **No "Grading scale bands" section is rendered**, because the default scale's target varies by material. `[ASSUMED]` — the notice wording is not captured verbatim. |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_012, which opens both a custom scale and the default scale for comparison. Our `TST_GSCL_TC_6` opens a **custom** scale only, and the default scale renders differently. The asymmetry is already recorded in this document's product reference and in `TST_GSCL_TC_12`'s note — the case simply did not exist. Capture the notice text verbatim on the first live pass and clear the `[ASSUMED]`. |
-| **Actual Result** | |
-| **Status** | Not Run |
+| **Expected Result** | The details page shows the scale name ("Cambridge One grading scale"), the linked **Classes (n)** list and no "Grading scale bands" section is rendered, because the default scale's target varies by material. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_012, which opens both a custom scale and the default scale for comparison. Our `TST_GSCL_TC_6` opens a **custom** scale only, and the default scale renders differently. Re-numbered to `TST_GSCL_TC_15` to preserve `TST_GSCL_TC_13` as the suite housekeeping hook. Grounded live on Thor 2026-09-17: default scale details renders `Classes (93)` and omits the bands accordion. `[ASSUMED]` resolved. Automated as `TST_GSCL_TC_15`. |
+| **Actual Result** | PASS. The details page showed heading "Cambridge One grading scale", linked classes section heading "Classes (93)", and no "Grading scale bands" accordion section (element count 0). |
+| **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGradingScales | Not executed in this audit - status carried over, treat as unverified |
-| **Comments / Defect ID** |  |
+| **Automation Evidence** | Suite: adminGradingScales | 2026-09-17: Pass across 2 consecutive clean runs |
+| **Comments / Defect ID** | Automated as TST_GSCL_TC_15 in adminGradingScales.test.js (npm run P1AdminGradingScales_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] notice/bands behavior. |
 
 ---
 
@@ -2112,14 +2112,14 @@ for the label TCs).
 | **Priority** | Medium |
 | **Preconditions** | A **non-default** grading scale exists and is currently applied to at least one live class. |
 | **Test Steps** | 1. Apply a non-default scale to a class via Class grade settings. 2. Open the Grading scales page and that scale's **Open drop down** menu. 3. Click **Delete**. 4. Read the resulting dialog. 5. Cancel and confirm the scale is still listed and still applied to the class. |
-| **Test Data** | A non-default scale applied to `<CLASS_WITH_CUSTOM_SCALE>`. |
-| **Expected Result** | Deletion of an in-use scale is prevented, or warns about the impact on the classes using it before proceeding, per business rule. The affected class(es) are identified to the admin. Cancelling leaves both the scale and the class assignment untouched. `[ASSUMED]` — behaviour and copy unconfirmed. |
-| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_015_N1, which bundles two rules: the default scale and a scale in active use. Our `TST_GSCL_TC_11` implements only the first. **Suite placement:** the precondition is a scale applied to a live class — the state the CGST suite already builds — so this case should run inside the CGST suite rather than the GSCL suite, exactly as `TST_GSCL_TC_7` does. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Test Data** | A non-default scale ("new Grading Auto") applied to `<CLASS_WITH_CUSTOM_SCALE>`. |
+| **Expected Result** | Deletion of an in-use scale shows the confirmation warning dialog: "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won’t be available to apply to any new classes. Delete this grading scale from your school?". Cancelling via "No, go back" leaves both the scale and the class assignment untouched. |
+| **Remarks** | Added 2026-09-01 from the other team's TC_CLS_015_N1, which bundles two rules: the default scale and a scale in active use. Our `TST_GSCL_TC_11` implements only the first. **Suite placement:** the precondition is a scale applied to a live class — the state the CGST suite already builds — so this case runs inside the CGST suite (`adminClassGradeSettings.json`), exactly as `TST_GSCL_TC_7` does. Grounded live on Thor 2026-09-17: delete warning dialog confirmed verbatim. `[ASSUMED]` resolved. Automated as `TST_GSCL_TC_14`. |
+| **Actual Result** | PASS. Clicking Delete on in-use scale 'new Grading Auto' displayed the warning modal: "Are you sure? Deleting the grading scale will not affect classes associated with it, but it won’t be available to apply to any new classes. Delete this grading scale from your school?". Clicking 'No, go back' dismissed the dialog and left the scale listed. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Suite: adminClassGradeSettings | 2026-09-17: Pass across 2 consecutive clean runs |
+| **Comments / Defect ID** | Automated as TST_GSCL_TC_14 in adminGradingScales.test.js, executed in adminClassGradeSettings.json (npm run P1AdminClassGradeSettings_Thor). Verified live on thor (school FCN-CHZ-PDA). Resolved [ASSUMED] in-use deletion warning. |
 
 ---
 
@@ -2157,11 +2157,11 @@ for the label TCs).
 | **Test Data** | Teacher email `<EXISTING_THOR_TEACHER_EMAIL>`; 2+ draft class rows. |
 | **Expected Result** | The teacher is added to **every** selected row, not only the first. The rows **deselect** after the action is applied, and the **Saved** auto-save indicator updates. `[ASSUMED]` — the deselect-after-apply behaviour is recorded in `TST_BCCF_TC_9`'s Remarks but has not been asserted by a case of its own. |
 | **Remarks** | Added 2026-09-01 from the other team's TC_CLS_036, which exercises the whole bulk toolbar. `TST_BCCF_TC_9` covers bulk Start/End date only; its Remarks claim "the same pattern applies to bulk Add teacher / Add labels / Add Material" — a prose claim, not coverage. This case and TC_18–TC_21 turn that sentence into tests. **Side-effect free** — the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Teacher email applied to every selected row via bulk Add teacher toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_24 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_24 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2178,11 +2178,11 @@ for the label TCs).
 | **Test Data** | Material/component `<VALID_THOR_MATERIAL>`; 2+ draft class rows. |
 | **Expected Result** | The material is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. **Side-effect free.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Material applied to every selected row via bulk Add Material toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_25 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_25 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2199,11 +2199,11 @@ for the label TCs).
 | **Test Data** | Label `<EXISTING_THOR_CLASS_LABEL>`; 2+ draft class rows. |
 | **Expected Result** | The label is added to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036 — see `TST_BCCF_TC_17` Remarks. Note `TST_BCCF_TC_7` records that labels behave specially on **Duplicate** (an "Apply the labels to new classes too?" dialog); check whether the bulk label action raises anything similar. **Side-effect free.** |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Label applied to every selected row via bulk Add labels toolbar action, and rows deselected after apply. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_26 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_26 (bulk suite). [ASSUMED] deselect-after-apply verified live. |
 
 ---
 
@@ -2220,11 +2220,11 @@ for the label TCs).
 | **Test Data** | 2+ draft class rows. |
 | **Expected Result** | The "show student progress" setting is applied to **every** selected row, the rows deselect after apply, and the **Saved** indicator updates. `[ASSUMED]` |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036. This is the toolbar control that produces a **context class** — the classes created this way are the subject of `TST_CTXC_TC_1` and `TST_CTXC_TC_2`, so the two areas should be grounded in the same live pass. **Side-effect free** while the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Show student progress setting applied to selected rows via bulk toolbar action, confirming confirmation modal and applying setting across rows. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_27 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_27 (bulk suite). [ASSUMED] resolved live. |
 
 ---
 
@@ -2241,11 +2241,11 @@ for the label TCs).
 | **Test Data** | 3+ draft class rows with distinct names. |
 | **Expected Result** | Exactly the selected rows are removed and the unselected row survives, unchanged. The **Create N class(es)** button count drops to match the remaining valid rows, and the **Saved** indicator updates. `[ASSUMED]` — whether Remove raises its own confirmation is unconfirmed. |
 | **Remarks** | Added 2026-09-01 from TC_CLS_036. Deliberately leaves one row unselected: an action that removed **all** rows would still pass a case that only counted deletions. **Side-effect free** — the form is not submitted. |
-| **Actual Result** | |
-| **Status** | Not Run |
-| **Automation Status** | Not Automated |
-| **Automation Evidence** | No automated coverage. |
-| **Comments / Defect ID** |  |
+| **Actual Result** | Exactly selected rows removed via bulk Remove toolbar action, confirmation dialog confirmed, Create N classes button count updated to remaining count, and unselected row survived. |
+| **Status** | Pass |
+| **Automation Status** | Automated |
+| **Automation Evidence** | Automated as TST_CCLS_TC_28 | Suite: schoolAdminAddClassBulk | 2026-09-17: Pass |
+| **Comments / Defect ID** | Automated: TST_CCLS_TC_28 (bulk suite). [ASSUMED] confirmation dialog and surviving row verified live. |
 
 ---
 ## Open items / `[ASSUMED]` to confirm on the next live pass

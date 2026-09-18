@@ -320,7 +320,8 @@ module.exports = {
    */
   reload_page: async function () {
     await logger.logInto(await stackTrace.get());
-    await browser.refresh();
+    var url = await browser.getUrl();
+    await browser.url(url);
     return await this.isInitialized();
   },
 

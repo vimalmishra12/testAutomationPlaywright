@@ -667,6 +667,84 @@ module.exports = {
   },
 
   /**
+   * TST_GSCL_TC_14 - Req #15 (Negative): Verify a grading scale that is applied to a class
+   * cannot be deleted without warning (and cancelling preserves it).
+   *
+   * RUNS INSIDE THE CGST SUITE, not the GSCL one: its precondition is "the scale is applied
+   * to >= 1 class", which TST_CGST_TC_2 sets up. Slotted in adminClassGradeSettings.json.
+   * Registered here because module ownership follows the page object (AGENTS.md Rule 6).
+   */
+  TST_GSCL_TC_14: async function (testdata) {
+    sts = await schoolClasses.return_toClassesTab();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not return to the Classes tab");
+
+    sts = await manageGradingScales.navigate_fromClassesTab();
+    await assertion.assertEqual(sts.pageStatus, true, "Could not open the Grading scales page");
+
+    sts = await manageGradingScales.click_deleteScale(testdata.scaleName);
+    await assertion.assertEqual(sts.pageStatus, true,
+      "The Delete confirmation did not open for in-use scale '" + testdata.scaleName + "'");
+
+    var modal = await manageGradingScales.getData_deleteModal();
+    console.log("TC_14 in-use scale delete modal text →", modal.text);
+    await assertion.assertEqual(modal.displayed, true, "The Delete confirmation modal is not visible");
+    await assertion.assertEqual(
+      squash(modal.text).indexOf(squash(DELETE_MODAL_COPY)) !== -1,
+      true,
+      "Delete confirmation modal copy does not match expectation. Got: " + squash(modal.text)
+    );
+
+    sts = await manageGradingScales.click_cancelDelete();
+    await assertion.assertEqual(sts.pageStatus, true,
+      "The Delete confirmation did not close after 'No, go back'");
+
+    var still = await manageGradingScales.getData_scaleListed(testdata.scaleName);
+    console.log("TC_14 after cancel →", still);
+    await assertion.assertEqual(still.listed, true,
+      "Scale '" + testdata.scaleName + "' was removed even though deletion was cancelled");
+  },
+
+  /**
+   * TST_GSCL_TC_15 - Req #12 (Positive): Verify the Cambridge One default grading scale details
+   * page shows its classes list and notice but no bands section.
+   * testdata: { systemDefaultScale }
+   *
+   * Runs in the GSCL suite (P1AdminGradingScales_Thor).
+   * Unlike custom scales, the default scale renders no "Grading scale bands" accordion.
+   */
+  TST_GSCL_TC_15: async function (testdata) {
+    sts = await manageGradingScales.click_viewDetails(testdata.systemDefaultScale);
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "View details did not open for system default grading scale '" + testdata.systemDefaultScale + "'"
+    );
+
+    var details = await manageGradingScales.getData_detailsPage();
+    console.log("TC_15 default scale details page →", details);
+
+    await assertion.assertEqual(
+      squash(details.heading), testdata.systemDefaultScale,
+      "Heading on details page does not match default scale name"
+    );
+    await assertion.assertEqual(
+      details.bandsToggleCount === 0 || details.bandsToggleDisplayed === false,
+      true,
+      "Grading scale bands section is present for default scale - it should not be rendered"
+    );
+    await assertion.assertEqual(
+      details.classesHeading.indexOf("Classes") !== -1 || details.noClassesDisplayed,
+      true,
+      "Classes section not shown on default scale details page"
+    );
+
+    sts = await manageGradingScales.click_backFromDetails();
+    await assertion.assertEqual(
+      sts.pageStatus, true,
+      "Back link did not return to the Manage grading scales page"
+    );
+  },
+
+  /**
    * TST_GSCL_TC_13 - housekeeping. Puts the page into a known state: on the Grading scales
    * list, nothing open, the school default back where it belongs, and no scale left over
    * from a previous run.

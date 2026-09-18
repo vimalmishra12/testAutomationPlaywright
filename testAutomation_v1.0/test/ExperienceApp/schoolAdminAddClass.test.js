@@ -605,5 +605,221 @@ module.exports = {
   TST_CCLS_TC_23: async function (testdata) {
     var wasReset = await createClasses.reset_formToSingleEmptyRow();
     await assertion.assertEqual(wasReset, true, "form did not reset to a single empty row");
+  },
+
+  /**
+   * TST_CCLS_TC_24 (Positive) — BCCF_TC_17: selecting multiple class rows and using the bulk
+   * toolbar "Add teacher" action applies the teacher to every selected row.
+   * Also verifies that rows deselect after the action is applied.
+   * testdata: { className, classNameRow2, teacherEmail }
+   */
+  TST_CCLS_TC_24: async function (testdata) {
+    var sts1 = await createClasses.set_className(testdata.className);
+    await assertion.assertEqual(sts1, true, "Row 1 className is not set");
+    var sts2 = await createClasses.set_className_row2(testdata.classNameRow2);
+    await assertion.assertEqual(sts2, true, "Row 2 className is not set");
+
+    var selAll = await createClasses.click_selectAllCheckbox();
+    await assertion.assertEqual(selAll, true, "selectAllCheckbox was not clicked");
+
+    var opened = await createClasses.click_toolbarAddTeacher();
+    await assertion.assertEqual(opened, true, "Bulk Edit teachers modal did not open");
+
+    var emailSet = await createClasses.set_teacherEmail(testdata.teacherEmail);
+    await assertion.assertEqual(emailSet, true, "Teacher email was not set");
+
+    var applied = await createClasses.click_teacherApplyChanges();
+    await assertion.assertEqual(applied.added, true, "Teacher was not applied to rows");
+
+    var row1 = await createClasses.getData_row1Values();
+    await assertion.assertEqual(row1.teacher, testdata.teacherEmail, "Row 1 teacher mismatch after bulk add");
+
+    var row2 = await createClasses.getData_row2Values();
+    await assertion.assertEqual(row2.teacher, testdata.teacherEmail, "Row 2 teacher mismatch after bulk add");
+
+    var anySelected = await createClasses.getData_anyRowSelected();
+    await assertion.assertEqual(anySelected, false, "Rows were not deselected after bulk action");
+  },
+
+  /**
+   * TST_CCLS_TC_25 (Positive) — BCCF_TC_18: selecting multiple class rows and using the bulk
+   * toolbar "Add Material" action applies the course material to every selected row.
+   * Persists data from TC_24 (teacher is preserved).
+   * Also verifies that rows deselect after the action is applied.
+   * testdata: { className, classNameRow2, material, teacherEmail }
+   */
+  TST_CCLS_TC_25: async function (testdata) {
+    var row1 = await createClasses.getData_row1Values();
+    if (!row1.name || row1.name.length === 0) {
+      await createClasses.set_className(testdata.className);
+    }
+    var row2 = await createClasses.getData_row2Values();
+    if (!row2.name || row2.name.length === 0) {
+      await createClasses.set_className_row2(testdata.classNameRow2);
+    }
+
+    var selAll = await createClasses.click_selectAllCheckbox();
+    await assertion.assertEqual(selAll, true, "selectAllCheckbox was not clicked");
+
+    var opened = await createClasses.click_toolbarAddMaterial();
+    await assertion.assertEqual(opened, true, "Bulk Add Materials modal did not open");
+
+    var selected = await createClasses.select_material(testdata.material);
+    await assertion.assertEqual(selected, true, "Material '" + testdata.material + "' was not selected");
+
+    var confirmed = await createClasses.click_addMaterialsConfirm();
+    await assertion.assertEqual(confirmed.added, true, "Material was not applied to rows");
+
+    row1 = await createClasses.getData_row1Values();
+    await assertion.assert(
+      typeof row1.material === "string" && row1.material.indexOf(testdata.material) !== -1,
+      "Row 1 material mismatch after bulk add (got: " + row1.material + ")"
+    );
+    if (testdata.teacherEmail) {
+      await assertion.assertEqual(row1.teacher, testdata.teacherEmail, "Row 1 teacher did not persist after bulk Add Material");
+    }
+
+    row2 = await createClasses.getData_row2Values();
+    await assertion.assert(
+      typeof row2.material === "string" && row2.material.indexOf(testdata.material) !== -1,
+      "Row 2 material mismatch after bulk add (got: " + row2.material + ")"
+    );
+    if (testdata.teacherEmail) {
+      await assertion.assertEqual(row2.teacher, testdata.teacherEmail, "Row 2 teacher did not persist after bulk Add Material");
+    }
+
+    var anySelected = await createClasses.getData_anyRowSelected();
+    await assertion.assertEqual(anySelected, false, "Rows were not deselected after bulk action");
+  },
+
+  /**
+   * TST_CCLS_TC_26 (Positive) — BCCF_TC_19: selecting multiple class rows and using the bulk
+   * toolbar "Add labels" action applies the label to every selected row.
+   * Persists data from TC_24 & TC_25 (teacher & material preserved).
+   * Also verifies that rows deselect after the action is applied.
+   * testdata: { className, classNameRow2, classLabel }
+   */
+  TST_CCLS_TC_26: async function (testdata) {
+    var row1 = await createClasses.getData_row1Values();
+    if (!row1.name || row1.name.length === 0) {
+      await createClasses.set_className(testdata.className);
+    }
+    var row2 = await createClasses.getData_row2Values();
+    if (!row2.name || row2.name.length === 0) {
+      await createClasses.set_className_row2(testdata.classNameRow2);
+    }
+
+    var selAll = await createClasses.click_selectAllCheckbox();
+    await assertion.assertEqual(selAll, true, "selectAllCheckbox was not clicked");
+
+    var opened = await createClasses.click_toolbarAddLabels();
+    await assertion.assertEqual(opened, true, "Bulk Add labels dropdown did not open");
+
+    var selected = await createClasses.select_bulkClassLabel(testdata.classLabel);
+    await assertion.assertEqual(selected, true, "Bulk label '" + testdata.classLabel + "' was not selected");
+
+    var row1Label = await createClasses.getData_appliedLabel();
+    await assertion.assert(
+      typeof row1Label.raw === "string" && row1Label.raw.indexOf(testdata.classLabel) !== -1,
+      "Row 1 label mismatch after bulk add (got: " + row1Label.raw + ")"
+    );
+
+    var row2Label = await createClasses.getData_appliedLabel_row2();
+    await assertion.assert(
+      typeof row2Label.raw === "string" && row2Label.raw.indexOf(testdata.classLabel) !== -1,
+      "Row 2 label mismatch after bulk add (got: " + row2Label.raw + ")"
+    );
+
+    var anySelected = await createClasses.getData_anyRowSelected();
+    await assertion.assertEqual(anySelected, false, "Rows were not deselected after bulk action");
+  },
+
+  /**
+   * TST_CCLS_TC_27 (Positive) — BCCF_TC_20: selecting multiple class rows and using the bulk
+   * toolbar "Show student progress" action applies the progress setting to every selected row.
+   * Persists data from TC_24 to TC_26.
+   * Also verifies that rows deselect after the action is applied.
+   * testdata: { className, classNameRow2 }
+   */
+  TST_CCLS_TC_27: async function (testdata) {
+    var row1 = await createClasses.getData_row1Values();
+    if (!row1.name || row1.name.length === 0) {
+      await createClasses.set_className(testdata.className);
+    }
+    var row2 = await createClasses.getData_row2Values();
+    if (!row2.name || row2.name.length === 0) {
+      await createClasses.set_className_row2(testdata.classNameRow2);
+    }
+
+    var selAll = await createClasses.click_selectAllCheckbox();
+    await assertion.assertEqual(selAll, true, "selectAllCheckbox was not clicked");
+
+    var clicked = await createClasses.click_toolbarShowStudentProgress();
+    await assertion.assertEqual(clicked, true, "toolbarShowStudentProgressBtn was not clicked");
+
+    var progressStates = await createClasses.getData_rowProgressStates();
+    await assertion.assert(
+      progressStates.row1 !== null && progressStates.row2 !== null,
+      "Could not read student progress state on rows"
+    );
+
+    var anySelected = await createClasses.getData_anyRowSelected();
+    await assertion.assertEqual(anySelected, false, "Rows were not deselected after bulk action");
+  },
+
+  /**
+   * TST_CCLS_TC_28 (Positive) — BCCF_TC_21: with 3 distinguishable class rows, selecting 2 rows
+   * (e.g. Row 1 and Row 2) and using the bulk toolbar "Remove" action deletes exactly the selected
+   * rows, while the unselected row (Row 3) survives.
+   * testdata: { className, classNameRow2, classNameRow3 }
+   */
+  TST_CCLS_TC_28: async function (testdata) {
+    var row1 = await createClasses.getData_row1Values();
+    if (!row1.name || row1.name.length === 0) {
+      await createClasses.set_className(testdata.className);
+    }
+    if (!row1.start || row1.start.length === 0) {
+      await createClasses.set_startDate();
+      await createClasses.set_endDate();
+    }
+
+    var row2 = await createClasses.getData_row2Values();
+    if (!row2.name || row2.name.length === 0) {
+      await createClasses.set_className_row2(testdata.classNameRow2);
+    }
+    if (!row2.start || row2.start.length === 0) {
+      await createClasses.set_startDate_row2();
+      await createClasses.set_endDate_row2();
+    }
+
+    var sts3 = await createClasses.set_className_row3(testdata.classNameRow3);
+    await assertion.assertEqual(sts3, true, "Row 3 className is not set");
+    sts3 = await createClasses.set_startDate_row3();
+    await assertion.assertEqual(sts3, true, "Row 3 startDate is not set");
+    sts3 = await createClasses.set_endDate_row3();
+    await assertion.assertEqual(sts3, true, "Row 3 endDate is not set");
+
+    var beforeLabel = await createClasses.getData_createBtnLabel();
+    await assertion.assertEqual(beforeLabel.count, 3, "Create button count should be 3 before removal");
+
+    // Select row 1 and row 2, leaving row 3 unselected
+    var r1Checked = await createClasses.click_rowCheckboxByIndex(0);
+    await assertion.assertEqual(r1Checked, true, "Row 1 checkbox was not clicked");
+    var r2Checked = await createClasses.click_rowCheckboxByIndex(1);
+    await assertion.assertEqual(r2Checked, true, "Row 2 checkbox was not clicked");
+
+    var removed = await createClasses.click_toolbarRemove(true);
+    await assertion.assertEqual(removed, true, "Bulk remove did not complete");
+
+    // After removing 2 rows, exactly 1 row remains and it is the surviving row 3
+    var afterLabel = await createClasses.getData_createBtnLabel();
+    await assertion.assertEqual(afterLabel.count, 1, "Create button count should be 1 after removing 2 of 3 rows");
+
+    var survivingRow = await createClasses.getData_row1Values();
+    await assertion.assertEqual(
+      survivingRow.name,
+      testdata.classNameRow3,
+      "Surviving row does not match the unselected row 3 name"
+    );
   }
 };

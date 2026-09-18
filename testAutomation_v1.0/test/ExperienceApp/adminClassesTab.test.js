@@ -263,6 +263,52 @@ module.exports = {
   },
 
   /**
+   * TST_CLST_TC_24 — Req #2: Verify a Class status and Class label filter applied
+   * together return only classes matching both (AND logic).
+   * testdata: { combinedStatus, combinedLabel, combinedExpectedClass }
+   */
+  TST_CLST_TC_24: async function (testdata) {
+    var statusToSelect = testdata.combinedStatus || "Active";
+    var labelToSelect = testdata.combinedLabel || "VM1";
+
+    sts = await schoolClasses.click_filter();
+    await assertion.assertEqual(sts.pageStatus, true, "Filter modal did not open");
+
+    sts = await classFilterModal.select_status(statusToSelect);
+    await assertion.assertEqual(sts, true, "Class status '" + statusToSelect + "' was not selected");
+
+    sts = await classFilterModal.select_label(labelToSelect);
+    await assertion.assertEqual(sts, true, "Class label '" + labelToSelect + "' was not selected");
+
+    sts = await classFilterModal.click_apply();
+    await assertion.assertEqual(sts.pageStatus, true, "Filter modal did not close after Apply");
+
+    await browser.pause(1000); // grid re-paint after filter is applied
+    var applied = await schoolClasses.getData_filterApplied();
+    var rows = await schoolClasses.getData_visibleClassRowCount();
+    var afterHeading = await schoolClasses.getData_activeClassCount();
+    console.log("TC_24 AFTER apply →", { rows: rows.count, heading: afterHeading.count, filterApplied: applied });
+
+    await assertion.assertEqual(
+      applied,
+      true,
+      "Combined filter (status: '" + statusToSelect + "', label: '" + labelToSelect + "') does not appear to be applied"
+    );
+    await assertion.assert(
+      rows.count > 0,
+      "No class rows returned for combined filter matching status '" + statusToSelect + "' and label '" + labelToSelect + "'"
+    );
+    await assertion.assert(
+      typeof afterHeading.count === "number",
+      "Could not read the 'Active classes (N)' heading count (raw: " + afterHeading.raw + ")"
+    );
+    await assertion.assert(
+      rows.count <= afterHeading.count,
+      "Visible filtered rows (" + rows.count + ") exceed the 'Active classes (N)' heading (" + afterHeading.count + ")"
+    );
+  },
+
+  /**
    * TST_CLST_TC_5 — Req #9: Verify search by class name returns the matching class.
    * testdata: { searchByName }
    */

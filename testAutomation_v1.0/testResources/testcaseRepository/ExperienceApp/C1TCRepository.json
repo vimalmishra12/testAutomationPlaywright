@@ -4678,6 +4678,36 @@
           "description": "Housekeeping | Reset the create form to a single empty row (the form restores an auto-saved draft)",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_24",
+          "description": "BCCF_TC_17 (Pos) | Bulk toolbar Add teacher applies teacher to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_25",
+          "description": "BCCF_TC_18 (Pos) | Bulk toolbar Add Material applies material to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_26",
+          "description": "BCCF_TC_19 (Pos) | Bulk toolbar Add labels applies label to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_27",
+          "description": "BCCF_TC_20 (Pos) | Bulk toolbar Show student progress applies progress setting to every selected row",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CCLS_TC_28",
+          "description": "BCCF_TC_21 (Pos) | Bulk toolbar Remove deletes exactly the selected rows while unselected rows survive",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -4713,6 +4743,12 @@
         {
           "id": "TST_CLST_TC_4",
           "description": "Verify filtering by a Class label returns only classes with that label",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CLST_TC_24",
+          "description": "Verify a Class status and Class label filter applied together return only classes matching both",
           "tags": "P2",
           "visualTest": false
         },
@@ -4890,6 +4926,12 @@
           "description": "BeforeEach — open Manage grading categories, close any open modal, sweep leftover AutoCat_* categories",
           "tags": "P3",
           "visualTest": false
+        },
+        {
+          "id": "TST_GCAT_TC_11",
+          "description": "Verify a grading category cannot be created with a name that already exists",
+          "tags": "P2",
+          "visualTest": false
         }
       ]
     },
@@ -4968,6 +5010,18 @@
           "id": "TST_GSCL_TC_13",
           "description": "BeforeEach — open Grading scales, close anything open, restore the school default, sweep leftover AutoScale_* scales",
           "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_14",
+          "description": "Verify a grading scale that is applied to a class cannot be deleted without warning",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_GSCL_TC_15",
+          "description": "Verify the Cambridge One default grading scale details page shows its classes list and notice but no bands section",
+          "tags": "P2",
           "visualTest": false
         }
       ]
