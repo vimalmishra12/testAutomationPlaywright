@@ -46,6 +46,16 @@ function typeTC(n, id, name, prio) {
 const TCS = [
   // ---------- Requirement #1
   {
+    id: 'TST_MRPT_TC_1',
+    title: 'Verify the Reports tab loads with its empty state when the school has no reports',
+    req: '#1 — Verify Create Report is launching',
+    type: 'Positive', priority: 'High', pre: PRE_TAB,
+    steps: '1. Open the school from "My school accounts".\n2. Click "REPORTS" in the school navigation.\n3. Observe the page.',
+    data: '—',
+    expected: 'URL is /admin/admin/org_<slug>/reports. The heading reads "Reports (0)". A "Create report" button is present. The informational line reads "Reports are available to download for up to 60 days". The empty state reads "No new reports available" above "Your reports will appear here after you create them", with a second "Create report" button.',
+    remarks: 'All copy captured verbatim live 2026-08-26. The (0) count is school-specific — on a school that already holds reports this case cannot show the empty state.',
+  },
+  {
     id: 'TST_MRPT_TC_2',
     title: 'Verify the class-selection step launches when "Create report" is clicked',
     req: '#1 — Verify Create Report is launching',
@@ -54,6 +64,16 @@ const TCS = [
     data: '—',
     expected: 'The app navigates to /admin/admin/org_<slug>/reports/create. The page shows a "Go back" link, the heading "Create report", the sub-heading "Choose classes you want to include in your report", a section heading "Select classes" with the note "You can include up to 1500 classes", a search box placeholdered "Search for class name or class key", a "Filter" control showing "All class statuses", a "Select all classes" checkbox, sortable column headers (Class name, Class key, Start date, End date, Students, Class status) and one selectable row per class.',
     remarks: 'Captured live 2026-08-26. Note the "Select classes" heading carries NO count while zero classes are selected — the "(N)" appears only once at least one class is ticked.',
+  },
+  {
+    id: 'TST_MRPT_TC_3',
+    title: 'Verify the Reports tab is restored when "Go back" is used from the class-selection step',
+    req: '#1 — Verify Create Report is launching',
+    type: 'Edge', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Click the "Go back" link at the top of the class-selection step.\n2. Observe the page.',
+    data: '—',
+    expected: 'The app returns to /admin/admin/org_<slug>/reports, the Reports tab renders, and no new report has been created (the heading count is unchanged).',
+    remarks: 'Distinct from the footer "Cancel" (TST_MRPT_TC_18) — both exit paths need covering.',
   },
 
   // ---------- Requirement #2
@@ -191,6 +211,19 @@ const TCS = [
     expected: 'The heading returns to "Select classes(1)" and the footer summary returns to "You have selected 1 class with a total of 1 student".',
     remarks: 'Unticking the last remaining class should also remove the footer bar entirely — cross-check against TST_MRPT_TC_15.',
   },
+  {
+    id: 'TST_MRPT_TC_17',
+    title: 'Verify the documented 1500-class selection limit is enforced when more classes are selected',
+    req: '#4 — Verify class selection checkbox',
+    type: 'Edge', priority: 'Low',
+    pre: 'A school holding more than 1500 classes, with the class-selection step open.',
+    steps: '1. Select classes until the count exceeds 1500.\n2. Observe the heading, the footer bar and the "Continue" button.',
+    data: '>1500 classes',
+    expected: '[ASSUMED] Selection is capped at 1500 and the product surfaces the limit it states on screen ("You can include up to 1500 classes").',
+    remarks: 'BLOCKED at design time. The cap text is captured verbatim live, but VED-NEH-KVU holds only 6 classes so the cap cannot be reached. UNBLOCK: a dedicated school seeded with >1500 classes, or a product/API confirmation. Whether the cap blocks further ticks or raises a message is unknown.',
+    status: 'Blocked',
+    comments: 'Blocked at design time — no school available with >1500 classes.',
+  },
 
   // ---------- Requirement #5
   {
@@ -254,6 +287,26 @@ const TCS = [
     remarks: '[ASSUMED] the exact "Date range" cell format for a custom window — only the "From the beginning" form ("All student data (up to - Aug 26, 2026)") was captured live. Listed in Open items. Repeat for the other three date-capable types. CREATES REAL DATA.',
   },
   {
+    id: 'TST_MRPT_TC_29',
+    title: 'Verify the start date cannot be set earlier than the product floor of 1 January 2022',
+    req: '#12 — Verify Custom date range reports',
+    type: 'Edge', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".\n2. Open the "From" date picker.\n3. Navigate back past January 2022.',
+    data: 'Boundary: 2022-01-01',
+    expected: 'Dates before 1 January 2022 are not selectable; 1 January 2022 itself is selectable.',
+    remarks: 'Verified live 2026-08-26 from the field attributes: the "From" input carries min="2021-12-31T18:30:00.000Z", i.e. 2022-01-01 in IST. Exactly the kind of field constraint admin-shared.md §A3 requires be read before writing boundary cases.',
+  },
+  {
+    id: 'TST_MRPT_TC_30',
+    title: 'Verify neither date can be set later than today',
+    req: '#12 — Verify Custom date range reports',
+    type: 'Edge', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".\n2. Open the "From" picker and attempt to select tomorrow.\n3. Repeat for the "To" picker.',
+    data: 'Boundary: today',
+    expected: 'All dates after today are disabled in both pickers; today is selectable in both.',
+    remarks: 'Verified live 2026-08-26: both inputs carry max="2026-08-26T18:29:59.999Z" (end of the current day). Reports cover past activity only.',
+  },
+  {
     id: 'TST_MRPT_TC_31',
     title: 'Verify the end date cannot be set earlier than the selected start date',
     req: '#12 — Verify Custom date range reports',
@@ -262,6 +315,26 @@ const TCS = [
     data: 'Boundary: start date',
     expected: 'Dates before the current "From" value are disabled in the "To" picker; the start date itself is selectable (a single-day range). The floor moves when "From" is changed.',
     remarks: 'Verified live 2026-08-26: the "To" input carried min="2026-08-19T18:30:00.000Z" while "From" was Aug 20, 2026 — the end-date floor tracks the chosen start date. Step 4 (that the floor moves) is [ASSUMED].',
+  },
+  {
+    id: 'TST_MRPT_TC_32',
+    title: 'Verify a date cannot be entered by typing because the date fields are read-only',
+    req: '#12 — Verify Custom date range reports',
+    type: 'Negative', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Open the "Create report" dialog, choose "Class summary" and select "Custom date range".\n2. Click into the "From" field and type "01/01/2020".\n3. Repeat for the "To" field.',
+    data: 'Typed input: 01/01/2020',
+    expected: 'Neither field accepts typed input; both retain their picker-set values. Dates can be set only through the calendar pickers.',
+    remarks: 'Verified live 2026-08-26: both "From" and "To" inputs are readOnly. This rules out the whole family of "type an invalid date" negative cases — the pickers are the only input path.',
+  },
+  {
+    id: 'TST_MRPT_TC_33',
+    title: 'Verify the custom date-range option is unavailable for report types that do not support it',
+    req: '#12 — Verify Custom date range reports',
+    type: 'Negative', priority: 'High', pre: PRE_SEL,
+    steps: '1. Tick one class and click "Continue".\n2. Choose report type "Assignments summary" and observe the "Date range" radios.\n3. Repeat for "Assignments detailed data".\n4. Repeat for "Estimated CEFR level".',
+    data: 'Report types: Assignments summary, Assignments detailed data, Estimated CEFR level',
+    expected: 'For all three types the "Custom date range" radio remains DISABLED and "From the beginning" stays selected — no "From"/"To" fields can be produced.',
+    remarks: 'Verified live 2026-08-26 across all seven types. Date range is supported by exactly four (Class summary, Class detailed data, Class daily data, Aggregated data), which matches the four named in scenario #12 — the scenario list is correct, and this case pins the negative half of it.',
   },
 
   // ---------- Requirement #13
@@ -286,6 +359,16 @@ const TCS = [
     expected: '[ASSUMED] The new Reports row shows an "Items" value other than "All items", reflecting the restriction, and the downloaded report omits the excluded component.',
     remarks: '[ASSUMED] — the "Items" cell reads "All items" when the option is UNticked (verified live 2026-08-26); the ticked value was NOT captured. Listed in Open items. Also requires a class with an excluded component — verify one exists on VED-NEH-KVU or configure one via Class grade settings (CGST) first. CREATES REAL DATA.',
   },
+  {
+    id: 'TST_MRPT_TC_36',
+    title: 'Verify the custom grade-settings option is unavailable for the Estimated CEFR level report',
+    req: '#13 — Verify reports with custom grade settings applied',
+    type: 'Negative', priority: 'Medium', pre: PRE_SEL,
+    steps: '1. Tick one class and click "Continue".\n2. Choose report type "Estimated CEFR level".\n3. Observe the "Only include items that contribute to grade calculation" checkbox.',
+    data: 'Report type: Estimated CEFR level',
+    expected: 'The checkbox is DISABLED and cannot be ticked.',
+    remarks: 'Verified live 2026-08-26. Estimated CEFR level is the only one of the seven types supporting neither a custom date range nor custom grade settings — which is why it appears in neither scenario #12 nor #13.',
+  },
 
   // ---------- Requirement #14 — the report type missing from the source list
   (function () {
@@ -304,6 +387,32 @@ const TCS = [
   })(),
 
   // ---------- Requirement #15 (added coverage — error paths)
+  {
+    id: 'TST_MRPT_TC_38',
+    title: 'Verify the failure dialog is shown when report generation fails',
+    req: '#15 — Added coverage: report generation error paths',
+    type: 'Negative', priority: 'Medium',
+    pre: 'The class-selection step is open and the report-generation backend is forced to fail.',
+    steps: '1. Tick one class and click "Continue".\n2. Choose any report type.\n3. Click "Submit" while report generation is failing.\n4. Observe the dialog.',
+    data: '—',
+    expected: 'A dialog is shown headed "Sorry, something went wrong. The report you requested was not generated." offering "Try again" and "Back to Reports".',
+    remarks: 'BLOCKED at design time. The copy above was captured verbatim from the PRE-RENDERED DOM on 2026-08-26 (admin-shared.md §A6 free-capture), so the expected result is verified even though the state was never reached. UNBLOCK: backend fault injection or a stubbed failure response. A second, separate failure surface exists on the Reports tab itself — see TST_MRPT_TC_39.',
+    status: 'Blocked',
+    comments: 'Blocked at design time — report generation failure cannot be forced on Thor.',
+  },
+  {
+    id: 'TST_MRPT_TC_39',
+    title: 'Verify the partial-failure detail modal lists the excluded classes when a report is created with errors',
+    req: '#15 — Added coverage: report generation error paths',
+    type: 'Negative', priority: 'Medium',
+    pre: 'The Reports tab holds a report that was generated with per-class errors.',
+    steps: '1. Open the Reports tab.\n2. Open the error detail for a report created with errors.\n3. Observe the modal.',
+    data: '—',
+    expected: 'A modal headed "Report created with errors" states "<N> out of <TOTAL> classes were not included in your report due to the errors shown below" above a table with the columns "Class name", "Class key" and "Error message", and offers "Download report".',
+    remarks: 'BLOCKED at design time. Copy captured from the pre-rendered DOM on the Reports tab 2026-08-26. Requires a multi-class report in which some classes fail — cannot be produced on demand. UNBLOCK: fault injection, or a class deliberately placed in a state that fails report generation.',
+    status: 'Blocked',
+    comments: 'Blocked at design time — a partially-failing report cannot be produced on Thor.',
+  },
 
   // ---------- Gap-analysis batch, added 2026-09-01.
   // These three were appended straight to the .md/.xlsx and were NEVER added to this file, so

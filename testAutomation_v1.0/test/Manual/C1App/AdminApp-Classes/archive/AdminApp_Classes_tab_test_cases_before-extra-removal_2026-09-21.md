@@ -11,17 +11,16 @@
 | Automation Status | Cases |
 |---|---|
 | Automated | 68 |
+| Blocked | 2 |
+| Excluded - Phase 1 | 5 |
 | Not Automated | 17 |
-| **Total** | **85** |
+| **Total** | **92** |
 
 | Execution Status | Cases |
 |---|---|
 | Pass | 67 |
-| Not Run | 18 |
-
-> **Hand-adjusted 2026-09-21** after removing 7 extra, non-automated cases (2 Blocked + 5 Excluded – Phase 1).
-> `registerSync.js` was NOT re-run: the .xlsx names five rows `TST_CCLS_TC_24–28` where the .md uses
-> `TST_BCCF_TC_17–21` (drift from PR #51). Fix that id drift, then re-run the tool.
+| Blocked | 2 |
+| Not Run | 23 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -33,14 +32,12 @@
 **Module:** CLST (Classes Tab) — *maps to the future `schoolClasses` page object when automated*
 **App:** Admin App / NEMO — `micro-nemo.comprodls.com` (Thor)
 **Page in scope:** School Classes tab — `/admin/admin/org_<school-slug>/class`
-**Generated:** 2026-08-14 | **Total TCs:** 85 (65 Positive · 10 Edge · 10 Negative; was 92 before the 2026-09-21 removal) — **all 30 scenarios covered**
+**Generated:** 2026-08-14 | **Total TCs:** 92 (68 Positive · 14 Edge · 10 Negative) — **all 30 scenarios covered**
 > **[2026-09-01] Gap-analysis batch.** Cases added after comparing this register against the other team's `C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`. Every one closes a scenario their sheet covers and ours did not. All are appended (never renumbered, skill rule 7), all carry `[ASSUMED]` expected results pending a live pass, and the design-time blockers are marked `Blocked` with their unblock route in Comments. See `HANDOFF_adminGapAnalysis_2026-09-01.md`.
 
 > **[2026-09-02] Phase 1 automation exclusions — "extra" cases.** **18** of this register's cases are marked **`[EXTRA — Phase 1 exclusion]`** in their **Remarks**. They are the cases carried as **"Extra in Ours"** in `Admin_Gap_Analysis.xlsx` — coverage we hold that the other team's reviewed sheet (`C1_Admin_Console_Detailed_Test_Cases_REVIEWED_Team.xlsx`) does not. **None of them will be automated in Phase 1**; Phase 1 automation scope is the cases *not* carrying this marker. They stay in the register and are revisited for a later phase. Excluded here: `TST_CLST_TC_19`, `TST_CLST_TC_22`, `TST_CLST_TC_20`, `TST_GCAT_TC_3`, `TST_GCAT_TC_4`, `TST_GCAT_TC_5`, `TST_BCCF_TC_1`, `TST_BCCF_TC_7`, `TST_BCCF_TC_12`, `TST_BCCF_TC_13`, `TST_BCCF_TC_15`, `TST_BCCF_TC_16`, `TST_GSCL_TC_4`, `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4`.
 
-> **[2026-09-21] Extra, non-automated cases REMOVED.** The 7 cases that were "Extra in Ours" in `Admin_Gap_Analysis.xlsx` **and** not automated were removed from this register (.md and .xlsx): `TST_GCAT_TC_4`, `TST_GSCL_TC_4` (both Blocked), `TST_CMGT_TC_4`, `TST_CMGT_TC_6`, `TST_CLON_TC_3`, `TST_CTXC_TC_3`, `TST_CTXC_TC_4` (all Excluded – Phase 1). Their ids are retired — never reuse them. Full pre-removal copies: `archive/AdminApp_Classes_tab_test_cases_before-extra-removal_2026-09-21.md` / `.xlsx`. The 11 extra cases that ARE automated stay. Register: 92 → **85** cases.
-
-**Execution status (2026-09-17):** **68 of 85 TCs automated and passing** (2026-09-21, after removing 7 extra non-automated cases).
+**Execution status (2026-09-17):** **68 of 92 TCs automated and passing.** 22 Not Run · 2 Blocked (`TST_GCAT_TC_4`, `TST_GSCL_TC_4`).
 - Module **CLST** (`TST_CLST_TC_1–24`, 24 TCs) — Requirements #1 tab load, #2 filter, #9 search, #27 sort, #18 expand row, #17/#33 user guide, #19 launch class, #28 Active/Ended sections, #29 ended-class launch, #20 load more — via `npm run P1AdminClassesTab_Thor` on **thor** (2026-08-17; `TC_23` added 2026-08-21; `TC_24` added 2026-09-17).
 - Module **BCCF** (16 TCs, Requirement **#3 bulk class creation form**) — automated onto the existing **CCLS** module and split across three suites: `P1AdminclassBulk_Thor` (side-effect free), `P1Adminclassworkflow_Thor` (creates real classes) and `P1AdminclassValidation_Thor` — on **thor** (2026-08-18).
 - Module **GCAT** (`TST_GCAT_TC_1, 2, 3, 5, 6, 8, 9, 11`, 8 TCs) — Requirements **#4 manage page**, **#5 create**, **#6 see details** and **#8 delete** grading category — via `npm run P1AdminGradingCategories_Thor` on **thor** (2026-08-19, 2 consecutive clean runs; `TC_11` added 2026-09-17).
@@ -52,7 +49,7 @@ The remaining **14 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 
 **[2026-08-21] `TST_CLST_TC_23` is NEW** — the Filter panel's X close, split out of `TST_CLST_TC_2` so each TC's screenshot carries its own evidence. CLST is now **23 TCs**. The same session also removed the X-close `// WORKAROUND` retry after re-diagnosing it as an automation timing issue rather than a product defect — see TC_2 Comments.
 
-~~**Two are BLOCKED, both for the same reason**~~ *(both removed 2026-09-21 — see the note above; kept here for history)* — see their Comments rows: `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are the maximum-categories / maximum-scales limits, whose precondition is a school already at its cap. `3 July Test School 1` is **shared**, so holding it at the cap would break other suites mid-run. Both modals are pre-rendered in the DOM, so their **expected copy is already verified word for word** — each is short work once a dedicated school exists.
+**Two are BLOCKED, both for the same reason** — see their Comments rows: `TST_GCAT_TC_4` and `TST_GSCL_TC_4` are the maximum-categories / maximum-scales limits, whose precondition is a school already at its cap. `3 July Test School 1` is **shared**, so holding it at the cap would break other suites mid-run. Both modals are pre-rendered in the DOM, so their **expected copy is already verified word for word** — each is short work once a dedicated school exists.
 
 **`TST_GCAT_TC_7` and `TST_GSCL_TC_7` are now DONE [2026-08-20].** Both were long deferred because they need the category / scale **applied to a live class** — a CGST operation. They are registered in their own modules but **run inside the CGST suite**, which creates exactly that state. Their expected results were `[ASSUMED]` until 2026-08-20 (every scale and category anyone had opened had zero classes); both are now captured live and both manual cases were **corrected** — see their Remarks rows.
 **Batches:** Batch 1 — Classes-tab list/navigation (`TST_CLST_*`, module CLST, 23 TCs) · Batch 2 — Grading categories (`TST_GCAT_*`, module GCAT, 9 TCs) · Batch 3 — Bulk class creation form (`TST_BCCF_*`, module BCCF, 16 TCs) · Batch 4 — Grading scales (`TST_GSCL_*`, module GSCL, 12 TCs) · Batch 5 — Class management: label / delete / count (`TST_CMGT_*`, module CMGT, 9 TCs) · Batch 6 — Class grade settings / clone / context class (`TST_CGST_* / TST_CLON_* / TST_CTXC_*`, 13 TCs)
@@ -86,24 +83,24 @@ The remaining **14 TCs are Not Run** (CMGT, CLON, CTXC, plus the stragglers belo
 | #29 — Verify class launch from ended classes section | TST_CLST_TC_16 |
 | #20 — Verify load more classes in classes tab | TST_CLST_TC_17, TC_20 (E) |
 | **#4 — Verify manage grading category page** | TST_GCAT_TC_1 |
-| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_5 (N), TST_GCAT_TC_11 (N) |
+| **#5 — Verify create grading category** | TST_GCAT_TC_2, TC_3 (E), TC_4 (E), TC_5 (N), TST_GCAT_TC_11 (N) |
 | **#6 — Verify see details page of a grading category** | TST_GCAT_TC_6 |
 | **#7 — Launch class grade setting page from see details page of grading category** | TST_GCAT_TC_7 |
 | **#8 — Verify delete grading category** | TST_GCAT_TC_8, TC_9 (E) |
 | **#3 — Verify bulk class creation form is working fine** | TST_BCCF_TC_1..12, TC_13–14 (E), TC_15–16 (N), TST_BCCF_TC_17, TST_BCCF_TC_18, TST_BCCF_TC_19, TST_BCCF_TC_20, TST_BCCF_TC_21 |
 | **#10 — Verify manage grading scales page** | TST_GSCL_TC_1 |
-| **#11 — Verify Create grading scale** | TST_GSCL_TC_2, TC_3, TC_5 (N) |
+| **#11 — Verify Create grading scale** | TST_GSCL_TC_2, TC_3, TC_4 (E), TC_5 (N) |
 | **#12 — Verify view details page of grading scale** | TST_GSCL_TC_6, TST_GSCL_TC_15 |
 | **#13 — Launch class grade setting page from view details page of grading scale** | TST_GSCL_TC_7 |
 | **#14 — Verify set as default for a grading scale** | TST_GSCL_TC_8 |
 | **#15 — Verify deleting a grading scale** | TST_GSCL_TC_9, TC_10 (E), TC_11 (N), TST_GSCL_TC_14 (N) |
 | **#16 — Verify expanding grading scale bands** | TST_GSCL_TC_12 |
 | **#21 — Add label in class** | TST_CMGT_TC_1, TC_2 |
-| **#23 — Verify delete classes (soft / hard / bulk up to 50)** | TST_CMGT_TC_3, TC_5, TC_7 (E), TC_8 (N) |
+| **#23 — Verify delete classes (soft / hard / bulk up to 50)** | TST_CMGT_TC_3, TC_4, TC_5, TC_6 (E), TC_7 (E), TC_8 (N) |
 | **#30 — Verify count of classes increase on adding a new class** | TST_CMGT_TC_9 |
 | **#22 — Launch class grade setting page from a class page** | TST_CGST_TC_1..5, TC_6 (E), TST_CGST_TC_7 |
-| **#31 — Verify class clone functionality (Copy an Existing Class)** | TST_CLON_TC_1, TC_2 |
-| **#32 — Verify Context class creation and view in teacher/admin/student login** | TST_CTXC_TC_1, TC_2 |
+| **#31 — Verify class clone functionality (Copy an Existing Class)** | TST_CLON_TC_1, TC_2, TC_3 (E) |
+| **#32 — Verify Context class creation and view in teacher/admin/student login** | TST_CTXC_TC_1..4 |
 
 ---
 
@@ -809,6 +806,27 @@ for the label TCs).
 
 | Field | Value |
 |---|---|
+| **S.No.** | 26 |
+| **Test Case ID** | TST_GCAT_TC_4 |
+| **Title** | Verify the maximum-grading-categories limit is enforced |
+| **Linked Requirement** | #5 — Verify create grading category |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | School is already at the maximum number of grading categories. |
+| **Test Steps** | 1. Attempt to create another grading category. |
+| **Test Data** | — |
+| **Expected Result** | A modal is shown: "You have reached the maximum number of grading categories for your school. Please remove at least one category to add a new one" (with a Go back action); no new category is created. **Copy confirmed live 2026-08-18** — this modal is pre-rendered in the DOM at all times, so its exact wording is verified; only the *triggering* of it is blocked. The exact maximum count is still `[ASSUMED]`. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. **NOT AUTOMATED — BLOCKED.** Deliberately absent from the test file, the TC repository and the execution file (not merely skipped), so it cannot run by accident. |
+| **Actual Result** | — (not executed) |
+| **Status** | Blocked |
+| **Automation Status** | Blocked |
+| **Automation Evidence** | BLOCKED - see Comments for the blocker and its unblock route |
+| **Comments / Defect ID** | **Why blocked (2026-08-18):** the precondition is "the school is already at its maximum", so the test must first *fill* the school with grading categories. Three problems: **(1)** the maximum is unknown, so the only way to find it is to keep creating until the app refuses; **(2)** `3 July Test School 1` (FCN-CHZ-PDA) is **shared** — while it sits at the cap, *nobody else* can create a grading category, and other suites would fail with a misleading error (the same class of cross-suite interference that broke two `TST_CLST_TC_7` assertions on 2026-08-17); **(3)** if a run crashes before cleanup, the school stays full until someone clears it by hand. **To unblock — any one of:** (a) a **dedicated school** used only by this test *(recommended — cheapest and fully safe)*; (b) product/dev supply the exact maximum, plus agreement to accept the shared-school impact; (c) an environment where no other suite is running. Once a dedicated school exists this is a short TC, since the expected copy is already verified. |
+
+---
+
+| Field | Value |
+|---|---|
 | **S.No.** | 27 |
 | **Test Case ID** | TST_GCAT_TC_5 |
 | **Title** | Verify a grading category cannot be created with an empty name |
@@ -1325,6 +1343,27 @@ for the label TCs).
 
 | Field | Value |
 |---|---|
+| **S.No.** | 51 |
+| **Test Case ID** | TST_GSCL_TC_4 |
+| **Title** | Verify the maximum-grading-scales limit is enforced |
+| **Linked Requirement** | #11 — Verify Create grading scale |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | School is already at the maximum number of grading scales. |
+| **Test Steps** | 1. Attempt to create another grading scale. |
+| **Test Data** | — |
+| **Expected Result** | A modal is shown: "You have reached the maximum number of grading scales for this school. Please remove at least one grading scale to add a new one"; no new scale is created. `[ASSUMED]` — confirm the exact maximum. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. The expected modal copy is now VERIFIED word for word - the modal is pre-rendered in the DOM, so it was captured without filling the school to its cap. Only triggering it is blocked (shared school). |
+| **Actual Result** | |
+| **Status** | Blocked |
+| **Automation Status** | Blocked |
+| **Automation Evidence** | BLOCKED - see Comments for the blocker and its unblock route |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
 | **S.No.** | 52 |
 | **Test Case ID** | TST_GSCL_TC_5 |
 | **Title** | Verify Save is disabled until title, valid bands and target are provided |
@@ -1570,6 +1609,27 @@ for the label TCs).
 
 | Field | Value |
 |---|---|
+| **S.No.** | 63 |
+| **Test Case ID** | TST_CMGT_TC_4 |
+| **Title** | Verify bulk-deleting multiple classes |
+| **Linked Requirement** | #23 — Verify delete classes (soft / hard / bulk up to 50) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | On the Classes tab with ≥ 2 active classes. |
+| **Test Steps** | 1. Select multiple class checkboxes (or use select-all). 2. Click **Delete class**. 3. Confirm **Yes, delete N classes**. |
+| **Test Data** | Multiple classes |
+| **Expected Result** | The selected classes are soft-deleted together; the confirmation reflects the count ("Yes, delete N classes"). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Automation Status** | Excluded - Phase 1 |
+| **Automation Evidence** | Out of Phase 1 automation scope. |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
 | **S.No.** | 64 |
 | **Test Case ID** | TST_CMGT_TC_5 |
 | **Title** | Verify a class can be permanently (hard) deleted when all conditions are met |
@@ -1585,6 +1645,27 @@ for the label TCs).
 | **Status** | Not Run |
 | **Automation Status** | Not Automated |
 | **Automation Evidence** | No automated coverage. |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 65 |
+| **Test Case ID** | TST_CMGT_TC_6 |
+| **Title** | Verify bulk delete supports up to 50 classes |
+| **Linked Requirement** | #23 — Verify delete classes (soft / hard / bulk up to 50) |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | On the Classes tab with many classes. |
+| **Test Steps** | 1. Select up to 50 classes. 2. Click **Delete class** and confirm. |
+| **Test Data** | 50 classes |
+| **Expected Result** | Up to 50 classes can be selected and deleted in a single action. `[ASSUMED]` — confirm the 50-class maximum. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Scenario title references "50 classes". |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Automation Status** | Excluded - Phase 1 |
+| **Automation Evidence** | Out of Phase 1 automation scope. |
 | **Comments / Defect ID** | |
 
 ---
@@ -1826,6 +1907,27 @@ for the label TCs).
 
 ---
 
+| Field | Value |
+|---|---|
+| **S.No.** | 77 |
+| **Test Case ID** | TST_CLON_TC_3 |
+| **Title** | Verify components with no items are not selectable when copying |
+| **Linked Requirement** | #31 — Verify class clone functionality (Copy an Existing Class) |
+| **Type** | Edge |
+| **Priority** | Medium |
+| **Preconditions** | A source class that has 0 of one or more components. |
+| **Test Steps** | 1. Copy an Existing Class → select a source with empty components → Continue. |
+| **Test Data** | Source: `SarthakTestClass1` (0 teachers/materials/assignments/rules) |
+| **Expected Result** | Components with a count of 0 are **disabled/unselectable** (e.g. "Teachers [0]" disabled; "Class grade settings — Not available"). |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Observed live. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Automation Status** | Excluded - Phase 1 |
+| **Automation Evidence** | Out of Phase 1 automation scope. |
+| **Comments / Defect ID** | |
+
+---
+
 ### Requirement #32 — Verify Context class creation and view in teacher/admin/student login
 
 > `[ASSUMED]` for the whole group: the **context-class creation entry point was not found** in the
@@ -1870,6 +1972,48 @@ for the label TCs).
 | **Status** | Not Run |
 | **Automation Status** | Not Automated |
 | **Automation Evidence** | No automated coverage. |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 80 |
+| **Test Case ID** | TST_CTXC_TC_3 |
+| **Title** | Verify the context class appears/behaves correctly in the teacher login |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | A context class exists; a **teacher** account associated with it. |
+| **Test Steps** | 1. Log in as the teacher. 2. Locate/open the context class. |
+| **Test Data** | Teacher account `[ASSUMED]` |
+| **Expected Result** | The context class is visible and behaves correctly for the teacher role. `[ASSUMED]` — needs a teacher test account. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Cross-role verification. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Automation Status** | Excluded - Phase 1 |
+| **Automation Evidence** | Out of Phase 1 automation scope. |
+| **Comments / Defect ID** | |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 81 |
+| **Test Case ID** | TST_CTXC_TC_4 |
+| **Title** | Verify the context class appears/behaves correctly in the student login |
+| **Linked Requirement** | #32 — Verify Context class creation and view in teacher/admin/student login |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | A context class exists; a **student** account enrolled in it. |
+| **Test Steps** | 1. Log in as the student. 2. Locate/open the context class. |
+| **Test Data** | Student account `[ASSUMED]` |
+| **Expected Result** | The context class is visible and behaves correctly for the student role. `[ASSUMED]` — needs a student test account. |
+| **Remarks** | **[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status "Extra in Ours"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. Cross-role verification. |
+| **Actual Result** | |
+| **Status** | Not Run |
+| **Automation Status** | Excluded - Phase 1 |
+| **Automation Evidence** | Out of Phase 1 automation scope. |
 | **Comments / Defect ID** | |
 
 ---
@@ -2111,18 +2255,18 @@ for the label TCs).
 3. **Load-more** (TST_CLST_TC_20): whether the link hides or disables once all classes are loaded; page size.
 4. **Class label** (TST_CLST_TC_4): a concrete existing label value (`<EXISTING_CLASS_LABEL>`), pending scenario #21 (Add label).
 5. Whether filtering updates the section counts, and whether "Ended/Expired/Deleted" statuses each render distinctly.
-6. ~~**Grading categories — max count** (TST_GCAT_TC_4)~~ — *case removed 2026-09-21.* **STILL OPEN / BLOCKED.** The exact maximum per school is unknown, and discovering it means filling a shared school to its cap. Needs a dedicated school (recommended) or the number from product — see TC_4's Comments row.
+6. **Grading categories — max count** (TST_GCAT_TC_4): **STILL OPEN / BLOCKED.** The exact maximum per school is unknown, and discovering it means filling a shared school to its cap. Needs a dedicated school (recommended) or the number from product — see TC_4's Comments row.
 7. ~~**Grading categories — 50-char boundary** (TST_GCAT_TC_3)~~ — **RESOLVED 2026-08-18.** `#gradingCategoryNameInput` carries `maxlength="50"`; a 50-character name is accepted and longer input cannot be typed. Automated and passing.
 8. **Grading categories — launch grade settings** (TST_GCAT_TC_7): the exact class link/destination on a category's details page once the category is applied to a class (all categories tested had 0 classes).
 9. **Bulk form — Duplicate** (TST_BCCF_TC_7): exact duplicate behaviour / confirmation.
 10. **Bulk form — Copy an Existing Class** (TST_BCCF_TC_8): the modal's source-class selection and copy options.
 11. **Bulk form — CSV** (TST_BCCF_TC_10, TC_11): the exact template headers and the upload flow/validation.
 12. **Bulk form — Create more classes** (TST_BCCF_TC_12) and **invalid-name inline error** (TST_BCCF_TC_16): confirm the form-reset behaviour and any error copy.
-13. ~~**Grading scales — max count** (TST_GSCL_TC_4)~~ — *case removed 2026-09-21.* the exact maximum number of grading scales per school.
+13. **Grading scales — max count** (TST_GSCL_TC_4): the exact maximum number of grading scales per school.
 14. **Grading scales — band validation** (TST_GSCL_TC_5): the exact copy/behaviour when bands overlap or don't sum to 100%.
 15. **Grading scales — launch grade settings** (TST_GSCL_TC_7): the class link/destination on a scale's details page once the scale is applied to a class (tested scale had 0 classes).
 16. **Hard/permanent delete** (TST_CMGT_TC_5, TC_8): the exact permanent-delete UI/location and the blocking behaviour when the 7 conditions aren't met.
-17. ~~**Bulk delete 50-class max** (TST_CMGT_TC_6)~~ — *case removed 2026-09-21.* confirm the 50-class selection maximum.
+17. **Bulk delete 50-class max** (TST_CMGT_TC_6): confirm the 50-class selection maximum.
 18. **New label creation from the class page** (TST_CMGT_TC_2): confirm the create-label form/flow.
 19. **Class grade settings — change scale / add category / total 100%** (TST_CGST_TC_2, TC_3, TC_6): confirm the change-scale + add-category selectors and the 100% total validation copy.
 20. **Clone — populated source** (TST_CLON_TC_2): verify each component (teacher/materials/assignments/lock rules/grade settings) copies, using a fully-seeded source class.
