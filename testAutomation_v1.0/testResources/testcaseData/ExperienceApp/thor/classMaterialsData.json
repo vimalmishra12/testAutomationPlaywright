@@ -17,7 +17,19 @@
           "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
           "componentName": "vm_automation_second_ebook_1rb"
         },
-        "selectedEbookTitle": "vm_automation_second_ebook_1rb"
+        "selectedEbookTitle": "vm_automation_second_ebook_1rb",
+        "presentationPlus": {
+          "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+          "componentName": "Presentation Plus"
+        },
+        "pplusDropdownBook": {
+          "ebookOneName": "vm_automation_first_ebook_pplus_1rb",
+          "ebookTwoName": "vm_automation_second_ebook_pplus_1rb"
+        },
+        "pplusViewerControls": {
+          "singlePage": "single-page",
+          "doublePage": "single-page"
+        }
       },
       "class2RB": {
         "class": {

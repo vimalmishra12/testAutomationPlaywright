@@ -584,8 +584,35 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
     await logger.logInto(await stackTrace.get());
     var res;
 
+    // Ensure TOC and dropdown are open if closed
+    if ((await action.isDisplayed(this.cqaEbookEvolveDropdown)) !== true) {
+      if ((await action.isDisplayed(this.contentButton)) === true) {
+        await action.click(this.contentButton);
+        await browser.pause(1000);
+      }
+    }
+    var isDropdownOpen = (await action.isDisplayed(this.teachersResourcesTOCItem)) === true;
+    if (!isDropdownOpen && (await action.isDisplayed(this.cqaEbookEvolveDropdown)) === true) {
+      await action.click(this.cqaEbookEvolveDropdown);
+      await browser.pause(1000);
+    }
+
     let cardElement = await this.click_playlistTitle(testdata);
-    
+    if (!cardElement) {
+      if ((await action.isDisplayed(this.cqaEbookEvolveDropdown)) === true) {
+        await action.click(this.cqaEbookEvolveDropdown);
+        await browser.pause(1000);
+        cardElement = await this.click_playlistTitle(testdata);
+      }
+    }
+    if (!cardElement) {
+      await logger.logInto(
+        await stackTrace.get(),
+        `cardElement for "${testdata}" not found in dropdown`,
+        "error"
+      );
+      return false;
+    }
 
     res = await action.click(cardElement);
 
