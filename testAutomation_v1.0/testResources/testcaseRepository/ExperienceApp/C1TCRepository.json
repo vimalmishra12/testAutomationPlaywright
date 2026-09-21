@@ -607,6 +607,30 @@
           "description": "Click Kebab Icon",
           "tags": "P3",
           "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_21",
+          "description": "Click Create Assignment in TOC and Cancel on modal",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_22",
+          "description": "Click Create Assignment in TOC and Take Me To Assignments",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_23",
+          "description": "Click Create New Assignment on modal and verify redirect",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_24",
+          "description": "Click Return to Presentation Plus on modal and verify return",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -1081,6 +1105,18 @@
           "description": "Validate that the show-Hide Selection tool  launched correctly",
           "tags": "P3",
           "visualTest": true
+        },
+        {
+          "id": "TST_EBOO_TC_24",
+          "description": "Validate clicking Teacher's Resources from TOC course material dropdown opens new tab and tab can be closed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_EBOO_TC_25",
+          "description": "Validate clicking Teacher's Resources from toolbar course material dropdown opens new tab and tab can be closed",
+          "tags": "P1",
+          "visualTest": false
         },
         {
           "id": "TST_PAGE_TC_1",
@@ -6457,6 +6493,68 @@
         {
           "id": "TST_BCEV_TC_9",
           "description": "Bulk create Class 1 & Class 2 together with Start Date, End Date, and Teacher (No label, No material)",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Experience App > Teacher > Class Materials",
+      "moduleId": "CMAT",
+      "testFile": "./test/ExperienceApp/classMaterials.test.js",
+      "testcase": [
+        {
+          "id": "TST_CMAT_TC_1",
+          "description": "Navigate to Class Materials tab",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_2",
+          "description": "Verify product bundle is displayed in Class Materials",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_3",
+          "description": "Click learning material component within product bundle",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_4",
+          "description": "Click folder component within product bundle",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_5",
+          "description": "Click Resource Bank component in folder by index",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_6",
+          "description": "Click Back button in folder view",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Experience App > Teacher > Resource Bank",
+      "moduleId": "RBNK",
+      "testFile": "./test/ExperienceApp/resourceBank.test.js",
+      "testcase": [
+        {
+          "id": "TST_RBNK_TC_1",
+          "description": "Verify Resource Bank Resources area page is displayed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RBNK_TC_2",
+          "description": "Click Back button on Resource Bank page",
           "tags": "P1",
           "visualTest": false
         }

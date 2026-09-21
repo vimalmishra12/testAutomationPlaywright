@@ -100,6 +100,30 @@ module.exports = {
     TST_C1AS_TC_16: async function (testdata) {
         sts = await c1assignment.click_yesDelete();
         await assertion.assertEqual(sts, true, "Yes delete not clicked");
+    },
+
+    TST_C1AS_TC_21: async function (testdata) {
+        var openModal = await c1assignment.click_createAssignmentBtnInTOC();
+        await assertion.assertEqual(openModal, true, "Create Assignment button in TOC not clicked");
+        sts = await c1assignment.click_cancelAssignmentModalBtn();
+        await assertion.assertEqual(sts, true, "Cancel button on confirmation modal not clicked");
+    },
+
+    TST_C1AS_TC_22: async function (testdata) {
+        var openModal = await c1assignment.click_createAssignmentBtnInTOC();
+        await assertion.assertEqual(openModal, true, "Create Assignment button in TOC not clicked");
+        sts = await c1assignment.click_takeMeToAssignmentsBtn();
+        await assertion.assertEqual(sts, true, "Take me to assignments button not clicked or redirect failed");
+    },
+
+    TST_C1AS_TC_23: async function (testdata) {
+        sts = await c1assignment.click_createNewAssignmentFromModal();
+        await assertion.assertEqual(sts, true, "Create new assignment button not clicked or redirect failed");
+    },
+
+    TST_C1AS_TC_24: async function (testdata) {
+        sts = await c1assignment.click_returnToPresentationPlusFromModal();
+        await assertion.assertEqual(sts, true, "Return to Presentation Plus button not clicked or return failed");
     }
 
 }

@@ -1,0 +1,291 @@
+{
+  "Suite1_TeacherPresentationPlus1RB": {
+    "Name": "Validation of Teacher Presentation Plus in Class 1RB with eBook Features and Teacher Resources",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Application URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Verify Landing Page Loaded",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter Instructor Username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter Instructor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Verify Instructor Login Successful",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open Active Class Card 1RB",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.class.name"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Navigate to Class Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_2",
+        "description": "Verify product bundle is displayed in Class Materials",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.bundle"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_3",
+        "description": "Click Presentation Plus component within product bundle",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.presentationPlus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "Validate that the Table of Content is clickable and the page is launched",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_6",
+        "description": "Validate that Change Course material Dropdown is launched correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusDropdownBook.ebookOneName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_7",
+        "description": "Validate second eBook in dropdown is clickable and selected",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusDropdownBook.ebookTwoName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_24",
+        "description": "Click Teacher's Resources from TOC course material dropdown, verify new tab opens and close tab",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_4",
+        "description": "Validate close button on Table of Contents",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_25",
+        "description": "Click Teacher's Resources from toolbar course material dropdown, verify new tab opens and close tab",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_17",
+        "description": "Validate that the eBook Toggle Layout button is clickable & returns single page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusViewerControls"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_22",
+        "description": "Validate that the eBook Toggle Layout button is clickable & returns double page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusViewerControls"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_19",
+        "description": "Validate that the eBook Fit to Width button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_18",
+        "description": "Validate that the eBook Fit to Screen button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_20",
+        "description": "Validate that the eBook Zoom In button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_21",
+        "description": "Validate that the eBook Zoom Out button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_3",
+        "description": "Validate that the Tools button is launched",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_8",
+        "description": "Validate that the Notes pane opens correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_13",
+        "description": "Validate that blank Tools Notes pane content is as expected",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.eBook"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Validate the 'Add Notes' button is working as expected",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Add note description",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Validate Added notes is saved after clicking Save note button",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_9",
+        "description": "Validate user Added Notes content matches expected data",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_6",
+        "description": "Validate clicking notes menu works correctly",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_7",
+        "description": "Validate clicking 'Delete Notes' button opens confirmation modal",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_8",
+        "description": "Validate clicking 'yes' button in confirmation dialog box deletes notes",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click user profile dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button and verify landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
+  }
+}

@@ -438,4 +438,22 @@ module.exports = {
     await assertion.assertEqual(sts, true, "zoomOutBtn are not Clicked");
     await browser.pause(2000);
   },
+
+  TST_EBOO_TC_24: async function () {
+    sts = await eBook.click_tocTeachersResources();
+    await assertion.assertEqual(
+      sts.pageStatus,
+      true,
+      "Failed to open/verify Teacher's Resources from TOC dropdown."
+    );
+  },
+
+  TST_EBOO_TC_25: async function () {
+    sts = await eBook.click_toolbarTeachersResources();
+    await assertion.assertEqual(
+      sts.pageStatus,
+      true,
+      "Failed to open/verify Teacher's Resources from toolbar dropdown."
+    );
+  },
 };
