@@ -1083,6 +1083,18 @@
           "visualTest": true
         },
         {
+          "id": "TST_EBOO_TC_24",
+          "description": "Validate clicking Teacher's Resources from TOC course material dropdown opens new tab and tab can be closed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_EBOO_TC_25",
+          "description": "Validate clicking Teacher's Resources from toolbar course material dropdown opens new tab and tab can be closed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
           "id": "TST_PAGE_TC_1",
           "description": "Validate that user is able click Page No One button",
           "tags": "P2",

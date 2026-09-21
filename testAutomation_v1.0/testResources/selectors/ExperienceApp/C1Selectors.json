@@ -327,6 +327,8 @@
         "cqaEbookEvolveDropdown": "button[qid=\"ebook-button-1\"]",
         "dropDownListTitle": "[qid^=\"ebook-list-item-",
         "cqaTestEbookOnlyAssets": "a[qid=\"ebook-list-item-3\"]",
+        "teachersResourcesTOCItem": "//a[contains(@class,'dropdown-item') and (contains(.,\"Teacher's Resources\") or @qid='ebook-list-item-3')]",
+        "teachersResourcesToolbarItem": "//a[contains(@class,'dropdown-item') and (contains(.,\"Teacher's Resources\") or @qid='ebook-list-item-3')]",
         "cqaTestEbookOnlyAssetsText": "div.eboook-selected.ng-tns-c606183087-2",
         "notes": "div:nth-child(4) div:nth-child(2) button:nth-child(1)",
         "timer": "button[qid=\"94\"]",

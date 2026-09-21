@@ -12,7 +12,12 @@
           "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
           "componentName": "Resource Bank",
           "expectedHeading": "Resources area"
-        }
+        },
+        "ebook": {
+          "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+          "componentName": "vm_automation_second_ebook_1rb"
+        },
+        "selectedEbookTitle": "vm_automation_second_ebook_1rb"
       },
       "class2RB": {
         "class": {
@@ -32,7 +37,12 @@
         "resourceBank2": {
           "index": 1,
           "expectedHeading": "Resources area"
-        }
+        },
+        "ebook": {
+          "bundleName": "EBOOK AUTOMATION 2RB TEST DATA",
+          "componentName": "vm_automation_second_ebook_2rb"
+        },
+        "selectedEbookTitle": "vm_automation_second_ebook_2rb"
       }
     }
   }
