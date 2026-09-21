@@ -98,12 +98,9 @@ Two causes, both mechanical:
       any authorised workaround is marked `// WORKAROUND — <ref>`.
 - [ ] Any missing/invalid test data was raised with the user rather than silently substituted.
 - [ ] All applied fixes were proposed and confirmed first; inline comments added per AGENTS.md.
-- [ ] Update `.architecture/authoring-status.md` — mark the block:
-
-```markdown
-- Phase 2 (run/fix): ✅ <date> — all <N> passing, 2 consecutive clean runs
-- Phase 3 (visual):  ⬜ pending
-```
+- [ ] Update `.architecture/authoring-status.md` — mark Phase 2 ✅ (<date>, <N>/<N> passing, 2 consecutive
+      clean runs) per that file's **Block format** section, and record any On Hold / Blocked /
+      Not built cases there. Status + open items only — fix history goes in the walkthrough.
 
 - [ ] Session walkthrough written/appended.
 - [ ] Tell the user: Phase 2 complete → **Phase 3 (visual assessment) is still pending and
