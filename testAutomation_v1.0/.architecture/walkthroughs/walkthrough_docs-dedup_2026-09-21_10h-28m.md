@@ -43,3 +43,20 @@ None. `package.json` itself was not modified; only the docs that list it changed
 ### Pending / Follow-up
 - Remaining de-dup topics: skills vs AGENTS.md duplicated rules; the `c1-test-authoring` block format
   vs the compacted `authoring-status.md`.
+
+---
+
+## Session 2 — 2026-09-21
+
+### Summary
+The authoring-status block format is now defined in one place, matching the compacted file.
+
+### Changes Made
+- `.architecture/authoring-status.md` §Block format: rewritten to the compact form (heading with npm script, module/knowledge
+  line, one line per phase, optional On Hold / Blocked / Not built / Follow-up lines) and declared the **single source**.
+- `.agent/skills/c1-test-authoring/phases/1-build.md` and `2-run-fix.md`: their copied templates were removed. The exit-checklist items
+  now point to that section and say "status + open items only; history goes in the walkthrough".
+- Left unchanged: `3-visual.md` (already says "remove the block") and `SKILL.md` (already says "read the file").
+
+### Protected Files Touched
+None.
