@@ -245,10 +245,9 @@ feature):
 ## Safety Rules
 
 - **NEVER** modify protected files without explicit confirmation. The **authoritative list lives in
-  AGENTS.md** (§"Protected Files"); at time of writing it is `core/runner/playwright.setup.js`,
-  `core/runner/run.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`,
-  `testrunner.js`, `specGenerator.js`, `launchUrl.js` (`wdio.conf.js` is retired/deleted). If AGENTS.md
-  differs, AGENTS.md wins.
+  AGENTS.md** (§"Protected Files") — read it there; it is not copied here, because the copy
+  went stale (it missed `.mocharc.js` and `package.json`). Note that adding an npm script in STEP 3
+  means editing `package.json`, which is protected.
 - **NEVER** modify test case files (`.test.js`) or page object files (`.page.js`) to fix environment issues — fix selectors and data instead
 - **ALWAYS** show a preview before creating or modifying files
 - **ALWAYS** ask for approval before applying fixes

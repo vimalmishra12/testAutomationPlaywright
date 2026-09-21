@@ -60,3 +60,23 @@ The authoring-status block format is now defined in one place, matching the comp
 
 ### Protected Files Touched
 None.
+
+---
+
+## Session 3 — 2026-09-21
+
+### Changes Made
+- `CLAUDE.md`: added the rule "any `archive/` folder is history — do not read it at session start; open only on demand
+  when a live file points to it" (covers `.architecture/archive/` and `test/Manual/**/archive/`).
+- `.agent/skills/c1-environment-test-replicator/SKILL.md` Safety Rules: the stale hard-coded protected-file list (missing
+  `.mocharc.js` and `package.json`) was replaced by a pointer to AGENTS.md, plus a note that adding an npm script edits the protected `package.json`.
+
+### Skills vs AGENTS.md review (B3), with verdicts
+- `c1-test-authoring/SKILL.md` "non-negotiables" (8 short rules): **kept**. It is a compact trigger-time summary, already says
+  "always load AGENTS.md", and defers to AGENTS.md for the protected list and walkthrough format.
+- `c1-manual-test-authoring/SKILL.md`: already pointer-only. No change.
+- `c1-test-authoring/reference/new-apptype.md`: **kept**. It is a scaffolding checklist that adds value beyond AGENTS.md §7.
+- `c1-environment-test-replicator`: the only real drift (the stale protected list) is fixed above.
+
+### Protected Files Touched
+None.

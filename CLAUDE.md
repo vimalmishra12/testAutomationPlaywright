@@ -28,6 +28,10 @@ is promoted into decisions.md, product-knowledge, and ARCHITECTURE-INVARIANTS.md
 (already read above). Consult a specific walkthrough only on demand, when
 investigating how or why a past change was made. (Writing a walkthrough at session
 end remains mandatory — see AGENTS.md §Walkthrough.)
+Likewise, **any `archive/` folder** — `.architecture/archive/` (retired handoffs, old
+`authoring-status.md` snapshots) and `test/Manual/**/archive/` (pre-change register copies) —
+is history: **do NOT read it at session start**, and never treat it as current. Open a file
+there only on demand, when a live file points to it.
 
 These are the authoritative source of architecture decisions, product rules, and
 standards. All code and test design must conform to them.
