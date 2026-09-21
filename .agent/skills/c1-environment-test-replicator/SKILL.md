@@ -221,7 +221,9 @@ If tests still fail after fixes, repeat Steps 4–6 (maximum 3 iterations).
 
 ## STEP 7 — Generate Walkthrough
 
-At the end, produce a walkthrough entry:
+At the end, produce a walkthrough entry — in the test's own walkthrough file, named and appended
+per AGENTS.md §Walkthrough (`walkthrough_<testfile>_<YYYY-MM-DD>_<HHh-MMm>.md`, one file per
+feature):
 
 ```markdown
 ### <testName> replicated to <targetEnv> — <date>
@@ -243,10 +245,9 @@ At the end, produce a walkthrough entry:
 ## Safety Rules
 
 - **NEVER** modify protected files without explicit confirmation. The **authoritative list lives in
-  AGENTS.md** (§"Protected Files"); at time of writing it is `core/runner/playwright.setup.js`,
-  `core/runner/run.js`, `env.conf.js`, `baseActionLibrary.js`, `baseAssertionLibrary.js`,
-  `testrunner.js`, `specGenerator.js`, `launchUrl.js` (`wdio.conf.js` is retired/deleted). If AGENTS.md
-  differs, AGENTS.md wins.
+  AGENTS.md** (§"Protected Files") — read it there; it is not copied here, because the copy
+  went stale (it missed `.mocharc.js` and `package.json`). Note that adding an npm script in STEP 3
+  means editing `package.json`, which is protected.
 - **NEVER** modify test case files (`.test.js`) or page object files (`.page.js`) to fix environment issues — fix selectors and data instead
 - **ALWAYS** show a preview before creating or modifying files
 - **ALWAYS** ask for approval before applying fixes

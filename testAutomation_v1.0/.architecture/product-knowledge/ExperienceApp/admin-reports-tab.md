@@ -453,7 +453,7 @@ is set.
 ### 10.15 The class-selection step has NO school tab strip `[2026-09-08]`
 
 `/reports/create` renders **zero `aDetail-*` links** — the CLASSES / STUDENTS / STAFF / LIBRARY /
-REPORTS tab strip that persists across every other admin screen (`admin-shared.md` §A9) is absent
+REPORTS tab strip that persists across every other admin screen (`admin-generic-shell.md` §A9) is absent
 here. The class-selection step is a **full-page flow**, not a tab.
 
 **`Go back` (`createReport-1`) is therefore the only route back to `/reports`.** A page object that

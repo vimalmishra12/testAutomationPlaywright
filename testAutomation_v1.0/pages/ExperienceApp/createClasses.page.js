@@ -126,6 +126,7 @@ module.exports = {
   includeClassLabelsCheckbox: selectorFile.css.ComproC1.createClasses.includeClassLabelsCheckbox,
   duplicateContinueLink: selectorFile.css.ComproC1.createClasses.duplicateContinueLink,
   duplicateCancelLink: selectorFile.css.ComproC1.createClasses.duplicateCancelLink,
+  addTeachersBtnRow2: selectorFile.css.ComproC1.createClasses.addTeachersBtnRow2,
   selectedTeacherInputRow2: selectorFile.css.ComproC1.createClasses.selectedTeacherInputRow2,
   selectedMaterialInputRow2: selectorFile.css.ComproC1.createClasses.selectedMaterialInputRow2,
   addLabelBtnRow2: selectorFile.css.ComproC1.createClasses.addLabelBtnRow2,
@@ -254,11 +255,19 @@ module.exports = {
   click_createClass: async function () {
     var res;
     await logger.logInto(await stackTrace.get());
+    try {
+      await browser.waitUntil(
+        async () => (await action.isEnabled(this.createClassBtn)) === true,
+        { timeout: 15000, timeoutMsg: "createClassBtn did not become enabled within 15s" }
+      );
+    } catch (e) {
+      await logger.logInto(await stackTrace.get(), "createClassBtn not enabled: " + e.message, "error");
+    }
     res = await action.click(this.createClassBtn);
     if (true == res) {
       await logger.logInto(await stackTrace.get(), "createClassBtn is clicked");
       // Creation is async; the success dialog is the immediate confirmation.
-      res = await action.waitForDisplayed(this.successDialogTitle);
+      res = await action.waitForDisplayed(this.successDialogTitle, 20000);
     } else {
       await logger.logInto(
         await stackTrace.get(),
@@ -283,7 +292,6 @@ module.exports = {
           ? await action.getText(this.successDialogTitle)
           : null
     };
-    console.log("successMessage", obj);
     return obj;
   },
 
@@ -671,11 +679,19 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var attempts = 3;
     for (var i = 0; i < attempts; i++) {
-      await action.clearValue(this.teacherEmailInput);
-      res = await action.addValue(this.teacherEmailInput, value);
-      actual = await action.getValue(this.teacherEmailInput);
-      if (true == res && actual === value) {
+      var loc = global.page.locator("input[qid^='dBulkClass-teacher-'][qid$='-1']:visible, input[placeholder*='email' i]:visible").first();
+      await loc.click();
+      await loc.fill("");
+      await loc.pressSequentially(value);
+      actual = await loc.inputValue();
+      if (actual === value) {
         await logger.logInto(await stackTrace.get(), "Value is entered in teacherEmailInput");
+        await loc.evaluate((el) => {
+          el.dispatchEvent(new Event("input", { bubbles: true }));
+          el.dispatchEvent(new Event("change", { bubbles: true }));
+          el.dispatchEvent(new Event("blur", { bubbles: true }));
+        });
+        await global.page.waitForTimeout(1500);
         return true;
       }
     }
@@ -689,39 +705,102 @@ module.exports = {
   },
 
   /**
-   * Clicks "Apply changes" and confirms the teacher rendered on the row (the row's
-   * "Add teachers" button holds a readonly input, same shape as selectedMaterialInput).
-   * "Apply changes" is never natively disabled (no `disabled` attribute — confirmed
-   * live), so the click itself always "succeeds"; the app takes several seconds to
-   * validate + apply. A SINGLE click is used deliberately (re-clicking risks
-   * double-applying the teacher if the first click is still processing) with a
-   * generous single wait for the observable result, per Invariant 1.
-   * Returns { added: <bool>, email: <applied value> }.
+   * Types the teacher's first name into the "Edit teachers" modal.
+   */
+  set_teacherFirstName: async function (value) {
+    await logger.logInto(await stackTrace.get());
+    var loc = global.page.locator("input[qid^='dBulkClass-teacher-'][qid$='-2']:visible, input[placeholder*='first' i]:visible").first();
+    if ((await loc.count()) > 0) {
+      await loc.click();
+      await loc.fill(value);
+      await loc.evaluate((el) => {
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+        el.dispatchEvent(new Event("blur", { bubbles: true }));
+      });
+      return true;
+    }
+    return false;
+  },
+
+  /**
+   * Types the teacher's last name into the "Edit teachers" modal.
+   */
+  set_teacherLastName: async function (value) {
+    await logger.logInto(await stackTrace.get());
+    var loc = global.page.locator("input[qid^='dBulkClass-teacher-'][qid$='-3']:visible, input[placeholder*='last' i]:visible").first();
+    if ((await loc.count()) > 0) {
+      await loc.click();
+      await loc.fill(value);
+      await loc.evaluate((el) => {
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+        el.dispatchEvent(new Event("blur", { bubbles: true }));
+      });
+      return true;
+    }
+    return false;
+  },
+
+  /**
+   * Clicks "Apply changes" and confirms the teacher rendered on the row.
    */
   click_teacherApplyChanges: async function () {
     await logger.logInto(await stackTrace.get());
     var obj = { added: false, email: null };
-    var res = await action.click(this.teacherApplyChangesBtn);
-    if (true == res) {
-      obj.added = await action.waitForDisplayed(this.selectedTeacherInput, 15000);
-      if (obj.added) {
-        await logger.logInto(await stackTrace.get(), "teacherApplyChangesBtn applied the teacher");
-        obj.email = await action.getValue(this.selectedTeacherInput);
-      } else {
-        await logger.logInto(
-          await stackTrace.get(),
-          "teacherApplyChangesBtn did not apply the teacher within 15s",
-          "error"
-        );
-      }
+    var applyBtn = global.page.locator("button[qid='dBulkClass-24']:visible, button:has-text('Apply changes'):visible").first();
+    var res = await applyBtn.click();
+    obj.added = await action.waitForDisplayed(this.selectedTeacherInput, 15000);
+    if (obj.added) {
+      await logger.logInto(await stackTrace.get(), "teacherApplyChanges applied the teacher");
+      obj.email = await action.getValue(this.selectedTeacherInput);
     } else {
       await logger.logInto(
         await stackTrace.get(),
-        res + "teacherApplyChangesBtn is NOT clicked",
+        "teacherApplyChanges did not apply the teacher within 15s",
         "error"
       );
     }
-    console.log("teacherApplyChanges", obj);
+    await global.page.waitForTimeout(1000);
+    return obj;
+  },
+
+  /**
+   * Opens row 2's "Edit teachers" modal and waits for the Email field.
+   */
+  click_addTeachersBtn_row2: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    res = await action.click(this.addTeachersBtnRow2);
+    if (true == res) {
+      await logger.logInto(await stackTrace.get(), "addTeachersBtnRow2 is clicked");
+      res = await action.waitForDisplayed(this.teacherEmailInput);
+    } else {
+      await logger.logInto(await stackTrace.get(), res + "addTeachersBtnRow2 is NOT clicked", "error");
+    }
+    return res;
+  },
+
+  /**
+   * Clicks "Apply changes" for row 2 and confirms the teacher rendered on row 2.
+   */
+  click_teacherApplyChanges_row2: async function () {
+    await logger.logInto(await stackTrace.get());
+    var obj = { added: false, email: null };
+    var applyBtn = global.page.locator("button[qid='dBulkClass-24']:visible, button:has-text('Apply changes'):visible").first();
+    var res = await applyBtn.click();
+    obj.added = await action.waitForDisplayed(this.selectedTeacherInputRow2, 15000);
+    if (obj.added) {
+      await logger.logInto(await stackTrace.get(), "teacherApplyChanges applied teacher to row 2");
+      obj.email = await action.getValue(this.selectedTeacherInputRow2);
+    } else {
+      await logger.logInto(
+        await stackTrace.get(),
+        "teacherApplyChanges did not apply teacher to row 2 within 15s",
+        "error"
+      );
+    }
+    await global.page.waitForTimeout(1000);
     return obj;
   },
 
@@ -1139,26 +1218,21 @@ module.exports = {
       return true;
     }
     var rowCount = await action.getElementCount(this.rowCheckbox);
-    console.log("RESET_FORM: rowCount=", rowCount);
     if (rowCount === 0) {
       await logger.logInto(await stackTrace.get(), "form already has no removable rows");
       return true;
     }
     var anySelected = await this.getData_anyRowSelected();
-    console.log("RESET_FORM: anySelected=", anySelected);
     if (!anySelected) {
       await action.click(this.selectAllCheckbox);
     }
     var removeClicked = await action.click(this.toolbarRemoveBtn);
-    console.log("RESET_FORM: removeBtn clicked=", removeClicked);
     var shown = await action.waitForDisplayed(this.removeRowsDialogTitle, 10000);
-    console.log("RESET_FORM: removeRowsDialog shown=", shown);
     if (shown !== true) {
       await logger.logInto(await stackTrace.get(), "remove-rows dialog never opened", "error");
       return false;
     }
     var res = await action.click(this.removeRowsConfirmLink);
-    console.log("RESET_FORM: removeRowsConfirmLink clicked=", res);
     if (true != res) {
       await logger.logInto(await stackTrace.get(), res + "remove-rows was NOT confirmed", "error");
       return false;
@@ -1169,7 +1243,6 @@ module.exports = {
         { timeout: 10000, timeoutMsg: "form did not reset to an empty row" }
       );
     } catch (e) {
-      console.log("RESET_FORM: waitUntil error=", e.message);
       await logger.logInto(await stackTrace.get(), "form did not reset to an empty row", "error");
       return false;
     }

@@ -23,18 +23,27 @@
 
 ## Block format
 
+**This section is the single source of the block format** — the `c1-test-authoring` phase files
+point here rather than repeating it. Keep a block to **status + open items**; debugging narrative
+goes in the walkthrough, durable lessons in the product-knowledge file. `[updated 2026-09-21]`
+
 ```markdown
-## <testName> (<App>, <env>)
-- Phase 1 (build):   ✅ <date> — TST_<MOD>_TC_1..<N> registered; executed: <P> passing / <F> failing on first run; visual candidates: <list|none>
-- Phase 2 (run/fix): ⬜ pending
-- Phase 3 (visual):  ⬜ pending
+## <testName> (<App>, <env>) — `<npm script>`
+Module `<MOD>` (<what it covers>) · knowledge: `<per-screen file>`
+- Phase 1 ✅ <date> — `TST_<MOD>_TC_…`; <P> passing / <F> failing on first run; visual candidates: <list|none>
+- Phase 2 ⬜ pending            (when done: ✅ <date> — <N>/<N> passing, 2 consecutive clean runs)
+- Phase 3 ⬜ pending            (⏭️ DEFERRED by user decision — if deferred; remove the block when ✅)
+- **On Hold:** <TC> — <open product bug, where it is written up>          (only if any)
+- **Blocked:** <TC> (<what is missing / what unblocks it>)                  (only if any)
+- **Not built:** <TC> (<why — e.g. creates data → data-owning suite>)       (only if any)
+- Follow-up: <one line>                                                     (only if any)
 ```
 
-Built but not yet executed (blocked):
+Built but not yet executed:
 
 ```markdown
-- Phase 1 (build):   ⚠️ <date> — built from documentation, NEVER EXECUTED.
-                       Every selector / timeout / data value is UNVERIFIED. Blocker: <reason>
+- Phase 1 ⚠️ <date> — built from documentation, NEVER EXECUTED. Every selector / timeout / data
+  value is UNVERIFIED. Blocker: <reason>
 ```
 
 ---
@@ -155,8 +164,8 @@ Manual register `test/Manual/C1App/AdminApp-Library/` (42; 28 Phase-1 EXTRA) · 
   one-line fix in `adminSchoolLibraryData.json`.
 
 ## Admin Generic / shell (ExperienceApp, thor) — ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI — `adminGenericTest_thor`
-Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · knowledge `admin-shared.md`
-§A9–§A12 · exec `adminGeneric.json` (7 suites, INVI last; SKEY runs on `KNF-XRD-QVE`, never FCN)
+Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · knowledge `admin-generic-shell.md`
+§A9–§A11 · exec `adminGeneric.json` (7 suites, INVI last; SKEY runs on `KNF-XRD-QVE`, never FCN)
 - Phase 1 ✅ 2026-09-14 · Phase 2 ✅ 2026-09-15 — **21/21 passing**, 2 consecutive clean runs
 - Phase 3 ⏭️ **DEFERRED by user decision** — not done; "no candidates" is an expectation, not a finding
 - **Parked:** `TST_INVI_TC_12` — registered, NOT in the exec file (consumes an unread notification;

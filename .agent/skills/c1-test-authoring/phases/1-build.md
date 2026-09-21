@@ -152,20 +152,9 @@ re-checks this table against the code that actually shipped.
   > raise it with the user** — do not bank unverified code as complete. Record Phase 1 as ⚠️
   > (see below), never ✅.
 
-- [ ] Update `.architecture/authoring-status.md` — create/update the block. Use ✅ **only if the
-      suite was actually executed**; otherwise ⚠️:
-
-```markdown
-## <testName> (<App>, <env>)
-- Phase 1 (build):   ✅ <date> — TST_<MOD>_TC_1..<N> registered; executed: <P> passing / <F> failing on first run; visual candidates: <list, or "none — all dynamic data">
-- Phase 2 (run/fix): ⬜ pending
-- Phase 3 (visual):  ⬜ pending
-```
-
-```markdown
-- Phase 1 (build):   ⚠️ <date> — built from documentation, NEVER EXECUTED.
-                       Every selector / timeout / data value is UNVERIFIED. Blocker: <reason>
-```
+- [ ] Update `.architecture/authoring-status.md` — create/update the block using that file's
+      **Block format** section (the single source). Use ✅ **only if the suite was actually
+      executed**; otherwise ⚠️. Status + open items only — the debugging story goes in the walkthrough.
 
 - [ ] Session walkthrough written/appended (AGENTS.md §Walkthrough).
 - [ ] Tell the user: Phase 1 complete → next is Phase 2 (run & fix), recommended in a fresh session.

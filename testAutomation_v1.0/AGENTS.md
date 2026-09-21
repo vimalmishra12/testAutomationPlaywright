@@ -169,6 +169,7 @@ you intend to change and why, and wait for explicit confirmation before proceedi
 | `core/runner/testrunner.js` | Core | The execution engine — changes affect every test run |
 | `core/runner/specGenerator.js` | Core | Entry point for spec execution |
 | `core/runner/launchUrl.js` | Core | Controls how the browser navigates to the application |
+| `package.json` | Configuration | npm scripts are the entry point of every suite (`<feature>_<env>`, `visualAcceptance_*`) and dependencies affect every run — confirm every script or dependency change (see also §8 Rule B) |
 
 > **Retired & deleted (2026-06-11, Prompt 4 / Phase 2):** `wdio.conf.js` is gone —
 > WebDriverIO was replaced by Playwright-as-library under Mocha (ADR-012). The file
@@ -251,15 +252,24 @@ produce a single walkthrough file that documents every change made in that sessi
 ### File Location and Naming
 
 ```
-.architecture/walkthroughs/walkthrough_YYYY-MM-DD.md
+.architecture/walkthroughs/walkthrough_<testfile-or-topic>_<YYYY-MM-DD>_<HHh-MMm>.md
 ```
 
-If a walkthrough file for today's date already exists, **append** to it — do not create a duplicate.
+- **Named after the WORK, not the day.** `<testfile-or-topic>` is the test file the work centres on
+  (e.g. `adminStudentsTab.test.js`) or, for non-test work, a short kebab-case topic
+  (e.g. `docs-dedup`). The date-time is when the file was **first** created.
+- **One file per feature / ticket.** A later session on the same feature **appends** a new
+  `## Session N — YYYY-MM-DD` section to that feature's existing file — do not create a second file.
+  Unrelated work on the same day gets its own file.
+- **Never rename existing walkthroughs** — knowledge files and ADRs cite them by name. Older files
+  use the retired `walkthrough_YYYY-MM-DD.md` form; leave them as they are. `[rule updated 2026-09-21]`
 
 ### Walkthrough File Format
 
 ```markdown
-# Session Walkthrough — YYYY-MM-DD
+# Walkthrough — <testfile-or-topic>
+
+## Session 1 — YYYY-MM-DD
 
 ## Summary
 One or two sentence description of what was worked on in this session.
@@ -291,10 +301,10 @@ Anything that was discussed but not completed, or that requires a future decisio
 
 ### Walkthrough Rules
 
-- **Every session must produce one** — no exceptions, even for small single-line changes
+- **Every session must produce or extend one** — no exceptions, even for small single-line changes
 - **Be precise** — "added click_submitButton method at line 45" not "added a method"
-- **Date is the session date** — use the actual date, not the file creation date
-- **Append, never overwrite** — if today's file exists, add a new `---` section below the existing content
+- **Date each session** — the `## Session N — YYYY-MM-DD` heading carries the actual session date
+- **Append, never overwrite** — if the feature already has a file, add `---` and a new `## Session N` section below the existing content
 
 ---
 

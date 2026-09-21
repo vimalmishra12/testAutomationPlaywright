@@ -62,6 +62,7 @@
     "teacherEbook2RBTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=teacherEbook2RBTest.json --browserCapability=desktop-chrome-1920",
     "teacherPplusTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=teacherPresentationPlus1RBTest.json --browserCapability=desktop-chrome-1920",
     "createAssignmentPplusTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=createAssignmentPresentationPlusTest.json --browserCapability=desktop-chrome-1920",
+    "bulkClassEmailVerificationTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=bulkClassEmailVerification.json --browserCapability=desktop-chrome-1920",
     "poc:thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
     "//─────────── ExperienceApp · production ───────────": "",
     "landingFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=landingTest.json --browserCapability=desktop-chrome-1920",
