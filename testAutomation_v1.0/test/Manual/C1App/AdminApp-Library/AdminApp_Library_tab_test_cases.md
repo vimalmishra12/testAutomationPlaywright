@@ -302,7 +302,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 3. `TST_LIBR_TC_3` — Verify the product list reverses to descending order when the Sort by Title control is clicked once
@@ -323,7 +323,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 4. `TST_LIBR_TC_4` — Verify the product list returns to ascending order when the Sort by Title control is clicked a second time
@@ -344,7 +344,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 ### Linked Requirement: #4 — Verify search by title
@@ -367,7 +367,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 11. `TST_LIBR_TC_11` — Verify all products whose title contains the term are returned first when a partial title is searched
@@ -388,7 +388,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 12. `TST_LIBR_TC_12` — Verify search results are the same regardless of the case of the search term
@@ -409,7 +409,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 20. `TST_LIBR_TC_20` — Verify the no-results message is shown and echoes the term when a search matches no product
@@ -430,7 +430,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 ### Linked Requirement: #3 — Verify School licence appear in school licence section
@@ -453,7 +453,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 25. `TST_LIBR_TC_25` — Verify the product materials view opens when a School licence tile is clicked
@@ -474,7 +474,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 ### Linked Requirement: #2 — Verify See Materials for an umbrella product - All types of components
@@ -497,7 +497,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 33. `TST_UMBP_TC_2` — Verify every component of a multi-component umbrella product is listed under Learning materials
@@ -518,7 +518,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 34. `TST_UMBP_TC_3` — Verify each component tile shows its component type and its component name
@@ -539,7 +539,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 #### 40. `TST_UMBP_TC_9` — Verify the component list renders correctly for products with differing component counts
@@ -560,7 +560,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | *(blank — filled by the tester)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank — filled by the tester)* |
 
 | Field | Value |
@@ -579,7 +579,7 @@ The earlier `Compass*` terms were replaced throughout for this reason.
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolLibrary | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolLibrary | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ---

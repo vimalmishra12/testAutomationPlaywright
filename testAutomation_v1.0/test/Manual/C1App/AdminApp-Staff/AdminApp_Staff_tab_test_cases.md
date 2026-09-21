@@ -11,15 +11,15 @@
 | Automation Status | Cases |
 |---|---|
 | Automated | 28 |
-| Blocked | 1 |
 | Not Automated | 11 |
+| Blocked | 1 |
 | **Total** | **40** |
 
 | Execution Status | Cases |
 |---|---|
 | Pass | 28 |
-| Blocked | 1 |
 | Not Run | 11 |
+| Blocked | 1 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -222,7 +222,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -243,7 +243,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -264,7 +264,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -288,7 +288,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -312,7 +312,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -333,7 +333,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -355,7 +355,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -378,7 +378,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -399,7 +399,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -422,7 +422,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -443,7 +443,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -464,7 +464,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -485,7 +485,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -506,7 +506,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -527,7 +527,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -548,7 +548,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -572,7 +572,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -593,7 +593,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -614,7 +614,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -661,7 +661,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -682,7 +682,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -708,7 +708,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -732,7 +732,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -776,7 +776,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -797,7 +797,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -842,7 +842,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -863,7 +863,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -905,7 +905,7 @@ No `maxlength` is set on the Staff search box, nor on any Email / First name / L
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStaffProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStaffProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---

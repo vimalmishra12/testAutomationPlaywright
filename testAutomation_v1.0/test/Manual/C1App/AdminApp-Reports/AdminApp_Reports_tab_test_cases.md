@@ -11,15 +11,16 @@
 | Automation Status | Cases |
 |---|---|
 | Automated | 31 |
-| Blocked | 1 |
 | Not Automated | 1 |
+| Blocked | 1 |
 | **Total** | **33** |
 
 | Execution Status | Cases |
 |---|---|
 | Pass | 30 |
+| Fail | 1 |
+| Not Run | 1 |
 | Blocked | 1 |
-| Not Run | 2 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -315,7 +316,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -339,7 +340,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -360,7 +361,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -381,7 +382,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -402,7 +403,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -425,7 +426,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -446,7 +447,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -467,7 +468,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -486,9 +487,9 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Expected Result** | The list contains classes of BOTH statuses (an OR combination), not their intersection. |
 | **Remarks** | Requires the school to hold at least one "Not started" class. All six classes on VED-NEH-KVU were Active on 2026-08-26, so this needs a class whose start date is in the future. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
+| **Status** | Fail |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Fail across 2 runs | Error: This case needs BOTH statuses to hold classes on this school - 'Ended' has 15 and 'Not started' has 0. With either at zero it cannot prove OR. |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -509,7 +510,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -530,7 +531,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -553,7 +554,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -574,7 +575,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -595,7 +596,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -616,7 +617,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -640,7 +641,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -661,7 +662,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -682,7 +683,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -885,7 +886,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -929,7 +930,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -954,7 +955,7 @@ Because every class shares one status, this school **cannot** demonstrate filter
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminSchoolReports | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminSchoolReports | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---

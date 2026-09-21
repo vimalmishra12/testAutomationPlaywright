@@ -11,17 +11,17 @@
 | Automation Status | Cases |
 |---|---|
 | Automated | 38 |
-| Written - not wired | 4 |
-| Blocked | 4 |
 | Not Automated | 17 |
+| Blocked | 4 |
+| Written - not wired | 4 |
 | **Total** | **63** |
 
 | Execution Status | Cases |
 |---|---|
 | Pass | 38 |
-| Blocked | 4 |
-| On Hold | 6 |
 | Not Run | 15 |
+| On Hold | 6 |
+| Blocked | 4 |
 
 <!-- END GENERATED AUTOMATION SUMMARY -->
 
@@ -238,7 +238,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #1 — Verify search by first name
@@ -259,7 +259,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -278,7 +278,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -297,7 +297,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -316,7 +316,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -335,7 +335,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -354,7 +354,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #2 — Verify search by last name
@@ -375,7 +375,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #3 — Verify search by email
@@ -396,7 +396,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -415,7 +415,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -434,7 +434,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #4 — Verify search by username
@@ -455,7 +455,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #5 — Verify search with "who activated the code in my school?" checkbox
@@ -476,7 +476,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -516,7 +516,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -535,7 +535,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -554,7 +554,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -573,7 +573,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -592,7 +592,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #7 — Verify user guide expand/collapse
@@ -613,7 +613,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -632,7 +632,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #16 — Verify load more feature
@@ -653,7 +653,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -672,7 +672,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 | Field | Value |
@@ -691,7 +691,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ### Requirement #23 — Verify count of students increase on adding a new student
@@ -733,7 +733,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -752,7 +752,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -771,7 +771,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -790,7 +790,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -830,7 +830,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #10 — Verify view profile for a adult with username
@@ -891,7 +891,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #12 — Verify update personal info of user: View Profile > Manage account > Edit account details
@@ -931,7 +931,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -950,7 +950,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated. "Update" is never clicked. |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). 2 consecutive clean runs on Thor 2026-09-15, on "Marvin Jae student". Resolves the earlier [ASSUMED] result and captures the verbatim copy. Automation note: "Update" is blocked by CSS only, so a native disabled check would wrongly read it as enabled. |
 
 ### Requirement #13 — Verify Activate course material for individual learner
@@ -990,7 +990,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 | Field | Value |
@@ -1009,7 +1009,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #14 — Verify launch class from view profile page
@@ -1030,7 +1030,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentProfile | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentProfile | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminStudentProfileTest_thor`). Passing on Thor 2026-09-15: baseline 10/10, then 11/11 after `TST_SPRF_TC_12` was added. |
 
 ### Requirement #15 — Verify umbrella details page launch from view profile page (click on umbrella name) - clicking Back should return to previous page
@@ -1150,7 +1150,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated. Next is natively disabled with neither option chosen. |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminBulkStudents | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminBulkStudents | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. Resolves the earlier [ASSUMED] expected result. |
 
 ### Requirement #18 — Verify Bulk feature > Add new students to classes adult with username
@@ -1253,7 +1253,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminBulkStudents | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminBulkStudents | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. NOTE: the grid is a server-side draft kept per admin account, so "one empty entry row" only holds after the grid is emptied; the TC clears it first (admin-students-tab.md §9.5). |
 
 | Field | Value |
@@ -1291,7 +1291,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated. Code only keeps Activate disabled; a known email auto-fills the names and enables Activate (never clicked). |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminBulkStudents | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminBulkStudents | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Automated (`adminBulkStudentsTest_thor`). 2 consecutive clean runs on Thor 2026-09-15. Resolves the earlier [ASSUMED] enabling threshold. |
 
 ---
@@ -1312,7 +1312,7 @@ The school held **26 students** at capture. It is **shared and actively mutated 
 | **Actual Result** | As expected — automated. Both the `!^+s95` (first name) and `&LName` (last name) searches returned exactly the one student, names intact. |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminStudentsTab | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminStudentsTab | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | Unblocked 2026-09-16: the user created "cqateststu!^+s95 &LName" on FCN-CHZ-PDA. Automated (`adminStudentsTabTest_thor`), 2 consecutive clean runs on Thor 2026-09-16 — 24/24 both times. |
 
 ---

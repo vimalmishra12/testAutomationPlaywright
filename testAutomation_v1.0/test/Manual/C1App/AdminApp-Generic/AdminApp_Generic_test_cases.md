@@ -11,9 +11,9 @@
 | Automation Status | Cases |
 |---|---|
 | Automated | 21 |
-| Written - not wired | 1 |
 | Blocked | 5 |
 | Not Automated | 1 |
+| Written - not wired | 1 |
 | **Total** | **28** |
 
 | Execution Status | Cases |
@@ -559,7 +559,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -580,7 +580,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -603,7 +603,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -624,7 +624,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -645,7 +645,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -666,7 +666,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -693,7 +693,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -714,7 +714,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -735,7 +735,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -756,7 +756,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -777,7 +777,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -800,7 +800,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -821,7 +821,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -844,7 +844,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -873,7 +873,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -894,7 +894,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -936,7 +936,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -984,7 +984,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -1032,7 +1032,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -1061,7 +1061,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** | *(blank in design)* |
 
 ---
@@ -1149,7 +1149,7 @@ disabled or **CSS-only** disabled (§B4) before writing that assertion.
 | **Actual Result** | |
 | **Status** | Pass |
 | **Automation Status** | Automated |
-| **Automation Evidence** | Suite: adminGeneric | Not executed in this audit - status carried over, treat as unverified |
+| **Automation Evidence** | Suite: adminGeneric | 2026-09-16: Pass across 2 runs |
 | **Comments / Defect ID** |  |
 
 ---
