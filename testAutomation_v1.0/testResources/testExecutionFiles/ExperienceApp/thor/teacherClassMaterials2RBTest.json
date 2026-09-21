@@ -1,6 +1,6 @@
 {
-  "Suite1_TeacherClassMaterials": {
-    "Name": "Validation of Teacher Class Materials and Resource Bank",
+  "Suite1_TeacherClassMaterials2RB": {
+    "Name": "Validation of Teacher Class Materials 2RB and Resource Banks",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -47,12 +47,12 @@
       },
       {
         "id": "TST_DASH_TC_11",
-        "description": "Open Active Class Card",
+        "description": "Open Active Class Card 2RB",
         "testFile": "./test/ExperienceApp/dashboard.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
-            "jsonPath": "C1.classMaterials.class.name"
+            "jsonPath": "C1.classMaterials.class2RB.class.name"
           }
         ]
       }
@@ -72,31 +72,76 @@
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
-            "jsonPath": "C1.classMaterials.bundle"
+            "jsonPath": "C1.classMaterials.class2RB.bundle"
           }
         ]
       },
       {
-        "id": "TST_CMAT_TC_3",
-        "description": "Click Resource Bank component within product bundle",
+        "id": "TST_CMAT_TC_4",
+        "description": "Click Resources folder component within product bundle",
         "testFile": "./test/ExperienceApp/classMaterials.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
-            "jsonPath": "C1.classMaterials.resourceBank"
+            "jsonPath": "C1.classMaterials.class2RB.folder"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_5",
+        "description": "Click 1st Resource Bank component in folder",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class2RB.resourceBank1"
           }
         ]
       },
       {
         "id": "TST_RBNK_TC_1",
-        "description": "Verify Resource Bank Resources area page is displayed",
+        "description": "Verify 1st Resource Bank Resources area page is displayed",
         "testFile": "./test/ExperienceApp/resourceBank.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
-            "jsonPath": "C1.classMaterials.resourceBank"
+            "jsonPath": "C1.classMaterials.class2RB.resourceBank1"
           }
         ]
+      },
+      {
+        "id": "TST_RBNK_TC_2",
+        "description": "Click Back button on 1st Resource Bank page and return to folder",
+        "testFile": "./test/ExperienceApp/resourceBank.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_5",
+        "description": "Click 2nd Resource Bank component in folder",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class2RB.resourceBank2"
+          }
+        ]
+      },
+      {
+        "id": "TST_RBNK_TC_1",
+        "description": "Verify 2nd Resource Bank Resources area page is displayed",
+        "testFile": "./test/ExperienceApp/resourceBank.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class2RB.resourceBank2"
+          }
+        ]
+      },
+      {
+        "id": "TST_RBNK_TC_2",
+        "description": "Click Back button on 2nd Resource Bank page and return to folder",
+        "testFile": "./test/ExperienceApp/resourceBank.test.js",
+        "testData": []
       }
     ],
     "AfterEach": [],

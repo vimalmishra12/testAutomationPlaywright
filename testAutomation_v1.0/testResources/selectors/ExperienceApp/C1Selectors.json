@@ -1766,10 +1766,15 @@
         "componentByNameInBundle": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
         "componentByName": "//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
         "bundleCollapseByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[@data-toggle='collapse']",
-        "bundleToggleByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//*[contains(@class,'toggle-icon')]"
+        "bundleToggleByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//*[contains(@class,'toggle-icon')]",
+        "categoryBackBtn": "a[qid^='cView-72-'], a.btn-link[aria-label*='Back']",
+        "categoryTitle": "p.category-name",
+        "folderComponentByName": "//a[contains(@class,'component') and .//p[contains(@class,'component-name') and normalize-space()='{{folderName}}']]",
+        "resourceBankInFolder": "div.products-container .row.products-row a.component"
       },
       "resourceBank": {
-        "resourcesAreaHeading": "//h1[contains(.,'Resources area')]"
+        "resourcesAreaHeading": "//h1[contains(.,'Resources area')]",
+        "backBtn": "a[qid='rb-back-btn'], #rb-back-btn"
       }
     }
   }

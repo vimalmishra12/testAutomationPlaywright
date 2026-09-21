@@ -20,5 +20,14 @@ module.exports = {
         "Resource Bank header text mismatch. Expected: " + testdata.expectedHeading + " but got: " + headerData.heading
       );
     }
+  },
+
+  TST_RBNK_TC_2: async function () {
+    sts = await resourceBank.click_back();
+    await assertion.assertEqual(
+      sts.pageStatus,
+      true,
+      "Failed to click Back button on Resource Bank page."
+    );
   }
 };

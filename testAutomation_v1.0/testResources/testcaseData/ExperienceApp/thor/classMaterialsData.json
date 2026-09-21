@@ -1,16 +1,38 @@
 {
   "C1": {
     "classMaterials": {
-      "class": {
-        "name": "CQA_AUTO_TEST_DND_1RB"
+      "class1RB": {
+        "class": {
+          "name": "CQA_AUTO_TEST_DND_1RB"
+        },
+        "bundle": {
+          "name": "EBOOK AUTOMATION 1RB TEST DATA"
+        },
+        "resourceBank": {
+          "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+          "componentName": "Resource Bank",
+          "expectedHeading": "Resources area"
+        }
       },
-      "bundle": {
-        "name": "EBOOK AUTOMATION 1RB TEST DATA"
-      },
-      "resourceBank": {
-        "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
-        "componentName": "Resource Bank",
-        "expectedHeading": "Resources area"
+      "class2RB": {
+        "class": {
+          "name": "CQA_AUTO_TEST_DND_2RB"
+        },
+        "bundle": {
+          "name": "EBOOK AUTOMATION 2RB TEST DATA"
+        },
+        "folder": {
+          "bundleName": "EBOOK AUTOMATION 2RB TEST DATA",
+          "folderName": "Resources"
+        },
+        "resourceBank1": {
+          "index": 0,
+          "expectedHeading": "Resources area"
+        },
+        "resourceBank2": {
+          "index": 1,
+          "expectedHeading": "Resources area"
+        }
       }
     }
   }

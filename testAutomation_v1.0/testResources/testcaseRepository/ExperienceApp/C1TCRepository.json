@@ -6423,6 +6423,24 @@
           "description": "Click learning material component within product bundle",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_4",
+          "description": "Click folder component within product bundle",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_5",
+          "description": "Click Resource Bank component in folder by index",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_6",
+          "description": "Click Back button in folder view",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -6434,6 +6452,12 @@
         {
           "id": "TST_RBNK_TC_1",
           "description": "Verify Resource Bank Resources area page is displayed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RBNK_TC_2",
+          "description": "Click Back button on Resource Bank page",
           "tags": "P1",
           "visualTest": false
         }
