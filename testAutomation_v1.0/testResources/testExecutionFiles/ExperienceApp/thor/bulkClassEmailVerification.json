@@ -1,0 +1,92 @@
+{
+  "Suite1": {
+    "Name": "Suite 1: School Admin Class Creation Flow (Class 1 & Class 2 with Teacher) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_SCLS_TC_2", "description": "Click 'Add class' to open the create form", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_CCLS_TC_23", "description": "Reset create form to single empty row", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_BCEV_TC_9", "description": "Bulk create Class 1 & Class 2 together with Start Date, End Date, and Teacher (no label, no material)", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite2": {
+    "Name": "Suite 2: C1 School Dashboard Class Verification (Class 1 & Class 2) | 3 July Test School 1 (FCN-CHZ-PDA)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch Thor base URL", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Click Login button on Landing page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Enter school admin username", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_LOGI_TC_2", "description": "Enter school admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json", "jsonPath": "C1.login.user.schoolAdmin" }] },
+      { "id": "TST_NEMO24306_TC_LOGIN", "description": "Click Login and confirm 'My school accounts' loaded", "testFile": "./test/ExperienceApp/nemoUploadCsvValidation.test.js", "testData": [] },
+      { "id": "TST_SADB_TC_1", "description": "Open '3 July Test School 1' by school key FCN-CHZ-PDA", "testFile": "./test/ExperienceApp/schoolAdminAddClass.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_BCEV_TC_7", "description": "Search for Class 1 in the dashboard class list and verify it exists", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_BCEV_TC_8", "description": "Search for Class 2 in the dashboard class list and verify it exists", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite3": {
+    "Name": "Suite 3: Mailsac Web UI Admin Summary Email Verification & Cleanup (testt1@mailsac.com)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch base URL", "testFile": "./core/runner/launchUrl.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_BCEV_TC_3", "description": "Verify admin received 1 summary report email via Mailsac UI", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_BCEV_TC_5", "description": "Cleanup - delete admin emails in Mailsac UI", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite4": {
+    "Name": "Suite 4: Mailsac Web UI Teacher Notification Email Verification & Cleanup (teacher17aug2026@mailsac.com)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "Launch base URL", "testFile": "./core/runner/launchUrl.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_BCEV_TC_4", "description": "Verify teacher received 2 per-class notification emails via Mailsac UI", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] },
+      { "id": "TST_BCEV_TC_6", "description": "Cleanup - delete teacher emails in Mailsac UI", "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+        "testData": [{ "dataFile": "./testResources/testcaseData/ExperienceApp/thor/bulkClassEmailVerificationData.json", "jsonPath": "C1.bulkClassEmailVerification" }] }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}
