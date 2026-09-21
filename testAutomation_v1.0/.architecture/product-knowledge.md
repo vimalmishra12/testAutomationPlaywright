@@ -29,6 +29,7 @@
 | ↳ **Students tab** — list, profile, manage account, bulk student ops — `SLST` / `SPRF` / `SBLK` | `ExperienceApp` | [`ExperienceApp/admin-students-tab.md`](product-knowledge/ExperienceApp/admin-students-tab.md) |
 | ↳ **Staff tab** — list, profile, admin rights, removal, bulk invitations — `STFL` / `STFP` / `STFB` | `ExperienceApp` | [`ExperienceApp/admin-staff-tab.md`](product-knowledge/ExperienceApp/admin-staff-tab.md) |
 | ↳ **Library tab** — list, sort, search, School licence, product materials view — `LIBR` / `UMBP` | `ExperienceApp` | [`ExperienceApp/admin-library-tab.md`](product-knowledge/ExperienceApp/admin-library-tab.md) |
+| ↳ **Generic / shell** — header, footer, language, notifications, My profile, school key, organisations, teacher view, setup wizard — `ASHL` / `FOOT` / `MYPR` / `SADB` / `SRQS` / `SKEY` / `INVI` | `ExperienceApp` | [`ExperienceApp/admin-generic-shell.md`](product-knowledge/ExperienceApp/admin-generic-shell.md) |
 | ↳ Class grade settings — `CGST` | `ExperienceApp` | [`ExperienceApp/admin-class-grade-settings.md`](product-knowledge/ExperienceApp/admin-class-grade-settings.md) |
 | ↳ Grading scale / category details pages | `ExperienceApp` | [`ExperienceApp/admin-grading-details-pages.md`](product-knowledge/ExperienceApp/admin-grading-details-pages.md) |
 | ↳ Bulk new account creation via CSV — `NEMO24306` | `ExperienceApp` | [`ExperienceApp/admin-bulk-account-csv.md`](product-knowledge/ExperienceApp/admin-bulk-account-csv.md) |

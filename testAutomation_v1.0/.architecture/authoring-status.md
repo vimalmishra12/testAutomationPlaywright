@@ -155,8 +155,8 @@ Manual register `test/Manual/C1App/AdminApp-Library/` (42; 28 Phase-1 EXTRA) · 
   one-line fix in `adminSchoolLibraryData.json`.
 
 ## Admin Generic / shell (ExperienceApp, thor) — ASHL / FOOT / MYPR / SADB / SRQS / SKEY / INVI — `adminGenericTest_thor`
-Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · knowledge `admin-shared.md`
-§A9–§A12 · exec `adminGeneric.json` (7 suites, INVI last; SKEY runs on `KNF-XRD-QVE`, never FCN)
+Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · knowledge `admin-generic-shell.md`
+§A9–§A11 · exec `adminGeneric.json` (7 suites, INVI last; SKEY runs on `KNF-XRD-QVE`, never FCN)
 - Phase 1 ✅ 2026-09-14 · Phase 2 ✅ 2026-09-15 — **21/21 passing**, 2 consecutive clean runs
 - Phase 3 ⏭️ **DEFERRED by user decision** — not done; "no candidates" is an expectation, not a finding
 - **Parked:** `TST_INVI_TC_12` — registered, NOT in the exec file (consumes an unread notification;
