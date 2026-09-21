@@ -410,14 +410,15 @@ const REQS = [
 //
 // These are the cases carried as "Extra in Ours" in Admin_Gap_Analysis.xlsx — coverage we hold
 // that the other team's reviewed sheet does not. None of them is automated in Phase 1; Phase 1
-// scope is the cases NOT listed here. They stay in the register and are revisited later.
+// scope is the cases NOT listed here.
+//
+// EMPTIED 2026-09-21: all ten were removed from this register (extra + not automated — see the
+// register note and archive/_tcdata_before-extra-removal_2026-09-21.js). Kept as an empty list so
+// _generate.js still works; a future exclusion goes back in here.
 //
 // Restored into the generator 2026-09-08: the marker had been hand-added to the .md/.xlsx only,
 // so regenerating would have dropped it from all ten Remarks cells.
-const PHASE1_EXCLUSIONS = [
-  'TST_MRPT_TC_1', 'TST_MRPT_TC_3', 'TST_MRPT_TC_17', 'TST_MRPT_TC_29', 'TST_MRPT_TC_30',
-  'TST_MRPT_TC_32', 'TST_MRPT_TC_33', 'TST_MRPT_TC_36', 'TST_MRPT_TC_38', 'TST_MRPT_TC_39',
-];
+const PHASE1_EXCLUSIONS = [];
 
 const EXCLUSION_MARKER =
   '**[EXTRA — Phase 1 exclusion]** Not present in the other team\'s reviewed sheet '
