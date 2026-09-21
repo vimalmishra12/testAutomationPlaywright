@@ -6400,6 +6400,67 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Bulk Class Creation with Mailsac Email Verification",
+      "moduleId": "BCEV",
+      "testFile": "./test/ExperienceApp/bulkClassEmailVerification.test.js",
+      "testcase": [
+        {
+          "id": "TST_BCEV_TC_1",
+          "description": "Purge admin inbox via Mailsac UI before test execution",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_2",
+          "description": "Purge teacher inbox via Mailsac UI before test execution",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_3",
+          "description": "Verify admin received 1 summary report email via Mailsac UI",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_4",
+          "description": "Verify teacher received 2 per-class notification emails via Mailsac UI",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_5",
+          "description": "Cleanup - delete admin emails in Mailsac UI",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_6",
+          "description": "Cleanup - delete teacher emails in Mailsac UI",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_7",
+          "description": "Search for Class 1 in the dashboard class list and verify it exists",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_8",
+          "description": "Search for Class 2 in the dashboard class list and verify it exists",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_BCEV_TC_9",
+          "description": "Bulk create Class 1 & Class 2 together with Start Date, End Date, and Teacher (No label, No material)",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }
