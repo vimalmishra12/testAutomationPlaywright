@@ -69,3 +69,11 @@ Only run `registerSync.js apply` where `output/reports/auditRuns` holds real run
 
 ### Protected Files Touched
 None.
+
+---
+
+## Session 3 — 2026-09-21
+
+- `test/Manual/C1App/AdminApp-Reports/_tcdata.js`: `PHASE1_EXCLUSIONS` emptied (all 10 ids were removed from the register in
+  Session 1), with a dated comment. Verified the module still loads: `TCS` 33, `PHASE1_EXCLUSIONS` 0, no `[EXTRA` markers
+  left. `_generate.js` was not re-run. Protected files touched: none.
