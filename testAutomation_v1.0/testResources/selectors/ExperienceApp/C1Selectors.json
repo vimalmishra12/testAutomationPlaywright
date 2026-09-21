@@ -23,7 +23,12 @@
         "crossIcon": "a[qid=\"learningPath-1\"]",
         "assignmentBackBtn": "a[qid=\"lo-renderer-bck-btn\"]",
         "yesDelete": "button[qid=\"rView-4\"]",
-        "assignNameInput": "[qid=\"assignment-detail-2\"]"
+        "assignNameInput": "[qid=\"assignment-detail-2\"]",
+        "createAssignmentBtnInTOC": "button[qid=\"assignment-button-1\"], button#createAssignmentBtn",
+        "assignmentModalCancelBtn": "button[qid=\"assignment-3\"], button.cancel-btn",
+        "assignmentModalActionBtn": "button[qid=\"assignment-4\"], button#assignmentModalActionBtn",
+        "createNewAssignmentBtn": "button:has-text(\"Create new assignment\"), button:has-text(\"create another assignment\"), [qid*=\"create-new\"]",
+        "returnToPresentationPlusBtn": "a:has-text(\"Return to Presentation Plus\"), button:has-text(\"Return to Presentation Plus\"), span:has-text(\"Return to Presentation Plus\"), [role=\"button\"]:has-text(\"Return to Presentation Plus\"), [qid*=\"return\"], [qid*=\"Return\"]"
       },
       "c1student": {
         "bellIcon": "#tippyDropdownMenuButton",

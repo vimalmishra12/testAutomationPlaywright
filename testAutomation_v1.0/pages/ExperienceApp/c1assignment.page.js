@@ -26,6 +26,11 @@ module.exports = {
     assignmentBackBtn: selectorFile.css.ComproC1.c1assignment.assignmentBackBtn,
     crossIcon: selectorFile.css.ComproC1.c1assignment.crossIcon,
     timeIncrease: selectorFile.css.ComproC1.c1assignment.timeIncrease,
+    createAssignmentBtnInTOC: selectorFile.css.ComproC1.c1assignment.createAssignmentBtnInTOC,
+    assignmentModalCancelBtn: selectorFile.css.ComproC1.c1assignment.assignmentModalCancelBtn,
+    assignmentModalActionBtn: selectorFile.css.ComproC1.c1assignment.assignmentModalActionBtn,
+    createNewAssignmentBtn: selectorFile.css.ComproC1.c1assignment.createNewAssignmentBtn,
+    returnToPresentationPlusBtn: selectorFile.css.ComproC1.c1assignment.returnToPresentationPlusBtn,
 
     isInitialized: async function () {
         var res;
@@ -343,5 +348,71 @@ module.exports = {
             await logger.logInto(await stackTrace.get(), res + " yesDelete is NOT clicked", 'error');
         }
         return res;
+    },
+
+    click_createAssignmentBtnInTOC: async function () {
+        await logger.logInto(await stackTrace.get());
+        var displayed = await action.waitForDisplayed(this.createAssignmentBtnInTOC, 15000);
+        if (!displayed) {
+            await logger.logInto(await stackTrace.get(), "createAssignmentBtnInTOC is not displayed", "error");
+            return false;
+        }
+        var res = await action.click(this.createAssignmentBtnInTOC);
+        await browser.pause(1500);
+        return res === true;
+    },
+
+    click_cancelAssignmentModalBtn: async function () {
+        await logger.logInto(await stackTrace.get());
+        var displayed = await action.waitForDisplayed(this.assignmentModalCancelBtn, 10000);
+        if (!displayed) {
+            await logger.logInto(await stackTrace.get(), "assignmentModalCancelBtn is not displayed", "error");
+            return false;
+        }
+        var res = await action.click(this.assignmentModalCancelBtn);
+        await browser.pause(1500);
+        return res === true;
+    },
+
+    click_takeMeToAssignmentsBtn: async function () {
+        await logger.logInto(await stackTrace.get());
+        var displayed = await action.waitForDisplayed(this.assignmentModalActionBtn, 10000);
+        if (!displayed) {
+            await logger.logInto(await stackTrace.get(), "assignmentModalActionBtn is not displayed", "error");
+            return false;
+        }
+        var res = await action.click(this.assignmentModalActionBtn);
+        await browser.pause(3000);
+        var unitDisplayed = await action.waitForDisplayed(this.Unit1, 20000);
+        return res === true && unitDisplayed === true;
+    },
+
+    click_createNewAssignmentFromModal: async function () {
+        await logger.logInto(await stackTrace.get());
+        var displayed = await action.waitForDisplayed(this.createNewAssignmentBtn, 15000);
+        if (!displayed) {
+            await logger.logInto(await stackTrace.get(), "createNewAssignmentBtn is not displayed", "error");
+            return false;
+        }
+        var res = await action.click(this.createNewAssignmentBtn);
+        await browser.pause(3000);
+        var unitDisplayed = await action.waitForDisplayed(this.Unit1, 20000);
+        return res === true && unitDisplayed === true;
+    },
+
+    click_returnToPresentationPlusFromModal: async function () {
+        await logger.logInto(await stackTrace.get());
+        await browser.pause(2000);
+        var displayed = await action.waitForDisplayed(this.returnToPresentationPlusBtn, 20000);
+        if (!displayed) {
+            await logger.logInto(await stackTrace.get(), "returnToPresentationPlusBtn is not displayed", "error");
+            return false;
+        }
+        var res = await action.click(this.returnToPresentationPlusBtn);
+        await browser.pause(3000);
+        await action.waitForDocumentLoad();
+        var eBookPage = require("./eBook.page.js");
+        var readerInit = await eBookPage.isInitialized();
+        return res === true && readerInit && readerInit.pageStatus === true;
     }
 }

@@ -607,6 +607,30 @@
           "description": "Click Kebab Icon",
           "tags": "P3",
           "visualTest": true
+        },
+        {
+          "id": "TST_C1AS_TC_21",
+          "description": "Click Create Assignment in TOC and Cancel on modal",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_22",
+          "description": "Click Create Assignment in TOC and Take Me To Assignments",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_23",
+          "description": "Click Create New Assignment on modal and verify redirect",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_24",
+          "description": "Click Return to Presentation Plus on modal and verify return",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
