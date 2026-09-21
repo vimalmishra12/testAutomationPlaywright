@@ -1,0 +1,17 @@
+{
+  "C1": {
+    "classMaterials": {
+      "class": {
+        "name": "CQA_AUTO_TEST_DND"
+      },
+      "bundle": {
+        "name": "EBOOK AUTOMATION 1RB TEST DATA"
+      },
+      "resourceBank": {
+        "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+        "componentName": "Resource Bank",
+        "expectedHeading": "Resources area"
+      }
+    }
+  }
+}

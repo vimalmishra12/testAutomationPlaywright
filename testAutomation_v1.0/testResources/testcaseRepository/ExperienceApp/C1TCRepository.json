@@ -6400,6 +6400,44 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Experience App > Teacher > Class Materials",
+      "moduleId": "CMAT",
+      "testFile": "./test/ExperienceApp/classMaterials.test.js",
+      "testcase": [
+        {
+          "id": "TST_CMAT_TC_1",
+          "description": "Navigate to Class Materials tab",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_2",
+          "description": "Verify product bundle is displayed in Class Materials",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_3",
+          "description": "Click learning material component within product bundle",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Experience App > Teacher > Resource Bank",
+      "moduleId": "RBNK",
+      "testFile": "./test/ExperienceApp/resourceBank.test.js",
+      "testcase": [
+        {
+          "id": "TST_RBNK_TC_1",
+          "description": "Verify Resource Bank Resources area page is displayed",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

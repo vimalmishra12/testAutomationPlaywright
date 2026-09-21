@@ -1754,6 +1754,22 @@
         "contactNextBtn": "button[qid=\"t-ss-cd-btn-1\"]",
         "summarySendRequestBtn": "button[qid=\"t-ss-as-btn-1\"]",
         "pageLoader": "#loader-container .loader"
+      },
+      "classMaterials": {
+        "materialsTab": "a[routerlink='materials'][qid='cView-45'], a[qid='cView-45']",
+        "materialsContainer": "materials .product-info, materials .materials-container",
+        "bundleContainer": "div.materials-container",
+        "bundleCollapseLink": "a.product-detail[data-toggle='collapse']",
+        "bundleTitle": "h2.product-name",
+        "componentLink": "a.component",
+        "componentName": "p.component-name",
+        "componentByNameInBundle": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
+        "componentByName": "//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
+        "bundleCollapseByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[@data-toggle='collapse']",
+        "bundleToggleByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//*[contains(@class,'toggle-icon')]"
+      },
+      "resourceBank": {
+        "resourcesAreaHeading": "//h1[contains(.,'Resources area')]"
       }
     }
   }
