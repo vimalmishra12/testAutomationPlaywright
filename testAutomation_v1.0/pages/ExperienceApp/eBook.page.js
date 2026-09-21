@@ -264,17 +264,23 @@ module.exports = {
     if (true == clicked) {
       await logger.logInto(await stackTrace.get(), " homeButton is clicked");
       await action.waitForDocumentLoad();
-      await browser.pause(2000);
-      try {
-        var dashRes = await require("./dashboard.page").isInitialized();
-        if (dashRes && dashRes.pageStatus === true) {
-          return dashRes;
-        }
-      } catch (e) {}
+      await browser.pause(1500);
       try {
         var cmatRes = await require("./classMaterials.page").isInitialized();
         if (cmatRes && cmatRes.pageStatus === true) {
           return cmatRes;
+        }
+      } catch (e) {}
+      try {
+        var appShellRes = await require("./appShell.page").isInitialized();
+        if (appShellRes && appShellRes.pageStatus === true) {
+          return appShellRes;
+        }
+      } catch (e) {}
+      try {
+        var dashRes = await require("./dashboard.page").isInitialized();
+        if (dashRes && dashRes.pageStatus === true) {
+          return dashRes;
         }
       } catch (e) {}
       res.pageStatus = true;

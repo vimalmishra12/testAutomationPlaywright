@@ -101,8 +101,8 @@
         "emailWarningText": "span[role='alert']"
       },
       "appShell": {
-        "userDrop_down": "button[qid=\"cHeader-2\"]",
-        "logout_btn": "button[qid=\"cHeader-7\"]",
+        "userDrop_down": "[qid=\"aHeader-3\"], [qid=\"cHeader-2\"], #dropdownMenuLinkHeader, button.user-dropdown, a#dropdownMenuLinkHeader",
+        "logout_btn": "[qid=\"aHeader-7\"], [qid=\"cHeader-7\"], button[qid=\"cHeader-7\"], a:has-text('Log out'), button:has-text('Log out')",
         "headerbandDiv": "header > div",
         "toggleSidebarBtn": "[aria-label=toggle-sidebar]",
         "custLogo": "[data-tid=image-headerLogo]",

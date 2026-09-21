@@ -166,6 +166,18 @@ module.exports = {
     var res = { pageStatus: false };
     var index = (testdata && typeof testdata.index === "number") ? testdata.index : 0;
 
+    await action.waitForDocumentLoad();
+    var displayed = (await action.waitForDisplayed(this.resourceBankInFolder, 10000)) === true;
+    if (!displayed) {
+      var folderSel = this.folderComponentByName.replace("{{folderName}}", "Resources");
+      if ((await action.isDisplayed(folderSel)) === true) {
+        await action.click(folderSel);
+        await browser.pause(1500);
+        await action.waitForDocumentLoad();
+      }
+      displayed = (await action.waitForDisplayed(this.resourceBankInFolder, 15000)) === true;
+    }
+
     var count = await action.getElementCount(this.resourceBankInFolder);
     await logger.logInto(await stackTrace.get(), "Found " + count + " resource bank components in folder");
 
