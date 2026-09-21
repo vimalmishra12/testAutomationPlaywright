@@ -221,7 +221,9 @@ If tests still fail after fixes, repeat Steps 4–6 (maximum 3 iterations).
 
 ## STEP 7 — Generate Walkthrough
 
-At the end, produce a walkthrough entry:
+At the end, produce a walkthrough entry — in the test's own walkthrough file, named and appended
+per AGENTS.md §Walkthrough (`walkthrough_<testfile>_<YYYY-MM-DD>_<HHh-MMm>.md`, one file per
+feature):
 
 ```markdown
 ### <testName> replicated to <targetEnv> — <date>
