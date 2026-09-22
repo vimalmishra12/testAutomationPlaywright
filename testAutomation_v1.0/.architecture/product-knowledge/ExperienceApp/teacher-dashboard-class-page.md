@@ -31,7 +31,10 @@ dashboard → the class card → class page with the **class key** (`span.class-
   address shows in `#pending-students-container`.
 - Learner: the invite reaches the bell within seconds on prod (SOURCE: up to ~2 min). Opening it
   renders the invitation list, **then routes to `/dashboard/invitation/main` and re-renders it** —
-  a tick made before that route is lost and Accept stays disabled. Each row's checkbox is
+  a tick made before that route is lost and Accept stays disabled. **Sometimes the page then reloads
+  itself once more, to `/dashboard/invitation/main?back=true`, ~450 ms after the notification click**
+  (seen in a failing prod trace; absent in other runs — intermittent) — this also wipes a tick, so the
+  URL alone is not a "settled" signal. `[2026-09-22]` Each row's checkbox is
   `input.select-class-checkbox[aria-label='Select <class name>']`; "Select all" is `#select-all-checkbox`.
 - After Accept → Go to dashboard, on an **SLE-licensed school** the class card shows its
   **Practice Extra** tile and **no activation-code prompt** (`#activationCodeInput` absent).
@@ -42,7 +45,11 @@ dashboard → the class card → class page with the **class key** (`span.class-
 
 - **Invite/accept TCs:** `CREA_TC_30` (the e-mail is pending — `CREA_TC_24` only waits for the
   heading); `INVI_TC_101` housekeeping bell wait; **`INVI_TC_13`** ticks the invitation by class name
-  after the route settles (used instead of `INVI_TC_3` "Select all", which races the re-render);
+  after the route settles AND the document has survived 1.5 s without being replaced
+  (`waitForStableDocument` in `invitationNotification.page.js` — a `window` marker that a reload
+  erases) — used instead of `INVI_TC_3` "Select all", which races the re-render. `[2026-09-22]` The
+  URL-only version failed on the user's run (tick at +297 ms, `?back=true` reload at +454 ms); a
+  synthetic self-reloading page reproduces it: old code → tick gone 1 s later, new code → tick kept;
   `DASH_TC_13` SLE access (class card by name → component tile inside it → no activation prompt).
 - `INVI_TC_2` clicks the FIRST notification title (positional) — fine for a brand-new learner whose
   only notification is the invite; not safe for a learner with other notifications.

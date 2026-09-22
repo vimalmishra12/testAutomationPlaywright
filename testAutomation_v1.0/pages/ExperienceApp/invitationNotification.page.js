@@ -3,6 +3,30 @@ var action = require('../../core/actionLibrary/baseActionLibrary.js')
 var selectorFile = jsonParserUtil.jsonParser(selectorDir)
 var appShellPage = require('./appShell.page.js')
 
+// 3x the measured self-reload delay (~450 ms after opening the invitation, prod 2026-09-22).
+var DOC_SETTLE_MS = 1500;
+
+/**
+ * Resolves once the current document has survived `settleMs` without being replaced by a
+ * navigation (bounded by timeoutMs). A marker is set on `window`; if a reload happens the new
+ * document does not carry it. evaluate() can throw while a navigation is in flight — treated as
+ * "not stable yet". Uses browser.execute (sanctioned compat helper), no selectors.
+ */
+async function waitForStableDocument(settleMs, timeoutMs) {
+  var deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try { await browser.execute(function () { window.__c1DocMark = 1; }); }
+    catch (e) { await browser.pause(250); continue; }
+    await browser.pause(settleMs);
+    var alive = false;
+    try { alive = await browser.execute(function () { return window.__c1DocMark === 1; }); }
+    catch (e) { alive = false; }
+    if (alive) return true;
+    await logger.logInto(await stackTrace.get(), "page reloaded itself during settle — waiting again");
+  }
+  return false;
+}
+
 module.exports = {
 notificationBtn: selectorFile.css.ComproC1.invitationNotification.notificationBtn,
 invitationNotify: selectorFile.css.ComproC1.invitationNotification.invitationNotify,
@@ -79,6 +103,11 @@ var sel = selectorFile.css.ComproC1.invitationNotification.invitedClassCheckbox.
 // /dashboard/invitation/main and re-renders it — a tick made before that route is wiped (the
 // click "worked", isChecked read false). Settle on the final route before touching the list.
 await action.waitForUrl(/\/dashboard\/invitation\/main/, 30000);
+// [2026-09-22, user's run failed again] The URL wait is not enough: SOMETIMES the app reloads the
+// page once more, to /dashboard/invitation/main?back=true, ~450 ms after the notification click
+// (failing trace: our tick at +297 ms, reload at +454 ms). Wait until the document has not been
+// replaced for DOC_SETTLE_MS before ticking — settle-then-act, the tick itself is never retried.
+await waitForStableDocument(DOC_SETTLE_MS, 15000);
 await action.waitForDocumentLoad();
 var listed = true == (await action.waitForDisplayed(sel, 30000));
 if (!listed) return { classListed: false, selected: false, acceptEnabled: false };
