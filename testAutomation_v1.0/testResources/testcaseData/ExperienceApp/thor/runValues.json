@@ -1,0 +1,6 @@
+{
+  "_comment": "ADR-022 — patterns for {{run.<key>}} tokens. Generated once per run on first use; the run's values land in runtime/lastRun.json ({{last.<key>}}). Shapes copied from playwright-automation-c1 (helpers/generators.ts) so migrated accounts look like SOURCE's. {rand4} = 4 random [a-z0-9], {ts} = epoch ms.",
+  "lpTeacherEmail": "cqathorlpteach_{rand4}@mailsac.com",
+  "lpLearnerEmail": "cqathorlplearn_{rand4}@mailsac.com",
+  "lpClassName": "Class {rand4}"
+}

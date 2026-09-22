@@ -163,7 +163,14 @@
         "homework_btn": "button.btn.btn-lg.btn-main-1.homework-button",
         "myProgress_btn": "a.agg-progress-btn.btn-main-color-1-bordered",
         "createNewClass": ".btn.btn-main-color-1-bordered.add-button.d-flex.align-items-center.justify-content-center",
-        "activeClassCard": "//h4[@class='class-title-heading' and normalize-space()='{CLASS_NAME}']"
+        "activeClassCard": "//h4[@class='class-title-heading' and normalize-space()='{CLASS_NAME}']",
+        "introTourDialog": ".introjs-tooltip",
+        "introTourSkipBtn": ".introjs-skipbutton",
+        "teacherCompleteAccountBtn": ".start-teaching-container .btn-start-learning",
+        "learnerWelcomeContinueBtn": "[qid='l-wl-btn-1']",
+        "learnerClassCard": "div.class-card-container",
+        "componentTile": ".component-container",
+        "activationCodeInput": "#activationCodeInput"
       },
       "createNewClass": {
         "enterClassDetails": ".form-heading, .add-class-details-heading",
@@ -188,13 +195,22 @@
         "addToClass_Btn": "button[qid=\"material-modal-add-to-class-btn\"] , button[qid='add-material-save-7'],button[qid=\"t-cc-mm-btn-2\"]",
         "finish_btn": "button[qid=\"create-class-finish-button\"] , button[qid='create-class-4'],button[qid=\"t-cc-cm-btn-4\"]",
         "dev_test_ebook_bundle_104_bundle_dropdown": "a[qid=\"material-modal-component-0\"]",
+        "materialResultItem": "li.dropdown-item.p-0",
+        "selectedMaterialName": "[for='material0'] span",
+        "selectedMaterialRadio": "[for='material0'] div.check",
+        "collaborativeInfoDialog": "#addMaterialInfoModal",
+        "collaborativeInfoTitle": "#addMaterialInfoModalLabel",
+        "collaborativeInfoCloseLink": "#addMaterialInfoModalCloseLink",
+        "classTitleLink": "a.class-title",
+        "classKey": "span.class-code",
         "classData": "a[qid=\"cView-43\"]",
         "addStudents": "a[qid=\"cView-73\"]",
         "adultsRadio": "label[for=\"adult-radio\"]",
         "confirmationNextBtn": "button[qid=\"typeSelect-4\"]",
         "studentEmail_input": "input[name=\"teacherEmail-0\"],input[qid=\"CBulkEnrollment-learner-0-1\"]",
         "inviteStudentBtn": "button[qid=\"CBulkEnrollment-4\"]",
-        "pendingTitle": "#pending-students-container > h3"
+        "pendingTitle": "#pending-students-container > h3",
+        "pendingStudentsContainer": "#pending-students-container"
       },
       "activeClass": {
         "actionButton": "a[qid=\"cView-70\"]",
@@ -317,7 +333,8 @@
         "invitationNotify": "h3[class=\"title d-flex mb-1\"]",
         "selectCheckbox": "#select-all-checkbox",
         "acceptBtn": "button[qid=\"idsh-3\"]",
-        "goToDashboard": "a[qid=\"iscs-3\"]"
+        "goToDashboard": "a[qid=\"iscs-3\"]",
+        "invitedClassCheckbox": "input.select-class-checkbox[aria-label='Select {CLASS_NAME}']"
       },
       "progress": {
         "progress": "h1[qid='clView-6']"
@@ -470,7 +487,20 @@
         "Timer": "button[qid=\"94\"]"
       },
       "practiceExtra": {
-        "practice_extra": "h2[class='mb-0']"
+        "practice_extra": "h2[class='mb-0']",
+        "_comment": "Learning Path player keys from playwright-automation-c1 LearningpathPage / DashboardPage (SOURCE-verified), 2026-09-22.",
+        "provisioningMessage": "text=/setting up the learning materials/i",
+        "playerIframe": "div#content-course-ext iframe",
+        "tocSidebar": "div.sidebar.bg-white",
+        "tocOpenBtn": "a.open-sidebar-btn",
+        "tocCloseBtn": "a.close-sidebar[aria-label='Close table of contents']:visible",
+        "frameWrap": "#content_wrap_{N}",
+        "frameDropdown": "#content_wrap_{N} #content-{N} .rich-dropdown",
+        "frameDropdownFilled": "#content_wrap_{N} #content-{N} .wrapper-dropdown.filled",
+        "dropdownOption": "ul li",
+        "checkBtn": "a.green-btn",
+        "nextBtn": "a[title='Next']",
+        "scoreMessage": "p.score"
       },
       "myProgress": {
         "my_progress": ".page-title.mt-3"
@@ -1095,7 +1125,41 @@
         "hotlinkPlayer": "[class=plyr__controls]"
       },
       "signUp": {
-        "createAccountTitleTxt": "#teacher-radio > .r-container > .checkmark"
+        "createAccountTitleTxt": "#teacher-radio > .r-container > .checkmark",
+        "teacherRadio": "#teacher-radio > .r-container > .checkmark",
+        "learnerRadio": "#learner-radio > .r-container > .checkmark",
+        "parentRadio": "#parent-radio > .r-container > .checkmark",
+        "nextBtn": "[value='Next']",
+        "roleConfirmDialog": ".modal-content:has([qid='conf-2'])",
+        "roleConfirmContinueBtn": "[qid='conf-2']",
+        "firstNameInput": "#gigya-textbox-120640165044771760",
+        "lastNameInput": "#gigya-textbox-56649036382991330",
+        "emailInput": ".white-box input[name='email']",
+        "passwordInput": "#gigya-password-56383998600152700",
+        "teacherCountryInput": "#gigya-textbox-82415858032213200",
+        "learnerCountryInput": "#gigya-textbox-68426077600495230",
+        "learnerAgeDropdown": "#gigya-dropdown-119533224137288220",
+        "countryOption": ".autocomplete-items div[role='option']",
+        "termsCheckbox": "input.termsCheckbox:visible",
+        "signUpSubmitBtn": "[value='Sign up']",
+        "verificationPendingEmail": "#gigya-verification-pending-screen .font-weight-bold.d-inline.text-center"
+      },
+      "teacherAccountSetup": {
+        "_comment": "Teacher 'Complete your account' → join a school by key. qids from playwright-automation-c1 DashboardPage (live-verified by SOURCE on thor/prod), 2026-09-22.",
+        "completeAccountBtn": ".start-teaching-container .btn-start-learning",
+        "introTourDialog": ".introjs-tooltip",
+        "introTourSkipBtn": ".introjs-skipbutton",
+        "teachInSchoolOption": "[qid='t-as-cntr-3']",
+        "accountSetupNextBtn": "[qid='t-as-btn-2']",
+        "joinSchoolOption": "[qid='t-jso-lbl-1']",
+        "joinSchoolNextBtn": "[qid='t-jso-btn-2']",
+        "schoolKeyInput": "[qid='t-js-fm-inpt-1']",
+        "joinSchoolBtn": "[qid='t-js-fm-btn-1']",
+        "serverErrorAlert": "[role='alert']",
+        "serverErrorAlertCloseBtn": "[role='alert'] button",
+        "goToDashboardBtn": ".content-div-body > .btn",
+        "dashboardTutorialBtn": "[qid='t-db-ttrl-btn-1']",
+        "schoolTitle": "#Active-Section .school-title"
       },
       "schoolAdminDashboard": {
         "firstSchoolLink": "[qid='aDashboard-1']",
@@ -1803,7 +1867,9 @@
         "unblockContentBtn": "a:has-text('Unblock Content')",
         "emailBodyContainer": ".message-content, .email-body, div.well, .dirty-content",
         "deleteMessageBtn": "button.btn-outline-danger:has-text('Delete'), button:has-text('Delete')",
-        "closeMessageBtn": "button[title='Close message view'], button.btn-secondary:has-text('Close')"
+        "closeMessageBtn": "button[title='Close message view'], button.btn-secondary:has-text('Close')",
+        "emailHtmlFrame": "iframe[title='Email HTML preview']",
+        "verifyLink": "td > a"
       }
     }
   }

@@ -33,6 +33,10 @@
 | ↳ Class grade settings — `CGST` | `ExperienceApp` | [`ExperienceApp/admin-class-grade-settings.md`](product-knowledge/ExperienceApp/admin-class-grade-settings.md) |
 | ↳ Grading scale / category details pages | `ExperienceApp` | [`ExperienceApp/admin-grading-details-pages.md`](product-knowledge/ExperienceApp/admin-grading-details-pages.md) |
 | ↳ Bulk new account creation via CSV — `NEMO24306` | `ExperienceApp` | [`ExperienceApp/admin-bulk-account-csv.md`](product-knowledge/ExperienceApp/admin-bulk-account-csv.md) |
+| **C1 teacher / learner surface** — shared (tours, Mailsac, thor cert, run-generated users) | `ExperienceApp` | [`product-knowledge/ExperienceApp/c1-core-shared.md`](product-knowledge/ExperienceApp/c1-core-shared.md) |
+| ↳ Signup, e-mail verification, teacher account setup — `SNUP` / `TSET` | `ExperienceApp` | [`ExperienceApp/onboarding.md`](product-knowledge/ExperienceApp/onboarding.md) |
+| ↳ Teacher dashboard — create a class, invite; learner accepts — `ENTE` / `CREA` / `INVI` / `DASH` | `ExperienceApp` | [`ExperienceApp/teacher-dashboard-class-page.md`](product-knowledge/ExperienceApp/teacher-dashboard-class-page.md) |
+| ↳ Learning Path player (Practice Extra) — `PEXT` | `ExperienceApp` | [`ExperienceApp/learning-path-player.md`](product-knowledge/ExperienceApp/learning-path-player.md) |
 
 > **`ExperienceApp.md` is an INDEX (ADR-020).** Read it for the app header, environment URLs and the
 > file map, then `admin-shared.md`, then the per-screen file(s) your task touches. Do not append

@@ -23,6 +23,120 @@ module.exports = {
     return res;
   },
 
+  /**
+   * First landing of a newly verified teacher: waits for the dashboard to settle, closes the
+   * IntroJS welcome tour if it is up, and reports whether "Complete your account" is shown.
+   *
+   * Why a two-signal wait [2026-09-22, SOURCE playwright-automation-c1 DashboardPage]: after
+   * e-mail verification the app goes through slow Gigya redirects, and the tour appears on
+   * some redirect paths and not others — either the tour overlay or the setup button is
+   * the "dashboard has settled" signal. SOURCE measured up to 3 min on thor (budget below).
+   * The tour intercepts pointer events, so it must be gone before anything is clicked.
+   *
+   * [2026-09-22, prod trace] The tour's dialog is `.introjs-tooltip` (qid s-gtour-cntr-1);
+   * `.introjs-overlay` is NOT always rendered, so it is not a usable sentinel. The tour also
+   * mounts AFTER the setup button: measured ~1.8 s later on a fresh login. So once the button
+   * shows we still give the tour TOUR_LATE_MS to appear — a presence-only check at that moment
+   * reported "no tour" and the next click was intercepted.
+   */
+  dismiss_introTour_getTeacherSetupPrompt: async function () {
+    await logger.logInto(await stackTrace.get());
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var TOUR_LATE_MS = 5000;
+    var deadline = Date.now() + 180000;
+    while (Date.now() < deadline) {
+      if (true == (await action.isDisplayed(ds.introTourDialog))) break;
+      if (true == (await action.isDisplayed(ds.teacherCompleteAccountBtn))) {
+        // Button first: wait (bounded) for the late tour; absence after the budget is fine.
+        await action.waitForDisplayed(ds.introTourDialog, TOUR_LATE_MS);
+        break;
+      }
+      await browser.pause(1000);
+    }
+    var tourShown = true == (await action.isDisplayed(ds.introTourDialog));
+    if (tourShown) {
+      await action.click(ds.introTourSkipBtn);
+      await action.waitForDisplayed(ds.introTourDialog, 10000, true);
+    }
+    return {
+      tourShown: tourShown,
+      tourClosed: true != (await action.isDisplayed(ds.introTourDialog)),
+      completeAccountShown: true == (await action.waitForDisplayed(ds.teacherCompleteAccountBtn, 120000)),
+    };
+  },
+
+  /**
+   * First landing of a newly verified LEARNER: waits for the learner welcome screen's Continue
+   * button (SOURCE DashboardPage.verifyLeanerSignUpComplete, qid l-wl-btn-1), closing a guided
+   * tour first if one comes up. Budget as for the teacher: post-verification Gigya redirects are
+   * slow (SOURCE allowed minutes on thor; seconds on prod in our runs).
+   */
+  getData_learnerWelcome: async function () {
+    await logger.logInto(await stackTrace.get());
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var shown = true == (await action.waitForDisplayed(ds.learnerWelcomeContinueBtn, 180000));
+    var tour = await this.close_introTourIfShown();
+    return { continueShown: shown, tourClosed: tour.tourClosed };
+  },
+
+  /**
+   * Learner dashboard after accepting a class invite on a School Level Licence (SLE) school:
+   * the class card (matched BY NAME), its component tile (e.g. "Practice Extra") inside that
+   * card, and whether the activation-code prompt is shown. With an SLE the product comes from
+   * the school licence, so the tile must be there with NO activation code (SOURCE
+   * DashboardPage.verifyComponentAvailableWithoutActivation). The tile is looked up inside the
+   * named card: once a product is active, other class cards can list the same component.
+   */
+  getData_learnerClassAccess: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var card = action.getFilteredLocator(ds.learnerClassCard, className);
+    var tile = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.componentTile, componentName);
+    // SOURCE allowed 2 min for the component to appear after the accept.
+    var classShown = true == (await action.waitForDisplayed(card, 60000));
+    var componentShown = classShown && true == (await action.waitForDisplayed(tile, 120000));
+    return {
+      classShown: classShown,
+      componentShown: componentShown,
+      activationPromptShown: true == (await action.isDisplayed(ds.activationCodeInput)),
+    };
+  },
+
+  /**
+   * Opens a component (e.g. "Practice Extra") from the card of class `className` on the learner
+   * dashboard, then waits for the Learning Path player. [2026-09-22] Replaces click_praticeExtra_btn
+   * for the LP suite: that one clicks the FIRST tile on the page (its selector is shared with
+   * ebook_btn) — positional (Invariant 2). The tile is scoped to the named card.
+   */
+  click_classComponent: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var tile = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.componentTile, componentName);
+    var res = await action.waitForDisplayed(tile, 60000);
+    if (true == res) res = await action.click(tile);
+    if (true != res) return { pageStatus: false, provisioningShown: false };
+    return await require("./practiceExtra.page.js").isInitialized_player();
+  },
+
+  /**
+   * Closes the IntroJS guided tour if one shows after login, and reports whether the dashboard
+   * is left usable. [2026-09-22, prod] The tour re-appears on EVERY fresh login of a new
+   * teacher, and mounts ~1.8 s after the dashboard is ready — so it gets TOUR_LATE_MS to show
+   * before we decide there is none. Anything clicked while it is up is swallowed.
+   */
+  close_introTourIfShown: async function () {
+    await logger.logInto(await stackTrace.get());
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var TOUR_LATE_MS = 5000;
+    await action.waitForDisplayed(ds.introTourDialog, TOUR_LATE_MS);
+    var tourShown = true == (await action.isDisplayed(ds.introTourDialog));
+    if (tourShown) {
+      await action.click(ds.introTourSkipBtn);
+      await action.waitForDisplayed(ds.introTourDialog, 10000, true);
+    }
+    return { tourShown: tourShown, tourClosed: true != (await action.isDisplayed(ds.introTourDialog)) };
+  },
+
   getData_dashboard: async function () {
     await logger.logInto(await stackTrace.get());
     var obj;

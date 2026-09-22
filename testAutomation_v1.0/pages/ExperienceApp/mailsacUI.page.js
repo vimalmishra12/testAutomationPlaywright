@@ -135,6 +135,63 @@ module.exports = {
   },
 
   /**
+   * Opens the Cambridge One verification e-mail for `emailAddress` and follows its link in the
+   * CURRENT tab, so the caller lands back on C1 already verified (cookies are per context).
+   * Caller must be logged into Mailsac (loginToMailsac).
+   *
+   * Why no click on the link [2026-09-22, SOURCE playwright-automation-c1 MailsacPage]: the mail
+   * body sits in a sandboxed iframe that may only open popups, so a click can never navigate
+   * in place. Reading the href and loading it here gives the same result without a second tab.
+   * "Unblock Content" is followed by its href for the same reason (it is a target=_blank link).
+   *
+   * @param {string} emailAddress - the signup address
+   * @param {number} timeoutMs - how long to wait for the mail to arrive (SOURCE allowed 5 min)
+   * @returns {Promise<{ mailFound: boolean, verifyHref: string|null, landedUrl: string|null }>}
+   */
+  openVerificationLink: async function (emailAddress, timeoutMs) {
+    await logger.logInto(await stackTrace.get(), "Waiting for verification mail for " + emailAddress);
+    // Rows are matched by text, never by position: a reused inbox keeps older mails.
+    var verifyRow = action.getFilteredLocator(ms.messageRow, /verif/i);
+    var deadline = Date.now() + (timeoutMs || 300000);
+    var found = false;
+    // Delivery is asynchronous; re-open (reload) the inbox until the mail shows (bounded).
+    while (Date.now() < deadline) {
+      await this.openInbox(emailAddress);
+      if (true == (await action.isDisplayed(verifyRow))) {
+        found = true;
+        break;
+      }
+      await browser.pause(5000);
+    }
+    if (!found) return { mailFound: false, verifyHref: null, landedUrl: null };
+
+    var res = await action.click(verifyRow);
+    if (true == res) res = await action.waitForDisplayed(ms.unblockContentBtn, 15000);
+    if (true != res) return { mailFound: true, verifyHref: null, landedUrl: null };
+    var unblockHref = await action.getAttribute(ms.unblockContentBtn, "href");
+    if (typeof unblockHref === "string" && unblockHref.length > 0) {
+      await browser.url(new URL(unblockHref, "https://mailsac.com").href);
+      await action.waitForDocumentLoad();
+    }
+
+    await action.switchToFrame(ms.emailHtmlFrame);
+    var verifyHref = null;
+    if (true == (await action.waitForDisplayed(ms.verifyLink, 15000))) {
+      verifyHref = await action.getAttribute(ms.verifyLink, "href");
+    }
+    await action.switchToParentFrame();
+    if (typeof verifyHref !== "string" || verifyHref.length === 0) {
+      return { mailFound: true, verifyHref: null, landedUrl: null };
+    }
+
+    await browser.url(verifyHref);
+    // The link goes through Gigya redirects before settling on the app; wait for the app's own
+    // host (appUrl global, env.json) so landedUrl is the final page, not a redirect hop.
+    var landed = await action.waitForUrl(new RegExp(new URL(appUrl).host.replace(/\./g, "\\.")), 120000);
+    return { mailFound: true, verifyHref: verifyHref, landedOnApp: true == landed, landedUrl: await browser.getUrl() };
+  },
+
+  /**
    * Helper to extract complete rendered text from page and all iframes.
    */
   getEmailBodyText: async function () {

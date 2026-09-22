@@ -1,0 +1,88 @@
+{
+  "C1": {
+    "_comment": "Learning Path migration (playwright-automation-c1 lp-scenarios) on PRODUCTION — approved by the user with the product team (2026-09-22). Fixed values are SOURCE's own prod data, used as-is. E-mails are ADR-022 tokens — a fresh account per run.",
+    "signup": {
+      "teacherRole": {
+        "role": "Teacher",
+        "expectedScreen": "profileForm"
+      },
+      "teacherForm": {
+        "firstName": "Teacher",
+        "lastName": "User",
+        "email": "{{run.lpTeacherEmail}}",
+        "password": "Compro11",
+        "country": "India"
+      },
+      "learnerRole": {
+        "role": "Learner",
+        "expectedScreen": "ageGate"
+      },
+      "learnerAgeGate": {
+        "country": "India",
+        "age": "18"
+      },
+      "learnerForm": {
+        "firstName": "Learner",
+        "lastName": "User",
+        "email": "{{run.lpLearnerEmail}}",
+        "password": "Compro11"
+      }
+    },
+    "teacherLogin": {
+      "email": "{{run.lpTeacherEmail}}",
+      "password": "Compro11"
+    },
+    "teacherSchool": {
+      "schoolKey": "MQA-ABC-DEF",
+      "schoolName": "MQA Sierra School"
+    },
+    "lpClass": {
+      "name": "{{run.lpClassName}}",
+      "material": "cqaautomationbundle1",
+      "collaborativeInfo": {
+        "title": "This material is collaborative"
+      },
+      "created": {
+        "className": "{{run.lpClassName}}",
+        "successText": "Class successfully created"
+      }
+    },
+    "learnerLogin": {
+      "email": "{{run.lpLearnerEmail}}",
+      "password": "Compro11"
+    },
+    "invite": {
+      "className": "{{run.lpClassName}}",
+      "learnerEmail": "{{run.lpLearnerEmail}}",
+      "notificationWait": {
+        "timeoutMs": 120000
+      }
+    },
+    "learnerAccess": {
+      "className": "{{run.lpClassName}}",
+      "componentName": "Practice Extra"
+    },
+    "pextScorable": {
+      "_comment": "Answers for the cqaautomationbundle1 scorable dropdown activity (BASE04_Dropdown_Scorable) — from SOURCE LearningpathPage.submitScorable. Content-specific.",
+      "frame1": { "frame": 0, "answers": ["is doing"] },
+      "frame2": { "frame": 1, "answers": ["is doing"] },
+      "frame3": { "frame": 2, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
+      "frame4": { "frame": 3, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
+      "score": { "expected": "You scored 4 out of 4" }
+    },
+    "mailsac": {
+      "teacherVerify": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "Compro11",
+        "email": "{{run.lpTeacherEmail}}",
+        "mailTimeoutMs": 300000
+      },
+      "learnerVerify": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "Compro11",
+        "email": "{{run.lpLearnerEmail}}",
+        "mailTimeoutMs": 300000
+      }
+    }
+  }
+}
