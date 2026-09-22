@@ -1,0 +1,40 @@
+{
+  "C1": {
+    "bulkClassEmailVerification": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "schoolDisplayName": "3 July Test School 1",
+      "adminEmail": "testt1@mailsac.com",
+      "teacherEmail": "teacher17aug2026@mailsac.com",
+      "mailsacUser": "comproqatest21@gmail.com",
+      "mailsacPassword": "Compro11",
+      "className": "BulkEmail_Class1",
+      "class1Name": "BulkEmail_Class1",
+      "class2Name": "BulkEmail_Class2",
+      "createMoreClassName": "BulkEmail_Class2",
+      "classLabel": "VM1",
+      "material": "dev_test_ebook_bundle_104_bundle",
+      "successMessage": "Success! We are now creating",
+      "expectedCreatedCount": 2,
+      "expectedFailedCount": 0,
+      "emailTimeoutMs": 60000
+    },
+    "bulkClassEmailVerificationClass2": {
+      "schoolKey": "FCN-CHZ-PDA",
+      "schoolDisplayName": "3 July Test School 1",
+      "adminEmail": "testt1@mailsac.com",
+      "teacherEmail": "teacher17aug2026@mailsac.com",
+      "mailsacUser": "comproqatest21@gmail.com",
+      "mailsacPassword": "Compro11",
+      "className": "BulkEmail_Class2",
+      "class1Name": "BulkEmail_Class1",
+      "class2Name": "BulkEmail_Class2",
+      "createMoreClassName": "BulkEmail_Class2",
+      "classLabel": "VM1",
+      "material": "dev_test_ebook_bundle_104_bundle",
+      "successMessage": "Success! We are now creating",
+      "expectedCreatedCount": 2,
+      "expectedFailedCount": 0,
+      "emailTimeoutMs": 60000
+    }
+  }
+}

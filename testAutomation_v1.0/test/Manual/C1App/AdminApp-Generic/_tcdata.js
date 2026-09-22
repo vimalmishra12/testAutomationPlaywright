@@ -196,101 +196,6 @@ const TCS = [
       + 'are plausible here. Do not assume; capture what happens. '
       + 'Back qid "c-mp-btn-1". CHANGES ACCOUNT STATE only if Update is pressed, which this case avoids.',
   },
-  {
-    id: 'TST_MYPR_TC_5',
-    title: 'Verify an over-long first name is handled correctly when no client-side limit exists',
-    req: '#2 — Verify My Profile',
-    type: 'Edge',
-    priority: 'Medium',
-    pre: PRE_IN + ' Manage profile open on the "Personal info" tab. USE A DISPOSABLE ACCOUNT.',
-    steps:
-      '1. Clear "First name".\n'
-      + '2. Type a 300-character value.\n'
-      + '3. Observe whether the field truncates the input as it is typed.\n'
-      + '4. Click "Update".',
-    data: 'First name: 300 repetitions of "a"',
-    expected:
-      'After step 3 the field accepts all 300 characters — there is NO client-side truncation.\n'
-      + '[ASSUMED] After step 4 the server rejects the value with a validation message, or accepts and '
-      + 'truncates it. Capture which, and the exact message.',
-    remarks:
-      'GROUNDED PARTIALLY 2026-08-27: the ABSENCE of a limit is verified — ALL SEVEN fields across both '
-      + 'tabs have maxlength=null and none is marked required. What the SERVER does is [ASSUMED]. '
-      + 'This is a deliberate departure from the rest of the admin app, where limits are declared and '
-      + 'enforced client-side (class name 50, grading scale title 20 — admin-shared.md §A3). Because '
-      + 'nothing is declared here, boundary cases CANNOT be derived from the markup and must be found '
-      + 'by submitting. '
-      + '⚠️ DO NOT RUN ON <ADMIN_USER> — that account is the login for the whole admin suite. Blocked '
-      + 'until a disposable account exists.',
-  },
-  {
-    id: 'TST_MYPR_TC_6',
-    title: 'Verify an error is shown when the new password and its confirmation do not match',
-    req: '#2 — Verify My Profile',
-    type: 'Negative',
-    priority: 'High',
-    pre: PRE_IN + ' Manage profile open on the "Password" tab. USE A DISPOSABLE ACCOUNT.',
-    steps:
-      '1. Enter the correct current password in "Old password".\n'
-      + '2. Enter a valid new password in "New password".\n'
-      + '3. Enter a DIFFERENT value in "Confirm new password".\n'
-      + '4. Click "Update".',
-    data: 'Old: <VALID_PASSWORD> · New: "Compro@2026" · Confirm: "Compro@2027"',
-    expected:
-      '[ASSUMED] The password is NOT changed and a mismatch validation message is shown against the '
-      + 'confirmation field.',
-    remarks:
-      '⚠️ ERROR COPY NOT CAPTURED — nothing was submitted, by agreement, because <ADMIN_USER> is the '
-      + 'admin suite\'s login account. The message text must be captured on a disposable account. '
-      + 'For reference the equivalent page in the other app exposes a dedicated error element '
-      + '("confirmPasswordError_text" in the SETT selector set), so a field-level message is expected '
-      + 'here too — but that is the OTHER app and must not be assumed identical. '
-      + 'DESTRUCTIVE IF IT SUCCEEDS: a mistyped variant of this case would change a real password.',
-  },
-  {
-    id: 'TST_MYPR_TC_7',
-    title: 'Verify an error is shown when the old password is incorrect',
-    req: '#2 — Verify My Profile',
-    type: 'Negative',
-    priority: 'High',
-    pre: PRE_IN + ' Manage profile open on the "Password" tab. USE A DISPOSABLE ACCOUNT.',
-    steps:
-      '1. Enter an INCORRECT value in "Old password".\n'
-      + '2. Enter a valid new password in both "New password" and "Confirm new password".\n'
-      + '3. Click "Update".',
-    data: 'Old: "WrongPassword123" · New / Confirm: "Compro@2026"',
-    expected:
-      '[ASSUMED] The password is NOT changed and an error identifies the old password as incorrect.',
-    remarks:
-      '⚠️ ERROR COPY NOT CAPTURED — see TST_MYPR_TC_6. The SETT selector set has a matching '
-      + '"currentPasswordError_text" element in the other app. '
-      + 'Worth checking whether repeated failures lock the account, which would affect suite design.',
-  },
-  {
-    id: 'TST_MYPR_TC_8',
-    title: 'Verify the active profile tab is identifiable to assistive technology',
-    req: '#2 — Verify My Profile',
-    type: 'Negative',
-    priority: 'Medium',
-    pre: PRE_IN + ' Manage profile open.',
-    steps:
-      '1. Inspect the "Personal info" and "Password" tab controls.\n'
-      + '2. Check for a tab role and a selected-state attribute.\n'
-      + '3. Switch tabs and re-check.',
-    data: '—',
-    expected:
-      'Each tab exposes an appropriate role and a selected state, so assistive technology can announce '
-      + 'which tab is active.\n'
-      + 'ACTUAL (2026-08-27): this FAILS. Both are plain <a> elements with NO role="tab" and NO '
-      + 'aria-selected. Nothing in the markup or the URL identifies the active tab.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27. Raised as a case because it is both an accessibility gap and an '
-      + 'automation blocker: with no aria-selected AND no URL change between tabs (TST_MYPR_TC_3), '
-      + 'there is no attribute to assert the active tab on — automation must fall back to checking '
-      + 'which fields are visible. '
-      + 'Confirm with the product team whether this should be raised as a defect. '
-      + 'Tab qids "c-mp-tab-1" (Personal info) and "c-mp-tab-2" (Password).',
-  },
 
   /* ---------------------------------------------- #3 Verify notifications */
   {
@@ -473,86 +378,6 @@ const TCS = [
   },
 
   /* --------------------------------------- #11 Verify different tab navigation */
-  {
-    id: 'TST_ASHL_TC_5',
-    title: 'Verify all five school tabs are shown with Classes active when a school is opened',
-    req: '#11 — Verify different tab navigation',
-    type: 'Positive',
-    priority: 'High',
-    pre: PRE_IN,
-    steps:
-      '1. Click a school card on "My school accounts".\n'
-      + '2. Observe the tab strip and which tab is active.\n'
-      + '3. Observe the page heading and the browser tab title.',
-    data: 'School: "3 July Test School 1" (<SCHOOL_KEY>)',
-    expected:
-      'Exactly FIVE tabs are shown, in this order and in upper case:\n'
-      + 'CLASSES · STUDENTS · STAFF · LIBRARY · REPORTS\n'
-      + '"CLASSES" is the active tab by default, the page heading shows the school name, and the '
-      + 'browser tab reads "Classes | Cambridge One".',
-    remarks:
-      'GROUNDED LIVE 2026-08-27. Tab qids "aDetail-1" (Classes), "aDetail-2" (Students), '
-      + '"aDetail-4" (Staff), "aDetail-5" (Library), "aDetail-6" (Reports). '
-      + '⚠️ "aDetail-3" IS SKIPPED — the sequence is 1,2,4,5,6. Do not iterate 1..5 assuming contiguity. '
-      + '⚠️ THE ACTIVE MARKER IS ON THE PARENT <li>, not the anchor: "li.nav-item.active > a". The '
-      + 'anchor className is identical on every tab whether active or not, so asserting on the link '
-      + 'class is a guaranteed false green. '
-      + 'Labels render UPPER CASE — confirm whether that is CSS text-transform or the actual text '
-      + 'before asserting case-sensitively.',
-  },
-  {
-    id: 'TST_ASHL_TC_6',
-    title: 'Verify each tab loads its own page and becomes the active tab when it is selected',
-    req: '#11 — Verify different tab navigation',
-    type: 'Positive',
-    priority: 'High',
-    pre: PRE_IN + ' A school is open on the Classes tab.',
-    steps:
-      '1. Click "STUDENTS" and note the URL, title and active tab.\n'
-      + '2. Repeat for "STAFF", "LIBRARY", "REPORTS", then "CLASSES".',
-    data: 'School slug: org_<SCHOOL_SLUG>',
-    expected:
-      'Each tab navigates to its own URL, sets its own browser-tab title, and becomes the active tab:\n'
-      + '| Tab | URL suffix | Title |\n'
-      + '| CLASSES | /class | "Classes \\| Cambridge One" |\n'
-      + '| STUDENTS | /learner | "Students \\| Cambridge One" |\n'
-      + '| STAFF | /staff | "Staff \\| Cambridge One" |\n'
-      + '| LIBRARY | /library | "Library \\| Cambridge One" |\n'
-      + '| REPORTS | /reports | "Reports \\| Cambridge One" |\n'
-      + 'The school heading stays unchanged throughout.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27 — all five walked and every URL and title confirmed. '
-      + '⚠️ NOTE the STUDENTS tab routes to "/learner", NOT "/student". A URL assertion built from the '
-      + 'tab label will fail on this one. '
-      + 'Tabs carry REAL hrefs (unlike the footer, whose logged-in hrefs collapse to javascript:void(0) '
-      + '— TST_FOOT_TC_10 remarks), so tab navigation is genuinely href-driven. '
-      + 'TIMING measured this session: Reports took ~4.3 s to become active, Classes ~1.2 s. Poll for '
-      + '"li.nav-item.active > a" carrying the expected qid rather than using a fixed pause '
-      + '(admin-shared.md §B8).',
-  },
-  {
-    id: 'TST_ASHL_TC_7',
-    title: 'Verify the active school tab is identifiable to assistive technology',
-    req: '#11 — Verify different tab navigation',
-    type: 'Negative',
-    priority: 'Medium',
-    pre: PRE_IN + ' A school is open.',
-    steps:
-      '1. Inspect each tab link for an aria-current or selected-state attribute.\n'
-      + '2. Switch tabs and re-inspect.',
-    data: '—',
-    expected:
-      'The active tab exposes an accessible current/selected state, so assistive technology can '
-      + 'announce which section the user is in.\n'
-      + 'ACTUAL (2026-08-27): this FAILS. No tab link carries aria-current or aria-selected; the only '
-      + 'indicator is the "active" CSS class on the parent <li>, which is presentational.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27. '
-      + 'This is the SECOND instance of the same gap in this batch — the My Profile tabs have it too '
-      + '(TST_MYPR_TC_8). Worth raising as one combined accessibility ticket rather than two. '
-      + 'The school tabs are at least recoverable for automation via "li.nav-item.active"; the profile '
-      + 'tabs have no indicator at all, which makes them the more severe of the two.',
-  },
 
   /* ------------------------------------------------ #8 Verify footer link */
   {
@@ -729,33 +554,6 @@ const TCS = [
 
   /* -------------------------------- #10 Admin part of multiple org */
   {
-    id: 'TST_SADB_TC_2',
-    title: 'Verify every school the administrator manages is listed when My school accounts is opened',
-    req: '#10 — Admin part of multiple org',
-    type: 'Positive',
-    priority: 'High',
-    pre: PRE_DASH,
-    steps: '1. Observe the "My school accounts" page.\n2. Inspect each school card.',
-    data: '—',
-    expected:
-      'Every school the administrator manages is listed, one card each, numbered sequentially from "01" '
-      + 'with zero padding.\n'
-      + 'Each card shows: index, school name, address, the label "School key", the key itself in '
-      + 'XXX-XXX-XXX format, a "Copy" control, and a chevron opening the school.\n'
-      + 'Observed 2026-08-27 for <ADMIN_USER>: 7 schools, numbered 01–07.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27. Card qid "aDashboard-N" (a.inst-link); chevron is a SEPARATE '
-      + '"aDashboard1-N". Both are POSITIONAL. The school key is carried in the card\'s aria-label, '
-      + 'which is what makes key-based selection possible (schoolAdminDashboard.schoolLinkByKey uses '
-      + 'a.inst-link[aria-label*="{{key}}"]).\n'
-      + '⚠️ NEVER assert the literal count 7 — this is a shared account and the list changes '
-      + '(admin-shared.md §A5). Assert the card STRUCTURE and that the expected key is present.\n'
-      + 'Extends the existing SADB module (TST_SADB_TC_1 opens a school by key) — that case already '
-      + 'covers opening; this one covers the LISTING, which nothing did.\n'
-      + '⚠️ EXTENDS admin-shared.md §0, which documents 4 schools. This account sees 7 — KNF-XRD-QVE, '
-      + 'HQC-ZWM-ZVF and GYB-JMU-KYA were undocumented.',
-  },
-  {
     id: 'TST_SADB_TC_3',
     title: 'Verify switching between organisations loads each one independently when the admin manages several',
     req: '#10 — Admin part of multiple org',
@@ -784,30 +582,6 @@ const TCS = [
   },
 
   /* ------------------------- #12 Verify viewing multiple schools */
-  {
-    id: 'TST_SADB_TC_4',
-    title: 'Verify two schools sharing a display name remain distinguishable by their school key',
-    req: '#12 — Verify viewing multiple schools',
-    type: 'Edge',
-    priority: 'High',
-    pre: PRE_DASH,
-    steps:
-      '1. Locate the two cards sharing the same display name.\n'
-      + '2. Compare their school keys.\n'
-      + '3. Open the one matching a specific key and confirm which school loaded.',
-    data: 'Duplicate display name "3 July Test School 1" — keys FCN-CHZ-PDA and ZPB-TWP-AEQ',
-    expected:
-      'Both cards show the SAME display name but DIFFERENT school keys, and the card selected by key '
-      + 'opens that specific school.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27 — cards 01 and 02 both read "3 July Test School 1" with keys '
-      + 'FCN-CHZ-PDA and ZPB-TWP-AEQ, and identical addresses too.\n'
-      + '⚠️ THIS IS THE CASE THAT JUSTIFIES admin-shared.md §0\'s standing rule: ALWAYS select a school '
-      + 'by KEY, never by name or card position. Selecting by name is ambiguous here, and card qids '
-      + '(aDashboard-N) are positional so they re-issue when the list changes.\n'
-      + 'Confirming WHICH school loaded (step 3) needs a distinguishing feature — the org slug in the '
-      + 'URL is the reliable one, since the heading shows the shared name.',
-  },
 
   /* ========================= BATCH C — cross-app ========================= */
 
@@ -876,86 +650,6 @@ const TCS = [
   },
 
   /* ------------------- #9 Verify various errors in forms and modals */
-  {
-    id: 'TST_ASHL_TC_8',
-    title: 'Verify no dialog is visible when an admin screen first loads',
-    req: '#9 — Verify various errors in forms and modals',
-    type: 'Negative',
-    priority: 'High',
-    pre: PRE_SCHOOL,
-    steps:
-      '1. Load the Classes tab and observe the screen without interacting.\n'
-      + '2. Repeat for Students, Staff, Library and Reports.',
-    data: '—',
-    expected:
-      'On every tab, no dialog, warning or error is visible on load. The screen shows only its own '
-      + 'content.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27 — verified that every dialog present in the DOM was hidden on load '
-      + '(Classes 5, Students 4, Staff 1; all offsetParent === null). '
-      + '⚠️ THIS IS THE HEADLINE AUTOMATION TRAP FOR THIS SCENARIO. Admin dialogs are PRE-RENDERED, so '
-      + 'they exist in the DOM before anything triggers them. Any check of the form '
-      + '"getElementCount(dialog) > 0" therefore passes ALWAYS and proves nothing — admin-shared.md §B2 '
-      + 'records this silently breaking reset_filters for weeks. Assert VISIBILITY, never presence. '
-      + 'Note also that opacity:0 still counts as visible to Playwright; only display:none is hidden.',
-  },
-  {
-    id: 'TST_ASHL_TC_9',
-    title: 'Verify the 50-item limit warnings use a consistent message pattern across screens',
-    req: '#9 — Verify various errors in forms and modals',
-    type: 'Edge',
-    priority: 'Medium',
-    pre: PRE_SCHOOL,
-    steps:
-      '1. Read the bulk-limit warning offered on the Classes tab.\n'
-      + '2. Read the equivalent warning on the Students tab.\n'
-      + '3. Compare their wording.',
-    data: '—',
-    expected:
-      'Both follow the same two-line pattern, differing only in the noun:\n'
-      + 'Classes: "You can only delete 50 classes at one time" / '
-      + '"Please uncheck some classes to continue"\n'
-      + 'Students: "You can only remove 50 students at one time" / '
-      + '"Please uncheck some students to continue"\n'
-      + 'Both offer a "Close" control.',
-    remarks:
-      'COPY GROUNDED LIVE 2026-08-27 — both captured VERBATIM from the pre-rendered DOM (§A6) without '
-      + 'reaching the capped state, which would otherwise require 51+ rows. '
-      + 'Note the VERB differs with the domain — "delete" for classes, "remove" for students — so a '
-      + 'single shared assertion string is wrong. The LIMIT (50) and the sentence shape are the '
-      + 'consistent parts. '
-      + 'Reaching these states for real is Blocked on the shared school (admin-shared.md §A5: it holds '
-      + '26 students, so the 50-student cap cannot be hit).',
-  },
-  {
-    id: 'TST_ASHL_TC_10',
-    title: 'Verify destructive confirmations state their consequence before the action is taken',
-    req: '#9 — Verify various errors in forms and modals',
-    type: 'Positive',
-    priority: 'High',
-    pre: PRE_SCHOOL,
-    steps:
-      '1. Read the class-deletion confirmation.\n'
-      + '2. Read the student-removal confirmation.\n'
-      + '3. Read the change-school-key confirmation.\n'
-      + '4. Check each offers a way to back out.',
-    data: '—',
-    expected:
-      'Each destructive confirmation names its consequence and offers a non-destructive exit:\n'
-      + 'Class delete — "WARNING!" / "There might be students, teachers and course materials in the '
-      + 'selected classes" / "Are you sure you want to delete?" / "No, cancel"\n'
-      + 'Student removal — "I confirm that I want to remove students from my school account" / '
-      + '"Cancel" / "Request to remove"\n'
-      + 'Change school key — "CAREFUL!" / "Changing the school key cannot be undone" / "Cancel"',
-    remarks:
-      'ALL THREE CAPTURED VERBATIM 2026-08-27 from the pre-rendered DOM, without triggering any of them '
-      + '— which is the only safe way, since all three are destructive on a shared school. '
-      + '⚠️ The change-school-key dialog is present on EVERY admin tab (Classes, Students, Staff all '
-      + 'carry it) because School settings lives in the shared page chrome — scope any modal selector '
-      + 'with :has(...) to the specific dialog, or it will match this one everywhere. '
-      + 'Async follow-ups are also pre-rendered and worth checking in the same pass: '
-      + '"This will take a few minutes" (classes) and "Removing students may take some time" (students).',
-  },
 
   /* --------------------- #13 Admin is able to switch to teacher view */
   {
@@ -990,38 +684,6 @@ const TCS = [
       + 'The toggle also appears on inner admin tabs, not just the dashboard. '
       + 'Existing selector schoolAdminDashboard.teacherAdminToggle already targets the input; this '
       + 'extends SADB. SIDE-EFFECT FREE — a view switch only.',
-  },
-  {
-    id: 'TST_SADB_TC_6',
-    title: 'Verify the teacher view lists the schools where the user teaches, not those they administer',
-    req: '#13 — Verify Admin is able to switch to teacher view',
-    type: 'Edge',
-    priority: 'High',
-    pre: PRE_DASH + ' The user is both an administrator and a teacher on overlapping sets of schools.',
-    steps:
-      '1. On "My school accounts", list the schools shown.\n'
-      + '2. Switch to the teacher view.\n'
-      + '3. List the school groups shown there.\n'
-      + '4. Compare the two lists.',
-    data: '—',
-    expected:
-      'The two lists are NOT the same. The administrator view shows schools the user administers; the '
-      + 'teacher view groups classes under schools where the user teaches, which may include schools '
-      + 'absent from the administrator view.\n'
-      + 'Observed 2026-08-27: administrator view 7 schools; teacher view 8 school groups, including '
-      + '"ABERYSTWYTH COLLEGE : THOR" and "LTI INTEGRATIONS TEST2", neither of which appears in the '
-      + 'administrator list.',
-    remarks:
-      'GROUNDED LIVE 2026-08-27. This matters because it is easy to assume the two views show the same '
-      + 'estate — they do not, and a test asserting equal school counts across the toggle will fail. '
-      + '⚠️ The teacher view groups by school DISPLAY NAME, so the two distinct schools both called '
-      + '"3 July Test School 1" (FCN-CHZ-PDA and ZPB-TWP-AEQ) collapse into a SINGLE group there. The '
-      + 'admin view keeps them separate via their keys. Do not match schools across the two views by '
-      + 'name. '
-      + '⚠️ NEVER assert the literal counts 7 and 8 — shared account (§A5). Assert the RELATIONSHIP: '
-      + 'the teacher list contains at least one school the admin list does not. '
-      + '⚠️ Every "Create class" button in the teacher view shares qid "tDashboard-ncls-btn-1" — 7 '
-      + 'elements, one per school group. See TST_SADB_TC_7.',
   },
 
   /* ---- #14 Create a class in teacher view and see it in the Admin classes tab */
@@ -1141,54 +803,6 @@ const __TCS_BACKPORTED = [
   "remarks": "⚠️ EXPECTED RESULT NOT VERIFIED — the edit-then-leave path was not exercised. Specifically UNKNOWN: whether an unsaved-changes confirmation appears. admin-shared.md §A6 records a pre-rendered \"Save changes?\" dialog on the OTHER app's Manage learner profile, and the create-classes form auto-saves a draft (§A4) — so BOTH \"silently discards\" and \"prompts\" are plausible here. Do not assume; capture what happens. Back qid \"c-mp-btn-1\". CHANGES ACCOUNT STATE only if Update is pressed, which this case avoids."
  },
  {
-  "id": "TST_MYPR_TC_5",
-  "title": "Verify an over-long first name is handled correctly when no client-side limit exists",
-  "req": "#2 — Verify My Profile",
-  "type": "Edge",
-  "priority": "Medium",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. Manage profile open on the \"Personal info\" tab. USE A DISPOSABLE ACCOUNT.",
-  "steps": "1. Clear \"First name\".\n2. Type a 300-character value.\n3. Observe whether the field truncates the input as it is typed.\n4. Click \"Update\".",
-  "data": "First name: 300 repetitions of \"a\"",
-  "expected": "After step 3 the field accepts all 300 characters — there is NO client-side truncation.\n[ASSUMED] After step 4 the server rejects the value with a validation message, or accepts and truncates it. Capture which, and the exact message.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED PARTIALLY 2026-08-27: the ABSENCE of a limit is verified — ALL SEVEN fields across both tabs have maxlength=null and none is marked required. What the SERVER does is [ASSUMED]. This is a deliberate departure from the rest of the admin app, where limits are declared and enforced client-side (class name 50, grading scale title 20 — admin-shared.md §A3). Because nothing is declared here, boundary cases CANNOT be derived from the markup and must be found by submitting. ⚠️ DO NOT RUN ON <ADMIN_USER> — that account is the login for the whole admin suite. Blocked until a disposable account exists."
- },
- {
-  "id": "TST_MYPR_TC_6",
-  "title": "Verify an error is shown when the new password and its confirmation do not match",
-  "req": "#2 — Verify My Profile",
-  "type": "Negative",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. Manage profile open on the \"Password\" tab. USE A DISPOSABLE ACCOUNT.",
-  "steps": "1. Enter the correct current password in \"Old password\".\n2. Enter a valid new password in \"New password\".\n3. Enter a DIFFERENT value in \"Confirm new password\".\n4. Click \"Update\".",
-  "data": "Old: <VALID_PASSWORD> · New: \"Compro@2026\" · Confirm: \"Compro@2027\"",
-  "expected": "[ASSUMED] The password is NOT changed and a mismatch validation message is shown against the confirmation field.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ⚠️ ERROR COPY NOT CAPTURED — nothing was submitted, by agreement, because <ADMIN_USER> is the admin suite's login account. The message text must be captured on a disposable account. For reference the equivalent page in the other app exposes a dedicated error element (\"confirmPasswordError_text\" in the SETT selector set), so a field-level message is expected here too — but that is the OTHER app and must not be assumed identical. DESTRUCTIVE IF IT SUCCEEDS: a mistyped variant of this case would change a real password."
- },
- {
-  "id": "TST_MYPR_TC_7",
-  "title": "Verify an error is shown when the old password is incorrect",
-  "req": "#2 — Verify My Profile",
-  "type": "Negative",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. Manage profile open on the \"Password\" tab. USE A DISPOSABLE ACCOUNT.",
-  "steps": "1. Enter an INCORRECT value in \"Old password\".\n2. Enter a valid new password in both \"New password\" and \"Confirm new password\".\n3. Click \"Update\".",
-  "data": "Old: \"WrongPassword123\" · New / Confirm: \"Compro@2026\"",
-  "expected": "[ASSUMED] The password is NOT changed and an error identifies the old password as incorrect.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ⚠️ ERROR COPY NOT CAPTURED — see TST_MYPR_TC_6. The SETT selector set has a matching \"currentPasswordError_text\" element in the other app. Worth checking whether repeated failures lock the account, which would affect suite design."
- },
- {
-  "id": "TST_MYPR_TC_8",
-  "title": "Verify the active profile tab is identifiable to assistive technology",
-  "req": "#2 — Verify My Profile",
-  "type": "Negative",
-  "priority": "Medium",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. Manage profile open.",
-  "steps": "1. Inspect the \"Personal info\" and \"Password\" tab controls.\n2. Check for a tab role and a selected-state attribute.\n3. Switch tabs and re-check.",
-  "data": "—",
-  "expected": "Each tab exposes an appropriate role and a selected state, so assistive technology can announce which tab is active.\nACTUAL (2026-08-27): this FAILS. Both are plain <a> elements with NO role=\"tab\" and NO aria-selected. Nothing in the markup or the URL identifies the active tab.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Raised as a case because it is both an accessibility gap and an automation blocker: with no aria-selected AND no URL change between tabs (TST_MYPR_TC_3), there is no attribute to assert the active tab on — automation must fall back to checking which fields are visible. Confirm with the product team whether this should be raised as a defect. Tab qids \"c-mp-tab-1\" (Personal info) and \"c-mp-tab-2\" (Password)."
- },
- {
   "id": "TST_INVI_TC_7",
   "title": "Verify the notifications bell badge and its accessible name report the same unread count",
   "req": "#3 — Verify notifications",
@@ -1273,42 +887,6 @@ const __TCS_BACKPORTED = [
   "remarks": "Titles grounded live 2026-08-27 from the pre-rendered DOM. ⚠️ All five share the SINGLE qid \"cHeader-hlp-6\" — when automated they must be addressed by text or index, never by qid. Same trap class as \"t-prd-cmp-cntr-1\" (admin-shared.md §B3), and the same shape as the cFooter-9 duplication the footer selectors already work around with an aria-label qualifier. What each topic OPENS was not captured — [ASSUMED] and out of scope for this case."
  },
  {
-  "id": "TST_ASHL_TC_5",
-  "title": "Verify all five school tabs are shown with Classes active when a school is opened",
-  "req": "#11 — Verify different tab navigation",
-  "type": "Positive",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed.",
-  "steps": "1. Click a school card on \"My school accounts\".\n2. Observe the tab strip and which tab is active.\n3. Observe the page heading and the browser tab title.",
-  "data": "School: \"3 July Test School 1\" (<SCHOOL_KEY>)",
-  "expected": "Exactly FIVE tabs are shown, in this order and in upper case:\nCLASSES · STUDENTS · STAFF · LIBRARY · REPORTS\n\"CLASSES\" is the active tab by default, the page heading shows the school name, and the browser tab reads \"Classes | Cambridge One\".",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Tab qids \"aDetail-1\" (Classes), \"aDetail-2\" (Students), \"aDetail-4\" (Staff), \"aDetail-5\" (Library), \"aDetail-6\" (Reports). ⚠️ \"aDetail-3\" IS SKIPPED — the sequence is 1,2,4,5,6. Do not iterate 1..5 assuming contiguity. ⚠️ THE ACTIVE MARKER IS ON THE PARENT <li>, not the anchor: \"li.nav-item.active > a\". The anchor className is identical on every tab whether active or not, so asserting on the link class is a guaranteed false green. Labels render UPPER CASE — confirm whether that is CSS text-transform or the actual text before asserting case-sensitively."
- },
- {
-  "id": "TST_ASHL_TC_6",
-  "title": "Verify each tab loads its own page and becomes the active tab when it is selected",
-  "req": "#11 — Verify different tab navigation",
-  "type": "Positive",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. A school is open on the Classes tab.",
-  "steps": "1. Click \"STUDENTS\" and note the URL, title and active tab.\n2. Repeat for \"STAFF\", \"LIBRARY\", \"REPORTS\", then \"CLASSES\".",
-  "data": "School slug: org_<SCHOOL_SLUG>",
-  "expected": "Each tab navigates to its own URL, sets its own browser-tab title, and becomes the active tab:\n| Tab | URL suffix | Title |\n| CLASSES | /class | \"Classes \\| Cambridge One\" |\n| STUDENTS | /learner | \"Students \\| Cambridge One\" |\n| STAFF | /staff | \"Staff \\| Cambridge One\" |\n| LIBRARY | /library | \"Library \\| Cambridge One\" |\n| REPORTS | /reports | \"Reports \\| Cambridge One\" |\nThe school heading stays unchanged throughout.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — all five walked and every URL and title confirmed. ⚠️ NOTE the STUDENTS tab routes to \"/learner\", NOT \"/student\". A URL assertion built from the tab label will fail on this one. Tabs carry REAL hrefs (unlike the footer, whose logged-in hrefs collapse to javascript:void(0) — TST_FOOT_TC_10 remarks), so tab navigation is genuinely href-driven. TIMING measured this session: Reports took ~4.3 s to become active, Classes ~1.2 s. Poll for \"li.nav-item.active > a\" carrying the expected qid rather than using a fixed pause (admin-shared.md §B8)."
- },
- {
-  "id": "TST_ASHL_TC_7",
-  "title": "Verify the active school tab is identifiable to assistive technology",
-  "req": "#11 — Verify different tab navigation",
-  "type": "Negative",
-  "priority": "Medium",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. A school is open.",
-  "steps": "1. Inspect each tab link for an aria-current or selected-state attribute.\n2. Switch tabs and re-inspect.",
-  "data": "—",
-  "expected": "The active tab exposes an accessible current/selected state, so assistive technology can announce which section the user is in.\nACTUAL (2026-08-27): this FAILS. No tab link carries aria-current or aria-selected; the only indicator is the \"active\" CSS class on the parent <li>, which is presentational.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. This is the SECOND instance of the same gap in this batch — the My Profile tabs have it too (TST_MYPR_TC_8). Worth raising as one combined accessibility ticket rather than two. The school tabs are at least recoverable for automation via \"li.nav-item.active\"; the profile tabs have no indicator at all, which makes them the more severe of the two."
- },
- {
   "id": "TST_FOOT_TC_10",
   "title": "Verify the admin footer renders seven links and omits Site Feedback",
   "req": "#8 — Verify footer link",
@@ -1385,18 +963,6 @@ const __TCS_BACKPORTED = [
   "remarks": "⚠️ THE EXPECTED RESULT DEPENDS ON A DEFINITION THAT DOES NOT YET EXIST. Restriction is a licensing property, NOT a naming convention, so this case cannot be written against product titles.\nOBSERVED LIVE 2026-08-27 on \"3 July Test School 1\" (FCN-CHZ-PDA), Library (971): TWO products whose TITLES contain \"CQA\" are listed — \"CQA - 7 Jan 2021 - Test Umbrella product\" and \"Teacher Training - CQA Test Product\". Separately, 3 titles begin \"NON MQA\", which are explicitly non-MQA products and are correctly present.\nThis is an OBSERVATION, NOT A DEFECT CLAIM: a title containing \"CQA\" does not prove the product is CQA-restricted. It is recorded because it is the concrete thing to check once the definition exists — if those two ARE restricted, this is a live leak; if they are merely named that way, the case needs different data.\nExtends the existing LIBR module (TST_LIBR_TC_1..31) — do not renumber it."
  },
  {
-  "id": "TST_SADB_TC_2",
-  "title": "Verify every school the administrator manages is listed when My school accounts is opened",
-  "req": "#10 — Admin part of multiple org",
-  "type": "Positive",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed.",
-  "steps": "1. Observe the \"My school accounts\" page.\n2. Inspect each school card.",
-  "data": "—",
-  "expected": "Every school the administrator manages is listed, one card each, numbered sequentially from \"01\" with zero padding.\nEach card shows: index, school name, address, the label \"School key\", the key itself in XXX-XXX-XXX format, a \"Copy\" control, and a chevron opening the school.\nObserved 2026-08-27 for <ADMIN_USER>: 7 schools, numbered 01–07.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. Card qid \"aDashboard-N\" (a.inst-link); chevron is a SEPARATE \"aDashboard1-N\". Both are POSITIONAL. The school key is carried in the card's aria-label, which is what makes key-based selection possible (schoolAdminDashboard.schoolLinkByKey uses a.inst-link[aria-label*=\"{{key}}\"]).\n⚠️ NEVER assert the literal count 7 — this is a shared account and the list changes (admin-shared.md §A5). Assert the card STRUCTURE and that the expected key is present.\nExtends the existing SADB module (TST_SADB_TC_1 opens a school by key) — that case already covers opening; this one covers the LISTING, which nothing did.\n⚠️ EXTENDS admin-shared.md §0, which documents 4 schools. This account sees 7 — KNF-XRD-QVE, HQC-ZWM-ZVF and GYB-JMU-KYA were undocumented."
- },
- {
   "id": "TST_SADB_TC_3",
   "title": "Verify switching between organisations loads each one independently when the admin manages several",
   "req": "#10 — Admin part of multiple org",
@@ -1407,18 +973,6 @@ const __TCS_BACKPORTED = [
   "data": "Schools: FCN-CHZ-PDA (\"3 July Test School 1\") and KNF-XRD-QVE (\"3 July Test School 2\")",
   "expected": "Each school opens under its own org slug with its own heading and its own school key: FCN-CHZ-PDA → /admin/admin/org_perf_testschool_1/class, \"3 July Test School 1\"; KNF-XRD-QVE → /admin/admin/org_perf_testschool_2/class, \"3 July Test School 2\". No content from the previously opened school persists — e.g. the FCN-only fixture class \"Fixture_GradeSettings_DO_NOT_DELETE\" is absent from KNF-XRD-QVE.",
   "remarks": "**[CORRECTED 2026-09-14 — live pass]** Step 4 VERIFIED live 2026-09-14 by switching FCN-CHZ-PDA → KNF-XRD-QVE. The fixture-class absence is a falsifiable no-carry-over check; never assert class COUNTS (both schools are shared and mutable). — Superseded note follows: GROUNDED PARTIALLY 2026-08-27 — one school was opened and its slug confirmed; the SWITCH between two schools was not exercised, so step 4 is [ASSUMED].\n⚠️ The org slug is NOT derivable from the school name or key — \"3 July Test School 1\" (FCN-CHZ-PDA) maps to org_perf_testschool_1. Capture each slug; never construct it.\nThe school context MUST be set by clicking the card — deep-linking /admin/admin/org_<slug>/class returns /dashboard/error even when authenticated (admin-shared.md §A1).\nWorth checking whether the per-account server-side class Filter and Search (§A4) are scoped per school or leak across organisations — that is unknown and would be a real defect if they leak."
- },
- {
-  "id": "TST_SADB_TC_4",
-  "title": "Verify two schools sharing a display name remain distinguishable by their school key",
-  "req": "#12 — Verify viewing multiple schools",
-  "type": "Edge",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed.",
-  "steps": "1. Locate the two cards sharing the same display name.\n2. Compare their school keys.\n3. Open the one matching a specific key and confirm which school loaded.",
-  "data": "Duplicate display name \"3 July Test School 1\" — keys FCN-CHZ-PDA and ZPB-TWP-AEQ",
-  "expected": "Both cards show the SAME display name but DIFFERENT school keys, and the card selected by key opens that specific school.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — cards 01 and 02 both read \"3 July Test School 1\" with keys FCN-CHZ-PDA and ZPB-TWP-AEQ, and identical addresses too.\n⚠️ THIS IS THE CASE THAT JUSTIFIES admin-shared.md §0's standing rule: ALWAYS select a school by KEY, never by name or card position. Selecting by name is ambiguous here, and card qids (aDashboard-N) are positional so they re-issue when the list changes.\nConfirming WHICH school loaded (step 3) needs a distinguishing feature — the org slug in the URL is the reliable one, since the heading shows the shared name."
  },
  {
   "id": "TST_SRQS_TC_2",
@@ -1447,42 +1001,6 @@ const __TCS_BACKPORTED = [
   "remarks": "**[CORRECTED 2026-09-14 — live pass]** VERIFIED LIVE 2026-09-14 — walked to the summary, never submitted. Next is NATIVELY disabled (disabled attribute + .disabled + pointer-events none), so an isEnabled assertion is valid. The wizard advances IN-PAGE (URL never changes) and the Next qid differs per step. ⚠️ The existing wizard modules' generic \"button.btn-purple\" also matches \"Send Request\" (t-ss-as-btn-1) — stop by qid. The summary omits school type and number of teachers. — Superseded note follows: ⚠️ EXPECTED RESULT NOT VERIFIED — the wizard was not walked in this session. INFERRED from the existing automation, whose case titles state the enabling direction only, e.g. TST_SCTY_TC_3 \"Select first radio option (Primary school) to ENABLE Next button\" and TST_SNAM_TC_3 \"Fill school name field to ENABLE Next button\". The DISABLED half is nowhere asserted, which is the gap this case fills. Confirm whether Next is natively disabled or only CSS-disabled — admin-shared.md §B4 records CSS-only disabling elsewhere in this app, which would make a naive enabled-state check a false green. SIDE-EFFECT FREE: stops short of submission."
  },
  {
-  "id": "TST_ASHL_TC_8",
-  "title": "Verify no dialog is visible when an admin screen first loads",
-  "req": "#9 — Verify various errors in forms and modals",
-  "type": "Negative",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; a school opened from \"My school accounts\" so the school context is set; Classes tab displayed.",
-  "steps": "1. Load the Classes tab and observe the screen without interacting.\n2. Repeat for Students, Staff, Library and Reports.",
-  "data": "—",
-  "expected": "On every tab, no dialog, warning or error is visible on load. The screen shows only its own content.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27 — verified that every dialog present in the DOM was hidden on load (Classes 5, Students 4, Staff 1; all offsetParent === null). ⚠️ THIS IS THE HEADLINE AUTOMATION TRAP FOR THIS SCENARIO. Admin dialogs are PRE-RENDERED, so they exist in the DOM before anything triggers them. Any check of the form \"getElementCount(dialog) > 0\" therefore passes ALWAYS and proves nothing — admin-shared.md §B2 records this silently breaking reset_filters for weeks. Assert VISIBILITY, never presence. Note also that opacity:0 still counts as visible to Playwright; only display:none is hidden."
- },
- {
-  "id": "TST_ASHL_TC_9",
-  "title": "Verify the 50-item limit warnings use a consistent message pattern across screens",
-  "req": "#9 — Verify various errors in forms and modals",
-  "type": "Edge",
-  "priority": "Medium",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; a school opened from \"My school accounts\" so the school context is set; Classes tab displayed.",
-  "steps": "1. Read the bulk-limit warning offered on the Classes tab.\n2. Read the equivalent warning on the Students tab.\n3. Compare their wording.",
-  "data": "—",
-  "expected": "Both follow the same two-line pattern, differing only in the noun:\nClasses: \"You can only delete 50 classes at one time\" / \"Please uncheck some classes to continue\"\nStudents: \"You can only remove 50 students at one time\" / \"Please uncheck some students to continue\"\nBoth offer a \"Close\" control.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. COPY GROUNDED LIVE 2026-08-27 — both captured VERBATIM from the pre-rendered DOM (§A6) without reaching the capped state, which would otherwise require 51+ rows. Note the VERB differs with the domain — \"delete\" for classes, \"remove\" for students — so a single shared assertion string is wrong. The LIMIT (50) and the sentence shape are the consistent parts. Reaching these states for real is Blocked on the shared school (admin-shared.md §A5: it holds 26 students, so the 50-student cap cannot be hit)."
- },
- {
-  "id": "TST_ASHL_TC_10",
-  "title": "Verify destructive confirmations state their consequence before the action is taken",
-  "req": "#9 — Verify various errors in forms and modals",
-  "type": "Positive",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; a school opened from \"My school accounts\" so the school context is set; Classes tab displayed.",
-  "steps": "1. Read the class-deletion confirmation.\n2. Read the student-removal confirmation.\n3. Read the change-school-key confirmation.\n4. Check each offers a way to back out.",
-  "data": "—",
-  "expected": "Each destructive confirmation names its consequence and offers a non-destructive exit:\nClass delete — \"WARNING!\" / \"There might be students, teachers and course materials in the selected classes\" / \"Are you sure you want to delete?\" / \"No, cancel\"\nStudent removal — \"I confirm that I want to remove students from my school account\" / \"Cancel\" / \"Request to remove\"\nChange school key — \"CAREFUL!\" / \"Changing the school key cannot be undone\" / \"Cancel\"",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. ALL THREE CAPTURED VERBATIM 2026-08-27 from the pre-rendered DOM, without triggering any of them — which is the only safe way, since all three are destructive on a shared school. ⚠️ The change-school-key dialog is present on EVERY admin tab (Classes, Students, Staff all carry it) because School settings lives in the shared page chrome — scope any modal selector with :has(...) to the specific dialog, or it will match this one everywhere. Async follow-ups are also pre-rendered and worth checking in the same pass: \"This will take a few minutes\" (classes) and \"Removing students may take some time\" (students)."
- },
- {
   "id": "TST_SADB_TC_5",
   "title": "Verify the administrator can switch to the teacher dashboard and back again",
   "req": "#13 — Verify Admin is able to switch to teacher view",
@@ -1493,18 +1011,6 @@ const __TCS_BACKPORTED = [
   "data": "—",
   "expected": "After step 2 the browser navigates to /dashboard/teacher/dashboard, the page greets the user (\"Hi <FIRST_NAME>!\"), #teacher-admin-toggle is checked and the switch's accessible name reports \"Teacher currently active\".\nAfter step 4 the browser returns to the ADMIN PAGE THE TOGGLE WAS LEFT FROM — /admin/admin/dashboard when started there — #teacher-admin-toggle is unchecked and the accessible name reports \"Administrator currently active\".",
   "remarks": "**[CORRECTED 2026-09-14 — live pass]** Toggling back returns to the admin page the round trip STARTED on (verified from /class on 2026-09-14), so start this case on the dashboard. Do NOT assert the document title — it varies with the load path (\"Administrator | Cambridge One\" vs \"My school accounts | Cambridge One\"). — Superseded note follows: GROUNDED LIVE 2026-08-27 — the full round trip was performed and the account was left in Administrator view. ⚠️ THE SWITCH ELEMENT IS NAMED DIFFERENTLY IN EACH VIEW: \".can-toggle__switch\" (double underscore) in the admin view, \".can-toggle-switch\" (single hyphen) in the teacher view. A selector written for one view SILENTLY FAILS to find it in the other, which breaks exactly the round trip this case exercises. Use \"#teacher-admin-toggle\" (stable in both) and read the input's checked state — false = Administrator, true = Teacher. The focusable control is the inner [tabindex=\"0\"] div; the input itself is aria-hidden. The toggle also appears on inner admin tabs, not just the dashboard. Existing selector schoolAdminDashboard.teacherAdminToggle already targets the input; this extends SADB. SIDE-EFFECT FREE — a view switch only."
- },
- {
-  "id": "TST_SADB_TC_6",
-  "title": "Verify the teacher view lists the schools where the user teaches, not those they administer",
-  "req": "#13 — Verify Admin is able to switch to teacher view",
-  "type": "Edge",
-  "priority": "High",
-  "pre": "Logged in as school-admin <ADMIN_USER> on Thor; \"My school accounts\" (/admin/admin/dashboard) displayed. The user is both an administrator and a teacher on overlapping sets of schools.",
-  "steps": "1. On \"My school accounts\", list the schools shown.\n2. Switch to the teacher view.\n3. List the school groups shown there.\n4. Compare the two lists.",
-  "data": "—",
-  "expected": "The two lists are NOT the same. The administrator view shows schools the user administers; the teacher view groups classes under schools where the user teaches, which may include schools absent from the administrator view.\nObserved 2026-08-27: administrator view 7 schools; teacher view 8 school groups, including \"ABERYSTWYTH COLLEGE : THOR\" and \"LTI INTEGRATIONS TEST2\", neither of which appears in the administrator list.",
-  "remarks": "**[EXTRA — Phase 1 exclusion]** Not present in the other team's reviewed sheet (`Admin_Gap_Analysis.xlsx`, status \"Extra in Ours\"). **This case will NOT be automated in Phase 1** — exclude it from the Phase 1 automation scope; revisit for a later phase. GROUNDED LIVE 2026-08-27. This matters because it is easy to assume the two views show the same estate — they do not, and a test asserting equal school counts across the toggle will fail. ⚠️ The teacher view groups by school DISPLAY NAME, so the two distinct schools both called \"3 July Test School 1\" (FCN-CHZ-PDA and ZPB-TWP-AEQ) collapse into a SINGLE group there. The admin view keeps them separate via their keys. Do not match schools across the two views by name. ⚠️ NEVER assert the literal counts 7 and 8 — shared account (§A5). Assert the RELATIONSHIP: the teacher list contains at least one school the admin list does not. ⚠️ Every \"Create class\" button in the teacher view shares qid \"tDashboard-ncls-btn-1\" — 7 elements, one per school group. See TST_SADB_TC_7."
  },
  {
   "id": "TST_SADB_TC_7",

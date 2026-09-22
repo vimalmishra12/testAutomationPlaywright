@@ -23,7 +23,12 @@
         "crossIcon": "a[qid=\"learningPath-1\"]",
         "assignmentBackBtn": "a[qid=\"lo-renderer-bck-btn\"]",
         "yesDelete": "button[qid=\"rView-4\"]",
-        "assignNameInput": "[qid=\"assignment-detail-2\"]"
+        "assignNameInput": "[qid=\"assignment-detail-2\"]",
+        "createAssignmentBtnInTOC": "button[qid=\"assignment-button-1\"], button#createAssignmentBtn",
+        "assignmentModalCancelBtn": "button[qid=\"assignment-3\"], button.cancel-btn",
+        "assignmentModalActionBtn": "button[qid=\"assignment-4\"], button#assignmentModalActionBtn",
+        "createNewAssignmentBtn": "button:has-text(\"Create new assignment\"), button:has-text(\"create another assignment\"), [qid*=\"create-new\"]",
+        "returnToPresentationPlusBtn": "a:has-text(\"Return to Presentation Plus\"), button:has-text(\"Return to Presentation Plus\"), span:has-text(\"Return to Presentation Plus\"), [role=\"button\"]:has-text(\"Return to Presentation Plus\"), [qid*=\"return\"], [qid*=\"Return\"]"
       },
       "c1student": {
         "bellIcon": "#tippyDropdownMenuButton",
@@ -101,8 +106,8 @@
         "emailWarningText": "span[role='alert']"
       },
       "appShell": {
-        "userDrop_down": "button[qid=\"cHeader-2\"]",
-        "logout_btn": "button[qid=\"cHeader-7\"]",
+        "userDrop_down": "[qid=\"aHeader-3\"], [qid=\"cHeader-2\"], #dropdownMenuLinkHeader, button.user-dropdown, a#dropdownMenuLinkHeader",
+        "logout_btn": "[qid=\"aHeader-7\"], [qid=\"cHeader-7\"], button[qid=\"cHeader-7\"], a:has-text('Log out'), button:has-text('Log out')",
         "headerbandDiv": "header > div",
         "toggleSidebarBtn": "[aria-label=toggle-sidebar]",
         "custLogo": "[data-tid=image-headerLogo]",
@@ -327,6 +332,8 @@
         "cqaEbookEvolveDropdown": "button[qid=\"ebook-button-1\"]",
         "dropDownListTitle": "[qid^=\"ebook-list-item-",
         "cqaTestEbookOnlyAssets": "a[qid=\"ebook-list-item-3\"]",
+        "teachersResourcesTOCItem": "//a[contains(@class,'dropdown-item') and (contains(.,\"Teacher's Resources\") or @qid='ebook-list-item-3')]",
+        "teachersResourcesToolbarItem": "//a[contains(@class,'dropdown-item') and (contains(.,\"Teacher's Resources\") or @qid='ebook-list-item-3')]",
         "cqaTestEbookOnlyAssetsText": "div.eboook-selected.ng-tns-c606183087-2",
         "notes": "div:nth-child(4) div:nth-child(2) button:nth-child(1)",
         "timer": "button[qid=\"94\"]",
@@ -1443,10 +1450,10 @@
         "bulkStartDateConfirmBtn": "button[qid='dBulkClass-select-start-date-modal-1']",
         "bulkEndDateConfirmBtn": "button[qid='dBulkClass-select-end-date-modal-1']",
         "addTeachersBtn": "button[qid='dBulkClass-0-5']",
-        "teacherEmailInput": "input[qid='dBulkClass-teacher-0-1']",
-        "teacherFirstNameInput": "input[qid='dBulkClass-teacher-0-2']",
-        "teacherLastNameInput": "input[qid='dBulkClass-teacher-0-3']",
-        "teacherApplyChangesBtn": "button[qid='dBulkClass-24']",
+        "teacherEmailInput": "input[qid^='dBulkClass-teacher-'][qid$='-1']:visible",
+        "teacherFirstNameInput": "input[qid^='dBulkClass-teacher-'][qid$='-2']:visible",
+        "teacherLastNameInput": "input[qid^='dBulkClass-teacher-'][qid$='-3']:visible",
+        "teacherApplyChangesBtn": "button[qid='dBulkClass-24']:visible, button:has-text('Apply changes'):visible",
         "selectedTeacherInput": "input[qid='dBulkClass-teachers0-5']",
         "addLabelBtn": "button[qid='dBulkClass-class-label0-7']",
         "labelSearchInput": "#class-label-list-modal-0 input[placeholder='Create or find a label']",
@@ -1468,6 +1475,7 @@
         "includeClassLabelsCheckbox": "#includeClassLabels",
         "duplicateContinueLink": "a[qid='dBulkClass-duplicate-selected-row-modal-2']",
         "duplicateCancelLink": "a[qid='edit-class-labels-cancel']",
+        "addTeachersBtnRow2": "button[qid='dBulkClass-1-5']",
         "selectedTeacherInputRow2": "input[qid='dBulkClass-teachers1-5']",
         "selectedMaterialInputRow2": "input[qid='dBulkClass-products1-6']",
         "addLabelBtnRow2": "button[qid='dBulkClass-class-label1-7']",
@@ -1754,6 +1762,48 @@
         "contactNextBtn": "button[qid=\"t-ss-cd-btn-1\"]",
         "summarySendRequestBtn": "button[qid=\"t-ss-as-btn-1\"]",
         "pageLoader": "#loader-container .loader"
+      },
+      "classMaterials": {
+        "materialsTab": "a[routerlink='materials'][qid='cView-45'], a[qid='cView-45']",
+        "materialsContainer": "materials .product-info, materials .materials-container",
+        "bundleContainer": "div.materials-container",
+        "bundleCollapseLink": "a.product-detail[data-toggle='collapse']",
+        "bundleTitle": "h2.product-name",
+        "componentLink": "a.component",
+        "componentName": "p.component-name",
+        "componentByNameInBundle": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
+        "componentByName": "//a[contains(@class,'component') and .//p[contains(@class,'component-name') and contains(.,'{{componentName}}')]]",
+        "bundleCollapseByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[@data-toggle='collapse']",
+        "bundleToggleByName": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//*[contains(@class,'toggle-icon')]",
+        "categoryBackBtn": "a[qid^='cView-72-'], a.btn-link[aria-label*='Back']",
+        "categoryTitle": "p.category-name",
+        "folderComponentByName": "//a[contains(@class,'component') and .//p[contains(@class,'component-name') and normalize-space()='{{folderName}}']]",
+        "resourceBankInFolder": "div.products-container .row.products-row a.component"
+      },
+      "resourceBank": {
+        "resourcesAreaHeading": "//h1[contains(.,'Resources area')]",
+        "backBtn": "a[qid='rb-back-btn'], #rb-back-btn"
+      },
+      "mailsacUI": {
+        "_comment": "Mailsac Web UI selectors for login, inbox navigation, reading email content, and purging inboxes.",
+        "usernameInput": "input[placeholder='username...'], input[name='username']",
+        "passwordInput": "input[placeholder='password...'], input[name='password']",
+        "signInBtn": "button:has-text('Sign In'), button.btn-primary",
+        "userLoggedInIndicator": "a[href*='/account'], button:has-text('Account'), a:has-text('Log Out')",
+        "inboxSearchInput": "input[placeholder='anything']",
+        "inboxCheckBtn": "button:has-text('Check the inbox!'), button.btn-primary:has-text('Check')",
+        "inboxHeading": "h2, h3, .inbox-title",
+        "inboxPurgeBtn": "button:has-text('Purge Inbox')",
+        "purgeConfirmBtn": "button.btn-danger:has-text('Purge'), button:has-text('Purge')",
+        "messageRow": "table tbody tr.clickable, table tbody tr",
+        "messageRowNth": "table tbody tr:nth-child({{index}})",
+        "messageSenderCell": "td:nth-child(2) span, td:nth-child(2)",
+        "messageSubjectCell": "td:nth-child(3) span, td:nth-child(3)",
+        "messageTimeCell": "td:nth-child(4)",
+        "unblockContentBtn": "a:has-text('Unblock Content')",
+        "emailBodyContainer": ".message-content, .email-body, div.well, .dirty-content",
+        "deleteMessageBtn": "button.btn-outline-danger:has-text('Delete'), button:has-text('Delete')",
+        "closeMessageBtn": "button[title='Close message view'], button.btn-secondary:has-text('Close')"
       }
     }
   }

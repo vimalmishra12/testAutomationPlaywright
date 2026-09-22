@@ -322,6 +322,7 @@ must follow the confirmation protocol defined in `AGENTS.md` before touching the
 | `core/runner/testrunner.js` | Core | Breaks all test runs |
 | `core/runner/specGenerator.js` | Core | Breaks spec execution entry point |
 | `core/runner/launchUrl.js` | Core | Breaks browser navigation to the application |
+| `package.json` | Configuration | npm scripts are every suite's entry point; a wrong script or dependency breaks runs |
 
 ---
 

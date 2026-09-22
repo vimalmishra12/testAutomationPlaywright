@@ -1,0 +1,82 @@
+# Walkthrough — docs-dedup
+
+> The `.architecture` / skills de-duplication work. Sessions from 2026-09-18 (handoff archive,
+> `authoring-status.md` compaction, Generic/shell split) are recorded in
+> `walkthrough_2026-09-18.md`, which uses the retired date-only name. It was deliberately not renamed.
+
+## Session 1 — 2026-09-21
+
+### Summary
+Two policy clarifications that the user decided. `package.json` stays a protected file and is now
+listed in the protected-file tables. The walkthrough naming rule now matches actual practice: files are
+named after the work, with one file per feature and sessions appended.
+
+### Changes Made
+
+#### 1. `testAutomation_v1.0/AGENTS.md`
+- **Type:** Modified
+- **Layer:** Docs / governance
+- **What changed:** The Protected File List gained a `package.json` row (Configuration: npm scripts are
+  every suite's entry point, and dependencies affect every run; see §8 Rule B). Under §Walkthrough, the naming changed
+  from `walkthrough_YYYY-MM-DD.md` to `walkthrough_<testfile-or-topic>_<YYYY-MM-DD>_<HHh-MMm>.md`, with
+  one file per feature/ticket, later sessions appended as `## Session N — YYYY-MM-DD`, and never
+  renaming existing files. The format template and rules were updated to match.
+- **Why:** `package.json` was protected only implicitly (Rule B), not in the table. The date-only
+  rule mixed unrelated work into one file and scattered a feature's history across several; about 27 of 41
+  existing walkthroughs already followed the feature-based form.
+
+#### 2. `testAutomation_v1.0/.architecture/system.md`
+- **Type:** Modified. The protected-files mirror table gained the `package.json` row, since it must match AGENTS.md.
+
+#### 3. `.agent/skills/c1-environment-test-replicator/SKILL.md`
+- **Type:** Modified. Step 7 now points to the AGENTS.md naming rule. The other skills already defer to
+  AGENTS.md §Walkthrough.
+
+### Decisions taken with the user
+- `package.json` remains protected (confirmation before any script or dependency change).
+- Walkthrough naming follows option (b): name after the work, one file per feature, sessions appended.
+- The "move completed walkthroughs to an archive folder" idea was not adopted in this change.
+
+### Protected Files Touched
+None. `package.json` itself was not modified; only the docs that list it changed.
+
+### Pending / Follow-up
+- Remaining de-dup topics: skills vs AGENTS.md duplicated rules; the `c1-test-authoring` block format
+  vs the compacted `authoring-status.md`.
+
+---
+
+## Session 2 — 2026-09-21
+
+### Summary
+The authoring-status block format is now defined in one place, matching the compacted file.
+
+### Changes Made
+- `.architecture/authoring-status.md` §Block format: rewritten to the compact form (heading with npm script, module/knowledge
+  line, one line per phase, optional On Hold / Blocked / Not built / Follow-up lines) and declared the **single source**.
+- `.agent/skills/c1-test-authoring/phases/1-build.md` and `2-run-fix.md`: their copied templates were removed. The exit-checklist items
+  now point to that section and say "status + open items only; history goes in the walkthrough".
+- Left unchanged: `3-visual.md` (already says "remove the block") and `SKILL.md` (already says "read the file").
+
+### Protected Files Touched
+None.
+
+---
+
+## Session 3 — 2026-09-21
+
+### Changes Made
+- `CLAUDE.md`: added the rule "any `archive/` folder is history — do not read it at session start; open only on demand
+  when a live file points to it" (covers `.architecture/archive/` and `test/Manual/**/archive/`).
+- `.agent/skills/c1-environment-test-replicator/SKILL.md` Safety Rules: the stale hard-coded protected-file list (missing
+  `.mocharc.js` and `package.json`) was replaced by a pointer to AGENTS.md, plus a note that adding an npm script edits the protected `package.json`.
+
+### Skills vs AGENTS.md review (B3), with verdicts
+- `c1-test-authoring/SKILL.md` "non-negotiables" (8 short rules): **kept**. It is a compact trigger-time summary, already says
+  "always load AGENTS.md", and defers to AGENTS.md for the protected list and walkthrough format.
+- `c1-manual-test-authoring/SKILL.md`: already pointer-only. No change.
+- `c1-test-authoring/reference/new-apptype.md`: **kept**. It is a scaffolding checklist that adds value beyond AGENTS.md §7.
+- `c1-environment-test-replicator`: the only real drift (the stale protected list) is fixed above.
+
+### Protected Files Touched
+None.

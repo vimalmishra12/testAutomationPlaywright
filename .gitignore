@@ -17,3 +17,5 @@ logs_*.txt
 # The leading slash matters: it pins this to the repo root only, so the TRACKED design-time
 # tooling at testAutomation_v1.0/tooling/ is unaffected.
 /tooling/
+.cora/
+.cora-cli/

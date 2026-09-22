@@ -118,3 +118,45 @@ None. No protected files were modified.
 ### Pending / Follow-up
 - The skill `c1-test-authoring` still describes the old long block format in places. Check it against
   the compact format in the next topic.
+
+---
+
+## Session 3: split Generic/shell out of `admin-shared.md` (branch `claude/admin-generic-shell-split`)
+
+### Summary
+`admin-shared.md` is read on every Admin App task. About 40% of it (§A9–§A12) covered one
+screen group (Generic/shell), not every admin screen. Following ADR-020, that part now lives in its own
+per-screen file. The work had three steps: a pure move, then link fixes, then folding the §A12
+corrections into the sections they correct. As a result, `admin-shared.md` went from 1,212 lines / 83 KB to 727 lines / 53 KB.
+
+### Changes Made
+
+#### 1. `.architecture/product-knowledge/ExperienceApp/admin-generic-shell.md` (new)
+- **Type:** Created. §A9/B11, §A10, §A11 and §A12 were moved verbatim, and losslessness was proven by
+  sha256 (`584945f5…`, identical before and after, 490 lines / 29,478 bytes). A per-screen header was
+  added.
+- The §A12 corrections were then folded into §A9–§A11, following the file's own rule (strike the old
+  claim, then add a dated correction): language qids, persistence and Spanish copy; `cFooter-8`; footer
+  destinations and `rel="nopener"`; the notification wrapper, Close, and read/unread rows; My profile
+  qids, the active tab and the menu trap; the change-key dialog and the `SKEY_TC_4` verification; the
+  KNF org slug and the org switch; the role-toggle round trip and its late binding; the disputed
+  school-grouping claim; and the institution-request wizard. The §A12 section was then removed.
+  Result: 468 lines / 28 KB.
+
+#### 2. `.architecture/product-knowledge/ExperienceApp/admin-shared.md`
+- **Type:** Modified. §A9–§A12 were replaced by a 5-line "moved" pointer. The eight §A2 coverage rows now link to the new
+  file. The §B12 heading date was corrected (2026-09-18).
+
+#### 3. Link updates
+- `product-knowledge.md` and `product-knowledge/ExperienceApp.md`: each gained a Generic / shell row.
+- `admin-reports-tab.md` (§A9 reference) and `authoring-status.md` (Generic knowledge link) now point to the new file.
+
+### Architecture Decisions Triggered
+ADR-020 (a feature area gets its own file). Same pure-move-then-edit method as the 2026-08-21 migration.
+
+### Protected Files Touched
+None. No protected files were modified.
+
+### Pending / Follow-up
+- `admin-generic-shell.md` §A11 dialog table still lists the Student removal copy, although removal is
+  gone from the product (`admin-students-tab.md` §9.7). This was left unchanged.
