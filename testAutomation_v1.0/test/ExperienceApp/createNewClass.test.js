@@ -277,4 +277,33 @@ module.exports = {
   await assertion.assertEqual(sts.inviteStudentBtn, testdata.inviteStudentBtn,"inviteStudentBtn Values is not as expected.");
   await assertion.assertEqual(sts.pendingTitle, testdata.pendingTitle,"pendingTitle Values is not as expected.");
   },
+
+  // [2026-09-22] LP migration: pick the material by EXACT name (not the first search result).
+  TST_ENTE_TC_24: async function (testdata) {
+    sts = await createNewClass.select_materialByName(testdata);
+    await assertion.assertEqual(sts.selected, true, "Material '" + testdata + "' not found in the search results / not ticked");
+    await assertion.assertEqual(sts.selectedName, testdata, "A different material was picked");
+  },
+
+  // [2026-09-22] LP migration: the invited learner's own e-mail is listed as pending.
+  TST_CREA_TC_30: async function (testdata) {
+    sts = await createNewClass.getData_pendingInvite(testdata);
+    await assertion.assertEqual(sts.emailPending, true, "Invited e-mail '" + testdata + "' not listed in the pending invitations");
+  },
+
+  // [2026-09-22] LP migration: a collaborative material raises an info dialog that must be closed.
+  TST_ENTE_TC_26: async function (testdata) {
+    sts = await createNewClass.close_collaborativeInfo();
+    await assertion.assertEqual(sts.shown, true, "Collaborative-material info dialog not shown after Add to class");
+    await assertion.assertEqual(sts.title, testdata.title, "Unexpected info dialog title");
+    await assertion.assertEqual(sts.closed, true, "Collaborative-material info dialog did not close");
+  },
+
+  // [2026-09-22] LP migration: class created → shown on the dashboard by name → has a class key.
+  TST_ENTE_TC_25: async function (testdata) {
+    sts = await createNewClass.getData_createdClass(testdata.className);
+    await assertion.assertEqual(sts.successText, testdata.successText, "Class-created confirmation not shown");
+    await assertion.assertEqual(sts.classOnDashboard, true, "Class '" + testdata.className + "' not listed on the teacher dashboard");
+    await assertion.assert(typeof sts.classKey === "string" && sts.classKey.length > 0, "Class key not shown on the class page");
+  },
 };

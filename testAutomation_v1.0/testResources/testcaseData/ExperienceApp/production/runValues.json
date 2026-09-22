@@ -1,0 +1,6 @@
+{
+  "_comment": "ADR-022 — patterns for {{run.<key>}} tokens on PRODUCTION. Account creation on prod approved by the user after confirming with the product team (2026-09-22). Shapes copied from playwright-automation-c1 (code 'prod'). {rand4} = 4 random [a-z0-9], {ts} = epoch ms.",
+  "lpTeacherEmail": "cqaprodlpteach_{rand4}@mailsac.com",
+  "lpLearnerEmail": "cqaprodlplearn_{rand4}@mailsac.com",
+  "lpClassName": "Class {rand4}"
+}

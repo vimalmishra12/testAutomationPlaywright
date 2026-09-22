@@ -92,4 +92,26 @@ module.exports = {
     await assertion.assertEqual(sts.pageStatus, true, 'Page is not launched. ');
   },
 
+  // [2026-09-22] LP migration: a new teacher's guided tour returns on every login; the
+  // dashboard must be left usable (tour closed) before anything is clicked.
+  // [2026-09-22] LP migration: after accepting on an SLE school, the learner sees the class and
+  // its component with NO activation-code prompt (the licence grants the product).
+  TST_DASH_TC_13: async function (testdata) {
+    sts = await dashboard.getData_learnerClassAccess(testdata.className, testdata.componentName);
+    await assertion.assertEqual(sts.classShown, true, "Class '" + testdata.className + "' not on the learner dashboard");
+    await assertion.assertEqual(sts.componentShown, true, "'" + testdata.componentName + "' not available in the class card");
+    await assertion.assertEqual(sts.activationPromptShown, false, "Learner was asked for an activation code despite the school licence");
+  },
+
+  // [2026-09-22] LP-001 entry: open the component from the NAMED class card → Learning Path player.
+  TST_DASH_TC_14: async function (testdata) {
+    sts = await dashboard.click_classComponent(testdata.className, testdata.componentName);
+    await assertion.assertEqual(sts.pageStatus, true, "'" + testdata.componentName + "' of class '" + testdata.className + "' did not open the Learning Path player");
+  },
+
+  TST_DASH_TC_12: async function (testdata) {
+    sts = await dashboard.close_introTourIfShown();
+    await assertion.assertEqual(sts.tourClosed, true, 'Guided tour is still covering the dashboard');
+  },
+
 };

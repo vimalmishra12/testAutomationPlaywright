@@ -4,7 +4,22 @@ var invitationNotification= require('../../pages/ExperienceApp/invitationNotific
 var sts;
 
 module.exports = {
-TST_INVI_TC_1 :   async function (testdata) { 
+// [2026-09-22] Housekeeping (TC_100+): wait until the class invite reaches the learner's bell —
+// it lags the teacher's invite by up to ~2 min (SOURCE). Retry lives here, never in TC_1..5.
+TST_INVI_TC_101 :   async function (testdata) {
+sts = await invitationNotification.wait_forInvitationNotification(testdata.timeoutMs);
+await assertion.assertEqual(sts.found, true, "Class invitation did not reach the learner's notifications in time");
+},
+
+// [2026-09-22] LP migration: the invitation page lists the invited class by name; ticking it enables Accept.
+TST_INVI_TC_13 :   async function (testdata) {
+sts = await invitationNotification.select_invitationByClass(testdata);
+await assertion.assertEqual(sts.classListed, true, "Invitation for '" + testdata + "' not listed");
+await assertion.assertEqual(sts.selected, true, "Invitation for '" + testdata + "' could not be ticked");
+await assertion.assertEqual(sts.acceptEnabled, true, "Accept stayed disabled after ticking the invitation");
+},
+
+TST_INVI_TC_1 :   async function (testdata) {
 sts = await invitationNotification.click_notificationBtn();
 await assertion.assertEqual(sts, true,"notificationBtn are not Clicked");
 },

@@ -435,6 +435,31 @@ module.exports = {
         return root().locator(selector).filter({ hasText: filterText });
     },
 
+    // [2026-09-22] Returns the inner element(s) matching innerText inside the n-th (0-based) outer
+    // element — for repeated widgets whose options share the same texts (e.g. four rich dropdowns
+    // in one activity frame), where the outer can only be told apart by position — confirmed by user.
+    getNthNestedFilteredLocator: function (outerSel, n, innerSel, innerText) {
+        return root().locator(outerSel).nth(n).locator(innerSel).filter({ hasText: innerText });
+    },
+
+    // [2026-09-22] Clicks the mouse at the element's centre WITHOUT scrolling or actionability
+    // re-checks. For widgets that close when the page scrolls (the Learning Path "rich dropdown"),
+    // where click()'s scroll-into-view dismisses the target first — confirmed by user.
+    // boundingBox() is viewport-relative even inside a frame, so it works after switchToFrame().
+    clickAtCenter: async function (selector) {
+        message = "element:" + selector;
+        try {
+            const box = await el(selector).boundingBox();
+            if (!box) throw new Error("clickAtCenter: element has no bounding box (not rendered): " + selector);
+            await global.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+            await logger.logInto(await stackTrace.get(), message);
+            return true;
+        } catch (err) {
+            await logger.logInto(await stackTrace.get(), err.message, "error");
+            return err;
+        }
+    },
+
     // Returns a locator for an inner element nested inside a container matched by text.
     // Covers patterns like "find umbrella card by name, then find its component link".
     getNestedFilteredLocator: function (outerSel, outerText, innerSel, innerText) {
