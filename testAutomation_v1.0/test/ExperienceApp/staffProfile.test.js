@@ -25,6 +25,7 @@
 // school-wide count.
 var schoolStaff = require("../../pages/ExperienceApp/schoolStaff.page.js");
 var staffProfile = require("../../pages/ExperienceApp/staffProfile.page.js");
+var action = require("../../core/actionLibrary/baseActionLibrary.js");
 
 var sts;
 
@@ -455,5 +456,206 @@ module.exports = {
       + rows.length + " rows");
     await assertion.assertEqual(rows[0].email, testdata.teacherEmail,
       "The listed row should still be " + testdata.teacherEmail + " — got: " + rows[0].email);
+  },
+
+  /**
+   * TST_STFP_TC_19 — Grant admin rights to a teacher, verify dual-login access to Admin Console, and teardown revocation.
+   *
+   * ⚠️ MUTATING TEST WITH GUARANTEED TEARDOWN:
+   * Uses dedicated fixture `cqatesttea18sept@mailsac.com` (password: `Compro11`).
+   * 1. Promotes teacher to Administrator/Teacher.
+   * 2. Logs in as the promoted teacher and verifies access to school Admin Console.
+   * 3. IN FINALLY BLOCK: Logs back in as school admin and revokes admin rights to restore baseline Teacher role.
+   */
+  TST_STFP_TC_19: async function (testdata) {
+    var teacherEmail = testdata.promotionTeacherEmail;
+    var teacherPassword = testdata.promotionTeacherPassword;
+    var adminEmail = testdata.adminUser;
+    var adminPassword = testdata.adminPassword;
+    var schoolKey = testdata.schoolKey;
+
+    var schoolAdminDashboard = require("../../pages/ExperienceApp/schoolAdminDashboard.page.js");
+    var schoolClasses = require("../../pages/ExperienceApp/schoolClasses.page.js");
+    var loginPage = require("../../pages/ExperienceApp/login.page.js");
+    var landingPage = require("../../pages/ExperienceApp/landing.page.js");
+    var appShell = require("../../pages/ExperienceApp/appShell.page.js");
+    var adminShell = require("../../pages/ExperienceApp/adminShell.page.js");
+
+    var ensureLogin = async function () {
+      var url = await browser.getUrl();
+      if (url.indexOf("/login") === -1) {
+        var domain = url.split("/").slice(0, 3).join("/");
+        await browser.url(domain + "/login");
+      }
+      await action.waitForDocumentLoad();
+      if (await action.isDisplayed(landingPage.loginBtn)) {
+        console.log("[STFP_19] Clicking landing login button");
+        await landingPage.click_loginBtn();
+      }
+      return await loginPage.isInitialized();
+    };
+
+    var doLogout = async function () {
+      console.log("[STFP_19] doLogout started");
+      try {
+        if (await action.isDisplayed(adminShell.profileMenuTrigger)) {
+          console.log("[STFP_19] clicking adminShell.profileMenuTrigger");
+          await action.click(adminShell.profileMenuTrigger);
+          await action.waitForDisplayed(adminShell.logoutItem, 5000);
+          console.log("[STFP_19] clicking adminShell.logoutItem");
+          await action.click(adminShell.logoutItem);
+          await action.waitForDocumentLoad();
+        } else if (await action.isDisplayed(appShell.userDrop_down)) {
+          console.log("[STFP_19] clicking appShell.userDrop_down");
+          await appShell.click_userDrop_down();
+          await action.waitForDisplayed(appShell.logout_btn, 5000);
+          console.log("[STFP_19] clicking appShell.logout_btn");
+          await appShell.click_logout_btn();
+          await action.waitForDocumentLoad();
+        }
+      } catch (e) {
+        console.log("[STFP_19] doLogout exception:", e.message);
+      }
+      var baseUrl = await browser.getUrl();
+      var domain = baseUrl.split("/").slice(0, 3).join("/");
+      await browser.url(domain + "/login");
+      await action.waitForDocumentLoad();
+      if (await action.isDisplayed(landingPage.loginBtn)) {
+        console.log("[STFP_19] Clicking landing login button after logout");
+        await landingPage.click_loginBtn();
+      }
+      await loginPage.isInitialized();
+      console.log("[STFP_19] doLogout completed");
+    };
+
+    var doLoginAndOpenSchool = async function (email, password) {
+      console.log("[STFP_19] doLoginAndOpenSchool started for", email);
+      await ensureLogin();
+      await loginPage.set_userName_tbox(email);
+      await loginPage.set_password_tbox(password);
+      console.log("[STFP_19] clicking login button");
+      await action.click(loginPage.login_btn);
+      await action.waitForDocumentLoad();
+      await browser.pause(4000);
+
+      var hasDashboardCards = (await action.getElementCount(schoolAdminDashboard.firstSchoolLink)) > 0;
+      var isDashboard = hasDashboardCards && (await action.isDisplayed(schoolAdminDashboard.firstSchoolLink));
+      console.log("[STFP_19] isDashboard =", isDashboard);
+      if (isDashboard) {
+        console.log("[STFP_19] clicking school key", schoolKey);
+        await schoolAdminDashboard.click_schoolByKey(schoolKey);
+      } else {
+        if ((await action.isExisting(adminShell.roleToggleSwitchTeacher)) && (await action.isDisplayed(adminShell.roleToggleSwitchTeacher))) {
+          console.log("[STFP_19] toggling to Admin role");
+          await action.click(adminShell.roleToggleSwitchTeacher);
+          await action.waitForDocumentLoad();
+        }
+        await schoolClasses.isInitialized();
+      }
+      console.log("[STFP_19] doLoginAndOpenSchool finished");
+    };
+
+    var openProfileForTeacher = async function (isFirstSearch) {
+      var sSts = await schoolStaff.search_staff(teacherEmail, { expectListChange: !isFirstSearch ? false : true });
+      console.log("[STFP_19] search_staff result:", JSON.stringify(sSts));
+      var vSts = await schoolStaff.click_viewProfile(teacherEmail);
+      console.log("[STFP_19] click_viewProfile result:", JSON.stringify(vSts));
+      return vSts;
+    };
+
+    // ── STAGE 1: Admin Promotion ────────────────────────────────────────────────────
+    console.log("[STFP_19] Stage 1: Searching for teacher", teacherEmail);
+    sts = await openProfileForTeacher(true);
+    await assertion.assertEqual(sts.pageStatus, true, "Teacher profile should load");
+
+    var initialRole = (await staffProfile.getData_profileLayout()).role;
+    console.log("[STFP_19] Initial role on profile:", initialRole);
+    if (normaliseCopy(initialRole) === testdata.roleAdmin) {
+      console.log("[STFP_19] Account was previously Admin; resetting to Teacher baseline");
+      await staffProfile.click_confirmRemoveAdminRights();
+      await browser.pause(5000);
+      await browser.refresh();
+      await action.waitForDocumentLoad();
+      await browser.pause(3000);
+      await staffProfile.isInitialized();
+      initialRole = (await staffProfile.getData_profileLayout()).role;
+      console.log("[STFP_19] Reset role:", initialRole);
+    }
+    await assertion.assertEqual(normaliseCopy(initialRole), testdata.roleTeacher,
+      "Account should initially have role '" + testdata.roleTeacher + "'");
+
+    console.log("[STFP_19] Granting admin rights");
+    sts = await staffProfile.click_grantAdminRights();
+    await assertion.assertEqual(sts.clickStatus, true, "Granting admin rights should succeed");
+
+    // [KNOWN ISSUE / WORKAROUND]: On Thor, granting admin rights causes the page to enter an
+    // infinite loading state. We wait 10s for the backend mutation to settle and reload the page.
+    // This reload workaround will be removed once the underlying product bug is fixed.
+    console.log("[STFP_19] Waiting 10s and reloading page to clear loader loop (workaround for infinite loading issue)");
+    await browser.pause(10000);
+    await browser.refresh();
+    await action.waitForDocumentLoad();
+    await browser.pause(3000);
+    await staffProfile.isInitialized();
+
+    var promotedRole = (await staffProfile.getData_profileLayout()).role;
+    console.log("[STFP_19] Promoted role on profile:", promotedRole);
+    await assertion.assertEqual(normaliseCopy(promotedRole), testdata.roleAdmin,
+      "Role should update to '" + testdata.roleAdmin + "' after grant");
+
+    // ── STAGE 2 & 3: Login Verification + Guaranteed Teardown ───────────────────────
+    try {
+      // 2a. Logout admin
+      console.log("[STFP_19] Stage 2: Logging out admin");
+      await doLogout();
+
+      // 2b. Login as promoted teacher
+      console.log("[STFP_19] Logging in as promoted teacher");
+      await doLoginAndOpenSchool(teacherEmail, teacherPassword);
+
+      // 2c. Verify Admin Console loaded
+      console.log("[STFP_19] Verifying schoolClasses isInitialized for promoted teacher");
+      sts = await schoolClasses.isInitialized();
+      await assertion.assertEqual(sts.pageStatus, true,
+        "Promoted teacher should access school Admin Console (Classes tab)");
+
+      // 2d. Navigate to Staff tab as admin
+      console.log("[STFP_19] Navigating to Staff tab as promoted teacher");
+      sts = await schoolStaff.click_staffTab();
+      await assertion.assertEqual(sts.pageStatus, true,
+        "Promoted teacher should be able to open Staff tab in Admin Console");
+
+    } finally {
+      // ── STAGE 3: Guaranteed Teardown Revocation ──────────────────────────────────
+      try {
+        console.log("[STFP_19] Stage 3 Teardown: Logging out teacher");
+        await doLogout();
+        console.log("[STFP_19] Stage 3 Teardown: Logging in as admin", adminEmail);
+        await doLoginAndOpenSchool(adminEmail, adminPassword);
+        console.log("[STFP_19] Stage 3 Teardown: Opening Staff tab and searching teacher");
+        await schoolStaff.click_staffTab();
+        await openProfileForTeacher(true);
+
+        var currentRole = (await staffProfile.getData_profileLayout()).role;
+        console.log("[STFP_19] Stage 3 Teardown: Current role:", currentRole);
+        if (normaliseCopy(currentRole) === testdata.roleAdmin) {
+          console.log("[STFP_19] Stage 3 Teardown: Revoking admin rights");
+          await staffProfile.click_confirmRemoveAdminRights();
+          console.log("[STFP_19] Stage 3 Teardown: Waiting 5s and refreshing page");
+          await browser.pause(5000);
+          await browser.refresh();
+          await action.waitForDocumentLoad();
+          await browser.pause(3000);
+          await staffProfile.isInitialized();
+        }
+        var restoredRole = (await staffProfile.getData_profileLayout()).role;
+        console.log("[STFP_19] Stage 3 Teardown: Restored role:", restoredRole);
+        await assertion.assertEqual(normaliseCopy(restoredRole), testdata.roleTeacher,
+          "Teardown: Role should be restored to '" + testdata.roleTeacher + "'");
+      } catch (teardownErr) {
+        console.log("[STFP_19] Teardown error:", teardownErr.message);
+        await logger.logInto(await stackTrace.get(), "Teardown error: " + teardownErr.message, "error");
+      }
+    }
   }
 };
