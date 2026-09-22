@@ -152,3 +152,40 @@ the suite runs on **production**: 20/20 passing. Learner, invite/accept and the 
 - ~~Manual register: record the `TSET_TC_3` WORKAROUND~~ — written into the setup sheet's Remarks.
 - Later: move the setup sheet's cases into application-wise registers (user decision).
 - Nothing committed (migration rule: no commits unless asked).
+
+---
+
+## Session 2 — 2026-09-22 (evening) — INVI_TC_13 flake after merge
+
+## Summary
+After PR #64 was merged, the user's full run on `main` (users `_gq8v` / `Class r5f8` / `_urgi`) went
+51/53: `INVI_TC_13` found the invitation row but the tick was lost, `INVI_TC_4` Accept timed out; the
+user accepted by hand. Root cause from the earlier failing trace: the invitation page SOMETIMES reloads
+itself to `/dashboard/invitation/main?back=true` ~450 ms after the notification click — after our tick.
+
+## Changes Made
+### 1. pages/ExperienceApp/invitationNotification.page.js
+- **Type:** Modified · **Layer:** Page Object
+- **What changed:** new module helper `waitForStableDocument(settleMs, timeoutMs)` (+ `DOC_SETTLE_MS = 1500`,
+  3x the measured 450 ms); `select_invitationByClass` now waits for the document to survive 1.5 s
+  without being replaced (a `window` marker a reload erases; `browser.execute`, sanctioned helper)
+  before waiting for the row and ticking. The tick itself is not retried.
+- **Why:** the URL wait alone was satisfied before the `?back=true` reload.
+### 2. .architecture/product-knowledge/ExperienceApp/teacher-dashboard-class-page.md
+- A2 + Part B: the intermittent `?back=true` self-reload and the settle fix.
+
+## Verification
+- Tick-only debug suite (Suite 6 without Accept) on the still-pending invite of learner `_o43d`
+  (`Class jd67`), `--runData=last`: 3/3 before the fix, 3/3 + 4/4 after — the reload did not occur in
+  these runs (intermittent).
+- **Synthetic reproduction** (scratchpad, headless, page routed to a stub that reloads itself to
+  `?back=true` after 450 ms), real page object: OLD code → 1 s later tick gone + Accept disabled
+  (= the user's failure); NEW code → reload detected once, tick kept, Accept enabled; without a reload
+  the new code passes with +1.5 s.
+- Worktree `lastRun.json` and `learningPathDebug.json` restored after debugging.
+
+## Protected Files Touched
+None — no protected files were modified.
+
+## Pending / Follow-up
+- Commit on a new branch from `main` + PR (asked the user). Next full run confirms live.
