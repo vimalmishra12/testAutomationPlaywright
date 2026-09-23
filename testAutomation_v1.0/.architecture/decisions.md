@@ -907,3 +907,4 @@ before any such run existed; the runs have now actually been performed.
 > **Decision 2 was not honoured on the student file until `[2026-09-23]`.** `ebookE2EstudentTest.json`
 > shipped with an empty `After` on 7 of its 8 suites, so it violated this ADR's own teardown rule and
 > the leak described in `c1-core-shared.md` Part C §C1 was live there. Now fixed.
+

@@ -134,3 +134,4 @@ Fixed data used as-is from SOURCE: prod school **MQA Sierra School** `MQA-ABC-DE
 | `npm run ebookAccessibilityTest_thor` | `ebookAccessibilityTest.json` | Single-login 35-step accessibility run: keyboard focus traversal pages 22/24/26/28 (`TST_KBOA_TC_1..19`), then continuous toolbar traversal page 26 (`TST_EBTF_TC_1..16`) |
 | `npm run visualAcceptance_ebookAccessibility_thor` | `ebookAccessibilityTest.json` | Same file in the visual lane (`--visual=novus --skipAssertion=true`). Baselines only the 16 `TST_EBTF_TC_*` steps; the 19 keyboard steps stay `visualTest: false` and are skipped by the engine |
 | `npm run eBookHotLinkTest_thor` | `player.json` | Media player hot-link playback |
+

@@ -237,3 +237,4 @@ Modules `CMAT` · `RBNK` · `EBOO` · `C1AS` · `APPS` (teacher materials, eBook
 - Phase 1 ✅ 2026-09-23 — 6 suites consolidated (Suites 1–5: Class 1RB/2RB materials & eBooks, RBNK 1 & 2, Presentation Plus launch; Suite 6: Assignment Creation from Presentation Plus TOC); `TST_APPS_TC_1/2` teardown per suite
 - Phase 2 ✅ 2026-09-23 — **77/77 passing (5m)** on Thor across all 6 suites, including Suite 6's assignment-creation round trip (`TST_C1AS_TC_24` return-to-Presentation-Plus verified).
 - Phase 3 ⬜ pending
+
