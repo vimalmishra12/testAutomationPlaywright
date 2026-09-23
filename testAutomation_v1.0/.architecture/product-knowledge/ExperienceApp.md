@@ -106,6 +106,11 @@ one intentional de-indent, and the single dropped line (the Thor URL) already st
 this file’s environment table above. Original file sha256
 `5241740AC8A859DC21885E2C3547F57B3EFCF5A362EFA9554AB42B9383AF80CB` (13,811 bytes); git history holds it.
 
+> **Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
+> notes, drawing tool and the teacher/student roles — which accounts for **16 of 51** C1 page
+> objects. When that work starts, it gets its own area shared file and per-screen files under
+> `ExperienceApp/`, following the same pattern (ADR-020).
+
 ### Migration note [2026-08-21]
 
 Under **ADR-020** the four feature sections that used to live in this file were moved verbatim into
