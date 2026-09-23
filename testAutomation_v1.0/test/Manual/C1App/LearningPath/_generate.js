@@ -25,6 +25,10 @@ const SETUP = require("./_tcdata_setup.js");
 
 const BASE = "LearningPath_test_cases";
 const DATE = "2026-09-22";
+// [2026-09-23] Batch A/C of batch 2 automated — the header's generated date / run summary move on;
+// DATE stays for the batch-1 history it describes.
+const DATE_B2 = "2026-09-23";
+const LAST_RUN = "full run 75/75 on production (" + DATE_B2 + ") — teacher _e9mo, Class lm76, learner _iyit; the previous full run the same day was 74/75 (TST_DASH_TC_15, since fixed)";
 
 const COLUMNS = [
   "S.No.", "Test Case ID", "Title", "Linked Requirement", "Type", "Priority",
@@ -44,6 +48,7 @@ const counts = rows.reduce((a, r) => ((a[r.type] = (a[r.type] || 0) + 1), a), {}
 const passed = rows.filter((r) => r.status === "Pass").length;
 const blocked = rows.filter((r) => r.status === "Blocked");
 const notRun = rows.filter((r) => r.status === "Not Run");
+const failed = rows.filter((r) => r.status === "Fail");
 // Setup rows keep the flow order within each module group; S.No. restarts on the setup sheet.
 const setupRows = SETUP.GROUPS.flatMap((g) => SETUP.TCS.filter((t) => t.req === g))
   .map((tc, i) => Object.assign({ sno: i + 1 }, tc));
@@ -94,11 +99,17 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 **Module:** PEXT (Practice Extra player) — *\`practiceExtra.page.js\`*; the entry click is DASH (\`dashboard.page.js\`)
 **App:** Cambridge One — \`www.cambridgeone.org\` (production; thor is blocked — see \`c1-core-shared.md\` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
-**Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive || 0} Positive · ${counts.Edge || 0} Edge · ${counts.Negative || 0} Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
-**Execution status (${DATE}):** **${passed} automated and passing** (\`npm run learningPathTest_prod\`, full run 53/53 — teacher _w1b7, Class vyi9, learner _jqh2) · **${notRun.length} Not Run** · **${blocked.length} Blocked** (${blocked.map((b) => b.id).join(", ")}).
+**Generated:** ${DATE_B2} | **Total TCs:** ${rows.length} (${counts.Positive || 0} Positive · ${counts.Edge || 0} Edge · ${counts.Negative || 0} Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
+**Execution status (${DATE_B2}):** **${passed} automated and passing** (\`npm run learningPathTest_prod\`, ${LAST_RUN}) · **${failed.length} Fail**${failed.length ? " (" + failed.map((f) => f.id).join(", ") + ")" : ""} · **${notRun.length} Not Run** · **${blocked.length} Blocked** (${blocked.map((b) => b.id).join(", ")}).
 **Part 2 — LP setup chain (${setupRows.length} TCs, module-wise, separate sheet):** **${setupPassed} of ${setupRows.length} passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision ${DATE}).
 
-**Batches:** Batch 1 — LP-001…006, automated (${B1.TCS.length} TCs) · **Batch 2 — LP-007…033, designed ${DATE}, not yet automated (${B2.TCS.length} TCs)** · Setup chain — sheet "LP Setup (by module)".
+**Batches:** Batch 1 — LP-001…006, automated (${B1.TCS.length} TCs) · **Batch 2 — LP-007…033, designed ${DATE} (${B2.TCS.length} TCs); its learner-player + dashboard part (LP-007…011, 014, 015, 018…020, 026, 027 — incl. appended TST_PEXT_TC_26) automated ${DATE_B2}** · Setup chain — sheet "LP Setup (by module)".
+>
+> **Batch 2 automation (${DATE_B2}):** expected results of the automated rows were confirmed live on production and
+> rewritten to what was seen. Three sheet assumptions did not hold and are recorded in Remarks: LP-018 (the
+> lesson-view ✕ does not leave the Learning Path — Back does, new TST_PEXT_TC_26), LP-019 (the open control
+> toggles the TOC), LP-027 (a spinner, not a progress bar). LP-021/022 were wrongly Blocked — the product has
+> an HTML and a PDF activity; now Not Run.
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.

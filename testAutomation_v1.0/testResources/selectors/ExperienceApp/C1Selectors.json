@@ -170,7 +170,9 @@
         "learnerWelcomeContinueBtn": "[qid='l-wl-btn-1']",
         "learnerClassCard": "div.class-card-container",
         "componentTile": ".component-container",
-        "activationCodeInput": "#activationCodeInput"
+        "activationCodeInput": "#activationCodeInput",
+        "_comment_lp": "LP batch 2 (2026-09-23, prod): the launch spinner shown ~1 s between the component click and the player (LP-027) — a spinner, not a progress bar.",
+        "learningPathLoader": "div.loader"
       },
       "createNewClass": {
         "enterClassDetails": ".form-heading, .add-class-details-heading",
@@ -500,7 +502,29 @@
         "dropdownOption": "ul li",
         "checkBtn": "a.green-btn",
         "nextBtn": "a[title='Next']",
-        "scoreMessage": "p.score"
+        "scoreMessage": "p.score",
+        "_comment_batch2": "LP batch 2 keys, captured live on production 2026-09-23 (learner _uyu7). The player chrome (Back, activity title) is on the OUTER page for every activity type; the Practice Set is NOT in the iframe. psAttemptedAnswer is SOURCE's, verified live after TST_PEXT_TC_13 submitted.",
+        "activityTitleBtn": "#selectedActivitySidebarBtn",
+        "backBtn": "a.back-btn[qid='lo-renderer-bck-btn']",
+        "tocUnitViewCloseBtn": "#unitViewCrossBtn",
+        "tocLessonViewCloseBtn": "#lessonViewCrossBtn",
+        "tocGoToUnitViewBtn": "#lessonViewBackBtn",
+        "tocUnitItem": ".unit-level-item",
+        "tocLessonToggle": ".accordian-heading a.toggable-btn",
+        "tocActivity": "a.activity-name-container:has(span[title='{NAME}'])",
+        "tocAnyActivity": "a.activity-name-container",
+        "deckStep": "ul.progress-bar li.step",
+        "deckStepCurrentAt": "ul.progress-bar li.step:nth-child({K}).current",
+        "deckLastStepCurrent": "ul.progress-bar li.step:last-child.current",
+        "activityCheckInner": "a.btn-check",
+        "prevBtn": "a[title='Previous']",
+        "psEditor": ".ql-editor[aria-label='PS Answer']",
+        "psWordCount": "p.word-count",
+        "psSubmitBtn": "#submitAnswer-productiveSkill-btn",
+        "psConfirmModal": "#exampleModal",
+        "psReadyToSubmitTitle": "#exampleModal #readyToSubmitLabel",
+        "psConfirmSubmitBtn": "#submitModal-productiveSkill-btn",
+        "psAttemptedAnswer": "div.attempted-answer"
       },
       "myProgress": {
         "my_progress": ".page-title.mt-3"

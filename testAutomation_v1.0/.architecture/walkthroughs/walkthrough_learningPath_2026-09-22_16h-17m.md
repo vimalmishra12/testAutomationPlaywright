@@ -189,3 +189,85 @@ None — no protected files were modified.
 
 ## Pending / Follow-up
 - Commit on a new branch from `main` + PR (asked the user). Next full run confirms live.
+
+---
+
+## Session 3 — 2026-09-23 — Batch 2, part A + C (learner player + dashboard)
+
+## Summary
+Automated LP-007…011, 014, 015, 018, 019, 026, 027 (new Suite 8) and LP-020 (Suite 6), on branch `ashu_local`.
+Grounded everything live first with a read-only probe (learner `_uyu7`), then: Suite 8 debug 21/21, full run
+74/75. The failure is `TST_DASH_TC_15` (automation design — see Pending).
+
+## Grounding (probe scripts in the session scratchpad, read-only except Flashcards paging + one PS submit by the debug run)
+- TOC = Unit → Lesson → 5 activities (incl. "Non-scorable HTML activity" and "test pdf" — LP-021/022 were wrongly Blocked).
+- Open control opens the LESSON view; it is a toggle (keyboard Enter while open closes it). The mouse cannot reach it while open.
+- Two "Go to unit view" links; the header one is covered — use `#lessonViewBackBtn`.
+- `#lessonViewCrossBtn` closes the TOC only; `a.back-btn` leaves to `/dashboard/learner/dashboard`.
+- Flashcards: 6 `li.step`; a Next within ≤1.8 s of a card change is ignored, ≥2.0 s always accepted (16 trials) → 2.5 s settle.
+  The deck remembers its position → rewind with Previous before paging.
+- PS is on the OUTER page (no iframe). Empty → Submit `class="btn disabled"`. The pre-rendered `#exampleModal`
+  showed the "class hasn't started" variant; the real Submit opened "Ready to submit?". A DOM `offsetParent`
+  check reported the fixed-position modal as hidden — misleading; the screenshot showed it.
+- Launch: `div.loader` spinner ~0.2–1.1 s; no progress bar; no expiry text.
+
+## Applicable-traps table
+| Trap | Applies? | Where handled |
+|---|---|---|
+| TOC persists in DOM when closed | yes | every TOC check is `isDisplayed`/`waitForDisplayed` |
+| CSS-only disabled button (Submit) | yes | TC_16 reads the class + asserts no dialog; click attempted with a 3 s timeout |
+| Pre-rendered modal (`#exampleModal`, 2 variants) | yes | assert the `#readyToSubmitLabel` title, not the modal |
+| Invented timeouts | yes | loader 60 s bound (measured ~1 s); deck settle 2.5 s measured; dialog ≤5 s (measured ~1 s) |
+| Covered element (open control while TOC open) | yes | LP-019 uses keyboard focus + Enter |
+| One PS submission per learner | yes | TC_16 before TC_13; debug learner consumed once, full run fresh |
+| Positional selectors | no | activities/units/lessons addressed by name |
+
+## Changes Made
+### 1. testResources/selectors/ExperienceApp/C1Selectors.json
+- `practiceExtra`: +activityTitleBtn, backBtn, tocUnitViewCloseBtn, tocLessonViewCloseBtn, tocGoToUnitViewBtn,
+  tocUnitItem, tocLessonToggle, tocActivity ({NAME}), tocAnyActivity, deckStep, deckStepCurrentAt ({K}),
+  deckLastStepCurrent, activityCheckInner, prevBtn, psEditor, psWordCount, psSubmitBtn, psConfirmModal,
+  psReadyToSubmitTitle, psConfirmSubmitBtn, psAttemptedAnswer.
+- `dashboard`: +learningPathLoader, headerNotificationsBtn.
+### 2. pages/ExperienceApp/practiceExtra.page.js
+- New: activityRow, getData_tocActivities, ensure_tocUnitView, click_goToUnitView, click_tocUnit, toggle_tocLesson,
+  keyboard_toggleToc, open_tocActivity, getData_deck, _deckCurrent, page_deckToEnd, getData_psScreen,
+  click_psSubmitWhenEmpty, submit_ps, revisit_activity, click_closeLessonView, click_back.
+### 3. pages/ExperienceApp/dashboard.page.js
+- New: launch_classComponent_watchLoading (LP-027), getData_learnerWithoutClass (LP-020).
+### 4. test/ExperienceApp/practiceExtra.test.js / dashboard.test.js
+- `TST_PEXT_TC_101, 9, 25, 19, 10, 11, 12, 16, 13, 17, 18, 26`; `TST_DASH_TC_15, 16`.
+### 5. C1TCRepository.json — the 14 TCs registered, all `visualTest: false`.
+### 6. learningPathData.json — `pextToc`, `pextFlashcards`, `pextPS`, `learnerNoClass`.
+### 7. learningPath.json — Suite 6 +DASH_TC_15; new Suite 8. `learningPathDebug.json` = Suite 8 (scratch; rewritten with LF).
+### 8. Knowledge / register
+- `learning-path-player.md` §A5–A8 + Part B batch-2 table; `authoring-status.md` block; register `_tcdata_batch2.js`
+  (observed expected results, statuses, LP-021/022 unblocked, TST_PEXT_TC_26 appended), `_generate.js` (header, Fail count).
+
+## Runs
+- Suite 8 debug (`--runData=last`, learner `_uyu7`): 21/21, 58 s. Probe afterwards confirmed the PS really submitted.
+- Full `npm run learningPathTest_prod`: 74/75, 298 s — teacher `_f5s1`, Class tje0, learner `_vcmw`.
+  `TST_DASH_TC_15` failed: "The learner dashboard did not load" — the screenshot shows "Invitations (1)" (the
+  learner is routed to the invitations page while an invite is pending). A "Temporary disruption to Cambridge
+  One" banner was also on screen (environmental, not related).
+
+## Architecture Decisions Triggered
+None.
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- `TST_UMBP_TC_5` in the LP register reuses a RETIRED id — rename before automating LP-033.
+
+### Session 3 (cont.) — DASH_TC_15 fix, user-confirmed
+- `invitationNotification.page.js`: + `getData_invitationsLanding(className)` — read-only; waits for the
+  `/dashboard/invitation/` route and this run's class row (`invitedClassCheckbox`).
+- `dashboard.page.js`: `getData_learnerWithoutClass(className, componentName)` now uses that landing as its
+  readiness signal (was: `/dashboard/learner/` URL + bell), then checks no class card / no component tile.
+- `dashboard.test.js` `TST_DASH_TC_15`: asserts onInvitations + classListed + no card + no Practice Extra.
+- `learningPathData.json` `learnerNoClass` + `className`; `C1Selectors.json` dropped the now-unused
+  `dashboard.headerNotificationsBtn`.
+- Full run 2: **75/75**, 301 s (teacher `_e9mo`, Class lm76, learner `_iyit`); DASH_TC_15 screenshot shows
+  "Invitations (1)" with Class lm76. Register regenerated (.md + .xlsx): 22 Pass · 9 Not Run · 4 Blocked.
+- Remaining: nothing committed (branch `ashu_local`); `TST_UMBP_TC_5` retired-ID rename before LP-033.

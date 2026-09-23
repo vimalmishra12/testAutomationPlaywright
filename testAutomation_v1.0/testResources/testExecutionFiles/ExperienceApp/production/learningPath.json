@@ -432,6 +432,8 @@
     "BeforeEach": [],
     "Test": [
       { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_15", "description": "LP-020: no class card and no Practice Extra before the invite is accepted", "testFile": "./test/ExperienceApp/dashboard.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerNoClass" } ] },
       { "id": "TST_INVI_TC_101", "description": "Housekeeping: wait for the invite in the bell", "testFile": "./test/ExperienceApp/invitationNotification.test.js", "timeout": 240000,
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.invite.notificationWait" } ] },
       { "id": "TST_INVI_TC_1", "description": "Open the bell", "testFile": "./test/ExperienceApp/invitationNotification.test.js", "testData": [] },
@@ -479,6 +481,54 @@
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.frame4" } ] },
       { "id": "TST_PEXT_TC_8", "description": "LP-003: full score", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.score" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite8": {
+    "Name": "LP-007…011, 014, 015, 018, 019, 026, 027 - TOC drill-down, Flashcards, Practice Set (one PS submission per learner)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's learner e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the learner password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_16", "description": "LP-027: no expiry date; loading indicator; player opens", "testFile": "./test/ExperienceApp/dashboard.test.js", "timeout": 300000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerAccess" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC (lesson view)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_101", "description": "Housekeeping: TOC at its unit view", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_9", "description": "LP-007: drill into the unit - its activities are listed", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_25", "description": "LP-026: lesson collapse / expand, up to unit view and back in", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_19", "description": "LP-019: open control activated again while open (keyboard) - toggles, one sidebar", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_10", "description": "LP-008: open Flashcards from the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextFlashcards" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_11", "description": "LP-009: page the deck first card to last, no grading", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 180000, "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_12", "description": "LP-010: open the PS from the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_16", "description": "LP-014: empty answer cannot be submitted", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_13", "description": "LP-011: type, Submit, confirm (ONE per learner)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_17", "description": "LP-015: leave and return - submitted answer shown, no Submit", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC (lesson view)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_18", "description": "LP-018: lesson-view close keeps the learner in the Learning Path", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_26", "description": "LP-018: Back returns to the dashboard", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] }
     ],
     "AfterEach": [],
     "After": []

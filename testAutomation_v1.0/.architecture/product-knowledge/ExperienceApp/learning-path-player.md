@@ -48,6 +48,66 @@
 - **One attempt per learner.** Progress is saved as you go; re-entry resumes at the next activity
   (Flashcards) and a finished or half-finished scorable is not offered fresh again.
 
+### A5. TOC structure and navigation `[2026-09-23, prod — learner _uyu7]`
+- cqaautomationbundle1's TOC has **three levels**: Unit 1 → Lesson 1 → five activities, in order
+  `BASE04_Dropdown_Scorable.zip`, `Flashcards.zip`, `PS`, `Non-scorable HTML activity`, `test pdf`.
+  (So the product DOES carry an HTML and a PDF activity — the batch-2 design assumed it did not; see LP-021/022.)
+- **Unit view**: header = product name, close `#unitViewCrossBtn`, one row per unit `.unit-level-item`
+  ("Unit 1 · 1/4 Completed"). Clicking a unit opens its **lesson view**.
+- **Lesson view**: header "Unit 1", close `#lessonViewCrossBtn`, a Bootstrap accordion per lesson
+  (`.accordian-heading a.toggable-btn`) listing `a.activity-name-container` rows (`span[title=<name>]`,
+  status icon with aria-label: "Completed above target", "in progress", "viewed", "evaluation pending",
+  "Not started"). "Go to unit view" = `#lessonViewBackBtn` — a SECOND link with that aria-label sits in the
+  header but is covered by `#lessonViewBackBtn` (clicks on it are intercepted).
+- The open control (`#selectedActivitySidebarBtn`, title = current activity) opens the **lesson view** of the
+  current activity on every entry but the first.
+- **The open control is a TOGGLE.** While the TOC is open the sidebar covers it for a mouse; from the
+  keyboard (focus + Enter) it CLOSES the TOC, and again re-opens it. Only one sidebar element ever exists.
+- **Opening an activity from the TOC leaves the TOC open.**
+- **`#lessonViewCrossBtn` closes the TOC only** — the learner stays on the same activity in the Learning
+  Path. The way OUT is the player's **Back** link (`a.back-btn`, qid `lo-renderer-bck-btn`) →
+  `/dashboard/learner/dashboard`.
+- Re-entry resumes at the **last activity opened** (not necessarily the next one in order).
+
+### A6. Flashcards (non-scorable) `[2026-09-23, prod]`
+- In the iframe: `ul.progress-bar li.step` × 6, current card `li.step.current`. Outer page: `Next`
+  (`a[title='Next']`), and `Previous` (`a[title='Previous']`) after the first card; on the LAST card the bar
+  shows "Previous" + "NEXT ACTIVITY", and that click moves on to the next activity (PS).
+- **No grading control** at any point: outer `a.green-btn` absent, in-activity `a.btn-check` hidden.
+- **The deck remembers the learner's position** across entries.
+- **A Next click within ~1.8 s of the previous card change is IGNORED** (≥ 2.0 s always accepted — measured
+  in 16 trials); nothing observable (class, aria, animation) marks the end of that window.
+
+### A7. Practice Set (PS) `[2026-09-23, prod]`
+- **NOT in the activity iframe** — rendered on the outer page: instructions, "Answer:" Quill editor
+  `.ql-editor[aria-label='PS Answer']`, B/I/U toolbar, `p.word-count` ("Word count: 0"), **Save**
+  `#saveAnswer-productiveSkill-btn` and **Submit** `#submitAnswer-productiveSkill-btn`.
+- **Empty editor → Submit is `class="btn disabled"`** (CSS only, no `disabled` attribute); a click opens no
+  dialog and submits nothing. Typing enables it ("btn").
+- Submit → **"Ready to submit?"** (`#exampleModal`, title `#readyToSubmitLabel`): "Just so you know, it
+  won't be possible to make any changes to your work after it's submitted" — Cancel
+  `#cancelModal1-productiveSkill-btn`, Submit `#submitModal-productiveSkill-btn`.
+- The SAME modal element also carries a **"Your class hasn't started yet"** variant (`#notStartedLabel`,
+  Cancel/Save only) — pre-rendered, so reading `#exampleModal` before Submit shows the wrong variant.
+  A class created today (default start date) HAS started: the ready-to-submit variant opens.
+- After submit: `div.attempted-answer` shows the answer read-only; editor and Submit are removed; the TOC row
+  reads "Activity status: evaluation pending". Revisiting shows the same.
+- Other pre-rendered PS modals: `#changesNotSavedModal` ("We're unable to submit your work…", "Last saved
+  690 months ago" placeholder), `#pskill-GroupInfoModal`, `#addLinkModal`.
+- **Fixed-position modals have no `offsetParent`** — a DOM-side `offsetParent !== null` visibility check
+  reports an open modal as hidden; use the action library's `isDisplayed`/`waitForDisplayed`.
+
+### A8. Launch and dashboard `[2026-09-23, prod]`
+- The Practice Extra tile of an SLE class reads "Practice Extra / Continue learning"; **no expiry date** on
+  the tile or the class card (dates on the card are the class's start → end, e.g. "Sep 23, 2026 → Sep 22, 2027").
+- Launch shows a **spinner** `div.loader` from ~0.2 s to ~1.1 s after the click, then the player — **no
+  progress bar** (the scenario sheet's "progress bar" was not observed).
+- **A learner with a pending invite and no class never sees the dashboard** — login routes straight to
+  "Invitations (1)" (`/dashboard/invitation/…`, the class listed, Accept disabled until ticked). LP-020
+  (`DASH_TC_15`) asserts that landing; a check for the learner dashboard times out. `[2026-09-23, prod full run]`
+- `isInitialized_player` (DASH_TC_14) waits for the iframe; a learner resuming at **PS has no iframe**, so
+  use the activity title link (`#selectedActivitySidebarBtn`) as the "player ready" signal (DASH_TC_16).
+
 ---
 
 ## Part B — Automation notes
@@ -71,6 +131,28 @@
   `--runData=last` (ADR-022); once a debug learner has finished the activity, the next debug of
   `PEXT_TC_4…8` needs a new learner (run Suites 4–6 in normal mode, or the full suite).
 - Runs 2026-09-22: Suite 7 debug 6/6 then 11/11 (learner `_ajq1`); full suite 53/53 (learner `_jqh2`).
+
+**Batch 2 (Suite 8, 2026-09-23)** — one learner, in this order (each needs the previous state):
+
+| TC | Proves |
+|---|---|
+| `DASH_TC_16` | LP-027: no expiry on the SLE tile/card; the `div.loader` spinner shows; player chrome opens |
+| `PEXT_TC_101` | housekeeping — TOC open at its unit view |
+| `PEXT_TC_9` | LP-007: unit → lesson view listing all five activities |
+| `PEXT_TC_25` | LP-026: lesson collapse/expand, "Go to unit view", back in with the same activities |
+| `PEXT_TC_19` | LP-019: keyboard re-activation toggles the TOC closed, then open; one sidebar |
+| `PEXT_TC_10` / `TC_11` | LP-008/009: Flashcards opens; deck rewound, then paged first → last, no grading control |
+| `PEXT_TC_12` / `TC_16` | LP-010/014: PS screen; empty answer → Submit disabled, no dialog |
+| `PEXT_TC_13` / `TC_17` | LP-011/015: type → Submit → confirm → answer shown; on return still shown, no editor/Submit |
+| `PEXT_TC_18` / `TC_26` | LP-018: lesson-view close keeps the learner in the LP; Back → dashboard |
+
+`DASH_TC_15` (LP-020) runs in **Suite 6**, before the invite is accepted — so it can only be exercised by a
+full run (a `--runData=last` learner already has the class).
+- Deck mechanics (`page_deckToEnd`): rewind with Previous (the deck remembers its position), then Next until
+  `li.step:last-child` is current, each change followed by `DECK_SETTLE_MS = 2500` (measured threshold
+  1.8–2.0 s, §A6). Stops ON the last card — the next Next would leave for PS.
+- `TST_PEXT_TC_13` consumes the learner's one PS submission: a `--runData=last` debug of it needs a learner
+  who has never submitted (run the full suite).
 
 ---
 
