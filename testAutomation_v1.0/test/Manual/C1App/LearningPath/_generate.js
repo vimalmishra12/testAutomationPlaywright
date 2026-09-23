@@ -126,6 +126,31 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 
 ---
 
+## How to automate a case from this register
+
+1. **Do not redesign.** Every scenario of the source sheet is already mapped here — pick a row with
+   Status \`Not Run\` and keep its **Test Case ID**; that ID is what goes into the test file, the TC
+   repository and the execution file. Never renumber existing rows; a genuinely new case is appended.
+2. **Read first:** \`.architecture/authoring-status.md\` → the \`learningPath\` block (what exists, the
+   commands, the constraints), \`product-knowledge/ExperienceApp/learning-path-player.md\` (Part C =
+   how to run and debug, what a run creates, what is once-per-learner) and \`c1-core-shared.md\`; then
+   follow the \`c1-test-authoring\` skill (\`.agent/skills/\`).
+3. **\`[ASSUMED]\` is a question, not a fact.** Any expected result marked \`[ASSUMED]\` comes from the
+   scenario sheet, not from the live app — confirm it live (or ask the product owner) and replace the
+   text with what was actually seen before the case is called automated.
+4. **Blocked rows** carry the reason and what would unblock them in \`Comments / Defect ID\`. Do not
+   automate one until its blocker is gone; say so instead.
+5. **Mind the data.** The suite runs on **production and creates real users, a class and progress on a
+   full run**; debug with \`learningPathDebug.json\` + \`--runData=last\` (creates nothing). The scorable
+   activity and the Practice Set can be met fresh only **once per learner** — plan which one a run uses.
+   Nothing new may be created on a shared environment without asking (ADR-021).
+6. **Close the loop:** back-port into \`_tcdata*.js\`, run
+   \`node test/Manual/C1App/LearningPath/_generate.js\` (it rewrites both the \`.md\` and the \`.xlsx\` —
+   never hand-edit them), set Status/Comments, and update the \`learningPath\` block in
+   \`authoring-status.md\`.
+
+---
+
 ## Requirement → Test Case coverage map
 
 | Linked Requirement (scenario) | Mapped TC IDs (P → E → N) |
