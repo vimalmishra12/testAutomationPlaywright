@@ -307,9 +307,13 @@ dropdown fixtures, and updated `package.json` scripts (Commit `71f7451ac161`).
 ### 2. pages/ExperienceApp/notes.page.js
 - **Type:** Modified
 - **Layer:** Page Object
-- **What changed:** Enhanced `switchToNewTabAndVerifyUrlPart()` to eliminate race conditions when reading
+- **What changed:** Enhanced `click_noteHyperlink()` to eliminate race conditions when reading
   new tab URLs. Replaced immediate `global.page.url()` read with `global.page.waitForURL(...)` specifying
   `{ timeout: 15000, waitUntil: "commit" }`, followed by a fallback 5-iteration polling loop.
+  > Corrected `[2026-09-23]`: this line named `switchToNewTabAndVerifyUrlPart()`, which does not exist
+  > anywhere in the repository. The method changed is `click_noteHyperlink`, called from
+  > `test/ExperienceApp/notes.test.js:114`; `switchToNewTab` is a separate `baseActionLibrary` helper
+  > that this method calls.
 - **Why:** In asynchronous tab creation, reading `global.page.url()` immediately captured `about:blank`
   before the browser committed navigation to the destination URL.
 
@@ -342,3 +346,285 @@ dropdown fixtures, and updated `package.json` scripts (Commit `71f7451ac161`).
 
 ## Pending / Follow-up
 - Clean live runs of `ebookE2EteacherTest_thor` against Thor to verify all 6 suites passing end-to-end.
+
+---
+
+## Session 7 — 2026-09-23
+
+## Summary
+Implemented the confirmed follow-ups from reviewing `9228b5e` + `71f7451`: created the merged
+accessibility execution file, added the missing per-suite logout teardown to the student E2E file,
+paid the outstanding `AGENTS.md` §7 comment debt in `notes.page.js`, and corrected several
+knowledge-base claims that measurement proved wrong. Regenerated `tooling/tc-map.md`, which had been
+failing its own check since the consolidation.
+
+## Changes Made
+
+### 1. testResources/testExecutionFiles/ExperienceApp/thor/ebookAccessibilityTest.json
+- **Type:** Created
+- **Layer:** Execution File (Test Resources)
+- **What changed:** Merged the 19 `TST_KBOA_TC_1..19` steps of `ebookFocusA11yMergedTest.json` with
+  the 16 `TST_EBTF_TC_1..16` steps of `ebookToolbarFocusTest.json` — 35 `Test` steps on one login —
+  plus `After: [TST_EBOO_TC_5, TST_APPS_TC_1, TST_APPS_TC_2]`. Built mechanically, not retyped: the
+  two sources' `Before` blocks were asserted byte-identical before joining, and each step keeps its
+  own `testFile` (ADR-011 composition — no TC redefined). All 38 steps verified to resolve in
+  `C1TCRepository.json` via the runner's own `testFile`→`id` rule (`testrunner.js:550`,`:557`).
+- **Why:** Restores the 16 `TST_EBTF_TC_*` P1 TCs, which ran in **no** live npm script after their
+  two scripts were retired in `9228b5e`. Their flags were left untouched, so per AGENTS.md §8 Rule B
+  the companion `visualAcceptance_ebookAccessibility_thor` script is required.
+- **Lines affected:** whole file (new, 1…467)
+
+### 2. testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EstudentTest.json
+- **Type:** Modified
+- **Layer:** Execution File (Test Resources)
+- **What changed:** Added the missing `After` teardown to the 7 suites that had none. Suites 1, 2, 4,
+  5, 7 (ending on a step other than Close eBook) get `[TST_EBOO_TC_5, TST_APPS_TC_1, TST_APPS_TC_2]`;
+  Suites 3 and 8 already end on `TST_EBOO_TC_5` so get `[TST_APPS_TC_1, TST_APPS_TC_2]`. Suite 6 was
+  already complete and is untouched. Diff: 128 insertions, 7 deletions (the 7 are the `"After": []`
+  lines that expanded).
+- **Why:** The file violated ADR-023 decision 2 — its own rule that every suite in a multi-suite file
+  logs out. Leaked auth state leaked into the next suite's `launchUrl`.
+- **Lines affected:** the `After` block of each of the 8 suites
+
+### 3. pages/ExperienceApp/notes.page.js
+- **Type:** Modified
+- **Layer:** Page Object
+- **What changed:** Added the doc comment for `click_noteHyperlink` (it had none) and inline comments
+  across the tab-switch block, which had **zero** comments across ~40 changed lines. 23 insertions,
+  0 deletions — comments only, no behaviour change. Records why `waitUntil: "commit"` is load-bearing,
+  why `action.waitForUrl()` is unusable here, and why the `catch` falls back to a substring poll.
+- **Why:** `AGENTS.md` §7 requires a what/why comment on every changed JS line group.
+- **Lines affected:** 193-201 (method doc), 233-240 and 253-256 (wait), 266-271 (fallback)
+
+### 4. .architecture/decisions.md — ADR-023
+- **Type:** Modified · **Layer:** Documentation
+- **What changed:** Status line no longer claims the student and teacher suites were verified on thor
+  (`authoring-status.md:224`/`:230` record them as Phase 2 pending). "38-step notes battery" → 42-step.
+  Consequences now carry measured script counts and the two corrections below.
+- **Why:** The ADR asserted execution that never happened, and contradicted itself on script counts.
+
+### 5. .architecture/authoring-status.md
+- **Type:** Modified · **Layer:** Documentation
+- **What changed:** Corrected the notes-battery counts to measured values and opened an
+  `ebookAccessibilityTest` block at Phase 1 with Phase 2 pending.
+- **Why:** This file owns the "✅ requires a real run" rule; the new file must not inherit a ✅ it has
+  not earned.
+
+### 6. .architecture/product-knowledge/ExperienceApp/class-materials-ebook-foc.md
+- **Type:** Modified · **Layer:** Documentation
+- **What changed:** Part B §1 now states the boundary with ADR-015C instead of reading as a
+  contradiction of `schoolLibrary.page.js:351-364`, and records that the `baseActionLibrary` escape
+  hatch is still outstanding. Part B §2 generalises the teardown rule to student suites, documents the
+  close-eBook-before-logout ordering as `[ASSUMED]`, and documents the duplicate-`TST_APPS_TC_*` id
+  trap. Part C §2's suite table corrected to measured step counts.
+- **Why:** ADR-020: a trap found in a session is not documented until it reaches a knowledge file.
+
+### 7. package_copyDND.json
+- **Type:** Modified · **Layer:** Config
+- **What changed:** Eight `//` marker keys at the head of `scripts` stating plainly that this is a
+  stale copy, not a retirement ledger, that 5 removed scripts are absent from it, and that nothing
+  reads it.
+- **Why:** It was being relied on as the ledger for the retired scripts; measurement shows it is not.
+
+### 8. tooling/tc-map.md
+- **Type:** Modified (generated) · **Layer:** Tooling
+- **What changed:** Regenerated with `node tooling/tcMap.js` — 143 execution files, 1112 TCs.
+- **Why:** `node tooling/tcMap.js --check` has exited 1 since `9228b5e` removed scripts without
+  regenerating. It now reports the map up to date.
+
+## Architecture Decisions Triggered
+- No new ADR. ADR-023 corrected in place; ADR-011 (reuse, compose via per-step `testFile`) and
+  ADR-003 (escape hatch) both re-cited rather than extended.
+- ⚠ Two claims from earlier sessions were **disproved by measurement** and are corrected above: the
+  retired-script count, and `package_copyDND.json`'s status as a ledger.
+
+## Protected Files Touched
+- `package.json` — **modified after explicit confirmation**, later in the same session (see §9 below).
+  The confirmation block was presented, held open across several turns while the non-protected work
+  was done and verified, and answered before the file was edited.
+- `baseActionLibrary.js`, `testrunner.js`, `run.js`, `env.conf.js` and the rest of the protected list
+  are untouched.
+
+### 9. package.json  (PROTECTED FILE — confirmation received before editing)
+- **Type:** Modified
+- **Layer:** Configuration
+- **What changed:** Line 15 `ebookFocusA11yTest_thor` → `ebookAccessibilityTest_thor`, repointed from
+  the frozen `ebookFocusA11yMergedTest.json` to `ebookAccessibilityTest.json`; added
+  `visualAcceptance_ebookAccessibility_thor` running the same file with
+  `--visual=novus --skipAssertion=true`. Script count 94 → 95. Two cosmetic fixes applied on a second
+  explicit confirmation: line 7's `test` hint suggested the deleted `loginFeatureTest_thor` and now
+  suggests `ebookE2EstudentTest_thor`, and line 13's `//` marker gained a pointer to
+  `package_copyDND.json` with the caveat that it is an incomplete copy. No other line changed.
+- **Naming decision — `Feature` suffix: considered and DECLINED by the user `[2026-09-23]`.** The
+  proposal was to drop the redundant `Feature` from the five `*AssignmentFeatureTest_prod` /
+  `createAssignmentFeatureTest_LT` scripts. Measured before acting: **32 of the 95 scripts carry
+  `Feature`** (15 `_prod`, 15 `_LT`, 2 `_LT` variants), so renaming 5 would leave 27 keeping it and put
+  `createAssignmentTest_prod` beside `completeAssignmentFeatureTest_prod` — more inconsistent than
+  before, not less. Renaming all 32 for real consistency is also riskier than it looks, because the CI
+  default `loginFeatureTest_LT` contains the word and appears three times in
+  `.github/workflows/e2e-tests.yml`. User decision: leave the naming alone. **Do not re-propose this
+  without new information.**
+- **Why:** Gives the merged 35-step file a name to be run by, and satisfies AGENTS.md §8 Rule B, which
+  requires a dual script because that file contains 16 `visualTest: true` TCs. Naming covers the
+  toolbar-focus suite as well as the keyboard-focus suite, since both now live in this one file.
+- **Lines affected:** 15-16
+- **Verified:** `npm run visualAcceptance_ebookAccessibility_thor` → 35/35 in 3m, exit 0, wrote 16
+  baselines all named `TST_EBTF_TC_*` and none for the keyboard steps, no non-zero mismatch. The
+  functional script's command string was asserted byte-identical to the direct-runner invocation that
+  had already passed 35/35. `tooling/tc-map.md` regenerated: `TST_EBTF_TC_*` now resolve to
+  `ebookAccessibilityTest_thor` + the visual script instead of the two retired names.
+
+## Pending / Follow-up
+- `package.json` — **fully closed out.** The a11y rename, repoint and Rule B companion (§9) plus the
+  two cosmetic fixes are applied and verified; the `Feature`-suffix rename was declined. Nothing about
+  this file remains open.
+- **Knowledge-file split: considered and DECLINED `[2026-09-23]`.** Splitting
+  `class-materials-ebook-foc.md` into per-screen files was raised under ADR-020 and rejected on that
+  same ADR's own triggers: the file is 120 lines against a ~500-line secondary trigger, its Part A/B/C
+  structure is already the ADR's shared-file shape, and `c1-core-shared.md` is the designated shared
+  entry point for this area (`ExperienceApp.md:73-74`), so a second `*-shared.md` would create two
+  competing shared files for one area. Its factual errors were corrected in place instead (§6).
+  > **Superseded `[2026-09-23]`, later the same day — the decline above does not stand.** The user
+  > re-opened it and a plan was written:
+  > [`PLAN_split-class-materials-knowledge_2026-09-23.md`](../PLAN_split-class-materials-knowledge_2026-09-23.md).
+  > Two of the three reasons given above were misreadings of ADR-020: the ~500-line trigger is stated
+  > as *"the **app file** passing ~500 lines"* (`decisions.md:690-691`) and does not govern a
+  > feature-area file, and the Part A/B/C shape is shared by the per-screen files too
+  > (`learning-path-player.md:12-106`), so it argues nothing. The `c1-core-shared.md` objection is
+  > sound but inapplicable — the plan creates no second `*-shared.md`, it routes cross-screen content
+  > into the existing one. ADR-020's **primary** trigger (own module code + own page object) is met
+  > five times in this file, and the split is now the anomaly-free state of the directory. **Executed
+  > later `[2026-09-23]` — see Session 8 below.**
+- **Live verification performed after the edits above, all green on thor.** Each was invoked straight
+  through the runner (`node core/runner/run.js --appType=ExperienceApp --testEnv=thor
+  --testExecFile=<file> --browserCapability=desktop-chrome-1920`), which needs no `package.json`
+  change and therefore did not pre-empt the outstanding confirmation:
+  | Execution file | Result | Wall clock |
+  |---|---|---|
+  | `ebookAccessibilityTest.json` | **35/35 passing**, 0 failures, 0 pending | 4m (222,798 ms) |
+  | `ebookE2EstudentTest.json` | **127/127 passing** across 8 suites | 13m (794,599 ms) |
+  | `ebookE2EteacherTest.json` | **77/77 passing** across 6 suites | 5m (303,618 ms) |
+  All three exited 0. The student run confirms the new teardown: every one of the 8 suites executed an
+  `After` ending in `TST_APPS_TC_1` → `TST_APPS_TC_2`, and the 5 suites that gained a leading
+  `TST_EBOO_TC_5` passed, so closing the reader before logout is safe after the drawing and timer
+  suites. The accessibility run confirms the single login carries both halves and the KBOA→EBTF page
+  handoff. Logs: `output/a11y_verify.log`, `output/student_verify.log`, `output/teacher_verify.log`
+  (gitignored).
+- `baseActionLibrary` — extract the forced raw `global.page.waitForURL` into a named logged method
+  (needs protected-file confirmation).
+- `TST_APPS_TC_1/2` are registered twice (`Login` and `appShell` modules); worth de-duplicating.
+- **Pre-existing, not from this session:** 13 execution steps reference TC ids the runner will throw
+  on — `TST_EBOOK_TC_1/2/4` (invalid module code; `eBook.page.js` yields `EBOO`, not `EBOOK`) and
+  `TST_EBOO_TC_55..61` (never registered), all in the frozen archives
+  `ebookLearningHyperlinkVC.json` and `ebookLearningHyperlinkVC_V.1.0.json`. These keep
+  `node tooling/tcMap.js --check` exiting 1 even with an up-to-date map.
+- `learningPathTest_thor` in `authoring-status.md:187` is **not** an error — that section is headed
+  "production; thor blocked" and `learningPathTest_prod` does exist. An earlier review finding
+  claiming it dead was wrong.
+
+---
+
+## Session 8 - 2026-09-23
+
+## Summary
+
+Split `class-materials-ebook-foc.md` into five per-screen knowledge files and moved its cross-screen
+rules into `c1-core-shared.md`, under ADR-020. Documentation only — no test, page object, execution
+file, selector, TC repository or `package.json` change. Plan:
+[`PLAN_split-class-materials-knowledge_2026-09-23.md`](../PLAN_split-class-materials-knowledge_2026-09-23.md).
+
+This reverses the Session 7 decline. That decline rested on two misreadings of ADR-020, recorded in the
+supersede note above it; the operative trigger is *"a feature area earns its own file when it has its
+own module code and page object"* (`decisions.md:690-691`), which this content satisfied five times,
+while the ~500-line figure is explicitly *"the **app file** passing ~500 lines"* and never applied here.
+
+## Changes Made
+
+### 1. Five new screen files under `product-knowledge/ExperienceApp/`
+- **Type:** Created — `foc-class-materials.md` (32 lines, `CMAT`), `foc-resource-bank.md` (28, `RBNK`),
+  `foc-ebook-reader.md` (58, `EBOO` + `DRAW` `PLAY` `TIME` `SHOW` `KBOA`), `foc-notes.md` (60, `NOTE`),
+  `foc-presentation-plus.md` (40, `C1AS`).
+- **Layer:** Product knowledge (ADR-020 feature-area level).
+- **What changed:** Bodies were **cut by line range from a snapshot of the original**, never retyped,
+  so moved text is byte-identical by construction. Each file carries the 9-line header shape of
+  `learning-path-player.md:1-9` and the Part A / B / C structure its siblings already use.
+- **Why:** `CMAT`, `RBNK`, `EBOO`, `NOTE` and `C1AS` each own a module code and a page object; the
+  reader tools (`DRAW` `PLAY` `TIME` `SHOW` `KBOA`) have no page object of their own and therefore
+  stayed with the reader rather than earning files.
+- **Naming:** the files above are shown with their **final** names. They were created unprefixed and
+  renamed to `foc-<screen>.md` on the user's request later the same day: 75 references rewritten across
+  8 files, verified to leave no unprefixed survivor and no doubled prefix. The prefix acts as the ADR-020
+  `<area>` token, grouping the family the way `admin-*` groups the admin area — with the caveat that
+  strictly only `foc-presentation-plus.md` *is* Front-of-Class, so the token names the eBook/FOC surface
+  as a whole rather than a single screen.
+
+### 2. `product-knowledge/ExperienceApp/c1-core-shared.md`
+- **Type:** Modified — 69 → 136 lines.
+- **What changed:** New **Part C — Cross-screen rules for the C1 surface**, appended (no existing
+  section touched): **C1** multi-suite `APPS_1`/`APPS_2` teardown incl. the duplicate-`TST_APPS_TC_1/2`
+  `testFile`-first resolution, **C2** r4 create-only archive invariant, **C3** shared login nodes,
+  **C4** consolidated execution-suite table.
+- **Why:** this is the payload the split existed to deliver. These rules apply to Learning Path,
+  onboarding and the dashboard as much as to the eBook, but lived in a screen file that only eBook
+  tasks read — the exact failure ADR-020's Context describes.
+
+### 3. `product-knowledge/ExperienceApp/class-materials-ebook-foc.md`
+- **Type:** **Deleted** (172 lines, 13,811 bytes, sha256
+  `5241740AC8A859DC21885E2C3547F57B3EFCF5A362EFA9554AB42B9383AF80CB`; recoverable from git).
+- **Why:** decision **D1** — delete rather than leave a stub. ADR-020 does not describe a
+  feature-area index file, and `ExperienceApp.md` already carries the screen→file map.
+
+### 4. `product-knowledge.md`, `product-knowledge/ExperienceApp.md`
+- **Type:** Modified.
+- **What changed:** the single 5-module index row in each became five; the *Documented surfaces* note
+  reworded; `ExperienceApp.md` gained a **Migration note [2026-09-23]** with the was→now table,
+  matching the `[2026-08-21]` admin precedent at `:86-100`.
+- **Why:** every module code that the retired row listed still resolves; `PLAY` `TIME` `SHOW` are now
+  indexed too, which they were not before.
+
+### 5. `decisions.md`, `authoring-status.md`
+- **Type:** Modified.
+- **What changed:** ADR-023's teardown-leak pointer at `:909` retargeted from
+  `class-materials-ebook-foc.md Part B §2` to `c1-core-shared.md Part C §C1`; the four
+  `knowledge:` links in `authoring-status.md:216/222/230/236` retargeted **by the module set named on
+  each line** (`KBOA` → `foc-ebook-reader.md`; `DRAW` → `foc-ebook-reader.md` + `foc-notes.md`; `CMAT` → the four
+  teacher-side files).
+
+## Verification performed
+
+- **Losslessness:** every non-blank source line matched against the destinations. **0 lines missing**;
+  1 intentional de-indent (the orphaned `Notes Tool` bullet, source line 40); 1 documented drop — the
+  Thor URL at source line 130, which already stands verbatim in `ExperienceApp.md:30`. Duplicated lines
+  are the 2 structural labels `**Test Data Files:**` / `**Class Fixtures:**`, repeated where a
+  destination needs its own fixture, plus two generic table/fence markers.
+- **Links:** every relative link in all five new files and in both index files resolves
+  (`fs.existsSync` per match). All 7 module codes from the retired index row survive.
+- **No second `*-shared.md`** — the area keeps one (`c1-core-shared.md`), which was the one sound
+  objection in the Session 7 decline and is honoured rather than argued around.
+- **No dangling live reference** to the retired file: the four remaining mentions are 2 provenance
+  lines written on purpose (`ExperienceApp.md:92`, `c1-core-shared.md:93`) and 2 walkthrough history
+  lines.
+- **Line endings preserved:** `c1-core-shared.md` is CRLF and was appended in CRLF; the new files are
+  LF like the file they came from. Checked for mixed endings — none.
+
+## Architecture Decisions Triggered
+
+None new. ADR-020 executed as written; ADR-023's cross-reference updated to match.
+
+## Protected Files Touched
+
+None — no protected files were modified. `package.json`, `baseActionLibrary.js`, `testrunner.js`,
+`run.js`, `env.conf.js` and every execution file are untouched.
+
+## Pending / Follow-up
+
+- **No runtime verification was possible and none is claimed** — this change moves documentation and
+  cannot be exercised by a test run. The mechanical reconciliation above is the evidence.
+- **Section numbering was normalised within each new file** (a lone `### 4.` became `### 1.`, and the
+  two PPlus sections became 1 and 2). Bodies untouched; this is the one place the move was not a
+  byte-for-byte copy of a heading line, and it is called out in each new file's header note.
+- `foc-notes.md` and `foc-resource-bank.md` are thin (60 and 28 lines) because Part A for those screens was
+  thin in the source. They will fill as those suites are worked, which is the point of the level.
+- Carried forward unchanged from Session 7: the `baseActionLibrary` escape-hatch extraction still
+  awaits protected-file confirmation, and `node tooling/tcMap.js --check` still exits 1 on the 13
+  pre-existing unregistered steps in the two frozen `ebookLearningHyperlinkVC*` archives.

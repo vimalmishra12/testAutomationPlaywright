@@ -79,9 +79,32 @@ certificate, run-generated users), then the screen file.
 | Signup, e-mail verification, teacher account setup / join a school | `SNUP` `TSET` | [`onboarding.md`](ExperienceApp/onboarding.md) |
 | Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
 | Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
-| **Class Materials, Resource Bank, eBook reader, Presentation Plus & Assignments** | `CMAT` `RBNK` `EBOO` `C1AS` `NOTE` `DRAW` `KBOA` | [`class-materials-ebook-foc.md`](ExperienceApp/class-materials-ebook-foc.md) |
+| Class Materials — bundle & component launch | `CMAT` | [`foc-class-materials.md`](ExperienceApp/foc-class-materials.md) |
+| Resource Bank | `RBNK` | [`foc-resource-bank.md`](ExperienceApp/foc-resource-bank.md) |
+| eBook reader — shell, TOC, reader tools (drawing, media, timer, show/hide, keyboard focus) | `EBOO` `DRAW` `PLAY` `TIME` `SHOW` `KBOA` | [`foc-ebook-reader.md`](ExperienceApp/foc-ebook-reader.md) |
+| Notes tool | `NOTE` | [`foc-notes.md`](ExperienceApp/foc-notes.md) |
+| Front-of-Class (Presentation Plus) & assignment creation | `C1AS` | [`foc-presentation-plus.md`](ExperienceApp/foc-presentation-plus.md) |
 
-> **Documented surfaces:** The non-admin C1 surface now covers onboarding, teacher class dashboard, Learning Path, and the full eBook / Front-of-Class (Presentation Plus) reader and assignment creation journey (`class-materials-ebook-foc.md`). Homework and student progress views remain to be documented as their respective authoring begins.
+> **Documented surfaces:** The non-admin C1 surface covers onboarding, the teacher class dashboard, Learning Path, and the eBook reader (its notes, drawing, timer, media, show/hide and keyboard-focus tools), Resource Bank and the Presentation Plus / assignment-creation journey (`foc-class-materials.md`, `foc-resource-bank.md`, `foc-ebook-reader.md`, `foc-notes.md`, `foc-presentation-plus.md`). Homework and student progress views remain to be documented as their respective authoring begins.
+
+### Migration note [2026-09-23]
+
+Under **ADR-020** `class-materials-ebook-foc.md` was split per screen. Its seven module codes covered
+five distinct screens, which is the ADR’s primary trigger for a file of its own:
+
+| Was a section there | Now |
+|---|---|
+| *1. Teacher Class Materials & Bundles* | `ExperienceApp/foc-class-materials.md` |
+| *2. Resource Bank* | `ExperienceApp/foc-resource-bank.md` |
+| *3. eBook Reader* + Part B *4. Table of Contents & Modal Transitions* + the a11y suite facts | `ExperienceApp/foc-ebook-reader.md` |
+| *Notes tool* + *1. New-Tab URL Commit Race Condition* | `ExperienceApp/foc-notes.md` |
+| *4. Front-of-Class* + *5. Creating Assignments* | `ExperienceApp/foc-presentation-plus.md` |
+| *2. Multi-Suite Session Teardown*, *3. r4 Create-Only Archive*, login nodes, the suite table | `ExperienceApp/c1-core-shared.md` Part C |
+
+**Pure move.** Every moved body was verified line-for-line: all 172 source lines reconcile, with
+one intentional de-indent, and the single dropped line (the Thor URL) already stands verbatim in
+this file’s environment table above. Original file sha256
+`5241740AC8A859DC21885E2C3547F57B3EFCF5A362EFA9554AB42B9383AF80CB` (13,811 bytes); git history holds it.
 
 ### Migration note [2026-08-21]
 

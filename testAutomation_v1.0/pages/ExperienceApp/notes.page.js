@@ -190,6 +190,16 @@ module.exports = {
     return res;
   },
 
+  /**
+   * Clicks the hyperlink inside a note, switches to the tab it opens, reports whether that tab
+   * reached `expectedUrlPart`, and closes the tab again so the caller is left on the reader tab.
+   *
+   * The link element is resolved by trying three selectors in order because a note's link markup
+   * varies by note type: the plain note link, the pinned-note link, then a text-matched anchor.
+   * The third one interpolates `expectedUrlPart` into `a:has-text(...)` at runtime — a text
+   * predicate cannot be a static entry in C1Selectors.json, so it is built here under the
+   * system.md Layer 2 "Escape hatch". `[2026-09-23]`
+   */
   click_noteHyperlink: async function (expectedUrlPart) {
     await logger.logInto(await stackTrace.get());
     var initialCount = action.getPageCount();
@@ -222,6 +232,13 @@ module.exports = {
         var currentUrl = "";
         var isMatched = false;
         try {
+          // switchToNewTab() returns as soon as the tab EXISTS, so global.page.url() can still
+          // read "about:blank" here. Wait for the target URL to commit before asserting on it.
+          // "commit" is load-bearing: the default waitUntil ("load") never resolves for this
+          // tab, which is the exact trap schoolLibrary.page.js documents at waitForUrlFragment.
+          // action.waitForUrl() is unusable here — it takes only a string glob/RegExp, uses the
+          // default waitUntil, and swallows the error into a return value, so it can neither
+          // express a case-insensitive substring match nor avoid the "load" trap. `[2026-09-23]`
           if (expectedUrlPart) {
             await global.page.waitForURL(
               (url) =>
@@ -231,6 +248,8 @@ module.exports = {
               { timeout: 15000, waitUntil: "commit" }
             );
           } else {
+            // No expected fragment to match against — settle for "left about:blank" so the
+            // caller still gets a meaningful URL to log rather than racing the blank document.
             await global.page.waitForURL(
               (url) =>
                 url.href &&
@@ -244,6 +263,10 @@ module.exports = {
             .toLowerCase()
             .includes((expectedUrlPart || "").toLowerCase());
         } catch (waitErr) {
+          // waitForURL rejected (never matched, or it raced a page object that had already
+          // moved on). Do not fail here — fall back to a substring poll, which names the URL the
+          // tab is actually on and so keeps "the link did nothing" distinguishable from "the
+          // matcher was wrong". Same technique as schoolLibrary.page.js waitForUrlFragment.
           await logger.logInto(
             await stackTrace.get(),
             "waitForURL caught: " + (waitErr && waitErr.message) + ", polling URL...",

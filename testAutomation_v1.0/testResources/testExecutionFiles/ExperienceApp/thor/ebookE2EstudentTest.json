@@ -101,7 +101,26 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Close eBook / go to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite2": {
     "Name": "Validation of eBook Page Viewer control features",
@@ -217,7 +236,26 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Close eBook / go to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite3": {
     "Name": "Validation of eBook Page (Notes) - full notes battery (merged)",
@@ -603,7 +641,20 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite4": {
     "Name": "Validation of Highlighter and Drawing",
@@ -837,7 +888,26 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Close eBook / go to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite5": {
     "Name": "Validation of Timer Page",
@@ -1009,7 +1079,26 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Close eBook / go to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite6": {
     "Name": "Validation of Next/Previous Page",
@@ -1279,7 +1368,26 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Close eBook / go to dashboard",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   },
   "Suite8": {
     "Name": "Validation of eBook Page (Hotlink)",
@@ -1514,6 +1622,19 @@
       }
     ],
     "AfterEach": [],
-    "After": []
+    "After": [
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click on prod drop down",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   }
 }
