@@ -12,7 +12,13 @@ const fs = require("fs");
 const path = require("path");
 // Resolved from the repo's node_modules (a worktree has none of its own; Node walks up).
 const ExcelJS = require("exceljs");
-const { TCS, REQS, NOT_COVERED } = require("./_tcdata.js");
+const B1 = require("./_tcdata.js");
+// [2026-09-22] Batch 2 — the remaining scenarios of lp-scenarios.xlsx (LP-007…033), appended to the
+// same sheet (never renumbered, SKILL rule 7).
+const B2 = require("./_tcdata_batch2.js");
+const TCS = B1.TCS.concat(B2.TCS);
+const REQS = B1.REQS.concat(B2.REQS);
+const NOT_COVERED = Object.assign({}, B1.NOT_COVERED, B2.NOT_COVERED);
 // [2026-09-22] Second sheet/section: the LP setup chain, module-wise (user decision; to be moved
 // into application-wise registers later).
 const SETUP = require("./_tcdata_setup.js");
@@ -30,10 +36,14 @@ const COLUMNS = [
 const order = { Positive: 0, Edge: 1, Negative: 2 };
 const grouped = REQS.flatMap((req) =>
   TCS.filter((t) => t.req === req).sort((a, b) => order[a.type] - order[b.type]));
-const rows = grouped.map((tc, i) => Object.assign({ sno: i + 1, status: "Not Run", comments: "" }, tc));
+const rows = grouped.map((tc, i) => Object.assign({ sno: i + 1, status: "Not Run", comments: "" },
+  // A TC's own status/comments win, but never let an undefined field blank a default.
+  Object.fromEntries(Object.entries(tc).filter(([, v]) => v !== undefined))));
 
 const counts = rows.reduce((a, r) => ((a[r.type] = (a[r.type] || 0) + 1), a), {});
 const passed = rows.filter((r) => r.status === "Pass").length;
+const blocked = rows.filter((r) => r.status === "Blocked");
+const notRun = rows.filter((r) => r.status === "Not Run");
 // Setup rows keep the flow order within each module group; S.No. restarts on the setup sheet.
 const setupRows = SETUP.GROUPS.flatMap((g) => SETUP.TCS.filter((t) => t.req === g))
   .map((tc, i) => Object.assign({ sno: i + 1 }, tc));
@@ -84,17 +94,26 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 **Module:** PEXT (Practice Extra player) — *\`practiceExtra.page.js\`*; the entry click is DASH (\`dashboard.page.js\`)
 **App:** Cambridge One — \`www.cambridgeone.org\` (production; thor is blocked — see \`c1-core-shared.md\` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
-**Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive || 0} Positive · ${counts.Edge || 0} Edge · ${counts.Negative || 0} Negative) — 5 of 6 scenarios covered; LP-004 deliberately not (see map)
-**Execution status (${DATE}):** **${passed} of ${rows.length} LP TCs automated and passing** — \`npm run learningPathTest_prod\`, full first-time run 53/53 (teacher _w1b7, Class vyi9, learner _jqh2).
+**Generated:** ${DATE} | **Total TCs:** ${rows.length} (${counts.Positive || 0} Positive · ${counts.Edge || 0} Edge · ${counts.Negative || 0} Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
+**Execution status (${DATE}):** **${passed} automated and passing** (\`npm run learningPathTest_prod\`, full run 53/53 — teacher _w1b7, Class vyi9, learner _jqh2) · **${notRun.length} Not Run** · **${blocked.length} Blocked** (${blocked.map((b) => b.id).join(", ")}).
 **Part 2 — LP setup chain (${setupRows.length} TCs, module-wise, separate sheet):** **${setupPassed} of ${setupRows.length} passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision ${DATE}).
 
-**Batches:** Batch 1 — LP-001…006 (\`TST_PEXT_*\` + \`TST_DASH_TC_14\`, ${rows.length} TCs) · Setup — sheet "LP Setup (by module)".
+**Batches:** Batch 1 — LP-001…006, automated (${B1.TCS.length} TCs) · **Batch 2 — LP-007…033, designed ${DATE}, not yet automated (${B2.TCS.length} TCs)** · Setup chain — sheet "LP Setup (by module)".
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.
 >
 > **Batch 1 scope (agreed 2026-09-22):** the first six rows of the sheet. LP-002 and LP-003 are split
 > into one case per frame plus the final score; LP-004 is not a product scenario and is not covered.
+>
+> **Batch 2 scope (${DATE}):** every remaining scenario, LP-007…LP-033, so any team member can pick one
+> up. These are **designed, not executed**: steps come from the scenario sheet (and SOURCE's page objects
+> where it says so), and everything the sheet itself calls "not confirmed" is marked \`[ASSUMED]\` —
+> confirm live in Phase 1. Module codes name the page object each case will belong to; \`MSAC\` and
+> \`TLIB\` are **proposed** codes for screens that have no page object yet.
+>
+> **One attempt per learner:** the scorable activity (LP-002/003/025) and the Practice Set (LP-011/014/015)
+> can each be met fresh only once per learner — plan which of them a run exercises.
 >
 > **Grounding.** Flows come from the SOURCE suite; every expected result was then **verified live on
 > production on ${DATE}** by our own runs (debug runs on learner _ajq1, then the full first-time run).
