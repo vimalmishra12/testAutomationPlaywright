@@ -808,3 +808,53 @@ every one of its failure modes exactly when they are most likely to be firing.
   wrong one reports clean while leftovers remain. Sweep on the shortest safe prefix.
 - Test data whose existence depends on someone else (a named source class for a copy operation) is
   a documented dependency with a stated symptom when it disappears, not an invisible assumption.
+
+## ADR-022: Run-Generated Test Data Shared via Tokens (`runContext`)
+
+**Status:** Accepted (2026-09-22) — `testrunner.js` hook confirmed by the user; first live suite
+using it (`learningPathTest_prod`, SNUP_TC_59–62) passed 4/4 on production. (Thor run reached
+SNUP_TC_61 and stopped on an expired certificate on `login.comprodls.com`, not on the mechanism.)
+
+**Context:** The playwright-automation-c1 migration (Learning Path, TC-LP-001…006) needs a fresh
+teacher, class and learner every run: signup → join school → create class → learner signup →
+invite → accept, then the Learning Path TCs as that learner. The e-mails and class name are
+generated at run time, but the runner resolves every TC's `testData` from JSON **before the first
+TC executes** (`testrunner.js` builds `testDataArr` up front), so a value created mid-run can never
+reach a later TC through plain JSON. Nothing in the framework shared data between TCs before this.
+
+**Decision:**
+1. Test data may carry tokens. `{{run.<key>}}` = a value for this run, generated on first use from
+   the pattern for `<key>` in `testResources/testcaseData/<appType>/<env>/runValues.json` (e.g.
+   `"lpTeacherEmail": "cqathorlpteach_{rand4}@mailsac.com"`), then reused unchanged by every later TC
+   of the same process. `{{last.<key>}}` = the value the previous run generated.
+2. Tokens are resolved in exactly **one** place — `testrunner.identifyTest()`, immediately before the
+   TC is called — so Test nodes and Before/After hooks are covered alike and existing TCs
+   (`LOGI`, `ENTE`, `CREA`, `INVI`, …) are reused unchanged (ADR-011). Page objects and TCs never see
+   a token.
+3. The logic lives in `core/utils/runContext.js` (`resolve`, `get`, `set`, `getLast`). `set` is for
+   values the **app** produces (e.g. a class key read off the screen) and is called only from page
+   objects.
+4. Generated values are persisted to `testcaseData/<appType>/<env>/runtime/lastRun.json` (gitignored)
+   after each new value, so a run that dies half-way still leaves usable `{{last.*}}` data.
+5. An unknown key throws. A literal `{{run.x}}` typed into a form would surface as a misleading
+   product failure (Invariant 13).
+
+**Scope rules:**
+- `{{run.*}}` only links TCs **within one exec file** (one npm script = one process). Across runs,
+  use `{{last.*}}` or copy the values into ordinary test data (the "fixed user" mode).
+- Everything created is still governed by **ADR-021**: prefixed, sweepable names; no creation on a
+  shared environment unasked. The prefix lives in the pattern (`cqathor…`, `Class …`).
+
+**Amendment (2026-09-22, user request) — debug mode `--runData=last`:** with this CLI flag every
+`{{run.<key>}}` resolves to the previous run's value (`lastRun.json`) instead of generating one,
+and values the run stores are MERGED into `lastRun.json` (a normal run replaces it). Debug one
+failing suite against the users that already exist via a small exec file holding only that suite
+(e.g. `learningPathDebug.json`), run as `node core/runner/run.js … --runData=last`; run the full
+suite once only when every part passes. First use: LP Suite 6 re-run 8/8 with no new accounts.
+
+**Alternatives rejected:** resolving tokens inside each page object (spreads the same code across
+every shared page object and every future one); hard-coding once-created users only (loses the
+fresh-user capability the migration needs).
+
+**Consequences:** one protected-file change (`testrunner.js`, ~5 lines); `runValues.json` per
+env is the single place to see what a run generates; exec files stay pure JSON (ADR-001).

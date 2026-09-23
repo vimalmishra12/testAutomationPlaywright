@@ -305,6 +305,24 @@
           "description": "Validate if Active class page is launched correctly",
           "tags": "P2",
           "visualTest": true
+        },
+        {
+          "id": "TST_DASH_TC_12",
+          "description": "Verify the dashboard is usable after login when the guided tour is shown and closed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASH_TC_14",
+          "description": "Verify the Learning Path player page opens when the learner clicks 'Practice Extra' in the class card",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASH_TC_13",
+          "description": "Verify the learner sees the class and its component without an activation-code prompt after accepting an invite on a school-licensed school",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -474,6 +492,30 @@
           "description": "Validate newly added scenario for Create module - 29",
           "tags": "P3",
           "visualTest": true
+        },
+        {
+          "id": "TST_ENTE_TC_24",
+          "description": "Verify the material with the exact searched name is picked when it is selected from the search results",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ENTE_TC_25",
+          "description": "Verify the new class is listed on the dashboard with a class key when class creation finishes",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CREA_TC_30",
+          "description": "Verify the invited learner's e-mail is listed in the class's pending invitations after Invite",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_ENTE_TC_26",
+          "description": "Verify the 'This material is collaborative' dialog is shown and can be closed after a collaborative material is added",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -766,6 +808,18 @@
           "description": "Validate that invitation notification data (Notification, Invitation, Checkbox, Accept, Go To Dashboard) is retrieved correctly",
           "tags": "P2",
           "visualTest": true
+        },
+        {
+          "id": "TST_INVI_TC_13",
+          "description": "Verify Accept is enabled when the invited class is ticked on the invitation page",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_101",
+          "description": "Housekeeping: wait until the class invitation reaches the learner's notifications",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -3483,194 +3537,136 @@
     },
     {
       "modulename": "SignUp",
-      "moduleId": "",
-      "testFile": "./test/ExperienceApp/signUp.test.js",
+      "moduleId": "SNUP",
+      "testFile": "./test/ExperienceApp/signup.test.js",
       "testcase": [
         {
-          "id": "TST_SNUP_TC_1",
-          "description": "Validate the content of signup page, where user enter the email details",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_59",
+          "description": "Verify the role's next signup screen opens when a role is selected and confirmed",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_2",
-          "description": "Validate the error message when no email is entered",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_60",
+          "description": "Verify the verification-pending screen shows the entered e-mail when the signup form is submitted",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_3",
-          "description": "Validate the error message when wrong email format is added",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_61",
+          "description": "Verify the Mailsac verification link returns the user to Cambridge One",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_4",
-          "description": "Validate the error message when existing user email id is entered",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_62",
+          "description": "Verify a newly verified teacher can close the welcome tour and is offered 'Complete your account'",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_5",
-          "description": "Validate clicking on 'Signup with Email' button",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_63",
+          "description": "Verify the learner profile form opens when a country and an allowed age are entered in the age gate",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_6",
-          "description": "Validate clicking on 'Google' button for signup",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_SNUP_TC_64",
+          "description": "Verify a newly verified learner lands on the welcome screen with Continue",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Practice Extra (Learning Path player)",
+      "moduleId": "PEXT",
+      "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+      "testcase": [
+        {
+          "id": "TST_PEXT_TC_1",
+          "description": "Verify the activity player is shown when Practice Extra is opened",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_7",
-          "description": "Validate clicking on 'facebook' button for signup",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_4",
+          "description": "Verify Frame 1's dropdown registers the chosen answer when it is selected and checked",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_9",
-          "description": "On signup page, Validate clicking on 'logIn' button",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_5",
+          "description": "Verify Frame 2 opens and registers its answer when Next is clicked after Frame 1",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_10",
-          "description": "Validate the  selecting 'I'm teacher' on Role Selection Page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_6",
+          "description": "Verify all four Frame 3 dropdowns reach the filled state when each is answered",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_11",
-          "description": "Validate the selecting 'I'm Student' on Role Selection Page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_7",
+          "description": "Verify all four Frame 4 dropdowns reach the filled state when each is answered",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_12",
-          "description": "Validate the click of continue button after selecting teacher on Role Selection Page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_8",
+          "description": "Verify the learner is shown a full score when the last frame is completed",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_13",
-          "description": "Validate the click of continue button after selecting student on Role Selection Page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_100",
+          "description": "Housekeeping: bring the TOC sidebar to the closed state",
+          "tags": "P2",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_14",
-          "description": "Validate the error message without selecting any teacher/student",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_2",
+          "description": "Verify the TOC sidebar is shown when the open-sidebar control is clicked",
+          "tags": "P2",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_16",
-          "description": "Validate the Click on 'Back to Sign in' on Role Selection Page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_PEXT_TC_3",
+          "description": "Verify the TOC sidebar is hidden when its close control is clicked",
+          "tags": "P2",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Teacher Account Setup",
+      "moduleId": "TSET",
+      "testFile": "./test/ExperienceApp/teacherAccountSetup.test.js",
+      "testcase": [
+        {
+          "id": "TST_TSET_TC_1",
+          "description": "Verify the setup wizard opens with 'I teach in a school' when the teacher clicks 'Complete your account'",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_17",
-          "description": "Validate the application content of 'Account Details' page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_TSET_TC_2",
+          "description": "Verify the school-key form is shown when the teacher chooses 'I teach in a school' and 'Join a school'",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_19",
-          "description": "Validate the email id on 'Account Details' page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_TSET_TC_3",
+          "description": "Verify the teacher joins the school when a valid school key is entered",
+          "tags": "P1",
+          "visualTest": false
         },
         {
-          "id": "TST_SNUP_TC_20",
-          "description": "Validate the error message of password, When Password have less than 8 character (other condition fulfill)",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_21",
-          "description": "Validate the error message of password, When Password have all upper case character (other condition fulfill)",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_22",
-          "description": "Validate the error message of password, When Password have all lower case character (other condition fulfill)",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_23",
-          "description": "Validate the error message of password, When Password have not any special character (other condition fulfill)",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_24",
-          "description": "Validate the error message of each textbox on Account details page when each textbox is blank",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_25",
-          "description": "Validate the error message when password  is not same with confirm passord",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_31",
-          "description": "Validate the click on eye button of password after entering the password",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_32",
-          "description": "Validate the click on eye button of Confirm password before entering the password",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_37",
-          "description": "Validate the country is selected from dropdown",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_39",
-          "description": "Validate the click on 'back Role Selection' on Account Details Page",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_54",
-          "description": "Validate the content of Role selection page",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_55",
-          "description": "Validate clicking on Privacy Policy link launch the pop up with Privacy Policy tab selected",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_56",
-          "description": "Validate clicking on Terms of use link launch the pop up with Privacy Policy tab selected",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_57",
-          "description": "Validate clicking on I Agree button on policy page select the policy checkbox on Account Details page",
-          "tags": "",
-          "visualTest": "-"
-        },
-        {
-          "id": "TST_SNUP_TC_58",
-          "description": "Validate clicking on Cancel button on policy page do not select the policy checkbox on Account Details page",
-          "tags": "",
-          "visualTest": "-"
+          "id": "TST_TSET_TC_4",
+          "description": "Verify the dashboard header shows the joined school after 'Go to dashboard'",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },

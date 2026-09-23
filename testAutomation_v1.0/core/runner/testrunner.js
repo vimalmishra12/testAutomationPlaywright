@@ -3,6 +3,9 @@ var testObj, execJsonData, prevtestFile, getName, hookFuncData, tcProp;
 var testDataArr = [];
 var Arr = [];
 var rootDir = process.cwd();
+// [2026-09-22] ADR-022 — run-generated test data ({{run.*}} / {{last.*}} tokens) — confirmed by user
+// Absolute from rootDir: specGenerator copies this file into test/tempRunner/, so a relative path breaks.
+var runContext = require(require("path").join(rootDir, "core", "utils", "runContext.js"));
 
 class specRunner {
   //instantiate class
@@ -450,6 +453,8 @@ class specRunner {
       }
     }
     try {
+      // [2026-09-22] ADR-022 — swap {{run.*}}/{{last.*}} tokens for generated values right before the TC runs — confirmed by user
+      testdata = runContext.resolve(testdata);
       // calling a test case function from the test js file
       await testObj[testFunction](testdata);
       //logger.logInto(stackTrace.get(),testObj[testFunction](testdata));

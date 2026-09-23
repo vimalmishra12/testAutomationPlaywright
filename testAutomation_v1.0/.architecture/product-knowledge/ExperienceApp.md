@@ -29,6 +29,7 @@ bulk student account creation for the Cambridge One platform.
 |---|---|
 | Thor (dev) | https://micro-nemo.comprodls.com/login |
 | QA | https://qa.cambridgeone.org/admin |
+| Production | https://www.cambridgeone.org — Learning Path migration suite only (creates users; user decision 2026-09-22) |
 
 ### Role: school-admin
 
@@ -67,7 +68,19 @@ Read `admin-shared.md`, then the file(s) for the screen your task actually touch
 | Clone ("Copy an Existing Class" as a class op) | `CLON` | — not automated | *(no knowledge file yet)* |
 | Context class | `CTXC` | — **blocked**, no entry point found | *(no knowledge file yet)* |
 
-> **Not yet documented anywhere:** the non-admin C1 surface — eBook, player, homework, progress,
+### Teacher / learner surface (non-admin) `[2026-09-22]`
+
+Read [`c1-core-shared.md`](ExperienceApp/c1-core-shared.md) first (tours, Mailsac, thor
+certificate, run-generated users), then the screen file.
+
+| Screen | Automation module | File |
+|---|---|---|
+| **Shared across teacher / learner screens** | — | [`c1-core-shared.md`](ExperienceApp/c1-core-shared.md) |
+| Signup, e-mail verification, teacher account setup / join a school | `SNUP` `TSET` | [`onboarding.md`](ExperienceApp/onboarding.md) |
+| Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
+| Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
+
+> **Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
 > notes, drawing tool and the teacher/student roles — which accounts for **16 of 51** C1 page
 > objects. When that work starts, it gets its own area shared file and per-screen files under
 > `ExperienceApp/`, following the same pattern (ADR-020).

@@ -183,3 +183,31 @@ Manual register `test/Manual/C1App/AdminApp-Generic/` (41; 13 Phase-1 EXTRA) · 
 - Reuse `createNewClass.page.js` `click_next_btn` / `click_addLater_Btn` / `getData_successfullyCreated`, but NOT `set_startDate` / `set_endDate` (hardcoded 2024 dates) or `set_enterYourSchool` (types into a readonly field).
 - Name `AutoClass_TeacherView_<RUN_ID>`. Verify in KNF's admin Classes tab by polling (creation is async, ~24 s to >90 s). Cleanup: CGST's `sweepClassesNamed` pattern (`adminClassGradeSettings.test.js`) — sweep BEFORE creating, bounded loop, assert every step.
 - Own exec file (e.g. `adminGenericCreate.json`) + own npm script (needs user confirmation).
+
+## learningPath (ExperienceApp, production; thor blocked) — `learningPathTest_prod` / `learningPathTest_thor`
+Modules `SNUP` · `TSET` · `ENTE`/`CREA`/`INVI`/`DASH` deltas (setup chain) · **`PEXT`** (LP-001/002/003/005/006) — playwright-automation-c1 `lp-scenarios.xlsx` rows 1–6 · **creates 1 teacher + affiliation + 1 class + 1 learner per full run** (user-approved; debug runs `learningPathDebug.json --runData=last` create nothing) · knowledge: `onboarding.md`, `teacher-dashboard-class-page.md`, `learning-path-player.md`, `c1-core-shared.md` · manual register: `test/Manual/C1App/LearningPath/` (sheet 1 LP, sheet 2 setup by module)
+- Phase 1 ✅ 2026-09-22 — setup `TST_SNUP_TC_59..64`, `TST_TSET_TC_1..4`, `TST_ENTE_TC_24..26`, `TST_CREA_TC_30`, `TST_INVI_TC_13/101`, `TST_DASH_TC_12/13`; LP `TST_DASH_TC_14`, `TST_PEXT_TC_1..8`, `TST_PEXT_TC_100` (+ reused LAND/LOGI/DASH/ENTE/CREA/INVI TCs); visual candidates: none (generated users / names / keys)
+- Phase 2 ✅ 2026-09-22 — full suite (7 suites) **53/53** on prod; Suites 1–3 clean twice before; Suites 6–7 debugged in `--runData=last` mode (8/8, 11/11)
+- Phase 3 ⏭️ DEFERRED by user decision (2026-09-22) — all TCs stay `visualTest: false`
+- **Blocked:** thor — verify link host `login.comprodls.com` certificate expired 2022 (`SNUP_TC_61`); unblock = cert renewed
+- **Not built:** LP-004, LP-016, LP-017 (automation-mechanics — recorded as not covered in the register); LP-007…033
+
+### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
+**The cases are already designed.** Do not re-derive them from the scenario sheet: all 33 scenarios of
+`lp-scenarios.xlsx` are mapped in the manual register `test/Manual/C1App/LearningPath/`
+(sheet "Test Cases": 34 rows — 9 Pass = automated, 19 Not Run, 6 Blocked with reasons; sheet
+"LP Setup (by module)": the fresh-user chain). Pick the Not Run cases, keep their TC IDs.
+1. **Read first:** this block · `product-knowledge/ExperienceApp/learning-path-player.md` (Part C has
+   the commands, the debug mode and the data constraints) · `c1-core-shared.md` · the register `.md`
+   (its "How to automate a case from this register" section) · then the `c1-test-authoring` skill.
+2. **Suggested order:** LP-007…011 (`TST_PEXT_TC_9..13` — TOC drill-down → Flashcards → Practice Set),
+   then LP-013…020, LP-024/025/026, then the teacher/admin entry points (`CMAT_TC_7`, `C1AS_TC_26`,
+   `MSAC_TC_1`, `TLIB_TC_1`, `UMBP_TC_5` — `MSAC`/`TLIB` module codes are PROPOSED, agree them first).
+3. **Constraints that decide how a run is planned:** the suite runs on **production and creates real
+   data every full run**; the scorable activity and the Practice Set are fresh **once per learner**;
+   debug with `learningPathDebug.json` + `--runData=last` (creates nothing).
+4. **Ask the user** (they know the product): any expected result marked `[ASSUMED]` in the register,
+   what unblocks the 6 Blocked cases, and approval before any new data-creating flow (ADR-021).
+5. **Close the loop:** update the register (Status + `Comments`) via
+   `node test/Manual/C1App/LearningPath/_generate.js` after back-porting into `_tcdata*.js`, and update
+   this block. Remove this "NEXT BATCH" section when the LP work is finished.
