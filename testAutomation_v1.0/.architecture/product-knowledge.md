@@ -37,6 +37,7 @@
 | ↳ Signup, e-mail verification, teacher account setup — `SNUP` / `TSET` | `ExperienceApp` | [`ExperienceApp/onboarding.md`](product-knowledge/ExperienceApp/onboarding.md) |
 | ↳ Teacher dashboard — create a class, invite; learner accepts — `ENTE` / `CREA` / `INVI` / `DASH` | `ExperienceApp` | [`ExperienceApp/teacher-dashboard-class-page.md`](product-knowledge/ExperienceApp/teacher-dashboard-class-page.md) |
 | ↳ Learning Path player (Practice Extra) — `PEXT` | `ExperienceApp` | [`ExperienceApp/learning-path-player.md`](product-knowledge/ExperienceApp/learning-path-player.md) |
+| ↳ Class Materials, eBook reader, Presentation Plus & Assignments — `CMAT` / `RBNK` / `EBOO` / `C1AS` / `NOTE` | `ExperienceApp` | [`ExperienceApp/class-materials-ebook-foc.md`](product-knowledge/ExperienceApp/class-materials-ebook-foc.md) |
 
 > **`ExperienceApp.md` is an INDEX (ADR-020).** Read it for the app header, environment URLs and the
 > file map, then `admin-shared.md`, then the per-screen file(s) your task touches. Do not append

@@ -280,3 +280,65 @@ untouched.
   `createAssignmentTest_thor`, nightly `visualAcceptance_thor`).
 - Pre-existing, out of scope: `dashboardFeatureTest_thor` and `resetPasswordTest_thor` point at exec files
   that do not exist under `thor/` — broken before this change; fix or retire separately.
+
+---
+
+## Session 6 — 2026-09-23
+
+## Summary
+Integrated the Presentation Plus Assignment Creation workflow into the teacher E2E test suite as Suite 6
+(plan revision r5, Approach A), stabilized new-tab URL resolution in `notes.page.js`, corrected Thor eBook
+dropdown fixtures, and updated `package.json` scripts (Commit `71f7451ac161`).
+
+## Changes Made
+
+### 1. testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EteacherTest.json
+- **Type:** Modified
+- **Layer:** Test Resources (execution file)
+- **What changed:** Added `Suite6_CreateAssignmentPresentationPlus` ("Validation of Creating Assignments from
+  Presentation Plus in Class 1RB", lines 865–1066). Integrates the 18 steps from the standalone
+  `createAssignmentPresentationPlusTest.json`: launches Presentation Plus in Class 1RB, opens TOC, triggers
+  "Create Assignment" (`TST_C1AS_TC_21/22`), selects Unit 1 Lesson A, configures dates and students
+  (`TST_C1AS_TC_5..13`), assigns, verifies modal return (`TST_C1AS_TC_24`), verifies home navigation
+  (`TST_EBOO_TC_5`), and performs clean teardown (`TST_APPS_TC_1/2`).
+- **Why:** Plan revision r5 (Approach A) — consolidates the Presentation Plus assignment creation flow
+  directly into the master teacher E2E suite, eliminating the need for a separate assignment runner.
+
+### 2. pages/ExperienceApp/notes.page.js
+- **Type:** Modified
+- **Layer:** Page Object
+- **What changed:** Enhanced `switchToNewTabAndVerifyUrlPart()` to eliminate race conditions when reading
+  new tab URLs. Replaced immediate `global.page.url()` read with `global.page.waitForURL(...)` specifying
+  `{ timeout: 15000, waitUntil: "commit" }`, followed by a fallback 5-iteration polling loop.
+- **Why:** In asynchronous tab creation, reading `global.page.url()` immediately captured `about:blank`
+  before the browser committed navigation to the destination URL.
+
+### 3. testResources/testcaseData/ExperienceApp/thor/ebookData.json
+- **Type:** Modified
+- **Layer:** Test Resources (test data)
+- **What changed:** Corrected `dropdownBook.ebookTwoName` from `vm_automation_ebook_latest_03` to
+  `vm_automation_ebook_latest_02`.
+- **Why:** Align test data with the actual second eBook fixture provisioned in Thor.
+
+### 4. package.json
+- **Type:** Modified
+- **Layer:** Configuration
+- **What changed:** Removed superseded `createAssignmentPplusTest_thor` script (absorbed by
+  `ebookE2EteacherTest_thor`), restored `eBookHotLinkTest_thor` (`player.json`), and cleaned up unused scripts.
+- **Why:** Align npm scripts with the 6-suite teacher E2E structure.
+
+### 5. .architecture/PLAN_ebook-foc-suite-merge_2026-09-22.md
+- **Type:** Modified
+- **Layer:** Documentation
+- **What changed:** Recorded revision r5 (Approach A): `createAssignmentPresentationPlusTest.json` merged as
+  Suite 6 into `ebookE2EteacherTest.json` (77 tests across 6 teacher suites).
+
+## Architecture Decisions Triggered
+- Formally adopted in ADR-023: Role-separated E2E consolidation, multi-suite session isolation via teardown
+  hooks, and `waitForURL({ waitUntil: "commit" })` for tab navigation verification.
+
+## Protected Files Touched
+- `package.json` updated to retire `createAssignmentPplusTest_thor`.
+
+## Pending / Follow-up
+- Clean live runs of `ebookE2EteacherTest_thor` against Thor to verify all 6 suites passing end-to-end.

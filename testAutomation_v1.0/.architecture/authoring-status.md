@@ -211,3 +211,21 @@ Modules `SNUP` · `TSET` · `ENTE`/`CREA`/`INVI`/`DASH` deltas (setup chain) · 
 5. **Close the loop:** update the register (Status + `Comments`) via
    `node test/Manual/C1App/LearningPath/_generate.js` after back-porting into `_tcdata*.js`, and update
    this block. Remove this "NEXT BATCH" section when the LP work is finished.
+
+## ebookFocusA11yMergedTest (ExperienceApp, thor) — `ebookFocusA11yTest_thor`
+Modules `KBOA` (keyboard accessibility focus traversal) · knowledge: `class-materials-ebook-foc.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
+- Phase 1 ✅ 2026-09-22 — `TST_KBOA_TC_1..19`; collapsed 4 logins into 1; visual candidates: none
+- Phase 2 ✅ 2026-09-22 — **19/19 passing (110s)** on Thor, single login
+- Phase 3 ⬜ pending
+
+## ebookE2EstudentTest (ExperienceApp, thor) — `ebookE2EstudentTest_thor`
+Modules `EBOO` · `NOTE` · `DRAW` · `TIME` · `SHOW` · `PLAY` · `PAGE` · `COMM` (student reader master E2E) · knowledge: `class-materials-ebook-foc.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
+- Phase 1 ✅ 2026-09-22 — 8 suites consolidated; Suite 3 embeds 38-step notes battery (`TST_NOTE_TC_1..18`); Suite 6 teardown; visual candidates: none
+- Phase 2 ⬜ pending live verification run on Thor
+- Phase 3 ⬜ pending
+
+## ebookE2EteacherTest (ExperienceApp, thor) — `ebookE2EteacherTest_thor`
+Modules `CMAT` · `RBNK` · `EBOO` · `C1AS` · `APPS` (teacher materials, eBook, resource banks, Presentation Plus, and assignment creation) · knowledge: `class-materials-ebook-foc.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md` (r5 Approach A)
+- Phase 1 ✅ 2026-09-23 — 6 suites consolidated (Suites 1–5: Class 1RB/2RB materials & eBooks, RBNK 1 & 2, Presentation Plus launch; Suite 6: Assignment Creation from Presentation Plus TOC); `TST_APPS_TC_1/2` teardown per suite
+- Phase 2 ⬜ pending live verification run on Thor
+- Phase 3 ⬜ pending

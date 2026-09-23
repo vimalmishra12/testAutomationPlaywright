@@ -79,11 +79,9 @@ certificate, run-generated users), then the screen file.
 | Signup, e-mail verification, teacher account setup / join a school | `SNUP` `TSET` | [`onboarding.md`](ExperienceApp/onboarding.md) |
 | Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
 | Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
+| **Class Materials, Resource Bank, eBook reader, Presentation Plus & Assignments** | `CMAT` `RBNK` `EBOO` `C1AS` `NOTE` `DRAW` `KBOA` | [`class-materials-ebook-foc.md`](ExperienceApp/class-materials-ebook-foc.md) |
 
-> **Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
-> notes, drawing tool and the teacher/student roles — which accounts for **16 of 51** C1 page
-> objects. When that work starts, it gets its own area shared file and per-screen files under
-> `ExperienceApp/`, following the same pattern (ADR-020).
+> **Documented surfaces:** The non-admin C1 surface now covers onboarding, teacher class dashboard, Learning Path, and the full eBook / Front-of-Class (Presentation Plus) reader and assignment creation journey (`class-materials-ebook-foc.md`). Homework and student progress views remain to be documented as their respective authoring begins.
 
 ### Migration note [2026-08-21]
 

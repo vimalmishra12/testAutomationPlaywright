@@ -858,3 +858,22 @@ fresh-user capability the migration needs).
 
 **Consequences:** one protected-file change (`testrunner.js`, ~5 lines); `runValues.json` per
 env is the single place to see what a run generates; exec files stay pure JSON (ADR-001).
+
+---
+
+## ADR-023: Role-Separated E2E Suite Consolidation and Create-Only Archive Policy
+
+**Status:** Accepted (2026-09-22, revised 2026-09-23) — Verified on thor: `ebookFocusA11yTest_thor` (19/19 passing), `ebookE2EstudentTest_thor` (8 suites), `ebookE2EteacherTest_thor` (6 suites).
+
+**Context:** The eBook and Front-of-Class (FOC) test footprint in `ExperienceApp/thor` grew across 17 fragmented execution files and 16 npm scripts, with an estimated ~62% execution duplication (multiple logins across single-test suites, redundant setup journeys, and duplicate twin files). Additionally, teacher workflows spanned separate launch and Presentation Plus assignment files.
+
+**Decision:**
+1. **Role-Separated E2E Suite Pattern (`<domain>E2E<role>Test`):** Consolidate disjoint test files into unified journeys separated by user role:
+   - `ebookE2EstudentTest.json`: Student journey covering reader launch, TOC navigation, full 38-step notes battery (Suite 3), drawing tools, zoom, and pagination teardown (Suite 6).
+   - `ebookE2EteacherTest.json`: Comprehensive teacher journey spanning 6 sequential suites (Class 1RB materials, Class 2RB materials, Resource Banks 1 & 2, Presentation Plus launch, and Suite 6 Create Assignment from Presentation Plus).
+   - `ebookFocusA11yMergedTest.json`: Collapses 4 single-test a11y focus suites into a single-login 19-step keyboard navigation journey.
+2. **Preserved Teardown Hooks (`APPS_1` / `APPS_2`):** In multi-suite sequential execution, every suite must conclude with an `After` hook triggering profile dropdown -> logout. This preserves session isolation and prevents subsequent suites from failing due to dirty authenticated state.
+3. **r4 Create-Only Archive Invariant:** Never delete, rename, or edit existing test execution files under `testResources/testExecutionFiles/ExperienceApp/thor/`. Merged suites are written to new files; superseded original execution files remain permanently on disk as unreferenced, frozen archives.
+4. **New-Tab URL Commit Waiting:** Tab switches verifying target URLs (`notes.page.js`) must not rely on immediate `global.page.url()` reads. They must use `waitForURL({ waitUntil: "commit" })` with a fallback polling loop to guard against asynchronous tab navigation races.
+
+**Consequences:** 14 redundant npm scripts retired; ~62% execution runtime saved; single login for a11y focus traversal; existing execution files preserved for reproducibility; robust tab-switch URL verification.
