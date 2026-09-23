@@ -862,5 +862,205 @@
         "testData": []
       }
     ]
+  },
+  "Suite6_CreateAssignmentPresentationPlus": {
+    "Name": "Validation of Creating Assignments from Presentation Plus in Class 1RB",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Application URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Verify Landing Page Loaded",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter Instructor Username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter Instructor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Verify Instructor Login Successful",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open Active Class Card 1RB",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.class.name"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Navigate to Class Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_2",
+        "description": "Verify product bundle is displayed in Class Materials",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.bundle"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_3",
+        "description": "Click Presentation Plus component within product bundle",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.presentationPlus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "Validate that the Table of Content is clickable and the page is launched",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_21",
+        "description": "Click Create Assignment in TOC and Cancel on modal",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_22",
+        "description": "Click Create Assignment in TOC and Take Me To Assignments",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_5",
+        "description": "Click Unit 1",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_6",
+        "description": "Click Lesson A",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_7",
+        "description": "Click Next Button",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_8",
+        "description": "Enter Assignment Name 1",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.assignmentName1"
+          }
+        ]
+      },
+      {
+        "id": "TST_C1AS_TC_9",
+        "description": "Click Input Tag",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_10",
+        "description": "Click Set Date",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_11",
+        "description": "Click Select Student",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_12",
+        "description": "Click View Summary",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_13",
+        "description": "Click Assign",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_C1AS_TC_24",
+        "description": "Click Return to Presentation Plus on modal and verify return",
+        "testFile": "./test/ExperienceApp/c1assignment.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click user profile dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button and verify landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
   }
 }

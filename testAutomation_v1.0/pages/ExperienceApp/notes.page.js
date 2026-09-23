@@ -219,14 +219,54 @@ module.exports = {
       );
       var tabRes = await action.switchToNewTab(initialCount);
       if (tabRes === true) {
-        var currentUrl = global.page.url();
+        var currentUrl = "";
+        var isMatched = false;
+        try {
+          if (expectedUrlPart) {
+            await global.page.waitForURL(
+              (url) =>
+                url.href
+                  .toLowerCase()
+                  .includes((expectedUrlPart || "").toLowerCase()),
+              { timeout: 15000, waitUntil: "commit" }
+            );
+          } else {
+            await global.page.waitForURL(
+              (url) =>
+                url.href &&
+                !url.href.startsWith("about:") &&
+                url.href !== "",
+              { timeout: 15000, waitUntil: "commit" }
+            );
+          }
+          currentUrl = global.page.url();
+          isMatched = currentUrl
+            .toLowerCase()
+            .includes((expectedUrlPart || "").toLowerCase());
+        } catch (waitErr) {
+          await logger.logInto(
+            await stackTrace.get(),
+            "waitForURL caught: " + (waitErr && waitErr.message) + ", polling URL...",
+            "warn"
+          );
+          for (var i = 0; i < 5; i++) {
+            await browser.pause(1000);
+            currentUrl = global.page.url();
+            if (
+              currentUrl &&
+              currentUrl
+                .toLowerCase()
+                .includes((expectedUrlPart || "").toLowerCase())
+            ) {
+              isMatched = true;
+              break;
+            }
+          }
+        }
         await logger.logInto(
           await stackTrace.get(),
           "New tab URL is: " + currentUrl
         );
-        var isMatched = currentUrl
-          .toLowerCase()
-          .includes((expectedUrlPart || "").toLowerCase());
         await action.closeCurrentTabAndRefocus();
         return isMatched;
       }

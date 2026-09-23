@@ -15,6 +15,10 @@
   ever edited again. All merge output goes into **new** files (`ebookE2EstudentTest.json`,
   `ebookFocusA11yMergedTest.json`, `ebookE2EteacherTest.json`); only `package.json` scripts are retired,
   renamed, retargeted or added. Superseded exec files stay on disk permanently as unreferenced archive.
+- **Revision r5 (2026-09-23, user decision — Approach A):** `createAssignmentPresentationPlusTest.json`
+  (18 steps) merged into `ebookE2EteacherTest.json` as **Suite 6** (`Suite6_CreateAssignmentPresentationPlus`).
+  Teacher E2E suite count is now 6 (77 tests total across 1RB/2RB eBook, Resource Banks, and Presentation Plus + assignments).
+  Original `createAssignmentPresentationPlusTest.json` is preserved on disk per r4 archive policy.
 - **Scope:** npm scripts under the `"//─────────── ExperienceApp · thor ───────────"` block (`package.json:12`)
   that exercise the eBook reader and Front-of-Class (FOC) flows
 - **Goal:** consolidate ~62 % duplicated execution volume into a clean, non-duplicated, logically ordered
