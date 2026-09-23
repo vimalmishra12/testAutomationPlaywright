@@ -1,4 +1,44 @@
 "use strict";
+// [secrets hardening] Load .env into process.env before anything reads a secret from it.
+// SOURCE repo's pattern (no dotenv dependency): a real env var (already set, e.g. by CI)
+// always wins over the file — confirmed by user.
+(function loadDotEnv() {
+    var dotenvPath = require('path').join(process.cwd(), '.env');
+    if (!require('fs').existsSync(dotenvPath)) return;
+    require('fs').readFileSync(dotenvPath, 'utf8').split(/\r?\n/).forEach(function (line) {
+        var trimmed = line.trim();
+        if (!trimmed || trimmed.indexOf('#') === 0) return;
+        var idx = trimmed.indexOf('=');
+        if (idx === -1) return;
+        var key = trimmed.slice(0, idx).trim();
+        var val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+        if (process.env[key] === undefined) process.env[key] = val;
+    });
+})();
+
+// [secrets hardening] Resolves "{{env.VAR}}" tokens left in env.json (CF-Access headers,
+// LambdaTest key) from process.env — confirmed by user. Same token syntax as
+// core/utils/runContext.js (used for testcaseData), kept as a small local copy here since
+// env.conf.js runs before that module's globals (argv/logger) are guaranteed ready.
+// Never logs the resolved value — only the var name on failure.
+function resolveEnvTokensDeep(obj) {
+    if (typeof obj === 'string') {
+        return obj.replace(/\{\{env\.([A-Za-z0-9_]+)\}\}/g, function (whole, name) {
+            var val = process.env[name];
+            if (val === undefined || val === '') {
+                throw new Error("env.conf.js: environment variable '" + name + "' is not set (copy .env.example to .env and fill it in, or set it in CI secrets)");
+            }
+            return val;
+        });
+    }
+    if (Array.isArray(obj)) return obj.map(resolveEnvTokensDeep);
+    if (obj && typeof obj === 'object') {
+        Object.keys(obj).forEach(function (k) { obj[k] = resolveEnvTokensDeep(obj[k]); });
+        return obj;
+    }
+    return obj;
+}
+
 global.appUrl = undefined;
 // global.testJsDir = undefined;
 // global.testRepoDir = undefined;
@@ -35,6 +75,19 @@ global.capabilitiesFile = global.jsonParserUtil.jsonParser(path.join(process.cwd
 
 // after loading env.json
 let envData = global.jsonParserUtil.jsonParser(process.cwd() + '/env.json');
+// [secrets hardening] Must NOT deep-resolve the whole envData here: it holds every app/env's
+// config, and e.g. a thor-only local run must not require qa/rel's {{env.*}} vars to be set just
+// because they exist elsewhere in the file — confirmed by user. LT_ACCESS_KEY is only actually
+// needed when browserCapability is lambdatest (see below); resolve it WITHOUT throwing here so a
+// non-LambdaTest run is never blocked by a missing LT var — a real LambdaTest run with the var
+// still unset simply fails later at LambdaTest auth, same as before this change.
+if (envData.lambdaTestCredentials) {
+    var ltKeyToken = envData.lambdaTestCredentials.LT_ACCESS_KEY;
+    var ltKeyMatch = typeof ltKeyToken === 'string' && ltKeyToken.match(/^\{\{env\.([A-Za-z0-9_]+)\}\}$/);
+    if (ltKeyMatch) {
+        envData.lambdaTestCredentials.LT_ACCESS_KEY = process.env[ltKeyMatch[1]]; // undefined if not set — fine, see above
+    }
+}
 
 // set LT creds globally (fallback if not provided in real env vars)
 if (envData.lambdaTestCredentials) {
@@ -100,6 +153,10 @@ else {
     global.moduleOff = envData[argv.appType].environments[argv.testEnv].moduleOff;
 
     global.headers = envData?.[argv.appType]?.environments?.[argv.testEnv]?.headers || {};
+    // [secrets hardening] resolve {{env.*}} CF-Access header tokens — scoped to ONLY this
+    // appType+testEnv's headers (not the whole env.json), so a thor/production run (no headers)
+    // never needs qa/rel's vars to be set — confirmed by user.
+    global.headers = resolveEnvTokensDeep(global.headers);
     // Normalize header names to lowercase and ensure values are strings
     global.headers = Object.fromEntries(
       Object.entries(global.headers || {}).map(([k, v]) => [String(k).toLowerCase(), String(v)])

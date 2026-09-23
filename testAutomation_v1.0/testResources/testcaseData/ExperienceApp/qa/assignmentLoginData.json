@@ -4,14 +4,14 @@
       "user": {
         "validTeacher": {
           "email": "CQA_AUTO_TEA_101@mailsac.com",
-          "password": "Compro11",
+          "password": "{{env.C1_QA_VALIDTEACHER_PASSWORD}}",
           "role": "teacher"
         }
       }
     },
     "student": {
       "email": "CQA_AUTO_STU_101@mailsac.com",
-      "password": "Compro11"
+      "password": "{{env.C1_QA_STUDENT_PASSWORD}}"
     }
   }
 }

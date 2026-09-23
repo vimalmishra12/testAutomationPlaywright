@@ -858,3 +858,76 @@ fresh-user capability the migration needs).
 
 **Consequences:** one protected-file change (`testrunner.js`, ~5 lines); `runValues.json` per
 env is the single place to see what a run generates; exec files stay pure JSON (ADR-001).
+
+## ADR-023: Secrets Hardening — `{{env.*}}` Tokens for Plaintext Credentials
+
+**Status:** Accepted and rolled out (2026-09-23) — all 243 credential fields across 24 files are
+now `{{env.*}}` tokens (pilot: `env.json` + `learningPathData.json`; Step 5: the remaining 224
+fields across 21 files — Builder, Blackboard, and the rest of ExperienceApp login/ebook/admin data,
+all envs). `env.conf.js` change confirmed by the user. `tooling/secretScan.js` exits 0 (no
+plaintext credential fields remain).
+
+**Context:** A Step 0 inventory (`node tooling/secretScan.js`, key-name scan, values never
+printed) found 243 credential-like fields across 24 JSON files — `env.json` (Cloudflare Access
+headers for qa/rel, LambdaTest key, **git-tracked**) and ~236 test-account passwords under
+`testResources/testcaseData/**`, backing only **13 distinct real values**. (An earlier estimate of
+"~377 fields / 63 values" conflated these with UI label/error-message strings under
+`.appContent.*` that merely contain the word "password" — not credentials; the scanner excludes
+that path and known label-key suffixes.)
+
+**Decision:**
+1. Each secret VALUE is replaced in place by a token `"{{env.<VAR_NAME>}}"`; JSON structure and key
+   names never change. Naming: `<APP>_<ENV>_<ACCOUNT/ROLE>_<FIELD>` (e.g.
+   `C1_PROD_LEARNERFORM_PASSWORD`, `C1_QA_CF_SECRET`) — **one var per account even when values
+   repeat** (verified necessary: two fields named `successfulInstructorUser` across `logindata.json`
+   vs `ebookData.json` hold *different* real passwords despite the shared display name — same-name
+   accounts are disambiguated by module segment, e.g. `C1_QA_LOGIN_SUCCESSFULINSTRUCTORUSER_PASSWORD`
+   vs `C1_QA_EBOOK_SUCCESSFULINSTRUCTORUSER_PASSWORD`, whenever a hash check finds a collision).
+2. **Resolution — two call sites, same token syntax, no shared runtime dependency:**
+   - `testResources/testcaseData/**` values flow through the *already-existing* ADR-022 hook
+     (`testrunner.identifyTest()` → `runContext.resolve()`) — **no `testrunner.js` change needed**;
+     `core/utils/runContext.js` (not protected) just gained an `env` token type alongside `run`/`last`.
+   - `env.json` is read directly by `env.conf.js` before any test runs, so it gets its own small
+     `resolveEnvTokensDeep()` in `env.conf.js` itself (same `{{env.VAR}}` syntax, independent
+     implementation — `env.conf.js` runs too early in bootstrap to depend on `runContext.js`'s
+     `argv`/`logger` globals).
+   - Both throw a clear error naming the missing variable — never resolve to `""` (mirrors ADR-022
+     invariant 13's reasoning).
+3. **`.env`** (gitignored) holds real values locally; **`.env.example`** (committed) lists every
+   variable name with a comment and a migration-status marker (✅ migrated / ⬜ pending), so the
+   file doubles as the rollout checklist. No `dotenv` dependency — `env.conf.js` loads `.env` itself
+   in a small IIFE (SOURCE repo's pattern: a real env var, e.g. from CI, always wins over the file).
+4. **CI:** both pipelines in this repo already inject secrets this way for LambdaTest/email creds —
+   GitHub Actions (`.github/workflows/e2e-tests.yml`, `secrets.LT_ACCESS_KEY` etc.) and Semaphore
+   (`.semaphore/semaphore.yml`, `secrets: Cred, LambdaTest, loginFeatureTest`). New `{{env.*}}`
+   variables are added to both as they're migrated (Step 5); no new CI mechanism required.
+5. **`tooling/secretScan.js`** (committed) is the standing checker: flags any credential-like KEY
+   whose VALUE is not a `{{env.*}}` token. Exit code 1 on any finding — usable as a future CI gate.
+   Excludes selector key names and UI-label/error-message keys (see the file's own exclusion list)
+   to avoid the false-positive inflation the original estimate had.
+
+**Rollout was incremental in design** (an un-migrated file would have kept working while migrated
+files resolve from `.env`/CI) but was in fact completed in one pass the same day, once the pilot
+verified end-to-end (`learningPathTest_prod`, 53/53). Sanity-checked after rollout: `loginFeatureTest_thor`
+(8/8), `BuilderLoginTest_thor` (2/2). `bbLoginTest_thor` has 1 pre-existing failure
+(`TST_BBLG_TC_4`, a post-login page timeout) — isolated by temporarily restoring the original
+plaintext file and re-running: **identical failure**, proving it predates and is unrelated to this
+migration (byte-for-byte credential value also verified identical via hash).
+
+**Deferred:** rotating the CF-Access/LambdaTest values already in git history — this pilot only
+stops *new* commits from adding plaintext; it does not retroactively scrub history. The pilot's own
+`env.json` CF-Access-Client-Secret values were additionally read once into a chat transcript by
+mistake during Step 0 (2026-09-23) — those two (qa, rel) should be rotated regardless of the
+history-scrub decision.
+
+**Alternatives rejected:** the `dotenv` npm package (adds a dependency for ~3 lines SOURCE already
+proves unnecessary); one env var per distinct value instead of per account (rejected per decisions
+log 2026-09-22 — a shared value today doesn't guarantee two accounts should keep sharing it after
+rotation, and per-account vars make git-history exposure scope obvious per account).
+
+**Consequences:** two files touched so far, one protected (`env.conf.js`, ~35 lines: `.env` loader
++ token resolver, called at both `env.json` load sites) and one not (`runContext.js`, ~15 lines:
+new token type). `testrunner.js` — untouched, despite being flagged as an expected protected-file
+change before Step 0 — the existing ADR-022 call site already covers this. 12 test-account fields
++ 7 infra fields migrated (pilot); 231 fields across 22 files remain (Step 5, tracked in
+`.env.example`).
