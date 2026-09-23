@@ -201,9 +201,21 @@ Suite 8 (new) + `TST_DASH_TC_15` in Suite 6 · `TST_DASH_TC_16`, `TST_PEXT_TC_9�
   `DASH_TC_15` green once (only a full run can exercise it). Evidence audit clean (both runs).
 - Phase 3 ⏭️ DEFERRED (as batch 1) — all new TCs `visualTest: false`
 - **Register:** regenerated (`.md` + `.xlsx`): 22 Pass · 9 Not Run · 4 Blocked.
-- **Register corrections:** LP-021/022 were wrongly Blocked (product HAS an HTML and a PDF activity) → Not Run.
+- **Register corrections:** LP-021/022 were wrongly Blocked (product HAS an HTML and a PDF activity).
 - **Open for the product owner:** LP-019 open control toggles the TOC (sheet assumed "stays open"); LP-027 spinner, not a progress bar; LP-018 ✕ keeps the learner in the LP (Back leaves).
-- **Still Not Run:** LP-013 `TC_15`, LP-025 `TC_24` (need an untouched scorable → second learner, ask), LP-021/022 `TC_20/21`, teacher/admin entry points (`CMAT_TC_7`, `C1AS_TC_26`, `MSAC_TC_1`, `TLIB_TC_1`, `UMBP_TC_5` — **that ID is RETIRED** in AdminApp-Library, rename to e.g. `UMBP_TC_11`)
+
+### Batch 2 — part B + D + E + LP-021/022 `[2026-09-23]`
+Suite 7 +`TST_PEXT_TC_15` (LP-013, before TC_4) +`TC_24` (LP-025, after TC_4) — ONE learner, no second one ·
+Suite 8 +`TC_20/21` (HTML/PDF) + housekeeping `TC_102` · Suites 9–12 teacher (`CMAT_TC_7`, `MSAC_TC_1`, `C1AS_TC_26`,
+`TLIB_TC_1`) · Suite 13 admin (`UMBP_TC_11`, prod `prod_admin_mqa@yopmail.com`) · new modules **MSAC**, **TLIB** (agreed)
+- Phase 1 ✅ — grounded live (teacher `_e9mo`, admin, fresh learner `_5an7` from a setup-only run Suites 1–6)
+- Phase 2 ✅ 2026-09-23 — full run 3 **95/96** (`TC_24` failed: first entry → TOC reopens on the unit view; fixed with
+  user OK) → full run 4 **96/96** (teacher `_osgr`, Class qzwn, learner `_xov9`). Debug Suites 8–13 green after 3
+  approved fixes; `UMBP_TC_11` 5/5 after the load-wait fix. Evidence audit clean. Suite 7's LP-013/025 steps have
+  one clean full run (each needs a fresh learner) — the rest passed in several.
+- Phase 3 ⏭️ DEFERRED — all new TCs `visualTest: false`
+- **Register:** 31 Pass · 0 Not Run · 4 Blocked (child account, group Collab, group PS, NLP). `TST_UMBP_TC_5` → `TST_UMBP_TC_11`.
+- **Nothing saved on teacher paths** (user decision): Next/Assign and Continue never clicked.
 
 ### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
 **The cases are already designed.** Do not re-derive them from the scenario sheet: all 33 scenarios of

@@ -105,6 +105,41 @@
 - **A learner with a pending invite and no class never sees the dashboard** — login routes straight to
   "Invitations (1)" (`/dashboard/invitation/…`, the class listed, Accept disabled until ticked). LP-020
   (`DASH_TC_15`) asserts that landing; a check for the learner dashboard times out. `[2026-09-23, prod full run]`
+### A9. Scorable, HTML and PDF — single-learner facts `[2026-09-23, prod — fresh learner _5an7]`
+- **Nothing chosen → no Check button at all** (`a.green-btn` renders on the first selection). So an "empty
+  check" (LP-013) is impossible and consumes nothing.
+- **A half-done scorable** (frame 1 checked): TOC status "Activity status: in progress" (the sheet's "Saved"
+  = re-landing where the learner left — user 2026-09-23). Reopening it from the TOC lands on the checked
+  frame with its answer kept (`.rich-dropdown.checked-correct`) and Next offered; frames 2–4 then finish
+  at "You scored 4 out of 4". So LP-013 + LP-025 run INSIDE the one attempt (Suite 7), no second learner.
+- **HTML activity** ("Non-scorable HTML activity"): loads in the iframe; TOC status "Activity status:
+  viewed" ~1.5 s after opening — no submit. "viewed" = completed for non-scorables: it counts in the unit's
+  "N/4 Completed" (`.unit-level-item .unit-progress`; the PS counts only once evaluated, the PDF not at all).
+- **After a non-scorable, the outer bar shows NEXT ACTIVITY** (`a.btn.nextActivityBtn`, no `title`).
+- **"test pdf"** (TOC: "Downloadable item"): landing on it (e.g. NEXT ACTIVITY from the HTML activity) shows a
+  **download page** `#content-course-download` — "Download the test pdf below and complete this activity",
+  `Sample1.pdf`, a Download link (`a.download-link[download]`) — NOT the PDF, and NO download starts.
+  Landing marks it "Activity status: viewed" (user-confirmed expected, 2026-09-23). The suite never clicks Download.
+- The TOC open control reopens the **last view shown** (unit or lesson) — reset with `TST_PEXT_TC_102`.
+
+### A10. Teacher / admin entry points (preview) `[2026-09-23, prod]`
+| Entry | Route after launch | TOC mode |
+|---|---|---|
+| Class → Materials (`cView-45`) → component (`cView-73-<b>-<c>`, by name) | `/learning-path/teacher/…/class/<id>/product/…/item/…` | normal (unit view on 1st entry) |
+| Class → Assignments (`cView-44`) → Create assignment (`rView-5`) → `a.component-item` by name | `…/assignments/product/…` | assignment: `h2.unit-name`, Cancel `pAssignment-9` / Next `pAssignment-6` |
+| Materials → Manage student access (`manageaccess-<n>`) → Create access rule (`ma-create-access-rule-btn`) → component | `…/product/…/create-access` | rule: "Select all units" (visible control = `div[role=checkbox]` wrapper; its `<label>` is sr-only, width 0), Cancel/Continue `create-rules-btn-1/2` |
+| Dashboard → My library (`/dashboard/teacher/library`) → search `#tLibSearch` + Enter → title `#myLibraryAllCourseMaterialBundleTitle<id>` (EXPANDS the card) → `#view-details-link-<id>` | materials view `/dashboard/teacher/org_<slug>/bundle/<id>/view` → tile → `/learning-path/teacher/…/product/…` | normal |
+| Admin (prod `prod_admin_mqa@yopmail.com`, single-school → lands in MQA) → LIBRARY → search → row → "See materials" → tile | same materials view → `/learning-path/teacher/…/product/…` | normal |
+- **The TOC opens by itself only on a user's FIRST entry** (teachers/admins too) — a second launch starts
+  closed; `getData_teacherPlayer` opens it with the player control when closed.
+- ⚠️ **The materials view (Vue/Nuxt) is SERVER-RENDERED**: tiles are visible while `document.readyState` is
+  still "loading", and a click then is **silently ignored** (measured: 2 of 8 immediate clicks, both while
+  "loading"; every click after "complete" navigated). `umbrellaProduct.launch_componentByName` waits for the
+  document load first — this cost 3 debug runs of "flaky" failures.
+- **A teacher/admin preview does NOT create learner progress** (user-confirmed 2026-09-23).
+- Nothing is saved on any teacher path: Next/Assign and Continue are never clicked; each is its own suite
+  (fresh browser context), so an unfinished assignment/rule is discarded with the context.
+
 - `isInitialized_player` (DASH_TC_14) waits for the iframe; a learner resuming at **PS has no iframe**, so
   use the activity title link (`#selectedActivitySidebarBtn`) as the "player ready" signal (DASH_TC_16).
 

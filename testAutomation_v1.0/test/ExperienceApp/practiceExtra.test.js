@@ -184,6 +184,68 @@ module.exports = {
     await assertion.assertEqual(sts.sameActivity, true, "Closing the lesson view changed the current activity");
   },
 
+  // Housekeeping (TC_100+): TOC open at the lesson view of the unit (the open control remembers the last view).
+  TST_PEXT_TC_102: async function (testdata) {
+    sts = await practiceExtra.ensure_tocLessonView(testdata.unit);
+    await assertion.assertEqual(sts.lessonView, true, "Could not bring the TOC to the lesson view of '" + testdata.unit + "'");
+  },
+
+  // LP-013: nothing chosen on frame 1 → Check is not offered at all (it renders on the first selection,
+  // which TST_PEXT_TC_4 then proves). Runs BEFORE TC_4 in the learner's one attempt — consumes nothing.
+  TST_PEXT_TC_15: async function (testdata) {
+    sts = await practiceExtra.getData_frameCheckState(testdata.frame);
+    await assertion.assertEqual(sts.frameShown, true, "Frame " + (testdata.frame + 1) + " of the scorable activity not shown");
+    await assertion.assertEqual(sts.filledCount, 0, "Precondition: an option is already chosen on frame " + (testdata.frame + 1));
+    await assertion.assertEqual(sts.checkShown, false, "Check is offered although no option has been chosen");
+  },
+
+  // LP-025: after frame 1 is checked, leave the scorable for another activity and reopen it — the TOC shows
+  // it "in progress" (not complete/scored) and it reopens on the frame where it was left, with the answer
+  // kept, so the attempt can continue. [user 2026-09-23] The sheet's "Saved" means exactly that re-landing;
+  // the TOC label itself is "Activity status: in progress".
+  TST_PEXT_TC_24: async function (testdata) {
+    sts = await practiceExtra.leave_and_relaunch(testdata.activity, testdata.away, testdata.frame, testdata.unit);
+    await assertion.assertEqual(sts.awayTitle, testdata.away, "Could not leave the scorable for '" + testdata.away + "'");
+    await assertion.assertEqual(sts.statusWhileAway, testdata.statusWhileAway, "The unfinished scorable's TOC status is wrong while away");
+    await assertion.assertEqual(sts.backTitle, testdata.activity, "Could not reopen '" + testdata.activity + "'");
+    await assertion.assertEqual(sts.frameShown, true, "The reopened scorable is not on frame " + (testdata.frame + 1));
+    await assertion.assertEqual(sts.filledCount, testdata.answerCount, "The frame's answer was not kept");
+    await assertion.assertEqual(sts.correctCount, testdata.answerCount, "The frame's checked (correct) state was not kept");
+    await assertion.assertEqual(sts.nextShown, true, "The reopened scorable cannot continue (no Next)");
+  },
+
+  // LP-021: the HTML activity completes by itself — no submit: its TOC status becomes "viewed" and the
+  // unit's "N/M Completed" goes up by one. Starts and ends with the TOC open (lesson view in, unit view out).
+  TST_PEXT_TC_20: async function (testdata) {
+    sts = await practiceExtra.click_goToUnitView();
+    await assertion.assertEqual(sts.unitView, true, "Could not show the TOC unit view");
+    var before = await practiceExtra.getData_unitProgress();
+    await assertion.assert(before.done >= 0, "Unit completion counter not readable: " + before.text);
+    sts = await practiceExtra.click_tocUnit(testdata.unit);
+    await assertion.assertEqual(sts.lessonView, true, "Could not open unit '" + testdata.unit + "'");
+    sts = await practiceExtra.open_activityAndWaitStatus(testdata.activity, testdata.status);
+    await assertion.assertEqual(sts.title, testdata.activity, "The player did not switch to '" + testdata.activity + "'");
+    await assertion.assertEqual(sts.iframeShown, true, "The HTML activity did not load in the player");
+    await assertion.assertEqual(sts.statusAfter, testdata.status, "The HTML activity did not complete by itself (status: " + sts.statusAfter + ")");
+    sts = await practiceExtra.click_goToUnitView();
+    await assertion.assertEqual(sts.unitView, true, "Could not return to the TOC unit view");
+    var after = await practiceExtra.getData_unitProgress();
+    await assertion.assertEqual(after.done, before.done + 1, "Unit completion did not go up by one (" + before.text + " → " + after.text + ")");
+  },
+
+  // LP-022: NEXT ACTIVITY from the HTML activity lands on the downloadable PDF — a download page (not the
+  // PDF itself), and landing marks it "viewed" with no download and no submit. Download is never clicked.
+  TST_PEXT_TC_21: async function (testdata) {
+    sts = await practiceExtra.open_nextActivityDownload(testdata.activity, testdata.status);
+    await assertion.assert(sts.statusBefore !== testdata.status, "Precondition: '" + testdata.activity + "' was already '" + testdata.status + "' before landing on it");
+    await assertion.assertEqual(sts.title, testdata.activity, "NEXT ACTIVITY did not land on '" + testdata.activity + "'");
+    await assertion.assertEqual(sts.pageShown, true, "The download page of '" + testdata.activity + "' is not shown");
+    await assertion.assertEqual(sts.instructions, testdata.instructions, "Unexpected download instructions");
+    await assertion.assertEqual(sts.fileName, testdata.fileName, "Unexpected file name on the download page");
+    await assertion.assertEqual(sts.downloadShown, true, "No Download link is offered");
+    await assertion.assertEqual(sts.statusAfter, testdata.status, "Landing on the PDF did not mark it viewed");
+  },
+
   // LP-018 (appended 2026-09-23): the way OUT of the Learning Path is the player's Back link → dashboard.
   TST_PEXT_TC_26: async function (testdata) {
     sts = await practiceExtra.click_back();

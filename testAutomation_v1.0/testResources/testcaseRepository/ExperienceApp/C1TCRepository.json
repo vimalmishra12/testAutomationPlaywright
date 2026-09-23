@@ -685,6 +685,12 @@
           "description": "Click Return to Presentation Plus on modal and verify return",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_26",
+          "description": "Verify a teacher can launch an LP component from the assignment-creation flow",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -3720,6 +3726,36 @@
           "description": "Verify the player's Back link returns the learner from the Learning Path to the dashboard",
           "tags": "P3",
           "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_15",
+          "description": "Verify Check is not offered on a scorable frame until a dropdown option is chosen",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_24",
+          "description": "Verify an unfinished scorable activity stays in progress and restores its checked answers on relaunch",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_20",
+          "description": "Verify an HTML activity completes by itself (no submit) and counts toward the unit completion",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_102",
+          "description": "Housekeeping: bring the TOC to the lesson view of a unit",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_21",
+          "description": "Verify a downloadable PDF activity is marked viewed when the learner lands on it, with no download or submit",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -6303,6 +6339,12 @@
           "description": "Verify the component list renders correctly for products with differing component counts",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_UMBP_TC_11",
+          "description": "Verify an admin can launch an LP component from the Library tab product materials",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -6624,6 +6666,12 @@
           "description": "Click Back button in folder view",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_7",
+          "description": "Verify a teacher can launch a Practice Extra component from the class Materials tab",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -6641,6 +6689,32 @@
         {
           "id": "TST_RBNK_TC_2",
           "description": "Click Back button on Resource Bank page",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Manage student access (teacher)",
+      "moduleId": "MSAC",
+      "testFile": "./test/ExperienceApp/manageStudentAccess.test.js",
+      "testcase": [
+        {
+          "id": "TST_MSAC_TC_1",
+          "description": "Verify a teacher can launch an LP component while creating a lock rule in Manage student access",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "My library (teacher)",
+      "moduleId": "TLIB",
+      "testFile": "./test/ExperienceApp/teacherLibrary.test.js",
+      "testcase": [
+        {
+          "id": "TST_TLIB_TC_1",
+          "description": "Verify a teacher can launch a Practice Extra component from My library",
           "tags": "P1",
           "visualTest": false
         }

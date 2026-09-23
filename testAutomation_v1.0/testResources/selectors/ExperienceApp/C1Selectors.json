@@ -28,6 +28,12 @@
         "assignmentModalCancelBtn": "button[qid=\"assignment-3\"], button.cancel-btn",
         "assignmentModalActionBtn": "button[qid=\"assignment-4\"], button#assignmentModalActionBtn",
         "createNewAssignmentBtn": "button:has-text(\"Create new assignment\"), button:has-text(\"create another assignment\"), [qid*=\"create-new\"]",
+        "_comment_lp": "LP-029 (2026-09-23, prod): Create assignment lists the product's components (a.component-item, positional qid a-path-2-<n> — addressed by name); Practice Extra opens the Learning Path in /assignments mode with its TOC (h2.unit-name) and Cancel / Next. The LP suite never clicks Next or Assign.",
+        "assignComponentByName": "a.component-item:has(h2.component-name:text-is('{NAME}'))",
+        "assignTocUnitName": "h2.unit-name",
+        "assignTocSidebar": "div.sidebar.bg-white",
+        "assignCancelBtn": "button[qid='pAssignment-9']",
+        "assignNextBtn": "button[qid='pAssignment-6']",
         "returnToPresentationPlusBtn": "a:has-text(\"Return to Presentation Plus\"), button:has-text(\"Return to Presentation Plus\"), span:has-text(\"Return to Presentation Plus\"), [role=\"button\"]:has-text(\"Return to Presentation Plus\"), [qid*=\"return\"], [qid*=\"Return\"]"
       },
       "c1student": {
@@ -524,7 +530,37 @@
         "psConfirmModal": "#exampleModal",
         "psReadyToSubmitTitle": "#exampleModal #readyToSubmitLabel",
         "psConfirmSubmitBtn": "#submitModal-productiveSkill-btn",
-        "psAttemptedAnswer": "div.attempted-answer"
+        "psAttemptedAnswer": "div.attempted-answer",
+        "_comment_batch2bde": "LP batch 2 B/D/E keys (2026-09-23, prod). frameCheckedCorrect: a checked dropdown gets `.checked-correct`. tocUnitProgress: '3/4 Completed' in the unit row. tocActivityStatus: the status icon's aria-label ('Activity status: viewed' / 'in progress' / 'Completed above target').",
+        "frameCheckedCorrect": "#content_wrap_{N} .rich-dropdown.checked-correct",
+        "tocUnitProgress": ".unit-level-item .unit-progress",
+        "_comment_pdf": "LP-022 (2026-09-23, prod): after a non-scorable activity the outer bar offers NEXT ACTIVITY (a.btn.nextActivityBtn, no title). Landing on the downloadable 'test pdf' shows a download page (NOT the PDF): instructions, file name, Download link. Landing marks it viewed; the suite NEVER clicks Download.",
+        "nextActivityBtn": "a.btn.nextActivityBtn",
+        "downloadPage": "#content-course-download",
+        "downloadInstructions": "#content-course-download p.downlaod-instructions",
+        "downloadFileName": "#content-course-download p.content-course-title",
+        "downloadLink": "#content-course-download a.download-link",
+        "tocActivityStatus": "a.activity-name-container:has(span[title='{NAME}']) [aria-label^='Activity status'], a.activity-name-container:has(span[title='{NAME}']) [aria-label^='Completed'], a.activity-name-container:has(span[title='{NAME}']) img[alt^='Activity status']"
+      },
+      "manageStudentAccess": {
+        "_comment": "Teacher class > Materials > 'Manage student access' (module MSAC), captured live on production 2026-09-23 (teacher _e9mo). The rule-creation flow reuses the assignment component picker (a.component-item) and then opens the Learning Path in /create-access mode: Select all units / unit checkboxes, Cancel / Continue. Nothing is saved unless Continue is used — the LP suite NEVER clicks Continue.",
+        "manageAccessLinkInBundle": "//div[contains(@class,'materials-container') and .//h2[contains(@class,'product-name') and contains(.,'{{bundleName}}')]]//a[starts-with(@qid,'manageaccess-')]",
+        "manageAccessLink": "a[qid^='manageaccess-']",
+        "heading": "h2.manage-access-heading",
+        "createRuleBtn": "button[qid='ma-create-access-rule-btn']",
+        "componentByName": "a.component-item:has(h2.component-name:text-is('{NAME}'))",
+        "selectAllUnits": "div.custom-control-input-wrapper[role='checkbox']:has(#create-access-select-allunits)",
+        "_comment_selectAll": "The <label qid=select-allunits> holds only sr-only text (width 0, never visible) — the visible control is its checkbox wrapper div[role=checkbox] (2026-09-23).",
+        "tocSidebar": "div.sidebar.bg-white",
+        "cancelBtn": "button[qid='create-rules-btn-1']",
+        "continueBtn": "button[qid='create-rules-btn-2']"
+      },
+      "teacherLibrary": {
+        "_comment": "Teacher dashboard > 'My library' (module TLIB), captured live on production 2026-09-23. Route /dashboard/teacher/library. Clicking a product's title EXPANDS its card (components + View details); 'View details' opens the product materials view /dashboard/teacher/org_<slug>/bundle/<id>/view — the same Vue page as the admin 'See materials' (umbrellaProduct). {ID} = the product id (e.g. cqaautomationbundle1).",
+        "myLibraryNav": "a:has-text('My library')",
+        "searchInput": "#tLibSearch",
+        "productTitleById": "#myLibraryAllCourseMaterialBundleTitle{ID}",
+        "viewDetailsById": "#view-details-link-{ID}"
       },
       "myProgress": {
         "my_progress": ".page-title.mt-3"
@@ -1740,7 +1776,8 @@
         "addToClassBtn": "[qid=\"t-prd-umb-btn-1\"]",
         "componentTile": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"]",
         "componentType": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"] div.heading",
-        "componentName": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"] div.font-xs.mb-1"
+        "componentName": "section.umbrella-components [qid=\"t-prd-cmp-cntr-1\"] div.font-xs.mb-1",
+        "componentLink": "a.link"
       },
       "adminShell": {
         "_comment": "Admin App shell chrome — header Help menu + tutorials, profile menu, site language, role toggle, loader, admin footer (modules ASHL / FOOT extension). Captured live on Thor 2026-09-14, admin-shared.md §A12. WARNINGS: (1) the logged-in language control is cFooter-7 / cFooter-8-0 / cFooter-8-1 — the sp-ldd-* qids in §A9 do NOT exist when logged in; the active option carries class 'active'. (2) all five tutorial topics share qid cHeader-hlp-6 — address them by index or text. (3) cFooter-9 is shared by FAQs and 'Cambridge One for schools' — disambiguated below. (4) logged-in internal footer hrefs are javascript:void(0) — assert the resulting URL, never the href. (5) the role toggle's switch class differs per view: .can-toggle__switch (admin) vs .can-toggle-switch (teacher). (6) wait for pageLoader to be hidden before ANY click — the overlay swallows clicks on visible elements.",

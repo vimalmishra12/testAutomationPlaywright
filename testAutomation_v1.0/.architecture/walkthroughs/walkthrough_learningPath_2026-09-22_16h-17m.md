@@ -271,3 +271,56 @@ None.
 - Full run 2: **75/75**, 301 s (teacher `_e9mo`, Class lm76, learner `_iyit`); DASH_TC_15 screenshot shows
   "Invitations (1)" with Class lm76. Register regenerated (.md + .xlsx): 22 Pass · 9 Not Run · 4 Blocked.
 - Remaining: nothing committed (branch `ashu_local`); `TST_UMBP_TC_5` retired-ID rename before LP-033.
+
+---
+
+## Session 4 — 2026-09-23 — Batch 2, parts B + D + E + LP-021/022
+
+## Summary
+User decisions: MSAC/TLIB codes OK; LP-033 → `TST_UMBP_TC_11` with admin `prod_admin_mqa@yopmail.com` (prod); teacher
+paths launch-only; for live/register differences that look like bugs, stop and ask. Asked: can LP-013/025 share the
+one learner? Probed on a fresh learner (setup-only run of Suites 1–6: teacher `_r5b7`, Class yzsk, learner `_5an7`)
+→ YES. Committed batch A+C first (`afd6a74`).
+
+## Grounding (read-only probes; scratchpad)
+- Teacher Materials / Create assignment / Manage student access / My library, and admin Library → all launch the LP
+  (knowledge §A10). Scorable single-learner sequence, HTML "viewed" + unit counter, PDF download page (§A9).
+- Questions answered by the user: PDF "viewed" on landing = expected; LP-025 "Saved" = wording ("in progress");
+  LP-033 "All course materials" dropped.
+
+## Changes Made
+- Selectors: practiceExtra (+frameCheckedCorrect, tocUnitProgress, tocActivityStatus, nextActivityBtn, download*),
+  c1assignment (+assignComponentByName, assignTocUnitName, assignTocSidebar, assignCancelBtn, assignNextBtn),
+  umbrellaProduct (+componentLink), NEW blocks manageStudentAccess, teacherLibrary.
+- Page objects: practiceExtra (+getData_frameCheckState, getData_activityStatus, leave_and_relaunch, getData_unitProgress,
+  open_activityAndWaitStatus, open_nextActivityDownload, ensure_tocLessonView, getData_teacherPlayer);
+  c1assignment (+launch_componentInCreateAssignment); umbrellaProduct (+launch_componentByName); NEW
+  manageStudentAccess.page.js, teacherLibrary.page.js.
+- Tests: PEXT_TC_15, 24, 20, 21, 102; CMAT_TC_7; C1AS_TC_26; UMBP_TC_11; NEW manageStudentAccess.test.js (MSAC_TC_1),
+  teacherLibrary.test.js (TLIB_TC_1). TC repo: 10 TCs, 2 new modules (MSAC, TLIB), all `visualTest: false`.
+- Data: pextScorable.emptyCheck/relaunch, pextHtml, pextPdf, teacherLp, adminLogin, adminLibrary.
+- Exec: Suite 7/8 steps; Suites 9–13 (reuse DASH_TC_11/12, CMAT_TC_1, MRPT_TC_201, LIBR_TC_101).
+
+## Runs
+- Debug 8–13 (`--runData=last`): 34/38 → fixes (user-approved): TC_102 housekeeping (TOC remembers last view);
+  MSAC select-all → visible checkbox wrapper (label is sr-only, width 0); getData_teacherPlayer opens the TOC when
+  closed (first-entry-only auto open). Then UMBP_TC_11 flaky (2/4, 1/4): traced — the Nuxt materials view is
+  server-rendered, clicks while readyState "loading" are ignored (measured 2/8) → wait for document load → 5/5.
+- Full run 3: **95/96** (teacher `_2yzn`, Class hfzb, learner `_6c7t`). `TC_24` failed: first entry → TOC reopens on the
+  unit view, activity row not present. Evidence audit clean for all new TCs.
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- Commit batch B/D/E after the fix (user asked to commit A+C first; ask again).
+
+### Session 4 (cont.) — TC_24 fix, user-confirmed
+- User clarified "Saved" applies to scorable activities only (Flashcards keeps no intermediate state) — the test
+  already checks the scorable; Flashcards is only the navigate-away target. Kept.
+- `practiceExtra.page.js` `leave_and_relaunch(…, unitName)`: `ensure_tocLessonView(unit)` before each TOC activity
+  click (was: open the TOC if closed — on a first entry that reopens the UNIT view). Test passes `testdata.unit`;
+  data `pextScorable.relaunch.unit = "Unit 1"`.
+- Full run 4: **96/96**, 379 s (teacher `_osgr`, Class qzwn, learner `_xov9`); TC_24 screenshot = reopened frame 1,
+  answer kept + correct, Next offered. Register regenerated: 31 Pass · 0 Not Run · 4 Blocked.
+- User confirmed 2026-09-23: a teacher preview does not create learner progress — recorded in CMAT_TC_7 Remarks and learning-path-player.md §A10.

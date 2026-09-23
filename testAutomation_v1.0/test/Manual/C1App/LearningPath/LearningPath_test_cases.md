@@ -5,10 +5,10 @@
 **App:** Cambridge One — `www.cambridgeone.org` (production; thor is blocked — see `c1-core-shared.md` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
 **Generated:** 2026-09-23 | **Total TCs:** 35 (30 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
-**Execution status (2026-09-23):** **22 automated and passing** (`npm run learningPathTest_prod`, full run 75/75 on production (2026-09-23) — teacher _e9mo, Class lm76, learner _iyit; the previous full run the same day was 74/75 (TST_DASH_TC_15, since fixed)) · **0 Fail** · **9 Not Run** · **4 Blocked** (TST_PEXT_TC_14, TST_PEXT_TC_22, TST_PEXT_TC_23, TST_C1AS_TC_27).
+**Execution status (2026-09-23):** **31 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23) — teacher _osgr, Class qzwn, learner _xov9) · **0 Fail** · **0 Not Run** · **4 Blocked** (TST_PEXT_TC_14, TST_PEXT_TC_22, TST_PEXT_TC_23, TST_C1AS_TC_27).
 **Part 2 — LP setup chain (40 TCs, module-wise, separate sheet):** **40 of 40 passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision 2026-09-22).
 
-**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (26 TCs); its learner-player + dashboard part (LP-007…011, 014, 015, 018…020, 026, 027 — incl. appended TST_PEXT_TC_26) automated 2026-09-23** · Setup chain — sheet "LP Setup (by module)".
+**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (26 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
 >
 > **Batch 2 automation (2026-09-23):** expected results of the automated rows were confirmed live on production and
 > rewritten to what was seen. Three sheet assumptions did not hold and are recorded in Remarks: LP-018 (the
@@ -103,7 +103,7 @@
 | #LP-030 — Teacher launches an NLP component from within the assignment-creation flow | TST_C1AS_TC_27 |
 | #LP-031 — Teacher launches an LP component while creating lock rules via "Manage student access" | TST_MSAC_TC_1 |
 | #LP-032 — Teacher launches a Practice Extra component under a product via "My library" | TST_TLIB_TC_1 |
-| #LP-033 — Admin launches an LP component under an umbrella product via the Library tab | TST_UMBP_TC_5 |
+| #LP-033 — Admin launches an LP component under an umbrella product via the Library tab | TST_UMBP_TC_11 |
 
 ---
 
@@ -441,18 +441,18 @@ _none — automation-mechanics scenario (it checks the automation's own error me
 |---|---|
 | **S.No.** | 16 |
 | **Test Case ID** | TST_PEXT_TC_15 |
-| **Title** | Verify what happens when check is clicked on a scorable frame with no option selected |
+| **Title** | Verify Check is not offered on a scorable frame until a dropdown option is chosen |
 | **Linked Requirement** | #LP-013 — Clicking check on a scorable frame without selecting any dropdown option |
 | **Type** | Negative |
 | **Priority** | Medium |
-| **Preconditions** | Learner is on a scorable activity frame; no dropdown opened or selected. |
-| **Test Steps** | 1. Without opening or selecting any option, click the green check button. |
-| **Test Data** | — |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. Inferred: the check is rejected / no-ops, or an explicit empty-answer state is shown. |
-| **Remarks** | Not exercised by SOURCE (it always selects an answer first). Capture the real copy when confirming, and keep it out of the same run as the happy-path scorable case (one attempt per learner). |
+| **Preconditions** | Learner is on frame 1 of the scorable activity; no dropdown opened or selected (first attempt). |
+| **Test Steps** | 1. Without opening or selecting any option, look for the green Check button.<br>2. Choose an option (TST_PEXT_TC_4). |
+| **Test Data** | Frame 1 (0-based 0) |
+| **Expected Result** | With nothing chosen, NO Check button is shown, so an empty check cannot be made; Check appears once an option is chosen (TST_PEXT_TC_4). |
+| **Remarks** | Confirmed live on production 2026-09-23. (fresh learner _5an7). Fits the sheet's inferred "rejected / no-op". It consumes nothing, so it runs inside the learner's one scorable attempt in Suite 7, just before TST_PEXT_TC_4 — no second learner needed (user question 2026-09-23). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -598,18 +598,18 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 |---|---|
 | **S.No.** | 23 |
 | **Test Case ID** | TST_PEXT_TC_20 |
-| **Title** | Verify an HTML activity completes by itself after a short dwell |
+| **Title** | Verify an HTML activity completes by itself (no submit) and counts toward the unit completion |
 | **Linked Requirement** | #LP-021 — Learner launches an HTML activity within a PE component (auto-completes after a dwell) |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | A PE component containing an HTML activity; learner has access. |
-| **Test Steps** | 1. Log in as the learner.<br>2. Launch the PE component.<br>3. Navigate to the HTML activity.<br>4. Wait about 3 seconds without interacting. |
-| **Test Data** | — |
-| **Expected Result** | The HTML activity loads without error and is marked completed after the dwell, with no explicit submit. |
-| **Remarks** | [LP Test Cases] TC_LRN_002. No page-object support in SOURCE; selectors must be captured live. |
+| **Preconditions** | Learner inside Practice Extra, TOC open on the lesson view of Unit 1; the HTML activity not yet opened. |
+| **Test Steps** | 1. Note the unit's completion counter in the TOC unit view ("N/4 Completed").<br>2. Open Unit 1 and open "Non-scorable HTML activity".<br>3. Wait a few seconds without interacting.<br>4. Check the activity's TOC status and the unit counter again. |
+| **Test Data** | Unit 1; activity "Non-scorable HTML activity" |
+| **Expected Result** | The HTML activity loads in the player; within seconds its TOC status becomes "Activity status: viewed" with no submit, and the unit counter goes up by one (e.g. 2/4 → 3/4 Completed). |
+| **Remarks** | [LP Test Cases] TC_LRN_002. Confirmed live on production 2026-09-23. "viewed" is the completed state of a non-scorable activity (it counts in "N/4 Completed"); reached ~1.5 s after opening (the sheet said a ~3 s dwell). Was wrongly Blocked at design time (the product does have an HTML activity). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | UNBLOCKED 2026-09-23: the design-time blocker was wrong — cqaautomationbundle1's Practice Extra (Unit 1 > Lesson 1) DOES contain "Non-scorable HTML activity" (seen live on production). Ready to automate in a later batch (was: "needs a product whose PE component contains an HTML activity"). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -619,18 +619,18 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 |---|---|
 | **S.No.** | 24 |
 | **Test Case ID** | TST_PEXT_TC_21 |
-| **Title** | Verify a PDF activity completes by itself after a short dwell |
+| **Title** | Verify a downloadable PDF activity is marked viewed when the learner lands on it, with no download or submit |
 | **Linked Requirement** | #LP-022 — Learner launches a PDF activity within a PE component (auto-completes after a dwell) |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | A PE component containing a PDF activity; learner has access. |
-| **Test Steps** | 1. Log in as the learner.<br>2. Launch the PE component.<br>3. Navigate to the PDF activity.<br>4. Wait about 3 seconds without interacting. |
-| **Test Data** | — |
-| **Expected Result** | The PDF activity loads without error and is marked completed after the dwell, with no explicit submit. |
-| **Remarks** | [LP Test Cases] TC_LRN_002. No page-object support in SOURCE. |
+| **Preconditions** | Learner on the HTML activity (TST_PEXT_TC_20); the PDF activity "test pdf" not yet visited. |
+| **Test Steps** | 1. Click NEXT ACTIVITY in the player.<br>2. Look at the page and at the activity's TOC status. Do NOT click Download. |
+| **Test Data** | Activity "test pdf" (file Sample1.pdf) |
+| **Expected Result** | The player lands on "test pdf" and shows a DOWNLOAD page — "Download the test pdf below and complete this activity", the file name "Sample1.pdf" and a Download button (the PDF itself is not displayed and nothing is downloaded). Landing on it marks the activity "Activity status: viewed", with no submit. |
+| **Remarks** | [LP Test Cases] TC_LRN_002. Confirmed live on production 2026-09-23. The TOC marks it "Downloadable item". Landing on it (e.g. via NEXT ACTIVITY after the HTML activity) is what marks it viewed — confirmed as expected by the user 2026-09-23. The suite never clicks Download. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | UNBLOCKED 2026-09-23: cqaautomationbundle1's Practice Extra (Unit 1 > Lesson 1) contains "test pdf", marked "Downloadable item" in the TOC — confirm live whether it opens in the player or downloads (the expected result may need to change). Ready to automate in a later batch. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -686,14 +686,14 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Linked Requirement** | #LP-025 — Exiting a Scorable activity before submitting saves it in a "Saved" in-progress state |
 | **Type** | Positive |
 | **Priority** | Medium |
-| **Preconditions** | A PE component with a scorable activity the learner has NOT completed. |
-| **Test Steps** | 1. Log in as the learner and open Practice Extra → a unit → a lesson.<br>2. Launch the scorable activity and answer part of it without completing.<br>3. Exit back to the TOC.<br>4. Relaunch the same activity. |
-| **Test Data** | Use the same answers as TST_PEXT_TC_4 (frame 1) — stop before the final Next. |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. Inferred from the sheet: the TOC shows the activity as "Saved" (in progress), not complete/scored, and relaunching restores the answers already entered. |
-| **Remarks** | Needs a learner whose scorable activity is untouched — mutually exclusive with LP-002/003 in the same run (one attempt per learner). Plan a dedicated learner, or run this INSTEAD of the full scorable pass. |
+| **Preconditions** | Frame 1 of the scorable activity has been answered and checked (TST_PEXT_TC_4); frames 2–4 not yet done. |
+| **Test Steps** | 1. Open the TOC and open another activity (Flashcards.zip).<br>2. Look at the scorable activity's status in the TOC.<br>3. Open the scorable activity again from the TOC. |
+| **Test Data** | Scorable: BASE04_Dropdown_Scorable.zip; away: Flashcards.zip |
+| **Expected Result** | While away, the TOC shows the scorable as "Activity status: in progress" (not completed, no score). Reopening it lands on the frame where the learner left it, with the checked answer kept (still marked correct) and Next offered, so the attempt continues (frames 2–4 then score 4 out of 4). |
+| **Remarks** | Confirmed live on production 2026-09-23. (fresh learner _5an7). The sheet's "Saved" = re-landing on the same screen where the learner left it; the TOC label is "in progress" (user, 2026-09-23 — wording, not a defect). Runs inside the learner's one attempt in Suite 7, right after TST_PEXT_TC_4. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7, between TST_PEXT_TC_4 and TC_5). First full run (learner _6c7t) failed on the test: on a FIRST entry the TOC reopens on the unit view, which lists no activities — fixed by opening it on the lesson view first; full run 96/96 (learner _xov9) passed. Flashcards is only where the learner navigates to; the saved state checked is the scorable's. |
 
 ---
 
@@ -751,12 +751,12 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Priority** | High |
 | **Preconditions** | Teacher in a class whose product contains an LP component. |
 | **Test Steps** | 1. Log in as the teacher.<br>2. Open the class from the teacher dashboard.<br>3. Open the "Materials" tab.<br>4. Expand the product and click the Practice Extra component. |
-| **Test Data** | Class of the LP run; product cqaautomationbundle1 |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The component launches for the teacher and its TOC renders, so the teacher can preview activities without submitting. |
-| **Remarks** | [LP Test Cases] TC_TCH_001. Module CMAT (classMaterials.page.js) already exists for the Materials tab; the LP launch from it is new. Teacher preview must not create learner progress — confirm. |
+| **Test Data** | Class of the LP run; product cqaautomationbundle1; component "Practice Extra" |
+| **Expected Result** | The Materials tab lists the product's components (Practice Extra, Projects, Test, Showcase); clicking Practice Extra opens the Learning Path on the teacher route (/learning-path/teacher/…) with an activity loaded and its TOC rendered (unit view, "Unit 1"), for preview. |
+| **Remarks** | [LP Test Cases] TC_TCH_001. Confirmed live on production 2026-09-23. The TOC opens by itself only on the user's first entry — on later entries the test opens it with the player's control. A teacher preview does NOT create learner progress (confirmed by the user 2026-09-23; not asserted by the test). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -771,13 +771,13 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Type** | Positive |
 | **Priority** | High |
 | **Preconditions** | Teacher in a class whose product contains an LP component. |
-| **Test Steps** | 1. Log in as the teacher and open the class.<br>2. Open the "Assignments" tab.<br>3. Click "Create assignment".<br>4. Select and launch the LP component inside the flow. |
-| **Test Data** | Class of the LP run |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The LP component launches for the teacher and its TOC renders inside assignment creation. |
-| **Remarks** | [LP Test Cases] TC_TCH_002. Module C1AS (c1assignment) covers assignments today; check its existing TCs before adding selectors. |
+| **Test Steps** | 1. Log in as the teacher and open the class.<br>2. Open the "Assignments" tab.<br>3. Click "Create assignment".<br>4. Click "Practice Extra" in the component list. Do NOT click Next / Assign. |
+| **Test Data** | Class of the LP run; component "Practice Extra" |
+| **Expected Result** | Create assignment lists the product's components (Practice Extra, Projects, Test); clicking Practice Extra opens the Learning Path in assignment mode (/learning-path/teacher/…/assignments/…) with its TOC ("Practice Extra", unit "Unit 1") and Cancel / Next. No assignment is created. |
+| **Remarks** | [LP Test Cases] TC_TCH_002. Confirmed live on production 2026-09-23. Launch only — the user decided nothing is saved (2026-09-23); the component is addressed by name (its qid a-path-2-<n> is positional). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -813,13 +813,13 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Type** | Positive |
 | **Priority** | High |
 | **Preconditions** | Teacher in a class with a product added; "Manage student access" available under Materials. |
-| **Test Steps** | 1. Log in as the teacher and open the class.<br>2. Open the "Materials" tab and click "Manage student access".<br>3. Start creating a lock/unlock rule and launch the LP component from that flow. |
-| **Test Data** | Class of the LP run |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The LP component launches for the teacher and its TOC renders. |
-| **Remarks** | [LP Test Cases] TC_TCH_004. Module code MSAC is PROPOSED — no page object exists for "Manage student access"; agree the code when the page object is created (AGENTS.md Rule 6). Creating a lock rule changes class state — decide before running whether the rule is removed afterwards (ADR-021). |
+| **Test Steps** | 1. Log in as the teacher and open the class.<br>2. Open the "Materials" tab and click the product's "Manage student access".<br>3. Click "Create access rule".<br>4. Click "Practice Extra" in the component list. Do NOT click Continue. |
+| **Test Data** | Class of the LP run; product cqaautomationbundle1; component "Practice Extra" |
+| **Expected Result** | "Manage student access" opens with "Create access rule"; the rule flow lists the product's components; clicking Practice Extra opens the Learning Path in rule-creation mode (/learning-path/teacher/…/create-access) with its TOC ("Select all units", unit checkboxes) and Cancel / Continue. No rule is created. |
+| **Remarks** | [LP Test Cases] TC_TCH_004. Confirmed live on production 2026-09-23. Module code MSAC agreed with the user 2026-09-23 (manageStudentAccess.page.js). Launch only — Continue is never clicked, so class state is unchanged (user decision 2026-09-23). The visible "Select all units" control is the checkbox wrapper; its <label> is screen-reader-only. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -834,13 +834,13 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Type** | Positive |
 | **Priority** | High |
 | **Preconditions** | Teacher whose "My library" contains the product. |
-| **Test Steps** | 1. Log in as the teacher.<br>2. Open the "My library" tab on the teacher dashboard.<br>3. Find/search the product.<br>4. Open the product ("View details" / bundle view).<br>5. Launch the Practice Extra component. |
-| **Test Data** | Product cqaautomationbundle1 |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The component launches for the teacher and its TOC renders. |
-| **Remarks** | [LP Test Cases] TC_TCH_005. Module code TLIB is PROPOSED — no page object exists for the teacher "My library" tab. Read-only case, safe to run repeatedly. |
+| **Test Steps** | 1. Log in as the teacher.<br>2. Open "My library" on the teacher dashboard.<br>3. Search the product (Enter).<br>4. Click the product title (expands its card), then "View details".<br>5. Click "Practice Extra". |
+| **Test Data** | Product cqaautomationbundle1; component "Practice Extra" |
+| **Expected Result** | My library (/dashboard/teacher/library) finds the product; its card expands with its components and "View details"; View details opens the product materials view (/dashboard/teacher/…/bundle/cqaautomationbundle1/view); Practice Extra opens the Learning Path on the teacher route with its TOC rendered. |
+| **Remarks** | [LP Test Cases] TC_TCH_005. Confirmed live on production 2026-09-23. Module code TLIB agreed with the user 2026-09-23 (teacherLibrary.page.js). Read-only, safe to run repeatedly. The materials view is server-rendered — a click before the page has loaded is ignored (the automation waits for the load). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
@@ -849,19 +849,19 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | Field | Value |
 |---|---|
 | **S.No.** | 35 |
-| **Test Case ID** | TST_UMBP_TC_5 |
+| **Test Case ID** | TST_UMBP_TC_11 |
 | **Title** | Verify an admin can launch an LP component from the Library tab's product materials |
 | **Linked Requirement** | #LP-033 — Admin launches an LP component under an umbrella product via the Library tab |
 | **Type** | Positive |
 | **Priority** | High |
-| **Preconditions** | School-admin login; the school library contains an umbrella product with an LP component. |
-| **Test Steps** | 1. Log in as the admin.<br>2. Open the "LIBRARY" tab.<br>3. Search the product.<br>4. Click "See materials".<br>5. Launch the LP component. |
-| **Test Data** | An umbrella product on the admin's school (e.g. the SLE product of the LP school) |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The Library tab shows "School licence" and "All course materials"; search filters to matching products; "See materials" opens the component list; the LP component launches for preview and renders. |
-| **Remarks** | [LP Test Cases] TC_ADM_001. Module UMBP (umbrellaProduct — product materials view) already covers "See materials"; only the LP launch is new. The Library tab itself is covered by LIBR in AdminApp-Library — check that register for overlap before automating. |
+| **Preconditions** | School-admin login (prod_admin_mqa@yopmail.com, single-school admin of MQA Sierra School MQA-ABC-DEF); the school library contains the product. |
+| **Test Steps** | 1. Log in as the admin (lands straight in the school).<br>2. Open the "LIBRARY" tab.<br>3. Search the product.<br>4. Click its row ("See materials").<br>5. Click "Practice Extra". |
+| **Test Data** | Product cqaautomationbundle1; component "Practice Extra"; school key MQA-ABC-DEF |
+| **Expected Result** | The Library tab shows the School licence section and the product list; the search lists the product; "See materials" opens the product materials view (components Practice Extra, Projects, Test); Practice Extra opens the Learning Path preview on the teacher route with its TOC rendered. |
+| **Remarks** | [LP Test Cases] TC_ADM_001. Confirmed live on production 2026-09-23. RENAMED from TST_UMBP_TC_5 (that id is retired in AdminApp-Library) with the user's OK. The sheet's "All course materials" heading belongs to the teacher's My library, not the admin Library tab — dropped (user, 2026-09-23). The materials view is server-rendered: clicks before its document has loaded are ignored (measured) — the automation waits for the load. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
 
 ---
 
