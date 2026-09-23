@@ -190,4 +190,24 @@ Modules `SNUP` · `TSET` · `ENTE`/`CREA`/`INVI`/`DASH` deltas (setup chain) · 
 - Phase 2 ✅ 2026-09-22 — full suite (7 suites) **53/53** on prod; Suites 1–3 clean twice before; Suites 6–7 debugged in `--runData=last` mode (8/8, 11/11)
 - Phase 3 ⏭️ DEFERRED by user decision (2026-09-22) — all TCs stay `visualTest: false`
 - **Blocked:** thor — verify link host `login.comprodls.com` certificate expired 2022 (`SNUP_TC_61`); unblock = cert renewed
-- **Not built:** LP-004 (automation-mechanics, user decision); LP-007…033 (next batches — 007–012 were automated in SOURCE)
+- **Not built:** LP-004, LP-016, LP-017 (automation-mechanics — recorded as not covered in the register); LP-007…033
+
+### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
+**The cases are already designed.** Do not re-derive them from the scenario sheet: all 33 scenarios of
+`lp-scenarios.xlsx` are mapped in the manual register `test/Manual/C1App/LearningPath/`
+(sheet "Test Cases": 34 rows — 9 Pass = automated, 19 Not Run, 6 Blocked with reasons; sheet
+"LP Setup (by module)": the fresh-user chain). Pick the Not Run cases, keep their TC IDs.
+1. **Read first:** this block · `product-knowledge/ExperienceApp/learning-path-player.md` (Part C has
+   the commands, the debug mode and the data constraints) · `c1-core-shared.md` · the register `.md`
+   (its "How to automate a case from this register" section) · then the `c1-test-authoring` skill.
+2. **Suggested order:** LP-007…011 (`TST_PEXT_TC_9..13` — TOC drill-down → Flashcards → Practice Set),
+   then LP-013…020, LP-024/025/026, then the teacher/admin entry points (`CMAT_TC_7`, `C1AS_TC_26`,
+   `MSAC_TC_1`, `TLIB_TC_1`, `UMBP_TC_5` — `MSAC`/`TLIB` module codes are PROPOSED, agree them first).
+3. **Constraints that decide how a run is planned:** the suite runs on **production and creates real
+   data every full run**; the scorable activity and the Practice Set are fresh **once per learner**;
+   debug with `learningPathDebug.json` + `--runData=last` (creates nothing).
+4. **Ask the user** (they know the product): any expected result marked `[ASSUMED]` in the register,
+   what unblocks the 6 Blocked cases, and approval before any new data-creating flow (ADR-021).
+5. **Close the loop:** update the register (Status + `Comments`) via
+   `node test/Manual/C1App/LearningPath/_generate.js` after back-porting into `_tcdata*.js`, and update
+   this block. Remove this "NEXT BATCH" section when the LP work is finished.

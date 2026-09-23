@@ -71,3 +71,40 @@
   `--runData=last` (ADR-022); once a debug learner has finished the activity, the next debug of
   `PEXT_TC_4…8` needs a new learner (run Suites 4–6 in normal mode, or the full suite).
 - Runs 2026-09-22: Suite 7 debug 6/6 then 11/11 (learner `_ajq1`); full suite 53/53 (learner `_jqh2`).
+
+---
+
+## Part C — Running and debugging this suite (permanent)
+
+### C1. Commands
+| Purpose | Command |
+|---|---|
+| Full suite (setup chain + LP cases) | `npm run learningPathTest_prod` |
+| Same on thor | `npm run learningPathTest_thor` — **Blocked** at `SNUP_TC_61`, see `c1-core-shared.md` §A4 |
+| Debug ONE suite on the previous run's users | `node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=learningPathDebug.json --browserCapability=desktop-chrome-1920 --runData=last` |
+| Add a trace to any of them | append `-- --trace=true` (npm) or `--trace=true` (node) → `traces/<Suite>.zip` |
+
+`learningPathDebug.json` holds whichever suite is being debugged — copy the suite you need into it from
+`learningPath.json` (it is a scratch file, not part of the full run).
+
+### C2. What a run creates, and the debug rule
+A **full** run creates real production data every time: 1 teacher (+ affiliation to MQA Sierra School),
+1 class, 1 learner (+ class membership and Learning Path progress) — approved by the user with the
+product team. A **`--runData=last`** run creates nothing: `{{run.*}}` resolve to the users in
+`runtime/lastRun.json` (ADR-022 amendment). So: debug a failing suite in `--runData=last` mode and run
+the full suite once, at the end, when every part passes.
+
+### C3. State that can only be met once per learner
+- **Scorable activity** (LP-002/003, `PEXT_TC_4…8`; also LP-025 "Saved" state): after it is completed —
+  or half-completed — re-entry resumes at the NEXT activity, so a learner gives exactly one attempt.
+- **Practice Set** (LP-011, and LP-014/015 which depend on its state): a submitted PS cannot be
+  submitted again by that learner.
+- **First entry** (TOC self-opens, the provisioning screen) happens once per learner.
+A debug attempt that consumes one of these needs a fresh learner: run the setup suites (4–6) normally,
+or the full suite. Plan which of these a single run exercises — they compete for the same learner.
+
+### C4. Where the cases live
+Manual register `test/Manual/C1App/LearningPath/` — sheet "Test Cases" (LP-001…033 mapped; 9 automated,
+the rest designed with `[ASSUMED]` expected results to confirm live) and sheet "LP Setup (by module)"
+(the fresh-user chain, module by module). Both are generated from `_tcdata.js` / `_tcdata_setup.js` /
+`_tcdata_batch2.js` by `_generate.js`; edit those, never the `.md`/`.xlsx` by hand.
