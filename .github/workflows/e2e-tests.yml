@@ -39,6 +39,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── Create .env file from secret ─────────────────────────────────────────
+      - name: Create .env file
+        env:
+          ENV_CONTENT: ${{ secrets.ENV_SECRETS }}
+        run: |
+          echo "$ENV_CONTENT" > .env
+        working-directory: ${{ env.WORKING_DIR }}
+
       # ── 2. Node.js + npm cache ───────────────────────────────────────────────
       #    cache: 'npm' uses package-lock.json as the cache key.
       #    On cache hit the next step (npm ci) still runs but is near-instant.
