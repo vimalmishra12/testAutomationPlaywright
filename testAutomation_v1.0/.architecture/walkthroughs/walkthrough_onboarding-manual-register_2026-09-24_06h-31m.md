@@ -64,3 +64,9 @@ None — no protected files were modified. (`npm install --no-save` was run loca
   choice; re-enabling FOOT_TC_4/6/8; TC_XCUT_009 handled as visual.
 - The LP register's setup sheet also lists LAND_TC_2/3, LOGI_TC_1/2/5 and SNUP_TC_59–64. It is marked
   "to be moved into application-wise registers later", and this register is that home.
+
+### 6. .architecture/authoring-status.md
+- **Type:** Modified — appended an `onboarding` block with a "NEXT BATCH" section (batches B1/B2/B3,
+  the 4 open questions, constraints), same pattern as the `learningPath` block.
+- **Why:** User asked to merge to `main` so team members can automate; the plan and open questions must
+  live in the repo (the S04 handoff is kept outside the repo per the migration rules).
