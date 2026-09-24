@@ -485,8 +485,9 @@ details.test.failed>summary{background:var(--ko-bg);border-radius:6px}
 .tag{border-radius:999px;padding:0 8px;font-size:11px;font-weight:600;border:1px solid var(--line);color:var(--muted)}
 .tag.setup{background:var(--code)}
 a.idlink{color:inherit;text-decoration:none;white-space:nowrap}a.idlink:hover code{outline:1px solid var(--ink)}a.idlink img{cursor:zoom-in}
-dialog#viewer{border:0;border-radius:10px;padding:10px;max-width:96vw;max-height:94vh;background:var(--card);color:var(--ink)}dialog#viewer::backdrop{background:rgba(0,0,0,.7)}
-dialog#viewer img{max-width:calc(96vw - 20px);max-height:calc(94vh - 60px);display:block}dialog#viewer .vhead{display:flex;gap:8px;align-items:center;margin-bottom:8px}dialog#viewer button{margin-left:auto}
+dialog#viewer{border:0;border-radius:10px;padding:0 10px 10px;width:96vw;max-width:96vw;max-height:94vh;overflow:auto;background:var(--card);color:var(--ink)}dialog#viewer::backdrop{background:rgba(0,0,0,.7)}
+dialog#viewer img{width:100%;height:auto;display:block;border:1px solid var(--line)}dialog#viewer.fit img{width:auto;max-width:100%;max-height:calc(94vh - 60px);margin:0 auto}
+dialog#viewer .vhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:0;background:var(--card);padding:10px 0 8px;z-index:1}dialog#viewer .vhead .muted{margin-right:auto}
 .body{padding:4px 8px 12px 28px}.body p{margin:4px 0}
 figure{margin:8px 0}figure img,.fail img{max-width:min(560px,100%);border:1px solid var(--line);border-radius:6px;display:block}figcaption{font-size:12px;color:var(--muted)}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:2}
@@ -543,7 +544,7 @@ ${waitsHtml}
 
 <footer>Built ${esc(fmtDate(new Date()))} by <code>tooling/report/buildReport.js</code> from ${[model.sources.mochawesome, model.sources.log, model.sources.runData].filter(Boolean).map((f) => `<code>${esc(shortPath(f))}</code>`).join(", ")}. Screenshots are taken at the end of each test and embedded in this page; click a test ID to open its screenshot.</footer>
 </div>
-<dialog id="viewer"><div class="vhead"><b id="vtitle"></b><button class="chip" id="vclose">Close</button></div><img id="vimg" alt=""></dialog>
+<dialog id="viewer"><div class="vhead"><b id="vtitle"></b><span class="muted" id="vsize"></span><button class="chip" id="vfit">Fit to window</button><button class="chip" id="vclose">Close</button></div><img id="vimg" alt=""></dialog>
 <script>
 (function(){
   var f={role:"",state:"",setup:true,q:""};
@@ -569,7 +570,12 @@ ${waitsHtml}
   var dlg=document.getElementById("viewer");
   document.addEventListener("click",function(e){var a=e.target.closest("a.idlink");if(!a)return;e.preventDefault();e.stopPropagation();
     var img=document.getElementById(a.getAttribute("data-shot"));if(!img)return;
-    document.getElementById("vimg").src=img.src;document.getElementById("vtitle").textContent=img.alt;dlg.showModal();},true);
+    // Full-page screenshots open at full width and scroll; "Fit to window" shows the whole page at once.
+    var v=document.getElementById("vimg"),vs=document.getElementById("vsize");vs.textContent="";
+    v.onload=function(){vs.textContent=v.naturalWidth+" × "+v.naturalHeight+" px";};
+    v.src=img.src;document.getElementById("vtitle").textContent=img.alt;
+    dlg.classList.remove("fit");document.getElementById("vfit").classList.remove("on");dlg.showModal();dlg.scrollTop=0;},true);
+  document.getElementById("vfit").addEventListener("click",function(){this.classList.toggle("on",dlg.classList.toggle("fit"));});
   document.getElementById("vclose").addEventListener("click",function(){dlg.close();});
   dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.close();});
   window.addEventListener("beforeprint",function(){document.querySelectorAll("details.suite").forEach(function(d){d.open=true;});});

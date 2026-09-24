@@ -22,8 +22,8 @@ plus a zipped copy (~9 MB) to share.
 4. **Test data and environment.** Base URL, run mode, the accounts, the password (masked), and the data values
    listed in `report.config.json`.
 5. **Summary by user type.** Results grouped Student / Teacher / Admin, then by suite, then by test. You can
-   filter by role or result, hide the setup suites, search, and print or save as PDF. Click a test ID (📷) to open the screen at the end of
-   that test. Requirement IDs (LP-xxx) are left out of suite and test titles.
+   filter by role or result, hide the setup suites, search, and print or save as PDF. Click a test ID (📷) to open the full-page screen at the end of
+   that test (full width, scroll down; "Fit to window" shows it whole). Requirement IDs (LP-xxx) are left out of suite and test titles.
 6. **Waits and slow tests.** The waits the log records, and the ten slowest tests.
 
 ## Setting up an execution file

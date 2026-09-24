@@ -131,3 +131,59 @@ All three are done in `tooling/report/buildReport.js`, and the reports were rebu
 
 ## Protected Files Touched
 None.
+
+## Session 3 — 2026-09-24 (commit + full-page screenshots)
+
+## Summary
+- **Committed** (at the user's request):
+  - `d1b1a3f`: records from full runs 10 and 11
+  - `46a4e2b`: the stakeholder report (ADR-023)
+- **Full-page screenshots:**
+  - The user asked about full-page screenshots and confirmed the protected-file change.
+  - The end-of-test screenshot now captures the whole page. If the full-page capture fails, it falls back to the visible screen.
+- **Assertion highlighting (Step 2):** the design was presented (read-tracking in the action library, check records in the assertion library, outlines drawn only just before the screenshot). The user said NOT to implement it for now.
+
+## Changes Made
+
+### 1. core/runner/playwright.setup.js (PROTECTED — confirmed by user)
+- **Type:** Modified
+- **Layer:** Core
+- **What changed:** In `afterEach`, `page.screenshot({ fullPage: false })` became `({ fullPage: true })`, with `.catch` falling back to the visible screen. A dated inline comment was added.
+
+### 2. .architecture/system.md
+- **Type:** Modified
+- **What changed:** The Reporting line now says the screenshots are full-page, and states the limit for inner panels.
+
+## Verification
+- **Debug run of Suite 12 (`learningPathDebug.json --runData=last`, read-only):** 2/2 passed.
+- **Screenshot sizes:**
+  - `TST_DASH_TC_12` (teacher dashboard): 1898×1481, about 100 KB. It shows the whole page down to the footer; before, only the visible screen (878 px) was captured.
+  - `TST_TLIB_TC_1` (Practice Extra player): 1920×878. The player scrolls inside its own panel, so only the visible part is captured, as expected.
+- The summary report builds from the debug run: 2/2 passed, 13 checks.
+
+**Incident:** the first debug attempt left out `--runData=last`.
+- The run generated a new teacher e-mail, the login failed in the Before hook, and the run **overwrote `runtime/lastRun.json`**. Nothing was created on production.
+- `lastRun.json` was rebuilt from run 11's `runContext generated/stored` log lines: teacher `_8sw6`, Class htbu, class key, learner `_wf0y`. The rerun with the flag then passed.
+- Debug runs must always pass `--runData=last` (ADR-022 amendment).
+- That first debug attempt also overwrote the mochawesome `report.json`. This did not affect the run 11 summary report, which had already been built.
+
+## Protected Files Touched
+- `core/runner/playwright.setup.js`: full-page end-of-test screenshot (confirmed by the user 2026-09-24).
+
+## Pending / Follow-up
+- **Step 2 assertion highlighting:** designed, on hold (user: "do not implement for now"). It needs `baseActionLibrary.js`, `baseAssertionLibrary.js` and `playwright.setup.js`.
+- **Not committed:** the full-page change, the system.md update and this walkthrough session.
+
+## Session 3 (continued) — full run 12 and the screenshot viewer
+
+- **Full run 12** (user request): 113/113 passed, 407 checks.
+  - Teacher `_rhq1`, learner `_ieew`. It took 16 min 20 s, against 9 min for run 11.
+  - About 3.5 min of that was one product wait: `TST_PROG_TC_3`, where Class data settled after 211 s (10 reads). Run 11's settled on the first read.
+  - Every other suite was 5–30 s slower. Suite 13 was faster.
+- **Full-page screenshots in run 12:**
+  - 67 of 113 are taller than the screen, up to 1898×2694.
+  - 46 are 1920×878, mostly the Practice Extra player, which scrolls inside its own panel.
+- **The user said the full-page screenshots did not show in the report.** Cause: the viewer scaled every image to fit the window (`max-height: 94vh`), so a tall page looked small.
+  - Fix in `buildReport.js`: the viewer shows the screenshot at full width and scrolls, the header stays at the top with the image size, and a "Fit to window" toggle shows the whole page.
+  - Checked in Chrome on `TST_PROG_TC_3` (1898×2331): 1322×1624 on screen and scrolls to the footer; Fit gives 638×784; no page errors.
+- **Report size** with full-page screenshots: 16 MB page, 12 MB zip, against 12 MB / 8.5 MB before.
