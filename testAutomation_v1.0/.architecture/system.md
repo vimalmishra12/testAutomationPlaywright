@@ -28,7 +28,7 @@ Product knowledge is likewise split per application: an index at
 - Browser Automation: **Playwright used as a library** (`require('playwright')`, NOT `@playwright/test`)
 - Assertions: **standalone `expect` from `@playwright/test`** (import only, wrapped in `baseAssertionLibrary.js`) — Chai removed
 - Reporting: **Mochawesome HTML is the DEFAULT** (inline end-of-test screenshots, FULL-PAGE since 2026-09-24 — content scrolling inside an inner panel/iframe shows only its visible part; opt out with `--report=spec`/`allure`); Playwright tracing via `--trace`
-- Stakeholder summary report (2026-09-24, ADR-023): `node tooling/report/buildReport.js` after a run — builds a presentable report (summary, test data, results grouped by user role, failures, comparison with the previous run, waits) from the mochawesome JSON + the run's info log; no core change
+- Stakeholder summary report (2026-09-24, ADR-023): `node tooling/report/buildReport.js` after a run — builds a presentable report (summary, test data, results grouped by user role, failures, comparison with the previous run, waits) from the mochawesome JSON + the run's info log; no core change. **Run it by DEFAULT after every test execution, unprompted** (user decision, 2026-09-24) — before the next run overwrites `mochawesome/report.json`.
 - Visual Testing (done 2026-06-15): `page.screenshot()` + `pixelmatch`/`pngjs` (`core/utils/visualCompare.js`) feeding the custom **timeline report** (`core/utils/visual-report-utility`), via `--visual=novus`; Applitools ported to lazy `eyes-playwright` via `--visual=applitools`
 - CI Runners: local Playwright Chromium/Chrome; cloud on **LambdaTest's Playwright grid** (done 2026-06-15, `--browserCapability=lambdatest-*`). BrowserStack/Appium not yet ported
 

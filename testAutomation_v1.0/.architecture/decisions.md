@@ -891,3 +891,9 @@ pass-worded check lists need the action / assertion libraries to record the elem
 **Consequences:** one extra command after a run (a `package.json` script would be a protected change); the report is
 only as current as its inputs — build it before the next run overwrites `mochawesome/report.json`, or pass the saved
 files with `--mochawesome` / `--log` / `--runData`.
+
+**Amendment (2026-09-24, user request) — build by default after every run.** `buildReport.js` is no longer an
+opt-in step someone has to ask for; it is run **immediately after every test execution** in this framework (any
+exec file, any environment), as a standard part of reporting results — same footing as showing the mochawesome
+output. If a run accidentally executes more than once in one command (e.g. a shell fallback re-triggering it),
+say so when handing over the report, since only the last run's mochawesome JSON survives to feed it.
