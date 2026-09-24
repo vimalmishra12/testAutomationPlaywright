@@ -1,6 +1,8 @@
 {
   "Suite1": {
     "Name": "LP setup 1 - Teacher signs up and verifies the e-mail",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -67,6 +69,8 @@
   },
   "Suite2": {
     "Name": "LP setup 2 - Teacher logs in and joins the school",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -162,6 +166,8 @@
   },
   "Suite3": {
     "Name": "LP setup 3 - Teacher creates the class with the product",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -308,6 +314,8 @@
   },
   "Suite4": {
     "Name": "LP setup 4 - Learner signs up and verifies the e-mail",
+    "Role": "Student",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -385,6 +393,8 @@
   },
   "Suite5": {
     "Name": "LP setup 5 - Teacher invites the run's learner to the class",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -417,6 +427,8 @@
   },
   "Suite6": {
     "Name": "LP setup 6 - Learner accepts the invite; product granted by the school licence",
+    "Role": "Student",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -450,6 +462,7 @@
   },
   "Suite7": {
     "Name": "LP-001, LP-005, LP-006 - Learner opens Practice Extra; TOC close / open",
+    "Role": "Student",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -491,6 +504,7 @@
   },
   "Suite8": {
     "Name": "LP-007…011, 014, 015, 018, 019, 026, 027 - TOC drill-down, Flashcards, Practice Set (one PS submission per learner)",
+    "Role": "Student",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -550,6 +564,7 @@
   },
   "Suite9": {
     "Name": "LP-028 - Teacher launches Practice Extra from the class Materials tab (read-only)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -576,6 +591,7 @@
   },
   "Suite10": {
     "Name": "LP-031 - Teacher launches the LP component inside Manage student access > Create access rule (NO rule is created)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -602,6 +618,7 @@
   },
   "Suite11": {
     "Name": "LP-029 - Teacher launches the LP component inside Create assignment (NO assignment is created)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -627,6 +644,7 @@
   },
   "Suite12": {
     "Name": "LP-032 - Teacher launches Practice Extra from My library (read-only)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -650,6 +668,7 @@
   },
   "Suite13": {
     "Name": "LP-033 - School admin (prod, MQA Sierra School) launches the LP component from Library > See materials (read-only)",
+    "Role": "Admin",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -675,6 +694,7 @@
   },
   "Suite14": {
     "Name": "LP-030 - Teacher launches the NLP component (Projects) inside Create assignment (NO assignment is created)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -700,6 +720,7 @@
   },
   "Suite8b": {
     "Name": "LP-035 (runs after Suites 9-14: submissions reach the queue after 4-7 min) - Teacher marks the learner's Practice Set (score 70, feedback Good) - mutates the run's own data",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -727,6 +748,7 @@
   },
   "Suite15": {
     "Name": "LP-034 - Teacher sees the learner's progress for the submitted activities (read-only)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -756,6 +778,7 @@
   },
   "Suite16": {
     "Name": "LP-034 - Learner sees their progress for the submitted activities (runs last: the summary totals lag by minutes)",
+    "Role": "Student",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],

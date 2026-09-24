@@ -858,3 +858,36 @@ fresh-user capability the migration needs).
 
 **Consequences:** one protected-file change (`testrunner.js`, ~5 lines); `runValues.json` per
 env is the single place to see what a run generates; exec files stay pure JSON (ADR-001).
+
+---
+
+## ADR-023: Stakeholder Summary Report Built After the Run (no core change)
+
+**Status:** Accepted (2026-09-24, user request — Step 1 of the report plan; core files deliberately untouched).
+
+**Context:** The mochawesome report is a developer view: suites and tests in run order with one screenshot
+each. Stakeholders asked for a run summary with the test data used, results grouped by the user who ran them
+(teacher / student / admin), a failure digest, a comparison with the previous run and the production waits.
+The runner's reporter selection lives in protected files (`run.js`, `playwright.setup.js`).
+
+**Decision:**
+1. A separate post-run tool, `tooling/report/buildReport.js` (settings in `tooling/report/report.config.json`),
+   builds `output/reports/TestReports/summary/<exec>_<env>_<date>/index.html` (screenshots embedded, one self-contained file) + a `.zip`. Mochawesome
+   stays the runner's reporter, unchanged.
+2. Inputs are only what every run already writes: the mochawesome JSON (states, durations, errors, end-of-test
+   screenshot), the run's `logs/info_*.json` (suite / hook / test order and every assertion message — the
+   assertion library logs each one before checking it), `runtime/lastRun.json` (ADR-022 accounts) and the
+   manual register `.md` (register title per TC). Requirement IDs (LP-xxx) are left out of titles, and cases not run are not listed (user review 2026-09-24).
+3. The user role of a suite is declared, not guessed: optional `"Role"` and `"Setup": true` on each suite of the
+   execution file. The runner reads suite fields by name, so they are inert for execution (tcMap findings unchanged).
+4. Each build appends a small summary to `output/reports/history/`; the report compares itself with the previous
+   run of the same exec file on the same environment (new failures, fixed, much slower / faster tests).
+5. Checks are counted from the log: every assertion logged in a passed test passed; in a failed test the failing
+   one is the last logged when the error repeats its message.
+
+**Not decided yet (Step 2, needs protected-file confirmation):** per-assertion green / red element highlighting and
+pass-worded check lists need the action / assertion libraries to record the element read and the result.
+
+**Consequences:** one extra command after a run (a `package.json` script would be a protected change); the report is
+only as current as its inputs — build it before the next run overwrites `mochawesome/report.json`, or pass the saved
+files with `--mochawesome` / `--log` / `--runData`.
