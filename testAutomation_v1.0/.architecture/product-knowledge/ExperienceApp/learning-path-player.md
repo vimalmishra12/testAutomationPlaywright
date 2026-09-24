@@ -161,6 +161,10 @@
   suite runs LAST (Suite 16, after the teacher's Suite 15) to give the job time.
 
 ### A12. Teacher marks the PS — and what changes `[2026-09-24, prod — teacher _4n9d / learner _yqma / Class u62l; one mark, user-approved]`
+- **A new submission reaches the marking queue 4.3–6.6 MINUTES after it is made** (full run 8, 2026-09-24: PS submitted
+  05:36:26Z; the class link read "0 Marking" until at least 05:40:43Z and "1 Marking" at 05:43:04Z). SOURCE's badge poll
+  (20 × (2 s + 15 s) ≈ 6 min) matches. So `TST_MRKQ_TC_1` re-reads the count every 20 s for up to 12 min, and the marking
+  suite (Suite8b) runs AFTER Suites 9–14 (~4 min of teacher entry points) so most of the delay has already passed.
 - **Entry:** dashboard class card shows a marking badge `span.marking-count` ("1"); class page `a[qid=cView-0]` "1 Marking"
   → `/class/…/marking`: tabs "Unmarked (n)" `#tomark-tab` / "Marked" `#completedMarking-tab`; course
   `[id^=course-link-]` "Practice Extra (1) cqaautomationbundle1" → item `[qid^=course-content-]` "Unit 1: Lesson 1 / PS"

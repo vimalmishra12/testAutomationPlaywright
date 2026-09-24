@@ -283,7 +283,7 @@ const TCS = [
     data: 'Product cqaautomationbundle1; component "Practice Extra"',
     expected: 'My library (/dashboard/teacher/library) finds the product; its card expands with its components and "View details"; View details opens the product materials view (/dashboard/teacher/…/bundle/cqaautomationbundle1/view); Practice Extra opens the Learning Path on the teacher route with its TOC rendered.',
     remarks: '[LP Test Cases] TC_TCH_005. ' + LIVE + ' Module code TLIB agreed with the user 2026-09-23 (teacherLibrary.page.js). Read-only, safe to run repeatedly. The materials view is server-rendered — a click before the page has loaded is ignored (the automation waits for the load).',
-    status: 'Pass', comments: B3_RUN },
+    status: 'Fail', comments: B3_RUN + " FAILED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b): My library opened but its content was still loading when the 30 s wait ended (production disruption — the same slow teacher-materials request as Add materials). Fix APPLIED 2026-09-24 (the library wait is now ≤ 90 s, user OK) — not yet verified by a run (user: no full run)." },
 
   { id: 'TST_UMBP_TC_11', req: REQS[26], type: 'Positive', priority: 'High',
     title: 'Verify an admin can launch an LP component from the Library tab\'s product materials',
@@ -301,7 +301,7 @@ const TCS = [
     data: "Class of the LP run; components Practice Extra, Projects",
     expected: "\"My progress\" shows, once the batch job has updated it (minutes after the mark): Completed activities 4/10, Activities completed above target score 2/4, 85% Average score. Practice Extra: 4/4, above target 2/4, below target 0/4, 85%. Projects: 0/5. (after the teacher marked the PS 70 / \"Good\", Suite 8b) Before marking the same page showed 3/10 · 1/3 · 100% (the PS is not counted until evaluated).",
     remarks: LIVE + " The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG).",
-    status: 'Pass', comments: "Automated 2026-09-23; expected figures moved to the post-marking values 2026-09-24 (Suite 16, last). Debug 9/9 on run 7's users after the Step-1 mark (settled). Earlier: failed in full run 7 on the summary lag — fixed (re-read every 20 s, ≤ 10 min). Full run with marking: NOT yet run (user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 
   { id: 'TST_PROG_TC_2', req: REQS[27], type: 'Positive', priority: 'High',
     title: "Verify the learner per-activity progress shows each submitted activity's result",
@@ -310,7 +310,7 @@ const TCS = [
     data: "Product cqaautomationbundle1; component Practice Extra",
     expected: "Rows: BASE04_Dropdown_Scorable.zip — First score 100%, Best score 100%, Attempts 1, icon \"Completed above target\"; Flashcards.zip — Viewed (\"Activity status: viewed\"); PS — First score -, Best score -, Attempts 1 (\"Activity status: evaluation pending\"); Non-scorable HTML activity — Viewed; test pdf — Viewed.",
     remarks: LIVE + " Runs at the END of Suite 8, right after the submissions and BEFORE the teacher marks the PS, so the PS row is still pending. Rows are immediate (no lag). Same page as the class card's \"See Progress\".",
-    status: 'Pass', comments: "Automated 2026-09-23 (passed in full run 7); moved back to the end of Suite 8 on 2026-09-24 (user OK) to check the pending state before marking. Full run with that order: NOT yet run." },
+    status: 'Pass', comments: "Automated 2026-09-23; at the end of Suite 8 (pending state before marking). PASSED in full runs 8 and 9 (2026-09-24)." },
 
   { id: 'TST_PROG_TC_3', req: REQS[27], type: 'Positive', priority: 'High',
     title: "Verify the teacher Class data shows the class and learner figures for the submitted activities",
@@ -319,7 +319,7 @@ const TCS = [
     data: "Class of the LP run; learner \"Learner User\"",
     expected: "Class data (once updated): Average completed activities 40%, Activities completed above target score 2 /4, 85% Average score; the learner's card 4/10, 2/4, 85%. (after the teacher marked the PS 70 / \"Good\", Suite 8b) Before marking: 30% · 1 /3 · 100% and 3/10.",
     remarks: LIVE + " The class has one learner, so the class figures follow that learner's.",
-    status: 'Pass', comments: "Automated 2026-09-23; post-marking values 2026-09-24 (Suite 15). Debug 9/9 on run 7's users (settled). Summary lag fixed as TC_1. Full run with marking: NOT yet run (user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 
   { id: 'TST_PROG_TC_4', req: REQS[27], type: 'Positive', priority: 'High',
     title: "Verify the teacher per-activity view of a learner matches the learner's own progress",
@@ -328,7 +328,7 @@ const TCS = [
     data: "Learner \"Learner User\"; product cqaautomationbundle1; component Practice Extra",
     expected: "The teacher sees the same rows as the learner: scorable 100% / 100% / 1 attempt; Flashcards / HTML / PDF Viewed; PS First score 70%, Best score 70%, Attempts 1 (\"Completed above target\") (after the teacher marked the PS 70 / \"Good\", Suite 8b).",
     remarks: LIVE + " Teacher route /class/teacher/…/learner/<id>/bundle/<id>.",
-    status: 'Pass', comments: "Automated 2026-09-23 (passed in full run 7 before marking); post-marking values 2026-09-24. Debug 9/9. Full run with marking: NOT yet run." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 
   { id: 'TST_MRKQ_TC_1', req: REQS[28], type: 'Positive', priority: 'High',
     title: "Verify the marking queue lists the learner's Practice Set submission with the score pre-filled",
@@ -337,7 +337,7 @@ const TCS = [
     data: "Course Practice Extra; item \"Unit 1: Lesson 1 / PS\"; learner \"Learner User\"",
     expected: "The class shows \"1 Marking\" (the dashboard card a badge 1). The queue shows \"Unmarked (1)\", \"Practice Extra (1) cqaautomationbundle1\", \"Unit 1: Lesson 1 / PS\" and the learner's submission; the marking screen shows the answer \"Submitting PS activity\", Score % pre-filled with 70, a Feedback editor, Save and Send.",
     remarks: LIVE + " MRKQ = markingQueue.page.js. The course/item ids are positional — matched by text. The count can lag the submission (re-read up to 3 min).",
-    status: 'Not Run', comments: "Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-24. Full run 8 FAILED: a new submission reaches the queue 4.3–6.6 min after it is made and the step waited only 3 min. Fixed (wait ≤ 12 min; marking suite moved after Suites 9–14). PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (2.5 s — the delay had already passed)." },
 
   { id: 'TST_MRKQ_TC_2', req: REQS[28], type: 'Positive', priority: 'High',
     title: "Verify a Practice Set is marked when the teacher sends a score and feedback and confirms it",
@@ -346,7 +346,7 @@ const TCS = [
     data: "Score 70 (SOURCE's value — pre-filled); feedback \"Good\" (user decision 2026-09-24)",
     expected: "\"Ready to send? Once sent, you won't be able to make any further changes\" opens; after Send the queue shows \"Unmarked (0)\", the item \"70% … Marked\", the submission \"Score : 70 %\" and the teacher block \"Score: 70 % Feedback: Good\".",
     remarks: LIVE + " Without feedback the confirmation reads \"Send this score without feedback?\". MUTATES the run's own data only; the mark cannot be changed afterwards. The Marked tab can lag (\"There are no marked student submissions to view\" right after).",
-    status: 'Not Run', comments: "Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-24. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b): marked 70 / \"Good\", \"Ready to send?\" confirmed, Unmarked (0)." },
 
   { id: 'TST_PROG_TC_5', req: REQS[28], type: 'Positive', priority: 'High',
     title: "Verify the learner receives the teacher's feedback notification with the mark",
@@ -355,7 +355,7 @@ const TCS = [
     data: "Score 70; feedback \"Good\"",
     expected: "The bell lists \"New feedback · PS · Your teacher has sent you some feedback\"; it opens the PS in the player showing \"Score : 70 %\" and the teacher's \"Score: 70 % Feedback: Good\".",
     remarks: LIVE + " The notification is found by its text (ntf-<n> qids are positional). From SOURCE verifyMarkedPS.",
-    status: 'Pass', comments: "Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 
   { id: 'TST_PROG_TC_6', req: REQS[28], type: 'Positive', priority: 'High',
     title: "Verify the learner's per-activity progress shows the marked Practice Set's score",
@@ -364,7 +364,7 @@ const TCS = [
     data: "Product cqaautomationbundle1; component Practice Extra",
     expected: "PS: First score 70%, Best score 70%, Attempts 1, icon \"Completed above target\"; the lesson reads 4/4 Completed, 85%. The other rows are unchanged.",
     remarks: LIVE + " Rows update immediately after the mark (only the summary totals lag).",
-    status: 'Pass', comments: "Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 
   { id: 'TST_PROG_TC_7', req: REQS[28], type: 'Positive', priority: 'High',
     title: "Verify the teacher's progress details show the learner's per-component figures after marking",
@@ -373,7 +373,7 @@ const TCS = [
     data: "Learner \"Learner User\"",
     expected: "Practice Extra: Completed activities 4/4, above target 2/4, below target 0/4, 85%. Projects: Completed activities 0/5 (0 Gold medals, \"-\" average). Test: \"This student has not activated the code yet\".",
     remarks: LIVE + " The switch's checkbox is visually hidden — its label is clicked. From SOURCE toggleProgressBar / verifyTeacherAnalyticsBundleLevel.",
-    status: 'Pass', comments: "Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision)." },
+    status: 'Pass', comments: "Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran)." },
 ];
 
 // Scenarios deliberately without a case (automation-mechanics, like LP-004).

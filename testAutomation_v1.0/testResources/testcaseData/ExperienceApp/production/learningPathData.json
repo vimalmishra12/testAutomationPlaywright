@@ -352,8 +352,9 @@
       "score": 70,
       "feedback": "Good",
       "confirmTitle": "Ready to send?",
-      "countTimeoutMs": 180000,
-      "reloadEveryMs": 20000
+      "countTimeoutMs": 720000,
+      "reloadEveryMs": 20000,
+      "_comment_lag": "A new submission reaches the marking queue 4.3-6.6 min after it is made (measured 2026-09-24, full run 8) — MRKQ_TC_1 re-reads the class 'Marking' count every 20 s for up to 12 min; Suite8b runs after Suites 9-14 so most of the delay has passed."
     }
   }
 }

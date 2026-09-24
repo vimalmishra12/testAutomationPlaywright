@@ -16,7 +16,10 @@ module.exports = {
   isInitialized: async function () {
     await logger.logInto(await stackTrace.get());
     await action.waitForDocumentLoad();
-    return { pageStatus: true == (await action.waitForDisplayed(this.searchInput, 30000)) };
+    // [2026-09-24, prod] The library's content (and its search box) renders only after the teacher-materials request
+    // answers — > 30 s during the production disruption (full run 9: tab open, spinner at 30 s). Same budget as
+    // createNewClass.click_addMaterial_btn; the step still fails if the library never loads.
+    return { pageStatus: true == (await action.waitForDisplayed(this.searchInput, 90000)) };
   },
 
   /** From the teacher dashboard: My library → search → expand the product → View details → materials view. */

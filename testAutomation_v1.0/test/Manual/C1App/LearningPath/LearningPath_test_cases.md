@@ -5,7 +5,7 @@
 **App:** Cambridge One — `www.cambridgeone.org` (production; thor is blocked — see `c1-core-shared.md` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
 **Generated:** 2026-09-23 | **Total TCs:** 44 (39 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
-**Execution status (2026-09-23):** **39 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 was 103/105 — TST_PROG_TC_1/3 failed on the progress-summary lag, fixed since (debug only)) · **0 Fail** · **4 Not Run** · **1 Blocked** (TST_PEXT_TC_14).
+**Execution status (2026-09-23):** **40 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 (run 9, with marking) 112/113 — teacher _qzro, Class e6tb, learner _m10b; the one failure is TST_TLIB_TC_1 (My library slow to load during the production disruption)) · **1 Fail** (TST_TLIB_TC_1) · **2 Not Run** · **1 Blocked** (TST_PEXT_TC_14).
 **Part 2 — LP setup chain (40 TCs, module-wise, separate sheet):** **40 of 40 passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision 2026-09-22).
 
 **Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (35 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
@@ -845,8 +845,8 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Expected Result** | My library (/dashboard/teacher/library) finds the product; its card expands with its components and "View details"; View details opens the product materials view (/dashboard/teacher/…/bundle/cqaautomationbundle1/view); Practice Extra opens the Learning Path on the teacher route with its TOC rendered. |
 | **Remarks** | [LP Test Cases] TC_TCH_005. Confirmed live on production 2026-09-23. Module code TLIB agreed with the user 2026-09-23 (teacherLibrary.page.js). Read-only, safe to run repeatedly. The materials view is server-rendered — a click before the page has loaded is ignored (the automation waits for the load). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
+| **Status** | Fail |
+| **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. FAILED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b): My library opened but its content was still loading when the 30 s wait ended (production disruption — the same slow teacher-materials request as Add materials). Fix APPLIED 2026-09-24 (the library wait is now ≤ 90 s, user OK) — not yet verified by a run (user: no full run). |
 
 ---
 
@@ -888,7 +888,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23; expected figures moved to the post-marking values 2026-09-24 (Suite 16, last). Debug 9/9 on run 7's users after the Step-1 mark (settled). Earlier: failed in full run 7 on the summary lag — fixed (re-read every 20 s, ≤ 10 min). Full run with marking: NOT yet run (user decision). |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 
@@ -907,7 +907,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. Runs at the END of Suite 8, right after the submissions and BEFORE the teacher marks the PS, so the PS row is still pending. Rows are immediate (no lag). Same page as the class card's "See Progress". |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (passed in full run 7); moved back to the end of Suite 8 on 2026-09-24 (user OK) to check the pending state before marking. Full run with that order: NOT yet run. |
+| **Comments / Defect ID** | Automated 2026-09-23; at the end of Suite 8 (pending state before marking). PASSED in full runs 8 and 9 (2026-09-24). |
 
 ---
 
@@ -926,7 +926,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. The class has one learner, so the class figures follow that learner's. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23; post-marking values 2026-09-24 (Suite 15). Debug 9/9 on run 7's users (settled). Summary lag fixed as TC_1. Full run with marking: NOT yet run (user decision). |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 
@@ -945,7 +945,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. Teacher route /class/teacher/…/learner/<id>/bundle/<id>. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (passed in full run 7 before marking); post-marking values 2026-09-24. Debug 9/9. Full run with marking: NOT yet run. |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 
@@ -965,8 +965,8 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Expected Result** | The class shows "1 Marking" (the dashboard card a badge 1). The queue shows "Unmarked (1)", "Practice Extra (1) cqaautomationbundle1", "Unit 1: Lesson 1 / PS" and the learner's submission; the marking screen shows the answer "Submitting PS activity", Score % pre-filled with 70, a Feedback editor, Save and Send. |
 | **Remarks** | Confirmed live on production 2026-09-23. MRKQ = markingQueue.page.js. The course/item ids are positional — matched by text. The count can lag the submission (re-read up to 3 min). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-24. Full run 8 FAILED: a new submission reaches the queue 4.3–6.6 min after it is made and the step waited only 3 min. Fixed (wait ≤ 12 min; marking suite moved after Suites 9–14). PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (2.5 s — the delay had already passed). |
 
 ---
 
@@ -984,8 +984,8 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Expected Result** | "Ready to send? Once sent, you won't be able to make any further changes" opens; after Send the queue shows "Unmarked (0)", the item "70% … Marked", the submission "Score : 70 %" and the teacher block "Score: 70 % Feedback: Good". |
 | **Remarks** | Confirmed live on production 2026-09-23. Without feedback the confirmation reads "Send this score without feedback?". MUTATES the run's own data only; the mark cannot be changed afterwards. The Marked tab can lag ("There are no marked student submissions to view" right after). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-24. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b): marked 70 / "Good", "Ready to send?" confirmed, Unmarked (0). |
 
 ---
 
@@ -1004,7 +1004,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. The notification is found by its text (ntf-<n> qids are positional). From SOURCE verifyMarkedPS. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 
@@ -1023,7 +1023,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. Rows update immediately after the mark (only the summary totals lag). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 
@@ -1042,7 +1042,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | Confirmed live on production 2026-09-23. The switch's checkbox is visually hidden — its label is clicked. From SOURCE toggleProgressBar / verifyTeacherAnalyticsBundleLevel. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
+| **Comments / Defect ID** | Automated 2026-09-23/24; post-marking figures. PASSED in full run 9 on 2026-09-24 (112/113; teacher _qzro, Class e6tb, learner _m10b) (the summary figures had settled by the time the check ran). |
 
 ---
 

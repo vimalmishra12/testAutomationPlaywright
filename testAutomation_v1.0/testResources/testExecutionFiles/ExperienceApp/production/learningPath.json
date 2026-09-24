@@ -548,33 +548,6 @@
     "AfterEach": [],
     "After": []
   },
-  "Suite8b": {
-    "Name": "LP-035 - Teacher marks the learner's Practice Set (score 70, feedback Good) - mutates the run's own data",
-    "TestCaseRepo": [
-      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
-    ],
-    "Before": [
-      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
-      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
-      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
-        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
-      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
-        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
-      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
-    ],
-    "BeforeEach": [],
-    "Test": [
-      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
-      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
-        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
-      { "id": "TST_MRKQ_TC_1", "description": "LP-035: the class has work to mark; the queue lists the learner's PS", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 300000,
-        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] },
-      { "id": "TST_MRKQ_TC_2", "description": "LP-035: mark 70 + Good, confirm Ready to send? - marked", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 180000,
-        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] }
-    ],
-    "AfterEach": [],
-    "After": []
-  },
   "Suite9": {
     "Name": "LP-028 - Teacher launches Practice Extra from the class Materials tab (read-only)",
     "TestCaseRepo": [
@@ -721,6 +694,33 @@
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
       { "id": "TST_C1AS_TC_27", "description": "LP-030: Projects opens in assignment mode with its TOC; Next / Assign are never clicked", "testFile": "./test/ExperienceApp/c1assignment.test.js", "timeout": 180000,
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherNlp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite8b": {
+    "Name": "LP-035 (runs after Suites 9-14: submissions reach the queue after 4-7 min) - Teacher marks the learner's Practice Set (score 70, feedback Good) - mutates the run's own data",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_MRKQ_TC_1", "description": "LP-035: the class has work to mark; the queue lists the learner's PS", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 900000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] },
+      { "id": "TST_MRKQ_TC_2", "description": "LP-035: mark 70 + Good, confirm Ready to send? - marked", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] }
     ],
     "AfterEach": [],
     "After": []

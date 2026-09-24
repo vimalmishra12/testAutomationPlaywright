@@ -440,3 +440,14 @@ None.
 ## Pending / Follow-up
 - Full run (fresh learner) to execute MRKQ_TC_1/2 + the Suite 8 pending check — not run, user decision.
 - Projects' own PS marking (SOURCE openMarking(1)) — deferred by the user. Nothing committed since f77e70b.
+
+### Session 7 (cont.) — full runs 8 and 9
+- Committed `eb54a77` (user). Full run 8: PROG_TC_2 (pending) green; MRKQ_TC_1 FAILED — the class "Marking" link read "0" on
+  all 9 reads for 3 min after the submission; a probe saw "1 Marking" 6.6 min after it (≥ 4.3 min) → the queue lags like the
+  summary. Stopped at Suite 12 (every later suite needs the mark); process tree killed. Data: teacher `_cjdu`, Class t8hh,
+  learner `_68zv` (PS submitted, unmarked).
+- Fix (user OK): `C1.marking.countTimeoutMs` 180000 → 720000; MRKQ_TC_1 step timeout 900000; Suite8b moved after Suite 14.
+- Full run 9: **112/113** (610 s; teacher `_qzro`, Class e6tb, learner `_m10b`): MRKQ_TC_1 (2.5 s) / TC_2, PROG_TC_1…7 all green.
+  Failure: TLIB_TC_1 — "My library did not open": screenshot shows the tab open with a loading spinner at 30 s (disruption).
+  Fix proposed: wait ≤ 90 s for the library search box (as click_addMaterial_btn). Not applied yet.
+- Fix applied (user OK): teacherLibrary.page.js isInitialized waits 90 s (was 30 s). Not verified by a run — user: do not run the full suite.

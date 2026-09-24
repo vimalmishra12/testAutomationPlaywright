@@ -28,7 +28,7 @@ const DATE = "2026-09-22";
 // [2026-09-23] Batch A/C of batch 2 automated — the header's generated date / run summary move on;
 // DATE stays for the batch-1 history it describes.
 const DATE_B2 = "2026-09-23";
-const LAST_RUN = "full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 was 103/105 — TST_PROG_TC_1/3 failed on the progress-summary lag, fixed since (debug only)";
+const LAST_RUN = "full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 (run 9, with marking) 112/113 — teacher _qzro, Class e6tb, learner _m10b; the one failure is TST_TLIB_TC_1 (My library slow to load during the production disruption)";
 
 const COLUMNS = [
   "S.No.", "Test Case ID", "Title", "Linked Requirement", "Type", "Priority",

@@ -241,8 +241,9 @@ From SOURCE `ClassDashboardPage` (marking / analytics), ported without its posit
 - Built: `markingQueue.page.js` + `markingQueue.test.js` (`MRKQ_TC_1/2`, new **Suite8b** after Suite 8); `PROG_TC_5` (feedback
   notification), `PROG_TC_6` (rows after marking), `PROG_TC_7` ("Show progress details"); `PROG_TC_1/3/4` now expect the post-marking
   figures (`C1.progressMarked`); `PROG_TC_2` back at the end of Suite 8 (pending state, `C1.progressPending`).
-- Phase 2 ⚠️ — debug 9/9 of Suites 15–16 (marked state) on run 7's users. `MRKQ_TC_1/2` and the Suite 8 pending check can only
-  run on a fresh learner → **NOT yet executed; full run NOT run (user decision)**. Register: MRKQ Not Run.
+- Phase 2 ✅ 2026-09-24 — full run 8: MRKQ_TC_1 failed (a submission reaches the queue after 4.3–6.6 min; waited 3) → fixed
+  (≤ 12 min; Suite8b moved after Suite 14, user OK). **Full run 9: 112/113** (teacher `_qzro`, Class e6tb, learner `_m10b`) — every
+  MRKQ / PROG case green. The one failure: `TLIB_TC_1` — My library still loading at 30 s (disruption); fix APPLIED (≤ 90 s, user OK) — NOT yet verified (no full run, user decision).
 - Deferred by user: the same chain for Projects' own PS (SOURCE `openMarking(1)`).
 
 ### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
