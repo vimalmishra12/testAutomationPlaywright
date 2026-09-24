@@ -178,7 +178,8 @@
         "componentTile": ".component-container",
         "activationCodeInput": "#activationCodeInput",
         "_comment_lp": "LP batch 2 (2026-09-23, prod): the launch spinner shown ~1 s between the component click and the player (LP-027) — a spinner, not a progress bar.",
-        "learningPathLoader": "div.loader"
+        "learningPathLoader": "div.loader",
+        "learnerMyProgressBtn": "[qid='l-db-cc-btn-2']"
       },
       "createNewClass": {
         "enterClassDetails": ".form-heading, .add-class-details-heading",
@@ -345,7 +346,21 @@
         "invitedClassCheckbox": "input.select-class-checkbox[aria-label='Select {CLASS_NAME}']"
       },
       "progress": {
-        "progress": "h1[qid='clView-6']"
+        "progress": "h1[qid='clView-6']",
+        "_comment": "Module PROG (progress views), captured live on production 2026-09-23 (learner _xov9 / teacher _osgr, Class qzwn). Every block is read as TEXT and compared by phrase; everything is addressed by NAME, never position (the bundle-card / clView qids are indexed). {NAME}/{PRODUCT}/{LEARNER} are filled by the page object.",
+        "aggPageTitle": "h1.page-title",
+        "aggSummary": "xpath=//h1[contains(@class,'page-title')]/following::div[contains(@class,'progress-box')][1]/..",
+        "aggComponentBlock": "div.progress-info:has(span.product-title:text-is('{NAME}'))",
+        "aggBundleCard": "a.bundle-card-container:has(p.bundle-title span:text-is('{PRODUCT}'))",
+        "backBtn": "[qid='agg-data-view-bck-btn']",
+        "bundleComponentLink": "a[qid^='clView-7-']",
+        "lessonTable": "div.lesson-table-container",
+        "activityRow": "div.table-row:has(span.activity-name[title='{NAME}'])",
+        "activityRowStatus": "div.table-row:has(span.activity-name[title='{NAME}']) i[aria-label]",
+        "teacherClassMetrics": "div.class-level-metrics",
+        "teacherStudentMetrics": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//div[contains(@class,'student-level-metrics')]][1]//div[contains(@class,'student-level-metrics')]",
+        "_comment_cards": "The product name sits in a <span> inside p.bundle-title (:text-is matches the innermost element). On the teacher side the student card is NOT the element carrying the name — its title link a[qid^=bundle-detail-title-] is (verified 2026-09-23).",
+        "teacherStudentBundleCard": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//a[starts-with(@qid,'bundle-detail-title-')]][1]//a[starts-with(@qid,'bundle-detail-title-') and normalize-space()='{PRODUCT}']"
       },
       "eBook": {
         "cqa_ebook_evolve": ".eboook-selected.ng-tns-c606183087-2",

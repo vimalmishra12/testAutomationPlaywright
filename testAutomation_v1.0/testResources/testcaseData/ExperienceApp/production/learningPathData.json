@@ -26,6 +26,12 @@
         "lastName": "User",
         "email": "{{run.lpLearnerEmail}}",
         "password": "Compro11"
+      },
+      "learnerFormB": {
+        "firstName": "LearnerB",
+        "lastName": "User",
+        "email": "{{run.lpLearner2Email}}",
+        "password": "Compro11"
       }
     },
     "teacherLogin": {
@@ -64,13 +70,50 @@
     },
     "pextScorable": {
       "_comment": "Answers for the cqaautomationbundle1 scorable dropdown activity (BASE04_Dropdown_Scorable) — from SOURCE LearningpathPage.submitScorable. Content-specific.",
-      "frame1": { "frame": 0, "answers": ["is doing"] },
-      "frame2": { "frame": 1, "answers": ["is doing"] },
-      "frame3": { "frame": 2, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
-      "frame4": { "frame": 3, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
-      "score": { "expected": "You scored 4 out of 4" },
-      "emptyCheck": { "frame": 0 },
-      "relaunch": { "unit": "Unit 1", "activity": "BASE04_Dropdown_Scorable.zip", "away": "Flashcards.zip", "frame": 0, "answerCount": 1, "statusWhileAway": "Activity status: in progress" }
+      "frame1": {
+        "frame": 0,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "frame2": {
+        "frame": 1,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "frame3": {
+        "frame": 2,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "frame4": {
+        "frame": 3,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "score": {
+        "expected": "You scored 4 out of 4"
+      },
+      "emptyCheck": {
+        "frame": 0
+      },
+      "relaunch": {
+        "unit": "Unit 1",
+        "activity": "BASE04_Dropdown_Scorable.zip",
+        "away": "Flashcards.zip",
+        "frame": 0,
+        "answerCount": 1,
+        "statusWhileAway": "Activity status: in progress"
+      }
     },
     "pextHtml": {
       "_comment": "LP-021: the non-scorable HTML activity of cqaautomationbundle1 Unit 1 (seen live 2026-09-23).",
@@ -93,6 +136,11 @@
       "productId": "cqaautomationbundle1",
       "productTitle": "cqaautomationbundle1"
     },
+    "teacherNlp": {
+      "_comment": "LP-030 — the NLP component (Projects, product cqaautomationpr1) of cqaautomationbundle1; launch only (2026-09-23).",
+      "componentName": "Projects",
+      "unit": "Unit 1"
+    },
     "adminLogin": {
       "_comment": "Production single-school admin of MQA Sierra School (MQA-ABC-DEF) — given by the user 2026-09-23 for LP-033.",
       "email": "prod_admin_mqa@yopmail.com",
@@ -108,16 +156,27 @@
       "unit": "Unit 1",
       "lesson": "Lesson 1",
       "probeActivity": "Flashcards.zip",
-      "activities": ["BASE04_Dropdown_Scorable.zip", "Flashcards.zip", "PS", "Non-scorable HTML activity", "test pdf"]
+      "activities": [
+        "BASE04_Dropdown_Scorable.zip",
+        "Flashcards.zip",
+        "PS",
+        "Non-scorable HTML activity",
+        "test pdf"
+      ]
     },
-    "pextFlashcards": { "activity": "Flashcards.zip" },
+    "pextFlashcards": {
+      "activity": "Flashcards.zip"
+    },
     "pextPS": {
       "_comment": "PS is free text, NOT auto-graded; ONE submission per learner. Answer text from SOURCE LearningpathPage.submitPS.",
       "activity": "PS",
       "answer": "Submitting PS activity",
       "away": "Flashcards.zip"
     },
-    "learnerNoClass": { "className": "{{run.lpClassName}}", "componentName": "Practice Extra" },
+    "learnerNoClass": {
+      "className": "{{run.lpClassName}}",
+      "componentName": "Practice Extra"
+    },
     "mailsac": {
       "teacherVerify": {
         "mailsacUser": "comproqatest21@gmail.com",
@@ -130,7 +189,97 @@
         "mailsacPassword": "Compro11",
         "email": "{{run.lpLearnerEmail}}",
         "mailTimeoutMs": 300000
+      },
+      "learnerVerifyB": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "Compro11",
+        "email": "{{run.lpLearner2Email}}",
+        "mailTimeoutMs": 300000
       }
+    },
+    "learnerLoginB": {
+      "email": "{{run.lpLearner2Email}}",
+      "password": "Compro11"
+    },
+    "inviteB": {
+      "_comment": "Learner B (LP-023/024 only) — invited to the same class.",
+      "className": "{{run.lpClassName}}",
+      "learnerEmail": "{{run.lpLearner2Email}}",
+      "notificationWait": {
+        "timeoutMs": 120000
+      }
+    },
+    "progressAfterRun": {
+      "_comment": "LP-034 (PROG) — what the progress views show after Suites 7-8 (identical every full run): scorable 4/4 = 100%, Flashcards/HTML/PDF viewed, PS submitted but NOT marked. Captured live on production 2026-09-23 (learner _xov9 / teacher _osgr). The PS is not counted as completed until it is evaluated.",
+      "className": "{{run.lpClassName}}",
+      "learnerName": "Learner User",
+      "product": "cqaautomationbundle1",
+      "component": "Practice Extra",
+      "learnerSummary": [
+        "Completed activities: 3/10",
+        "Activities completed above target score : 1/3",
+        "100% Average score"
+      ],
+      "learnerComponents": {
+        "Practice Extra": [
+          "Completed activities: 3/4",
+          "Activities completed above target score : 1/3",
+          "Activities completed below target score : 0/3",
+          "100%"
+        ],
+        "Projects": [
+          "Completed activities: 0/5"
+        ]
+      },
+      "activities": [
+        {
+          "name": "BASE04_Dropdown_Scorable.zip",
+          "text": [
+            "First score 100%",
+            "Best score 100%",
+            "Attempts 1"
+          ],
+          "status": "Completed above target"
+        },
+        {
+          "name": "Flashcards.zip",
+          "text": [
+            "Viewed"
+          ],
+          "status": "Activity status: viewed"
+        },
+        {
+          "name": "PS",
+          "text": [
+            "First score -",
+            "Best score -",
+            "Attempts 1"
+          ],
+          "status": "Activity status: evaluation pending"
+        },
+        {
+          "name": "Non-scorable HTML activity",
+          "text": [
+            "Viewed"
+          ]
+        },
+        {
+          "name": "test pdf",
+          "text": [
+            "Viewed"
+          ]
+        }
+      ],
+      "teacherClass": [
+        "Average completed activities: 30%",
+        "1 /3",
+        "100%"
+      ],
+      "teacherStudent": [
+        "Completed activities: 3/10",
+        "1/3",
+        "100%"
+      ]
     }
   }
 }

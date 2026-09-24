@@ -1,6 +1,6 @@
 {
-  "Suite13": {
-    "Name": "LP-033 - School admin (prod, MQA Sierra School) launches the LP component from Library > See materials (read-only)",
+  "Suite8": {
+    "Name": "DEBUG - learner PROG_TC_1/2 on the last full run's learner",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -19,60 +19,158 @@
       },
       {
         "id": "TST_LOGI_TC_1",
-        "description": "Type the school-admin e-mail",
+        "description": "Type the run's learner e-mail",
         "testFile": "./test/ExperienceApp/login.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.adminLogin"
+            "jsonPath": "C1.learnerLogin"
           }
         ]
       },
       {
         "id": "TST_LOGI_TC_2",
-        "description": "Type the school-admin password",
+        "description": "Type the learner password",
         "testFile": "./test/ExperienceApp/login.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.adminLogin"
+            "jsonPath": "C1.learnerLogin"
           }
         ]
       },
       {
-        "id": "TST_MRPT_TC_201",
-        "description": "Log in as the single-school admin and confirm the school key (MQA-ABC-DEF)",
-        "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.adminLibrary"
-          }
-        ]
-      },
-      {
-        "id": "TST_LIBR_TC_101",
-        "description": "Open the Library tab",
-        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.adminLibrary"
-          }
-        ]
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
       }
     ],
     "BeforeEach": [],
     "Test": [
       {
-        "id": "TST_UMBP_TC_11",
-        "description": "LP-033: Library - search - See materials - Practice Extra opens the preview with its TOC",
-        "testFile": "./test/ExperienceApp/umbrellaProduct.test.js",
-        "timeout": 240000,
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PROG_TC_1",
+        "description": "LP-034: My progress counts the submitted activities",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.adminLibrary"
+            "jsonPath": "C1.progressAfterRun"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_2",
+        "description": "LP-034: per-activity progress of the submitted activities",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.progressAfterRun"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite15": {
+    "Name": "LP-034 - Teacher sees the learner's progress for the submitted activities (read-only)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name (Class data tab)",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_3",
+        "description": "LP-034: Class data - class and learner figures",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.progressAfterRun"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_4",
+        "description": "LP-034: teacher per-activity view of the learner",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.progressAfterRun"
           }
         ]
       }

@@ -324,3 +324,75 @@ None.
 - Full run 4: **96/96**, 379 s (teacher `_osgr`, Class qzwn, learner `_xov9`); TC_24 screenshot = reopened frame 1,
   answer kept + correct, Next offered. Register regenerated: 31 Pass · 0 Not Run · 4 Blocked.
 - User confirmed 2026-09-23: a teacher preview does not create learner progress — recorded in CMAT_TC_7 Remarks and learning-path-player.md §A10.
+
+---
+
+## Session 5 — 2026-09-23 — LP-030, and the collaborative / group cases (on hold)
+
+## Summary
+Read-only grounding of Projects (NLP, `/nlp/teacher/…/product/cqaautomationpr1`: Unit 1 > Lesson 1 > scorable,
+Flashcards, PS, Collaborative Task, Group PS). Automated `TST_C1AS_TC_27` (LP-030) — Projects launches from Create
+assignment exactly like Practice Extra. Planned LP-023/024; user answered (groups: Class data → Students/Groups toggle →
+Create groups; learner B only for these; mark 90 "Well Done"; NLPP/CGRP/MRKQ) and then put TC_22/23 ON HOLD.
+
+## Changes Made
+- `c1assignment.test.js`: `TST_C1AS_TC_27` (delegates to TC_26 with the component from data).
+- `learningPathData.json`: `teacherNlp`; learner B keys `signup.learnerFormB`, `mailsac.learnerVerifyB`, `learnerLoginB`,
+  `inviteB` (file re-serialised by JSON.stringify — formatting change only).
+- `runValues.json`: `lpLearner2Email` (generated only when a learner-B suite runs).
+- `learningPath.json`: Suite 14 (C1AS_TC_27). NEW parked `learningPathGroups.json` (Suites 15–17, learner B) — kept out
+  of the full run per the user's hold; the runner treats every top-level key as a suite, so no `_comment` key there.
+- TC repo: `TST_C1AS_TC_27`. Register: C1AS_TC_27 Pass (debug), TC_22/23 Not Run + ON HOLD comment.
+
+## Findings
+- The "Content locked … null at null" dialog on the NLP view is pre-rendered and hidden — NOT a defect (an early
+  check counted hidden `[role=dialog]`).
+- No group-management control on a ONE-student class (dashboard, class data, Actions, student menu, Assignments,
+  Materials, NLP view). User screenshot shows it on Class data (Students/Groups toggle).
+
+## Runs
+- Suite 14 debug: 3/3. Setup Suites 1–6 + 15–17: 65/65 (teacher `_f6up`, Class f98w, learners `_mgka`, B `_kwtm`).
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- TC_22/23 on hold — resume with Step 1 grounding (Groups toggle on the 2-student class Class f98w) when confirmed.
+- `TST_C1AS_TC_27` needs a full run. Register `.xlsx` regeneration pending (file open in Excel).
+
+---
+
+## Session 6 — 2026-09-23/24 — LP-034 progress views; full runs blocked by the production disruption
+
+## Summary
+Added LP-034 (user request): learner "My progress" + per-activity progress, teacher Class data + per-activity view
+(module PROG, `TST_PROG_TC_1…4`; learner steps at the end of Suite 8, teacher Suite 15). Debug 5/7 → selector fix
+(user OK) → 7/7. Two full runs then failed in class creation (Suite 3) during the production disruption; debugged.
+
+## Changes Made
+- `progress.page.js` (PROG methods), `dashboard.page.js` (`click_classMyProgress`), NEW `test/ExperienceApp/progress.test.js`,
+  selectors `progress.*` + `dashboard.learnerMyProgressBtn`, TC repo module PROG, data `C1.progressAfterRun`,
+  exec Suite 8 (+PROG_TC_1/2) and Suite 15; parked learner-B file renumbered to Suites 16–18.
+- Fix (user OK): `aggBundleCard` → `p.bundle-title span:text-is(…)`; `teacherStudentBundleCard` → the learner's
+  `a[qid^=bundle-detail-title-]` (the card does not carry the name).
+- Fix 1 (user OK): `createNewClass.click_addMaterial_btn` waits 90 s for the materials dialog and fails there.
+- Knowledge: learning-path-player.md §A11; teacher-dashboard-class-page.md (Add materials timing); c1-core-shared.md
+  §A2b (NPS survey). Register: LP-034 + 4 PROG rows (result pending a full run).
+
+## Runs / debugging
+- Full run 5: class "Class jnfx" created WITHOUT its product (every class step green) → 23 knock-on failures; stopped.
+- Full run 6: ENTE_TC_22 took 30.1 s, search failed → stopped. NOTE: TaskStop ended only the bash wrapper — the npm /
+  run.js / Chrome tree kept running until killed with `taskkill /T` (check `node.exe … run.js` after any stop).
+- Probes: the materials dialog waits for `/dashboard/api/teacher-materials` (~8.5–9 s now, up to ~20 s; the product IS
+  found once it opens). NPS survey `cg-survey-popup` seen once in a persistent probe profile — user: 3rd login in the
+  same browser, cached 30 days → never met by the framework (fresh context per suite); no handler built (fix 2 dropped).
+
+## Production data created (no cleanup, as for every run)
+teacher `_508s` + Class jnfx (no product) + learner `_hi2q`; teacher `_uw9l` + Class 79es (no product) + learner `_l4ir`.
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- Full run to confirm PROG_TC_1…4 and C1AS_TC_27 once production recovers (user decision).
+- Nothing committed since 3fbb203.

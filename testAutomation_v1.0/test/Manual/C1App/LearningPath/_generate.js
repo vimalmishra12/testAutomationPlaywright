@@ -110,6 +110,8 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 > lesson-view ✕ does not leave the Learning Path — Back does, new TST_PEXT_TC_26), LP-019 (the open control
 > toggles the TOC), LP-027 (a spinner, not a progress bar). LP-021/022 were wrongly Blocked — the product has
 > an HTML and a PDF activity; now Not Run.
+>
+> **LP-034 (added on user request, ${DATE_B2}):** learner and teacher progress views for the submitted activities — module PROG (TST_PROG_TC_1…4). Not in the scenario sheet.
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.

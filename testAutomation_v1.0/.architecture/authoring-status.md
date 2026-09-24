@@ -217,6 +217,22 @@ Suite 8 +`TC_20/21` (HTML/PDF) + housekeeping `TC_102` · Suites 9–12 teacher 
 - **Register:** 31 Pass · 0 Not Run · 4 Blocked (child account, group Collab, group PS, NLP). `TST_UMBP_TC_5` → `TST_UMBP_TC_11`.
 - **Nothing saved on teacher paths** (user decision): Next/Assign and Continue never clicked.
 
+### Batch 2 — LP-030 + collaborative / group (LP-023/024) `[2026-09-23]`
+- **`TST_C1AS_TC_27`** (LP-030, Projects = the NLP component, launch only): Suite 14; debug 3/3 (teacher `_osgr`). NOT yet in a full run.
+- **`TST_PEXT_TC_22` / `TC_23` — ON HOLD by user** ("do not automate until I confirm"). Blockers resolved: Projects
+  (`cqaautomationpr1`) holds "Collaborative Task" + "Group PS"; groups = Class data → Students/Groups toggle → "+ Create
+  groups" (user screenshot; toggle not seen on a 1-student class); learner B approved for these two only; mark 90 /
+  "Well Done"; modules NLPP / CGRP / MRKQ agreed. **Parked**: `learningPathGroups.json` (Suites 15–17, learner B
+  signup → invite → accept) — NOT in `learningPathTest_prod`; verified 65/65 with Suites 1–6 (teacher `_f6up`, Class
+  f98w, learners `_mgka` + B `_kwtm`). Next when confirmed: ground the Groups toggle on that 2-student class.
+
+### LP-034 — progress views (module PROG) `[2026-09-24]`
+- `TST_PROG_TC_1/2` (learner, end of Suite 8) · `TST_PROG_TC_3/4` (teacher, Suite 15) — Phase 1 ✅: debug 7/7 on the
+  previous run's users (`_osgr` / Class qzwn / `_xov9`) after a user-approved selector fix.
+- Phase 2 ⚠️ — NOT yet in a full run: two attempts stopped in class creation (Suite 3) during the production disruption
+  (materials API ~9–30+ s; one class saved without its product). `click_addMaterial_btn` now waits 90 s and fails there.
+- Phase 3 ⏭️ DEFERRED — `visualTest: false`.
+
 ### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
 **The cases are already designed.** Do not re-derive them from the scenario sheet: all 33 scenarios of
 `lp-scenarios.xlsx` are mapped in the manual register `test/Manual/C1App/LearningPath/`

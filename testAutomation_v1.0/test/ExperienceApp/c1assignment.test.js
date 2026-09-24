@@ -136,6 +136,12 @@ module.exports = {
         await assertion.assertEqual(sts.tocShown, true, "The Learning Path TOC did not render inside Create assignment");
         await assertion.assertEqual(sts.unitName, testdata.unit, "The assignment TOC does not show '" + testdata.unit + "'");
         await assertion.assertEqual(sts.cancelShown && sts.nextShown, true, "Cancel / Next are not offered in the assignment TOC");
+    },
+
+    // [2026-09-23] LP-030: the NLP component (Projects) launches from Create assignment exactly like the LP
+    // component — the Learning Path opens in /assignments mode with its TOC and Cancel / Next. Launch only.
+    TST_C1AS_TC_27: async function (testdata) {
+        await module.exports.TST_C1AS_TC_26(testdata);
     }
 
 

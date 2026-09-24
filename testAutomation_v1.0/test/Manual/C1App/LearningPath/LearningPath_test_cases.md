@@ -4,17 +4,19 @@
 **Module:** PEXT (Practice Extra player) — *`practiceExtra.page.js`*; the entry click is DASH (`dashboard.page.js`)
 **App:** Cambridge One — `www.cambridgeone.org` (production; thor is blocked — see `c1-core-shared.md` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
-**Generated:** 2026-09-23 | **Total TCs:** 35 (30 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
-**Execution status (2026-09-23):** **31 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23) — teacher _osgr, Class qzwn, learner _xov9) · **0 Fail** · **0 Not Run** · **4 Blocked** (TST_PEXT_TC_14, TST_PEXT_TC_22, TST_PEXT_TC_23, TST_C1AS_TC_27).
+**Generated:** 2026-09-23 | **Total TCs:** 39 (34 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
+**Execution status (2026-09-23):** **36 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23) — teacher _osgr, Class qzwn, learner _xov9) · **0 Fail** · **2 Not Run** · **1 Blocked** (TST_PEXT_TC_14).
 **Part 2 — LP setup chain (40 TCs, module-wise, separate sheet):** **40 of 40 passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision 2026-09-22).
 
-**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (26 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
+**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (30 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
 >
 > **Batch 2 automation (2026-09-23):** expected results of the automated rows were confirmed live on production and
 > rewritten to what was seen. Three sheet assumptions did not hold and are recorded in Remarks: LP-018 (the
 > lesson-view ✕ does not leave the Learning Path — Back does, new TST_PEXT_TC_26), LP-019 (the open control
 > toggles the TOC), LP-027 (a spinner, not a progress bar). LP-021/022 were wrongly Blocked — the product has
 > an HTML and a PDF activity; now Not Run.
+>
+> **LP-034 (added on user request, 2026-09-23):** learner and teacher progress views for the submitted activities — module PROG (TST_PROG_TC_1…4). Not in the scenario sheet.
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.
@@ -104,6 +106,7 @@
 | #LP-031 — Teacher launches an LP component while creating lock rules via "Manage student access" | TST_MSAC_TC_1 |
 | #LP-032 — Teacher launches a Practice Extra component under a product via "My library" | TST_TLIB_TC_1 |
 | #LP-033 — Admin launches an LP component under an umbrella product via the Library tab | TST_UMBP_TC_11 |
+| #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) | TST_PROG_TC_1, TST_PROG_TC_2, TST_PROG_TC_3, TST_PROG_TC_4 |
 
 ---
 
@@ -650,8 +653,8 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Expected Result** | Every participant sees the others' comments in the Collab activity, and the activity is marked completed once submitted. |
 | **Remarks** | [LP Test Cases] TC_LRN_003. Multi-actor (2 learners + teacher) — plan the run accordingly. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Blocked |
-| **Comments / Defect ID** | BLOCKED: needs a group-enabled component with a Collab activity, 2 learners and a class group. Class groups are not automated yet (planned as a separate module). Unblock = that product/data plus group creation. |
+| **Status** | Not Run |
+| **Comments / Defect ID** | ON HOLD — user 2026-09-23: do not automate until confirmed. The design-time blockers are resolved: the group-enabled (NLP) component is Projects (cqaautomationpr1) with "Collaborative Task" and "Group PS"; groups are created from Class data → Students/Groups toggle → "+ Create groups" (user screenshot); a second learner per run is approved for these two cases only (parked setup: learningPathGroups.json, verified 65/65). Plan agreed: modules NLPP / CGRP / MRKQ; mark 90, comment "Well Done". |
 
 ---
 
@@ -671,8 +674,8 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Expected Result** | The Group PS is marked like a normal PS and the score/analytics appear for both learners and in the teacher's class view. |
 | **Remarks** | [LP Test Cases] TC_LRN_003. Depends on marking + analytics, which are separate un-migrated areas. |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Blocked |
-| **Comments / Defect ID** | BLOCKED: as TST_PEXT_TC_22, plus the teacher marking queue and analytics are not automated yet. |
+| **Status** | Not Run |
+| **Comments / Defect ID** | ON HOLD — user 2026-09-23: as TST_PEXT_TC_22. Teacher marks in the marking queue with score 90 and comment "Well Done" (user decision). |
 
 ---
 
@@ -794,11 +797,11 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | Teacher in a class with at least one NLP (Projects) component. |
 | **Test Steps** | 1. Log in as the teacher and open the class.<br>2. Open the "Assignments" tab.<br>3. Click "Create assignment".<br>4. Select and launch the NLP component. |
 | **Test Data** | — |
-| **Expected Result** | [ASSUMED] The scenario sheet states this behaviour is not confirmed — verify live before automating. The component launches in the LP app/view and its TOC renders. |
-| **Remarks** | [LP Test Cases] TC_TCH_003. The sheet marks the whole scenario an ASSUMPTION — confirm with product/design that NLP appears here at all. |
+| **Expected Result** | Create assignment lists Projects; clicking it opens the Learning Path in assignment mode (/learning-path/teacher/…/assignments/product/cqaautomationpr1/…) with its TOC (unit "Unit 1") and Cancel / Next. No assignment is created. |
+| **Remarks** | [LP Test Cases] TC_TCH_003. Confirmed live on production 2026-09-23. The NLP component is Projects (cqaautomationpr1); the flow exists (was Blocked as unverified). Launch only, like TST_C1AS_TC_26 (Suite 14). |
 | **Actual Result** | *(blank in design)* |
-| **Status** | Blocked |
-| **Comments / Defect ID** | BLOCKED: NLP/Projects is not automated anywhere yet, and the sheet flags the scenario itself as unverified. Unblock = confirm the flow exists, then automate after the NLP player. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (learningPath.json Suite 14). Debug run 3/3 on teacher _osgr (Class qzwn); not yet part of a full run. |
 
 ---
 
@@ -862,6 +865,84 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
 | **Comments / Defect ID** | Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both. |
+
+---
+
+### Requirement #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx)
+
+| Field | Value |
+|---|---|
+| **S.No.** | 36 |
+| **Test Case ID** | TST_PROG_TC_1 |
+| **Title** | Verify the learner My progress counts the submitted activities overall and per component |
+| **Linked Requirement** | #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Learner on the dashboard. |
+| **Test Steps** | 1. On the class card, click "My progress".<br>2. Read the summary and the Practice Extra / Projects blocks. |
+| **Test Data** | Class of the LP run; components Practice Extra, Projects |
+| **Expected Result** | "My progress" (/class/learner/…/aggregated-progress) shows: Completed activities 3/10, Activities completed above target score 1/3, 100% Average score. Practice Extra: Completed activities 3/4, above target 1/3, below target 0/3, 100%. Projects: Completed activities 0/5. |
+| **Remarks** | Confirmed live on production 2026-09-23. The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG). |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 37 |
+| **Test Case ID** | TST_PROG_TC_2 |
+| **Title** | Verify the learner per-activity progress shows each submitted activity's result |
+| **Linked Requirement** | #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | Learner on "My progress" (TST_PROG_TC_1). |
+| **Test Steps** | 1. Click the product card (cqaautomationbundle1).<br>2. Click "Practice Extra".<br>3. Read the Unit 1 / Lesson 1 activity rows. |
+| **Test Data** | Product cqaautomationbundle1; component Practice Extra |
+| **Expected Result** | Rows: BASE04_Dropdown_Scorable.zip — First score 100%, Best score 100%, Attempts 1, icon "Completed above target"; Flashcards.zip — Viewed ("Activity status: viewed"); PS — First score -, Best score -, Attempts 1 ("Activity status: evaluation pending"); Non-scorable HTML activity — Viewed; test pdf — Viewed. |
+| **Remarks** | Confirmed live on production 2026-09-23. Same page as the class card's "See Progress" (/class/learner/…/bundle/<id>). |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 38 |
+| **Test Case ID** | TST_PROG_TC_3 |
+| **Title** | Verify the teacher Class data shows the class and learner figures for the submitted activities |
+| **Linked Requirement** | #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Teacher on the class page (Class data tab). |
+| **Test Steps** | 1. Open the class from the teacher dashboard (Class data is the default tab).<br>2. Read Class performance and the learner's card. |
+| **Test Data** | Class of the LP run; learner "Learner User" |
+| **Expected Result** | Class performance: Average completed activities 30%, Activities completed above target score 1 /3, 100% Average score. The learner's card: Completed activities 3/10, 1/3 above target, 100% Average score. |
+| **Remarks** | Confirmed live on production 2026-09-23. The class has one learner, so the class figures follow that learner's. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 39 |
+| **Test Case ID** | TST_PROG_TC_4 |
+| **Title** | Verify the teacher per-activity view of a learner matches the learner's own progress |
+| **Linked Requirement** | #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | Teacher on Class data (TST_PROG_TC_3). |
+| **Test Steps** | 1. Click the learner's product link (cqaautomationbundle1).<br>2. Click "Practice Extra".<br>3. Read the activity rows. |
+| **Test Data** | Learner "Learner User"; product cqaautomationbundle1; component Practice Extra |
+| **Expected Result** | The teacher sees the same rows as the learner (TST_PROG_TC_2): scorable 100% / 100% / 1 attempt, Flashcards / HTML / PDF Viewed, PS - / - / 1 attempt awaiting evaluation. |
+| **Remarks** | Confirmed live on production 2026-09-23. Teacher route /class/teacher/…/learner/<id>/bundle/<id>. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
 
 ---
 

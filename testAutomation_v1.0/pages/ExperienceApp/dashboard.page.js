@@ -151,6 +151,19 @@ module.exports = {
   },
 
   /**
+   * [2026-09-23] LP-034 (TST_PROG_TC_1): the class card's "My progress" (qid l-db-cc-btn-2) — looked up
+   * INSIDE the named class card — opens the learner's aggregated progress for that class.
+   */
+  click_classMyProgress: async function (className) {
+    await logger.logInto(await stackTrace.get(), "class:" + className);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var btn = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.learnerMyProgressBtn, "");
+    var res = await action.waitForDisplayed(btn, 60000);
+    if (true == res) res = await action.click(btn);
+    return { opened: true == res && true == (await action.waitForUrl(/\/aggregated-progress/, 30000)) };
+  },
+
+  /**
    * LP-020 (TST_DASH_TC_15): a verified learner who has NOT yet accepted a class invite (so has no
    * class and no product). [2026-09-23, prod full run] Such a learner is NOT shown the dashboard: login
    * routes them straight to the Invitations page with the pending class listed. The landing (route +

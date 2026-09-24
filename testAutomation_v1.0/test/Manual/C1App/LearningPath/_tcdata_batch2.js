@@ -23,6 +23,8 @@ const LIVE = 'Confirmed live on production 2026-09-23.';
 const B2_RUN = 'Automated 2026-09-23 in learningPath.json Suite 8 (Suite 6 for DASH_TC_15). Debug run 21/21 (learner _uyu7); full runs 74/75 (learner _vcmw) and 75/75 (learner _iyit) — this case passed in both.';
 // [2026-09-23] Batches B/D/E + LP-021/022 — filled in from the full run (see authoring-status.md).
 const B3_RUN = 'Automated 2026-09-23 (Suite 7 for LP-013/025, Suite 8 for LP-021/022, Suites 9–12 teacher, Suite 13 admin). Full runs 95/96 (learner _6c7t) and 96/96 (teacher _osgr, Class qzwn, learner _xov9) on production — this case passed in both.';
+// [2026-09-23] LP-034 (PROG) — filled in from the full run.
+const B4_RUN = 'Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run\x27s users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption).';
 
 const REQS = [
   '#LP-007 — Drilling into a unit from the open TOC sidebar reveals that unit\'s activity list',
@@ -52,6 +54,7 @@ const REQS = [
   '#LP-031 — Teacher launches an LP component while creating lock rules via "Manage student access"',
   '#LP-032 — Teacher launches a Practice Extra component under a product via "My library"',
   '#LP-033 — Admin launches an LP component under an umbrella product via the Library tab',
+  '#LP-034 — Learner and teacher progress views reflect the learner\x27s submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx)',
 ];
 
 const TCS = [
@@ -191,23 +194,23 @@ const TCS = [
     status: 'Pass',
     comments: B3_RUN },
 
-  { id: 'TST_PEXT_TC_22', req: REQS[16], type: 'Positive', priority: 'High', status: 'Blocked',
+  { id: 'TST_PEXT_TC_22', req: REQS[16], type: 'Positive', priority: 'High', status: 'Not Run',
     title: 'Verify learners and the teacher see each other\'s comments in a group-enabled Collab activity',
     pre: 'A group-enabled PE component with a Collab activity; two learners with product access in the same class and in one group.',
     steps: '1. Learner 1 launches the Collab activity and adds a comment.\n2. Learner 2 opens the same activity, sees Learner 1\'s comment and adds one.\n3. Teacher opens the class → class material → the same component and activity.\n4. Teacher selects the group, sees both comments and adds one.\n5. Learner 1 sees the teacher\'s comment.\n6. Learner 1 marks the activity ready/submitted.',
     data: '—',
     expected: 'Every participant sees the others\' comments in the Collab activity, and the activity is marked completed once submitted.',
     remarks: '[LP Test Cases] TC_LRN_003. Multi-actor (2 learners + teacher) — plan the run accordingly.',
-    comments: 'BLOCKED: needs a group-enabled component with a Collab activity, 2 learners and a class group. Class groups are not automated yet (planned as a separate module). Unblock = that product/data plus group creation.' },
+    comments: 'ON HOLD — user 2026-09-23: do not automate until confirmed. The design-time blockers are resolved: the group-enabled (NLP) component is Projects (cqaautomationpr1) with "Collaborative Task" and "Group PS"; groups are created from Class data → Students/Groups toggle → "+ Create groups" (user screenshot); a second learner per run is approved for these two cases only (parked setup: learningPathGroups.json, verified 65/65). Plan agreed: modules NLPP / CGRP / MRKQ; mark 90, comment "Well Done".' },
 
-  { id: 'TST_PEXT_TC_23', req: REQS[17], type: 'Positive', priority: 'High', status: 'Blocked',
+  { id: 'TST_PEXT_TC_23', req: REQS[17], type: 'Positive', priority: 'High', status: 'Not Run',
     title: 'Verify a Group PS is marked like an individual PS and the score reaches both learners and the teacher\'s analytics',
     pre: 'A group-enabled PE component with a Group PS; two learners with product access in the same class and in one group.',
     steps: '1. Learner 1 submits the Group PS.\n2. Teacher marks it in the Marking Queue (score + comment).\n3. Both learners check their progress page for the score.\n4. Teacher checks that class analytics reflect the mark.',
     data: '—',
     expected: 'The Group PS is marked like a normal PS and the score/analytics appear for both learners and in the teacher\'s class view.',
     remarks: '[LP Test Cases] TC_LRN_003. Depends on marking + analytics, which are separate un-migrated areas.',
-    comments: 'BLOCKED: as TST_PEXT_TC_22, plus the teacher marking queue and analytics are not automated yet.' },
+    comments: 'ON HOLD — user 2026-09-23: as TST_PEXT_TC_22. Teacher marks in the marking queue with score 90 and comment "Well Done" (user decision).' },
 
   { id: 'TST_PEXT_TC_24', req: REQS[18], type: 'Positive', priority: 'Medium',
     title: 'Verify an unfinished scorable activity is kept in a "Saved" state and restores its answers on relaunch',
@@ -254,14 +257,14 @@ const TCS = [
     remarks: '[LP Test Cases] TC_TCH_002. ' + LIVE + ' Launch only — the user decided nothing is saved (2026-09-23); the component is addressed by name (its qid a-path-2-<n> is positional).',
     status: 'Pass', comments: B3_RUN },
 
-  { id: 'TST_C1AS_TC_27', req: REQS[23], type: 'Positive', priority: 'High', status: 'Blocked',
+  { id: 'TST_C1AS_TC_27', req: REQS[23], type: 'Positive', priority: 'High',
     title: 'Verify a teacher can launch an NLP component from the assignment-creation flow',
     pre: 'Teacher in a class with at least one NLP (Projects) component.',
     steps: '1. Log in as the teacher and open the class.\n2. Open the "Assignments" tab.\n3. Click "Create assignment".\n4. Select and launch the NLP component.',
     data: '—',
-    expected: ASSUMED + ' The component launches in the LP app/view and its TOC renders.',
-    remarks: '[LP Test Cases] TC_TCH_003. The sheet marks the whole scenario an ASSUMPTION — confirm with product/design that NLP appears here at all.',
-    comments: 'BLOCKED: NLP/Projects is not automated anywhere yet, and the sheet flags the scenario itself as unverified. Unblock = confirm the flow exists, then automate after the NLP player.' },
+    expected: 'Create assignment lists Projects; clicking it opens the Learning Path in assignment mode (/learning-path/teacher/…/assignments/product/cqaautomationpr1/…) with its TOC (unit "Unit 1") and Cancel / Next. No assignment is created.',
+    remarks: '[LP Test Cases] TC_TCH_003. ' + LIVE + ' The NLP component is Projects (cqaautomationpr1); the flow exists (was Blocked as unverified). Launch only, like TST_C1AS_TC_26 (Suite 14).',
+    status: 'Pass', comments: 'Automated 2026-09-23 (learningPath.json Suite 14). Debug run 3/3 on teacher _osgr (Class qzwn); not yet part of a full run.' },
 
   { id: 'TST_MSAC_TC_1', req: REQS[24], type: 'Positive', priority: 'High',
     title: 'Verify a teacher can launch an LP component while creating a lock rule in "Manage student access"',
@@ -289,6 +292,42 @@ const TCS = [
     expected: 'The Library tab shows the School licence section and the product list; the search lists the product; "See materials" opens the product materials view (components Practice Extra, Projects, Test); Practice Extra opens the Learning Path preview on the teacher route with its TOC rendered.',
     remarks: '[LP Test Cases] TC_ADM_001. ' + LIVE + ' RENAMED from TST_UMBP_TC_5 (that id is retired in AdminApp-Library) with the user\'s OK. The sheet\'s "All course materials" heading belongs to the teacher\'s My library, not the admin Library tab — dropped (user, 2026-09-23). The materials view is server-rendered: clicks before its document has loaded are ignored (measured) — the automation waits for the load.',
     status: 'Pass', comments: B3_RUN },
+
+  { id: 'TST_PROG_TC_1', req: REQS[27], type: 'Positive', priority: 'High',
+    title: "Verify the learner My progress counts the submitted activities overall and per component",
+    pre: "The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Learner on the dashboard.",
+    steps: "1. On the class card, click \"My progress\".\n2. Read the summary and the Practice Extra / Projects blocks.",
+    data: "Class of the LP run; components Practice Extra, Projects",
+    expected: "\"My progress\" (/class/learner/…/aggregated-progress) shows: Completed activities 3/10, Activities completed above target score 1/3, 100% Average score. Practice Extra: Completed activities 3/4, above target 1/3, below target 0/3, 100%. Projects: Completed activities 0/5.",
+    remarks: LIVE + " The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG).",
+    status: 'Pass', comments: B4_RUN },
+
+  { id: 'TST_PROG_TC_2', req: REQS[27], type: 'Positive', priority: 'High',
+    title: "Verify the learner per-activity progress shows each submitted activity's result",
+    pre: "Learner on \"My progress\" (TST_PROG_TC_1).",
+    steps: "1. Click the product card (cqaautomationbundle1).\n2. Click \"Practice Extra\".\n3. Read the Unit 1 / Lesson 1 activity rows.",
+    data: "Product cqaautomationbundle1; component Practice Extra",
+    expected: "Rows: BASE04_Dropdown_Scorable.zip — First score 100%, Best score 100%, Attempts 1, icon \"Completed above target\"; Flashcards.zip — Viewed (\"Activity status: viewed\"); PS — First score -, Best score -, Attempts 1 (\"Activity status: evaluation pending\"); Non-scorable HTML activity — Viewed; test pdf — Viewed.",
+    remarks: LIVE + " Same page as the class card's \"See Progress\" (/class/learner/…/bundle/<id>).",
+    status: 'Pass', comments: B4_RUN },
+
+  { id: 'TST_PROG_TC_3', req: REQS[27], type: 'Positive', priority: 'High',
+    title: "Verify the teacher Class data shows the class and learner figures for the submitted activities",
+    pre: "The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Teacher on the class page (Class data tab).",
+    steps: "1. Open the class from the teacher dashboard (Class data is the default tab).\n2. Read Class performance and the learner's card.",
+    data: "Class of the LP run; learner \"Learner User\"",
+    expected: "Class performance: Average completed activities 30%, Activities completed above target score 1 /3, 100% Average score. The learner's card: Completed activities 3/10, 1/3 above target, 100% Average score.",
+    remarks: LIVE + " The class has one learner, so the class figures follow that learner's.",
+    status: 'Pass', comments: B4_RUN },
+
+  { id: 'TST_PROG_TC_4', req: REQS[27], type: 'Positive', priority: 'High',
+    title: "Verify the teacher per-activity view of a learner matches the learner's own progress",
+    pre: "Teacher on Class data (TST_PROG_TC_3).",
+    steps: "1. Click the learner's product link (cqaautomationbundle1).\n2. Click \"Practice Extra\".\n3. Read the activity rows.",
+    data: "Learner \"Learner User\"; product cqaautomationbundle1; component Practice Extra",
+    expected: "The teacher sees the same rows as the learner (TST_PROG_TC_2): scorable 100% / 100% / 1 attempt, Flashcards / HTML / PDF Viewed, PS - / - / 1 attempt awaiting evaluation.",
+    remarks: LIVE + " Teacher route /class/teacher/…/learner/<id>/bundle/<id>.",
+    status: 'Pass', comments: B4_RUN },
 ];
 
 // Scenarios deliberately without a case (automation-mechanics, like LP-004).

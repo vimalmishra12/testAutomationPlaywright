@@ -691,6 +691,12 @@
           "description": "Verify a teacher can launch an LP component from the assignment-creation flow",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_27",
+          "description": "Verify a teacher can launch an NLP component from the assignment-creation flow",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -6715,6 +6721,37 @@
         {
           "id": "TST_TLIB_TC_1",
           "description": "Verify a teacher can launch a Practice Extra component from My library",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Progress views (learner My progress / teacher Class data)",
+      "moduleId": "PROG",
+      "testFile": "./test/ExperienceApp/progress.test.js",
+      "testcase": [
+        {
+          "id": "TST_PROG_TC_1",
+          "description": "Verify the learner My progress counts the submitted activities overall and per component",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_2",
+          "description": "Verify the learner per-activity progress shows each submitted activity result",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_3",
+          "description": "Verify the teacher Class data shows the class and learner figures for the submitted activities",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_4",
+          "description": "Verify the teacher per-activity view of a learner matches the learner progress",
           "tags": "P1",
           "visualTest": false
         }

@@ -140,6 +140,21 @@
 - Nothing is saved on any teacher path: Next/Assign and Continue are never clicked; each is its own suite
   (fresh browser context), so an unfinished assignment/rule is discarded with the context.
 
+### A11. Progress views for submitted activities (module PROG) `[2026-09-23, prod — learner _xov9 / teacher _osgr]`
+- **Learner:** class card "My progress" (`l-db-cc-btn-2`) → `/class/learner/…/aggregated-progress`: summary
+  (Completed activities N/M, above target a/b, average score, time spent) + one `.progress-info` block per component
+  (`span.product-title`). Product card → `/bundle/<id>` (= the card's "See Progress") → component link
+  (`clView-7-<n>`, by name) → Unit → Lesson → one `div.table-row` per activity (`span.activity-name[title]`):
+  scorable "First score / Best score / Attempts", non-scorables "Viewed", status icon `aria-label`.
+- **Teacher:** class → Class data: `div.class-level-metrics` (Average completed activities %, above target, average)
+  + per student `div.student-level-metrics`; the student's product TITLE link `a[qid^=bundle-detail-title-]` (the
+  card `a.bundle-card-container` does not carry the name) → `/class/teacher/…/learner/<id>/bundle/<id>` → the SAME
+  component / activity rows as the learner.
+- After Suites 7–8 (every run): 3/10 overall, Practice Extra 3/4 (scorable, Flashcards, HTML), 1/3 above target,
+  100%; **a submitted but unmarked PS is NOT counted as completed** ("evaluation pending", scores "-"); the PDF is
+  not counted either. Teacher class: 30% average completion.
+- Trap: `:text-is` on `p.bundle-title` matches nothing — the name is in an inner `<span>`.
+
 - `isInitialized_player` (DASH_TC_14) waits for the iframe; a learner resuming at **PS has no iframe**, so
   use the activity title link (`#selectedActivitySidebarBtn`) as the "player ready" signal (DASH_TC_16).
 
