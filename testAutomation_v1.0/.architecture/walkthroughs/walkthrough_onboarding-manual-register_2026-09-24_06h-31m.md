@@ -70,3 +70,10 @@ None — no protected files were modified. (`npm install --no-save` was run loca
   the 4 open questions, constraints), same pattern as the `learningPath` block.
 - **Why:** User asked to merge to `main` so team members can automate; the plan and open questions must
   live in the repo (the S04 handoff is kept outside the repo per the migration rules).
+
+### 7. onboarding.md header + register "How to automate" step 4 (after PR #71 merged)
+- **Type:** Modified. Added a pointer at the top of `onboarding.md` and in the register (via `_generate.js`, then regenerated):
+  "cases are already designed, do not redesign, start at authoring-status.md → onboarding → NEXT BATCH".
+- **Why:** A team member's plain prompt ("start planning onboarding automation") reaches `onboarding.md`
+  through CLAUDE.md's mandatory reads, but it might pick the manual-authoring skill and redesign the
+  cases. The pointer routes it to the existing plan.

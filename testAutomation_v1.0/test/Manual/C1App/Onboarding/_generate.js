@@ -139,8 +139,9 @@ ${modules.map(moduleLine).join("\n")}
 2. **Never automate a 🔴/🟡 row** — they are manual-only by user decision (${DATE}).
 3. **"EXISTING TC reused" rows** are already automated: confirm the existing function asserts the row's
    Expected Result, extend it if not — do not write a second function (ADR-011).
-4. **Read first:** \`product-knowledge/ExperienceApp/c1-core-shared.md\` then \`onboarding.md\`, the
-   migration plan's B1/B5 rows, then follow \`.agent/skills/c1-test-authoring\`.
+4. **Read first:** \`.architecture/authoring-status.md\` → block \`onboarding\` → "NEXT BATCH" (batch order,
+   open questions, constraints), then \`product-knowledge/ExperienceApp/c1-core-shared.md\` and \`onboarding.md\`,
+   then follow \`.agent/skills/c1-test-authoring\`.
 5. **\`[ASSUMED]\` is a question, not a fact** — confirm it live and replace it with what was seen.
 6. **Close the loop:** back-port into \`_tcdata.js\`, run \`node test/Manual/C1App/Onboarding/_generate.js\`
    (rewrites both \`.md\` and \`.xlsx\` — never hand-edit them), then set Status/Comments.
