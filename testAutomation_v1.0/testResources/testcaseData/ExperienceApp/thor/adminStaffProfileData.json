@@ -27,7 +27,7 @@
       "removalCheckboxLabel": "I confirm I want to remove this staff member from my school account",
       "removalCancelBtn": "No, cancel",
       "removalConfirmBtn": "Yes, remove",
-      "_promotionComment": "TST_STFP_TC_19. Dedicated promotion fixture cqatesttea18sept@mailsac.com with known password Compro11. Mutating test with mandatory teardown revocation.",
+      "_promotionComment": "TST_STFP_TC_19. Dedicated promotion fixture cqatesttea18sept@mailsac.com with known password via env. Mutating test with mandatory teardown revocation.",
       "promotionTeacherEmail": "cqatesttea18sept@mailsac.com",
       "promotionTeacherPassword": "{{env.C1_THOR_ADMINSTAFFPROFILE_PASSWORD}}",
       "adminUser": "testt1@mailsac.com",

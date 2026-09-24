@@ -19,3 +19,7 @@ logs_*.txt
 /tooling/
 .cora/
 .cora-cli/
+# Secrets hardening — real values for {{env.*}} tokens live here, never commit
+.env
+.env.*.local
+*.env

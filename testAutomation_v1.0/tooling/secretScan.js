@@ -51,6 +51,8 @@ const files = [];
 walk(path.join(ROOT, "testResources"), files);
 const envJsonPath = path.join(ROOT, "env.json");
 if (fs.existsSync(envJsonPath)) files.push(envJsonPath);
+const capabilitiesJsonPath = path.join(ROOT, "capabilities.json");
+if (fs.existsSync(capabilitiesJsonPath)) files.push(capabilitiesJsonPath);
 
 const leftovers = [];
 for (const f of files) {
