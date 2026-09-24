@@ -462,7 +462,7 @@ module.exports = {
    * TST_STFP_TC_19 — Grant admin rights to a teacher, verify dual-login access to Admin Console, and teardown revocation.
    *
    * ⚠️ MUTATING TEST WITH GUARANTEED TEARDOWN:
-   * Uses dedicated fixture `cqatesttea18sept@mailsac.com` (password: `Compro11`).
+   * Uses dedicated fixture `cqatesttea18sept@mailsac.com` (password managed via env).
    * 1. Promotes teacher to Administrator/Teacher.
    * 2. Logs in as the promoted teacher and verifies access to school Admin Console.
    * 3. IN FINALLY BLOCK: Logs back in as school admin and revokes admin rights to restore baseline Teacher role.

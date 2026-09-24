@@ -11048,7 +11048,7 @@ npm run manageReportsTest_thor
 > **Selectors may need adjustment**: The CSS selectors for `manageReports_link` (`a[qid="cView-14"]`) and `downloadReport_btn` are placeholder values based on the pattern used in `activeClass`. After running the test, if selectors don't match, inspect the live DOM and update the selectors in `C1Selectors.json`.
 
 > [!NOTE]
-> **Login credentials**: The test uses `successfulInstructorUser` (`thorteacherda@mailsac.com` / `Compro11`) — a teacher role. Update the `jsonPath` in the execution file if a different user is needed.
+> **Login credentials**: The test uses `successfulInstructorUser` (`thorteacherda@mailsac.com`) — a teacher role. Update the `jsonPath` in the execution file if a different user is needed.
 
 > [!NOTE]
 > **activeClass TC registration**: The existing `TST_ACTI_TC_1`–`TC_5` test cases were not registered in `C1TCRepository.json`. Added them to prevent `getTCPropertiesFromTCRepo` errors.

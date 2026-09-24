@@ -87,6 +87,11 @@ if (envData.lambdaTestCredentials) {
     if (ltKeyMatch) {
         envData.lambdaTestCredentials.LT_ACCESS_KEY = process.env[ltKeyMatch[1]]; // undefined if not set — fine, see above
     }
+    var ltUserToken = envData.lambdaTestCredentials.LT_USERNAME;
+    var ltUserMatch = typeof ltUserToken === 'string' && ltUserToken.match(/^\{\{env\.([A-Za-z0-9_]+)\}\}$/);
+    if (ltUserMatch) {
+        envData.lambdaTestCredentials.LT_USERNAME = process.env[ltUserMatch[1]];
+    }
 }
 
 // set LT creds globally (fallback if not provided in real env vars)
@@ -100,18 +105,28 @@ global.envData = envData;
 
 if (
     argv.browserCapability &&
-    global.capabilitiesFile[argv.browserCapability] &&
-    global.capabilitiesFile[argv.browserCapability].webDriverService ===
-        "lambdatest"
+    global.capabilitiesFile[argv.browserCapability]
 ) {
     const cap = global.capabilitiesFile[argv.browserCapability];
-    cap.hostname = cap.hostname || "hub.lambdatest.com";
-    cap.portNumber = cap.portNumber || 443;
-    cap.webServicePath = cap.webServicePath || "/wd/hub";
+    if (cap.webDriverService === "lambdatest") {
+        cap.hostname = cap.hostname || "hub.lambdatest.com";
+        cap.portNumber = cap.portNumber || 443;
+        cap.webServicePath = cap.webServicePath || "/wd/hub";
 
-    // prefer env vars for credentials (safer for CI)
-    cap.user = process.env.LT_USERNAME || cap.user;
-    cap.key = process.env.LT_ACCESS_KEY || cap.key;
+        // prefer env vars for credentials (safer for CI)
+        cap.user = process.env.LT_USERNAME || cap.user;
+        cap.key = process.env.LT_ACCESS_KEY || cap.key;
+    } else if (cap.webDriverService === "appium") {
+        if (typeof cap.user === "string" && cap.user.startsWith("{{env.")) {
+            cap.user = process.env[cap.user.slice(6, -2)] || process.env.BSTACK_USERNAME;
+        }
+        if (typeof cap.key === "string" && cap.key.startsWith("{{env.")) {
+            cap.key = process.env[cap.key.slice(6, -2)] || process.env.BSTACK_KEY;
+        }
+    }
+    if (cap.eyes && typeof cap.eyes.apiKey === "string" && cap.eyes.apiKey.startsWith("{{env.")) {
+        cap.eyes.apiKey = process.env[cap.eyes.apiKey.slice(6, -2)] || process.env.APPLITOOLS_API_KEY;
+    }
 }
 
 
