@@ -76,7 +76,7 @@ certificate, run-generated users), then the screen file.
 | Screen | Automation module | File |
 |---|---|---|
 | **Shared across teacher / learner screens** | — | [`c1-core-shared.md`](ExperienceApp/c1-core-shared.md) |
-| Signup, e-mail verification, teacher account setup / join a school | `SNUP` `TSET` | [`onboarding.md`](ExperienceApp/onboarding.md) |
+| Signup, e-mail verification, teacher account setup / join a school; homepage, login, reset password, parent/child, invite signup (onboarding register, 2026-09-24) | `SNUP` `TSET` `LAND` `FOOT` `LOGI` `RESE` `PCHD`(proposed) | [`onboarding.md`](ExperienceApp/onboarding.md) |
 | Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
 | Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
 
