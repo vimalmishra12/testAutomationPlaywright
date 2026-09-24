@@ -6754,6 +6754,43 @@
           "description": "Verify the teacher per-activity view of a learner matches the learner progress",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_5",
+          "description": "Verify the learner receives the teacher feedback notification with the mark",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_6",
+          "description": "Verify the learner per-activity progress shows the marked Practice Set score",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_7",
+          "description": "Verify the teacher progress details show the learner per-component figures after marking",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Marking queue (teacher marks submitted work)",
+      "moduleId": "MRKQ",
+      "testFile": "./test/ExperienceApp/markingQueue.test.js",
+      "testcase": [
+        {
+          "id": "TST_MRKQ_TC_1",
+          "description": "Verify the marking queue lists the learner Practice Set submission with the score pre-filled",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRKQ_TC_2",
+          "description": "Verify a Practice Set is marked when the teacher sends a score and feedback and confirms it",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     }

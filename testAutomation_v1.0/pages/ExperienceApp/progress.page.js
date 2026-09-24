@@ -45,6 +45,105 @@ module.exports = {
     return out;
   },
 
+  /** True when every phrase of `phrases` is contained in `text`. */
+  _hasAll: function (text, phrases) {
+    if (typeof text !== "string") return false;
+    for (var i = 0; i < phrases.length; i++) if (text.indexOf(phrases[i]) === -1) return false;
+    return true;
+  },
+
+  /**
+   * Re-reads the current page (reload every `reloadEveryMs`) until `read()` returns data for which `settled(data)`
+   * is true, or `timeoutMs` passes. Returns the LAST data read plus settled / attempts / waitedMs.
+   * [2026-09-24, prod — user-confirmed expected] The progress SUMMARY totals (learner "My progress", teacher
+   * Class data) are updated by a batch analytics job and lag the submissions by SEVERAL MINUTES (read at once:
+   * 1/10 and 10%; ~2 min after the run: 3/10 and 30%). The per-activity rows are immediate and need no wait.
+   */
+  _pollUntilSettled: async function (read, settled, timeoutMs, reloadEveryMs) {
+    var url = await browser.getUrl();
+    var start = Date.now();
+    var attempts = 0;
+    var data = await read();
+    attempts++;
+    while (!settled(data) && Date.now() - start < timeoutMs) {
+      await browser.pause(reloadEveryMs); // sanctioned: nothing on the page signals the batch job (Invariant 1)
+      await browser.url(url);
+      await action.waitForDocumentLoad();
+      data = await read();
+      attempts++;
+    }
+    return { data: data, settled: settled(data), attempts: attempts, waitedMs: Date.now() - start };
+  },
+
+  /** Learner "My progress" read repeatedly until the summary and every component block show the expected phrases. */
+  getData_aggregatedProgressSettled: async function (expectedSummary, expectedComponents, timeoutMs, reloadEveryMs) {
+    await logger.logInto(await stackTrace.get(), "timeout:" + timeoutMs + " reloadEvery:" + reloadEveryMs);
+    var self = this;
+    var names = Object.keys(expectedComponents);
+    var r = await this._pollUntilSettled(
+      function () { return self.getData_aggregatedProgress(names); },
+      function (d) {
+        if (!self._hasAll(d.summary, expectedSummary)) return false;
+        for (var i = 0; i < names.length; i++) if (!self._hasAll(d.components[names[i]], expectedComponents[names[i]])) return false;
+        return true;
+      }, timeoutMs, reloadEveryMs);
+    return Object.assign({ settled: r.settled, attempts: r.attempts, waitedMs: r.waitedMs }, r.data);
+  },
+
+  /** Teacher Class data read repeatedly until the class metrics and the student's card show the expected phrases. */
+  getData_teacherClassProgressSettled: async function (learnerName, expectedClass, expectedStudent, timeoutMs, reloadEveryMs) {
+    await logger.logInto(await stackTrace.get(), "learner:" + learnerName + " timeout:" + timeoutMs);
+    var self = this;
+    var r = await this._pollUntilSettled(
+      function () { return self.getData_teacherClassProgress(learnerName); },
+      function (d) { return self._hasAll(d.classMetrics, expectedClass) && self._hasAll(d.studentMetrics, expectedStudent); },
+      timeoutMs, reloadEveryMs);
+    return Object.assign({ settled: r.settled, attempts: r.attempts, waitedMs: r.waitedMs }, r.data);
+  },
+
+  /**
+   * [2026-09-24] LP-035 (learner): the bell's "New feedback" notification (matched by TEXT — the ntf-<n> qids are
+   * positional) opens the marked PS in the player: the learner's score and the teacher's score + feedback.
+   */
+  getData_feedbackNotification: async function (itemText) {
+    await logger.logInto(await stackTrace.get(), "item:" + itemText);
+    var pr = selectorFile.css.ComproC1.progress;
+    var out = { itemShown: false, itemLabel: null, score: null, teacherScore: null, teacherFeedback: null };
+    var res = await action.waitForDisplayed(pr.notificationBtn, 60000);
+    if (true == res) res = await action.click(pr.notificationBtn);
+    var item = action.getFilteredLocator(pr.notificationItem, itemText);
+    out.itemShown = true == res && true == (await action.waitForDisplayed(item, 30000));
+    if (!out.itemShown) return out;
+    out.itemLabel = String(await action.getText(item)).replace(/\s+/g, " ").trim();
+    if (true != (await action.click(item))) return out;
+    if (true != (await action.waitForDisplayed(pr.feedbackScore, 60000))) return out;
+    out.score = String(await action.getText(pr.feedbackScore)).trim();
+    if (true == (await action.waitForDisplayed(pr.feedbackTeacherScore, 15000))) {
+      out.teacherScore = String(await action.getText(pr.feedbackTeacherScore)).trim();
+      out.teacherFeedback = String(await action.getText(pr.feedbackTeacherText)).trim();
+    }
+    return out;
+  },
+
+  /**
+   * [2026-09-24] LP-035 (teacher): Class data → "Show progress details" → the named learner's per-component blocks.
+   * The switch's checkbox is visually hidden, so its label.switch is clicked; the state is read from the checkbox.
+   */
+  getData_teacherProgressDetails: async function (learnerName, componentNames) {
+    await logger.logInto(await stackTrace.get(), "learner:" + learnerName);
+    var pr = selectorFile.css.ComproC1.progress;
+    var out = { switchedOn: false, components: {} };
+    var res = await action.waitForDisplayed(pr.progressDetailsSwitch, 30000);
+    if (true == res && true != (await action.isSelected(pr.progressDetailsCheckbox))) res = await action.click(pr.progressDetailsSwitch);
+    out.switchedOn = true == res && true == (await action.isSelected(pr.progressDetailsCheckbox));
+    if (!out.switchedOn) return out;
+    for (var i = 0; i < componentNames.length; i++) {
+      var sel = pr.teacherStudentComponentBlock.replace(/\{LEARNER\}/g, learnerName).replace(/\{NAME\}/g, componentNames[i]);
+      out.components[componentNames[i]] = await this._text(sel, 30000);
+    }
+    return out;
+  },
+
   /** From "My progress": the product card → the product's progress page (same page as "See Progress"). */
   click_aggregatedBundle: async function (productTitle) {
     await logger.logInto(await stackTrace.get(), "product:" + productTitle);

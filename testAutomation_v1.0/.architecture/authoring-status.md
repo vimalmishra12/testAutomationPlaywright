@@ -218,20 +218,32 @@ Suite 8 +`TC_20/21` (HTML/PDF) + housekeeping `TC_102` · Suites 9–12 teacher 
 - **Nothing saved on teacher paths** (user decision): Next/Assign and Continue never clicked.
 
 ### Batch 2 — LP-030 + collaborative / group (LP-023/024) `[2026-09-23]`
-- **`TST_C1AS_TC_27`** (LP-030, Projects = the NLP component, launch only): Suite 14; debug 3/3 (teacher `_osgr`). NOT yet in a full run.
+- **`TST_C1AS_TC_27`** (LP-030, Projects = the NLP component, launch only): Suite 14; debug 3/3; passed in full run 7.
 - **`TST_PEXT_TC_22` / `TC_23` — ON HOLD by user** ("do not automate until I confirm"). Blockers resolved: Projects
   (`cqaautomationpr1`) holds "Collaborative Task" + "Group PS"; groups = Class data → Students/Groups toggle → "+ Create
   groups" (user screenshot; toggle not seen on a 1-student class); learner B approved for these two only; mark 90 /
-  "Well Done"; modules NLPP / CGRP / MRKQ agreed. **Parked**: `learningPathGroups.json` (Suites 15–17, learner B
+  "Well Done"; modules NLPP / CGRP / MRKQ agreed. **Parked**: `learningPathGroups.json` (Suites 17–19, learner B
   signup → invite → accept) — NOT in `learningPathTest_prod`; verified 65/65 with Suites 1–6 (teacher `_f6up`, Class
   f98w, learners `_mgka` + B `_kwtm`). Next when confirmed: ground the Groups toggle on that 2-student class.
 
 ### LP-034 — progress views (module PROG) `[2026-09-24]`
 - `TST_PROG_TC_1/2` (learner, end of Suite 8) · `TST_PROG_TC_3/4` (teacher, Suite 15) — Phase 1 ✅: debug 7/7 on the
   previous run's users (`_osgr` / Class qzwn / `_xov9`) after a user-approved selector fix.
-- Phase 2 ⚠️ — NOT yet in a full run: two attempts stopped in class creation (Suite 3) during the production disruption
-  (materials API ~9–30+ s; one class saved without its product). `click_addMaterial_btn` now waits 90 s and fails there.
+- Phase 2 ⚠️ — full run 7 (2026-09-24) **103/105** (teacher `_4n9d`, Class u62l, learner `_yqma`): TC_2/TC_4 ✅; TC_1/TC_3
+  failed on the summary lag (batch job, minutes — user-confirmed expected). Fixed: learner PROG moved to the LAST suite
+  (16); TC_1/TC_3 re-read every 20 s up to 10 min. Verified on a debug run only — **full run NOT run by user decision**.
+  Earlier: two runs stopped in class creation (production disruption); `click_addMaterial_btn` now waits 90 s.
 - Phase 3 ⏭️ DEFERRED — `visualTest: false`.
+
+### LP-035 — teacher marks the PS (MRKQ) + post-marking progress (PROG_TC_5…7) `[2026-09-24]`
+From SOURCE `ClassDashboardPage` (marking / analytics), ported without its positional ids, fixed 3 s pause and silent skips.
+- Grounded: one REAL mark (user-approved) of run 7's learner `_yqma` (Class u62l) — score 70 (pre-filled; user: SOURCE's 70), "Good".
+- Built: `markingQueue.page.js` + `markingQueue.test.js` (`MRKQ_TC_1/2`, new **Suite8b** after Suite 8); `PROG_TC_5` (feedback
+  notification), `PROG_TC_6` (rows after marking), `PROG_TC_7` ("Show progress details"); `PROG_TC_1/3/4` now expect the post-marking
+  figures (`C1.progressMarked`); `PROG_TC_2` back at the end of Suite 8 (pending state, `C1.progressPending`).
+- Phase 2 ⚠️ — debug 9/9 of Suites 15–16 (marked state) on run 7's users. `MRKQ_TC_1/2` and the Suite 8 pending check can only
+  run on a fresh learner → **NOT yet executed; full run NOT run (user decision)**. Register: MRKQ Not Run.
+- Deferred by user: the same chain for Projects' own PS (SOURCE `openMarking(1)`).
 
 ### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
 **The cases are already designed.** Do not re-derive them from the scenario sheet: all 33 scenarios of

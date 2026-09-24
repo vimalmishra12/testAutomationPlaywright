@@ -30,7 +30,8 @@
 
 ### A2b. NPS survey popup `[2026-09-24, prod; rule from the user]`
 - `<cg-survey id="cg-survey-popup" surveytype="POP_UP" … touchpoint "ELT NPS Cambridge One">` — shown on a user's
-  **THIRD login in the SAME browser**, then remembered in that browser for **30 days**. While up it **intercepts
+  **THIRD login in the SAME browser**, then remembered in that browser for **30 days**; it appears **~10 s AFTER
+  login** (user, 2026-09-24) — so it can land mid-flow, over whatever the user is doing. While up it **intercepts
   pointer events** (seen once blocking a click in a probe).
 - **The framework never meets it:** every suite gets a FRESH browser context (no storage carried over), so each
   login is that browser's first. Only a persistent profile (e.g. a probe script reusing a user-data dir, or a

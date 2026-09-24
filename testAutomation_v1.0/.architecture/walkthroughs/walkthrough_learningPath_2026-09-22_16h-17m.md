@@ -396,3 +396,47 @@ None.
 ## Pending / Follow-up
 - Full run to confirm PROG_TC_1…4 and C1AS_TC_27 once production recovers (user decision).
 - Nothing committed since 3fbb203.
+
+### Session 6 (cont.) — 2026-09-24 — full run 7 and the progress-summary lag
+- Committed `f77e70b` first (user). Full run 7: **103/105** (teacher `_4n9d`, Class u62l, learner `_yqma`) — class creation
+  passed again (Add materials 4 s). `PROG_TC_1` read 1/10 · 1/1, `PROG_TC_3` read 10% · 1 /1; a probe ~2 min after the run
+  read 3/10 · 1/3 → the summary totals lag (batch job, user-confirmed EXPECTED). Per-activity rows are immediate.
+- Fix (user OK): `progress.page.js` `_pollUntilSettled` + `getData_aggregatedProgressSettled` /
+  `getData_teacherClassProgressSettled` (reload every 20 s, ≤ 10 min, return last read); TC_1/TC_3 use them; data
+  `settleTimeoutMs` / `reloadEveryMs`; learner PROG moved from Suite 8 to a new LAST Suite 16; step timeout 720 s;
+  parked learner-B suites → 17–19. Debug 7/7 (settled data). Full run NOT run — user decision.
+- User: the NPS survey appears ~10 s after login (added to c1-core-shared.md §A2b).
+
+---
+
+## Session 7 — 2026-09-24 — LP-035: teacher marks the PS; post-marking progress (from SOURCE)
+
+## Summary
+Reviewed SOURCE (github ComproSQA/playwright-automation-c1 @293e295, shallow clone in the scratchpad — the recorded local
+path no longer exists): `ClassDashboardPage` marking + learner/teacher analytics. Plan agreed (user: mark once on run 7's
+data; SOURCE's 70; Projects later; PROG_TC_2 back to Suite 8). Grounded read-only, then ONE real mark, then learner and
+teacher views after it. Built MRKQ + PROG_TC_5…7; debug 9/9 on the marked state. No full run (user decision).
+
+## Grounding (probes k1–k4)
+- Marking queue / screen / confirm copy, pre-filled score 70 (= SOURCE's 70), Marked-tab lag → learning-path-player.md §A12.
+- Learner after the mark: "New feedback" notification → player shows 70 + "Good"; PS row 70%/70%/1 immediately; summary 4/10 ·
+  2/4 · 85% after ~3.5 min. Teacher: class 40% · 2 /4 · 85%; student 4/10; "Show progress details" (hidden checkbox → label).
+
+## Changes Made
+- Selectors: NEW `markingQueue` block; `progress` + notification / feedback / details keys.
+- NEW `pages/ExperienceApp/markingQueue.page.js` (getData_classMarkingCount, open_submission, mark_submission);
+  `progress.page.js` + getData_feedbackNotification, getData_teacherProgressDetails.
+- NEW `test/ExperienceApp/markingQueue.test.js` (MRKQ_TC_1/2); `progress.test.js` + TC_5/6/7, TC_2 opens My progress itself.
+- TC repo: module MRKQ; PROG_TC_5/6/7. Data: `C1.progressPending`, `C1.progressMarked`, `C1.marking` (replaces progressAfterRun).
+- Exec: Suite 8 + PROG_TC_2; NEW Suite8b (teacher marks); Suite 15 = TC_3/TC_7/TC_4; Suite 16 = TC_1/TC_6/TC_5.
+- Register: LP-035 + 5 rows (MRKQ Not Run — never executed by automation); PROG_TC_1/3/4 post-marking expectations.
+
+## Production data changed
+Run 7's learner `_yqma` PS marked 70 / "Good" by teacher `_4n9d` (Class u62l) — user-approved, run-owned.
+
+## Protected Files Touched
+None.
+
+## Pending / Follow-up
+- Full run (fresh learner) to execute MRKQ_TC_1/2 + the Suite 8 pending check — not run, user decision.
+- Projects' own PS marking (SOURCE openMarking(1)) — deferred by the user. Nothing committed since f77e70b.

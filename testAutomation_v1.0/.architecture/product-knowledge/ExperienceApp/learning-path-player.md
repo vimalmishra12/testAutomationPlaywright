@@ -154,6 +154,37 @@
   100%; **a submitted but unmarked PS is NOT counted as completed** ("evaluation pending", scores "-"); the PDF is
   not counted either. Teacher class: 30% average completion.
 - Trap: `:text-is` on `p.bundle-title` matches nothing — the name is in an inner `<span>`.
+- **The SUMMARY totals lag the submissions by SEVERAL MINUTES** (batch analytics — user-confirmed EXPECTED,
+  2026-09-24). Read right after the activities: learner 1/10 · 1/1 above target, teacher class 10%; ~2 min after
+  the run: 3/10 · 1/3 and 30%. The PER-ACTIVITY rows are immediate. So `TST_PROG_TC_1` / `TC_3` re-read the page
+  (reload every 20 s, up to 10 min; step timeout 12 min) until every expected figure shows, and the learner PROG
+  suite runs LAST (Suite 16, after the teacher's Suite 15) to give the job time.
+
+### A12. Teacher marks the PS — and what changes `[2026-09-24, prod — teacher _4n9d / learner _yqma / Class u62l; one mark, user-approved]`
+- **Entry:** dashboard class card shows a marking badge `span.marking-count` ("1"); class page `a[qid=cView-0]` "1 Marking"
+  → `/class/…/marking`: tabs "Unmarked (n)" `#tomark-tab` / "Marked" `#completedMarking-tab`; course
+  `[id^=course-link-]` "Practice Extra (1) cqaautomationbundle1" → item `[qid^=course-content-]` "Unit 1: Lesson 1 / PS"
+  → the learner's submission (`cMarking-6-*`, "Learner User <date · time>") opens the marking screen.
+  The `course-link-<n>` / `course-content-<n>-<m>` ids are POSITIONAL — address them by their text.
+- **Marking screen:** the submitted answer; **Score %** `#scoreInput` (`mkForm-2`, number) **PRE-FILLED with 70** (this is
+  SOURCE's "70" — it never types a score), −/+ `mkForm-1`/`mkForm-3`; Feedback `div.ql-editor`; "Request new submission"
+  checkbox; Save `ctMarking-5`; **Send `ctMarking-7`**.
+- **Send → `#exampleModal` confirm**, open in ~0.4 s (no fixed pause needed): with feedback "Ready to send? Once sent, you
+  won't be able to make any further changes"; WITHOUT feedback "Send this score without feedback?". Cancel `ctMarking-8`,
+  **Send `ctMarking-9`**. Other pre-rendered dialogs: `cancelTeacherScoreModal`, `classEndedModal`, `leaveCustomDraftModal`,
+  `leaveEditModeModal`, showcase modals.
+- **After:** "Unmarked (0)", item "70% Learner User Marked", submission "Score : 70 %" + "Teacher User <date · time> Score: 70 %
+  Feedback: Good"; `.user-submission strong` = "70". The **Marked** tab showed "There are no marked student submissions to
+  view" right after, and listed "… PS · 1 completed · Learner User 70%" a few minutes later (lag, not a defect).
+- **Learner:** bell → "New feedback · PS · Your teacher has sent you some feedback" (find by TEXT; `ntf-30/31` are positional)
+  → opens the PS in the player: "Score : 70 %", teacher block "Score: 70 % Feedback: Good", `strong.ml-1` = "70".
+- **Progress after marking:** per-activity PS row IMMEDIATELY "First score 70% · Best score 70% · Attempts 1", status
+  "Completed above target"; lesson "4/4 Completed 85%". Summary totals lag (~3.5 min learner, ≤ 5 min teacher):
+  learner 4/10 · above target 2/4 · 85% (Practice Extra 4/4 · 2/4 · 0/4 · 85%); teacher class 40% · 2 /4 · 85%, student
+  4/10 · 2/4 · 85%. So a marked PS counts as completed AND above target (70% ≥ target).
+- **"Show progress details"** (Class data): `input#progressSummary-summaries` is visually HIDDEN behind `label.switch` /
+  `span.slider` — click the label. On: per student, `#classDataBundleCollapse00 .progress-info` per component —
+  Practice Extra 4/4 · 2/4 · 0/4 · 85%; Projects 0/5 · 0 Gold medals · "-"; Test "This student has not activated the code yet".
 
 - `isInitialized_player` (DASH_TC_14) waits for the iframe; a learner resuming at **PS has no iframe**, so
   use the activity title link (`#selectedActivitySidebarBtn`) as the "player ready" signal (DASH_TC_16).

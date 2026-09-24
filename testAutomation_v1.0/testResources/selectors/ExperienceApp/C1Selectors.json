@@ -360,7 +360,16 @@
         "teacherClassMetrics": "div.class-level-metrics",
         "teacherStudentMetrics": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//div[contains(@class,'student-level-metrics')]][1]//div[contains(@class,'student-level-metrics')]",
         "_comment_cards": "The product name sits in a <span> inside p.bundle-title (:text-is matches the innermost element). On the teacher side the student card is NOT the element carrying the name — its title link a[qid^=bundle-detail-title-] is (verified 2026-09-23).",
-        "teacherStudentBundleCard": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//a[starts-with(@qid,'bundle-detail-title-')]][1]//a[starts-with(@qid,'bundle-detail-title-') and normalize-space()='{PRODUCT}']"
+        "teacherStudentBundleCard": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//a[starts-with(@qid,'bundle-detail-title-')]][1]//a[starts-with(@qid,'bundle-detail-title-') and normalize-space()='{PRODUCT}']",
+        "_comment_marked": "After the teacher marks the PS (2026-09-24): the learner's bell item 'New feedback' (matched by TEXT) opens the PS in the player with the score in .submitted-info strong.ml-1 and the teacher block .teacher-feedback. Teacher Class data 'Show progress details': the checkbox #progressSummary-summaries is visually HIDDEN — click its label.switch; the per-student panel id classDataBundleCollapse<i><j> is positional, so it is scoped by the learner's name.",
+        "notificationBtn": "#tippyDropdownMenuButton",
+        "notificationItem": "#all-notification-items-wrapper button.tippy-dropdown-item",
+        "feedbackScore": ".submitted-info strong.ml-1",
+        "feedbackTeacherScore": ".teacher-feedback .percentage",
+        "feedbackTeacherText": ".teacher-feedback .feedback-comment",
+        "progressDetailsSwitch": "label.switch:has(#progressSummary-summaries)",
+        "progressDetailsCheckbox": "#progressSummary-summaries",
+        "teacherStudentComponentBlock": "xpath=//h3[contains(@class,'learnerName') and normalize-space()='{LEARNER}']/ancestor::div[.//div[starts-with(@id,'classDataBundleCollapse')]][1]//div[starts-with(@id,'classDataBundleCollapse')]//div[contains(@class,'progress-info')][.//span[contains(@class,'product-title') and normalize-space()='{NAME}']]"
       },
       "eBook": {
         "cqa_ebook_evolve": ".eboook-selected.ng-tns-c606183087-2",
@@ -556,6 +565,23 @@
         "downloadFileName": "#content-course-download p.content-course-title",
         "downloadLink": "#content-course-download a.download-link",
         "tocActivityStatus": "a.activity-name-container:has(span[title='{NAME}']) [aria-label^='Activity status'], a.activity-name-container:has(span[title='{NAME}']) [aria-label^='Completed'], a.activity-name-container:has(span[title='{NAME}']) img[alt^='Activity status']"
+      },
+      "markingQueue": {
+        "_comment": "Module MRKQ — the teacher marking queue (/class/…/marking), captured live on production 2026-09-24 (teacher _4n9d, one user-approved mark). course-link-<n> / course-content-<n>-<m> / cMarking-6-* are POSITIONAL — everything is addressed by its text. The score is PRE-FILLED with 70 (SOURCE's 70). Send opens #exampleModal: 'Ready to send?…' with feedback, 'Send this score without feedback?' without; ctMarking-9 confirms.",
+        "classMarkingLink": "a[qid='cView-0']",
+        "unmarkedTab": "#tomark-tab",
+        "markedTab": "#completedMarking-tab",
+        "courseLink": "[id^='course-link-']",
+        "contentItem": "[qid^='course-content-']",
+        "submissionItem": "a.marking-item",
+        "scoreInput": "#scoreInput",
+        "feedbackEditor": "div.ql-editor",
+        "sendBtn": "[qid='ctMarking-7']",
+        "confirmModal": "#exampleModal",
+        "confirmSendBtn": "[qid='ctMarking-9']",
+        "submissionScore": ".user-submission strong.ml-1",
+        "teacherFeedbackScore": ".teacher-feedback .percentage",
+        "teacherFeedbackText": ".teacher-feedback .feedback-comment"
       },
       "manageStudentAccess": {
         "_comment": "Teacher class > Materials > 'Manage student access' (module MSAC), captured live on production 2026-09-23 (teacher _e9mo). The rule-creation flow reuses the assignment component picker (a.component-item) and then opens the Learning Path in /create-access mode: Select all units / unit checkboxes, Cancel / Continue. Nothing is saved unless Continue is used — the LP suite NEVER clicks Continue.",

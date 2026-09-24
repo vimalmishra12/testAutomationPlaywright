@@ -28,7 +28,7 @@ const DATE = "2026-09-22";
 // [2026-09-23] Batch A/C of batch 2 automated — the header's generated date / run summary move on;
 // DATE stays for the batch-1 history it describes.
 const DATE_B2 = "2026-09-23";
-const LAST_RUN = "full run 96/96 on production (" + DATE_B2 + ") — teacher _osgr, Class qzwn, learner _xov9";
+const LAST_RUN = "full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 was 103/105 — TST_PROG_TC_1/3 failed on the progress-summary lag, fixed since (debug only)";
 
 const COLUMNS = [
   "S.No.", "Test Case ID", "Title", "Linked Requirement", "Type", "Priority",
@@ -112,6 +112,8 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 > an HTML and a PDF activity; now Not Run.
 >
 > **LP-034 (added on user request, ${DATE_B2}):** learner and teacher progress views for the submitted activities — module PROG (TST_PROG_TC_1…4). Not in the scenario sheet.
+>
+> **LP-035 (added on user request, 2026-09-24, from SOURCE ClassDashboardPage):** the teacher marks the learner's PS (MRKQ_TC_1/2, score 70 / "Good") and the mark reaches the learner (PROG_TC_5/6) and the teacher's progress details (PROG_TC_7); PROG_TC_1/3/4 now check the post-marking figures.
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.

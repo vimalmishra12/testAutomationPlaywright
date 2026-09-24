@@ -4,11 +4,11 @@
 **Module:** PEXT (Practice Extra player) — *`practiceExtra.page.js`*; the entry click is DASH (`dashboard.page.js`)
 **App:** Cambridge One — `www.cambridgeone.org` (production; thor is blocked — see `c1-core-shared.md` §A4)
 **Page in scope:** learner dashboard → Practice Extra → Learning Path unit view
-**Generated:** 2026-09-23 | **Total TCs:** 39 (34 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
-**Execution status (2026-09-23):** **36 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23) — teacher _osgr, Class qzwn, learner _xov9) · **0 Fail** · **2 Not Run** · **1 Blocked** (TST_PEXT_TC_14).
+**Generated:** 2026-09-23 | **Total TCs:** 44 (39 Positive · 2 Edge · 3 Negative) — **30 of the sheet's 33 scenarios covered**; LP-004, LP-016, LP-017 deliberately not (automation-mechanics — see map)
+**Execution status (2026-09-23):** **39 automated and passing** (`npm run learningPathTest_prod`, full run 96/96 on production (2026-09-23 — teacher _osgr, Class qzwn, learner _xov9); latest full run 2026-09-24 was 103/105 — TST_PROG_TC_1/3 failed on the progress-summary lag, fixed since (debug only)) · **0 Fail** · **4 Not Run** · **1 Blocked** (TST_PEXT_TC_14).
 **Part 2 — LP setup chain (40 TCs, module-wise, separate sheet):** **40 of 40 passing** in the same run. Kept here for now; to be moved into application-wise registers later (user decision 2026-09-22).
 
-**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (30 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
+**Batches:** Batch 1 — LP-001…006, automated (9 TCs) · **Batch 2 — LP-007…033, designed 2026-09-22 (35 TCs); automated 2026-09-23 except the 4 Blocked rows (incl. appended TST_PEXT_TC_26; LP-033 renamed TST_UMBP_TC_11)** · Setup chain — sheet "LP Setup (by module)".
 >
 > **Batch 2 automation (2026-09-23):** expected results of the automated rows were confirmed live on production and
 > rewritten to what was seen. Three sheet assumptions did not hold and are recorded in Remarks: LP-018 (the
@@ -17,6 +17,8 @@
 > an HTML and a PDF activity; now Not Run.
 >
 > **LP-034 (added on user request, 2026-09-23):** learner and teacher progress views for the submitted activities — module PROG (TST_PROG_TC_1…4). Not in the scenario sheet.
+>
+> **LP-035 (added on user request, 2026-09-24, from SOURCE ClassDashboardPage):** the teacher marks the learner's PS (MRKQ_TC_1/2, score 70 / "Good") and the mark reaches the learner (PROG_TC_5/6) and the teacher's progress details (PROG_TC_7); PROG_TC_1/3/4 now check the post-marking figures.
 
 > **Ordering:** grouped by Linked Requirement (scenario); Positive → Edge → Negative within a group.
 > **S.No.** follows that order; **Test Case IDs** are stable and so appear out of numeric sequence.
@@ -107,6 +109,7 @@
 | #LP-032 — Teacher launches a Practice Extra component under a product via "My library" | TST_TLIB_TC_1 |
 | #LP-033 — Admin launches an LP component under an umbrella product via the Library tab | TST_UMBP_TC_11 |
 | #LP-034 — Learner and teacher progress views reflect the learner's submitted activities (added on user request 2026-09-23 — not in lp-scenarios.xlsx) | TST_PROG_TC_1, TST_PROG_TC_2, TST_PROG_TC_3, TST_PROG_TC_4 |
+| #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) | TST_MRKQ_TC_1, TST_MRKQ_TC_2, TST_PROG_TC_5, TST_PROG_TC_6, TST_PROG_TC_7 |
 
 ---
 
@@ -801,7 +804,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Remarks** | [LP Test Cases] TC_TCH_003. Confirmed live on production 2026-09-23. The NLP component is Projects (cqaautomationpr1); the flow exists (was Blocked as unverified). Launch only, like TST_C1AS_TC_26 (Suite 14). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (learningPath.json Suite 14). Debug run 3/3 on teacher _osgr (Class qzwn); not yet part of a full run. |
+| **Comments / Defect ID** | Automated 2026-09-23 (learningPath.json Suite 14). Debug 3/3; passed in full run 7 on 2026-09-24 (103/105; teacher _4n9d, Class u62l, learner _yqma). |
 
 ---
 
@@ -881,11 +884,11 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Learner on the dashboard. |
 | **Test Steps** | 1. On the class card, click "My progress".<br>2. Read the summary and the Practice Extra / Projects blocks. |
 | **Test Data** | Class of the LP run; components Practice Extra, Projects |
-| **Expected Result** | "My progress" (/class/learner/…/aggregated-progress) shows: Completed activities 3/10, Activities completed above target score 1/3, 100% Average score. Practice Extra: Completed activities 3/4, above target 1/3, below target 0/3, 100%. Projects: Completed activities 0/5. |
+| **Expected Result** | "My progress" shows, once the batch job has updated it (minutes after the mark): Completed activities 4/10, Activities completed above target score 2/4, 85% Average score. Practice Extra: 4/4, above target 2/4, below target 0/4, 85%. Projects: 0/5. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking the same page showed 3/10 · 1/3 · 100% (the PS is not counted until evaluated). |
 | **Remarks** | Confirmed live on production 2026-09-23. The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+| **Comments / Defect ID** | Automated 2026-09-23; expected figures moved to the post-marking values 2026-09-24 (Suite 16, last). Debug 9/9 on run 7's users after the Step-1 mark (settled). Earlier: failed in full run 7 on the summary lag — fixed (re-read every 20 s, ≤ 10 min). Full run with marking: NOT yet run (user decision). |
 
 ---
 
@@ -901,10 +904,10 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Test Steps** | 1. Click the product card (cqaautomationbundle1).<br>2. Click "Practice Extra".<br>3. Read the Unit 1 / Lesson 1 activity rows. |
 | **Test Data** | Product cqaautomationbundle1; component Practice Extra |
 | **Expected Result** | Rows: BASE04_Dropdown_Scorable.zip — First score 100%, Best score 100%, Attempts 1, icon "Completed above target"; Flashcards.zip — Viewed ("Activity status: viewed"); PS — First score -, Best score -, Attempts 1 ("Activity status: evaluation pending"); Non-scorable HTML activity — Viewed; test pdf — Viewed. |
-| **Remarks** | Confirmed live on production 2026-09-23. Same page as the class card's "See Progress" (/class/learner/…/bundle/<id>). |
+| **Remarks** | Confirmed live on production 2026-09-23. Runs at the END of Suite 8, right after the submissions and BEFORE the teacher marks the PS, so the PS row is still pending. Rows are immediate (no lag). Same page as the class card's "See Progress". |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+| **Comments / Defect ID** | Automated 2026-09-23 (passed in full run 7); moved back to the end of Suite 8 on 2026-09-24 (user OK) to check the pending state before marking. Full run with that order: NOT yet run. |
 
 ---
 
@@ -919,11 +922,11 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Teacher on the class page (Class data tab). |
 | **Test Steps** | 1. Open the class from the teacher dashboard (Class data is the default tab).<br>2. Read Class performance and the learner's card. |
 | **Test Data** | Class of the LP run; learner "Learner User" |
-| **Expected Result** | Class performance: Average completed activities 30%, Activities completed above target score 1 /3, 100% Average score. The learner's card: Completed activities 3/10, 1/3 above target, 100% Average score. |
+| **Expected Result** | Class data (once updated): Average completed activities 40%, Activities completed above target score 2 /4, 85% Average score; the learner's card 4/10, 2/4, 85%. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking: 30% · 1 /3 · 100% and 3/10. |
 | **Remarks** | Confirmed live on production 2026-09-23. The class has one learner, so the class figures follow that learner's. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+| **Comments / Defect ID** | Automated 2026-09-23; post-marking values 2026-09-24 (Suite 15). Debug 9/9 on run 7's users (settled). Summary lag fixed as TC_1. Full run with marking: NOT yet run (user decision). |
 
 ---
 
@@ -938,11 +941,108 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | Teacher on Class data (TST_PROG_TC_3). |
 | **Test Steps** | 1. Click the learner's product link (cqaautomationbundle1).<br>2. Click "Practice Extra".<br>3. Read the activity rows. |
 | **Test Data** | Learner "Learner User"; product cqaautomationbundle1; component Practice Extra |
-| **Expected Result** | The teacher sees the same rows as the learner (TST_PROG_TC_2): scorable 100% / 100% / 1 attempt, Flashcards / HTML / PDF Viewed, PS - / - / 1 attempt awaiting evaluation. |
+| **Expected Result** | The teacher sees the same rows as the learner: scorable 100% / 100% / 1 attempt; Flashcards / HTML / PDF Viewed; PS First score 70%, Best score 70%, Attempts 1 ("Completed above target") (after the teacher marked the PS 70 / "Good", Suite 8b). |
 | **Remarks** | Confirmed live on production 2026-09-23. Teacher route /class/teacher/…/learner/<id>/bundle/<id>. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated 2026-09-23 (learner: end of Suite 8; teacher: Suite 15). Debug run 7/7 on the previous run's users (_osgr / Class qzwn / _xov9); not yet part of a full run (two attempts on 2026-09-23/24 stopped in class creation — production disruption). |
+| **Comments / Defect ID** | Automated 2026-09-23 (passed in full run 7 before marking); post-marking values 2026-09-24. Debug 9/9. Full run with marking: NOT yet run. |
+
+---
+
+### Requirement #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage)
+
+| Field | Value |
+|---|---|
+| **S.No.** | 40 |
+| **Test Case ID** | TST_MRKQ_TC_1 |
+| **Title** | Verify the marking queue lists the learner's Practice Set submission with the score pre-filled |
+| **Linked Requirement** | #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The learner has submitted the PS (TST_PEXT_TC_13); teacher on the class page. |
+| **Test Steps** | 1. Look at the class's "Marking" link.<br>2. Open it; open "Practice Extra", then "Unit 1: Lesson 1 / PS", then the learner's submission. |
+| **Test Data** | Course Practice Extra; item "Unit 1: Lesson 1 / PS"; learner "Learner User" |
+| **Expected Result** | The class shows "1 Marking" (the dashboard card a badge 1). The queue shows "Unmarked (1)", "Practice Extra (1) cqaautomationbundle1", "Unit 1: Lesson 1 / PS" and the learner's submission; the marking screen shows the answer "Submitting PS activity", Score % pre-filled with 70, a Feedback editor, Save and Send. |
+| **Remarks** | Confirmed live on production 2026-09-23. MRKQ = markingQueue.page.js. The course/item ids are positional — matched by text. The count can lag the submission (re-read up to 3 min). |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Not Run |
+| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 41 |
+| **Test Case ID** | TST_MRKQ_TC_2 |
+| **Title** | Verify a Practice Set is marked when the teacher sends a score and feedback and confirms it |
+| **Linked Requirement** | #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The learner's PS is open on the marking screen (TST_MRKQ_TC_1). |
+| **Test Steps** | 1. Set Score to 70.<br>2. Type the feedback "Good".<br>3. Click Send.<br>4. Confirm with Send in "Ready to send?". |
+| **Test Data** | Score 70 (SOURCE's value — pre-filled); feedback "Good" (user decision 2026-09-24) |
+| **Expected Result** | "Ready to send? Once sent, you won't be able to make any further changes" opens; after Send the queue shows "Unmarked (0)", the item "70% … Marked", the submission "Score : 70 %" and the teacher block "Score: 70 % Feedback: Good". |
+| **Remarks** | Confirmed live on production 2026-09-23. Without feedback the confirmation reads "Send this score without feedback?". MUTATES the run's own data only; the mark cannot be changed afterwards. The Marked tab can lag ("There are no marked student submissions to view" right after). |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Not Run |
+| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved, the same flow) on run 7's data. Cannot be debug-run on marked data — its first automated execution is the next full run (NOT yet run, user decision). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 42 |
+| **Test Case ID** | TST_PROG_TC_5 |
+| **Title** | Verify the learner receives the teacher's feedback notification with the mark |
+| **Linked Requirement** | #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The teacher has marked the run's learner's PS (TST_MRKQ_TC_2, Suite 8b). Learner logged in. |
+| **Test Steps** | 1. Open the notifications bell.<br>2. Click "New feedback". |
+| **Test Data** | Score 70; feedback "Good" |
+| **Expected Result** | The bell lists "New feedback · PS · Your teacher has sent you some feedback"; it opens the PS in the player showing "Score : 70 %" and the teacher's "Score: 70 % Feedback: Good". |
+| **Remarks** | Confirmed live on production 2026-09-23. The notification is found by its text (ntf-<n> qids are positional). From SOURCE verifyMarkedPS. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 43 |
+| **Test Case ID** | TST_PROG_TC_6 |
+| **Title** | Verify the learner's per-activity progress shows the marked Practice Set's score |
+| **Linked Requirement** | #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The teacher has marked the run's learner's PS (TST_MRKQ_TC_2, Suite 8b). Learner on "My progress" (TST_PROG_TC_1). |
+| **Test Steps** | 1. Click the product card.<br>2. Click "Practice Extra".<br>3. Read the PS row. |
+| **Test Data** | Product cqaautomationbundle1; component Practice Extra |
+| **Expected Result** | PS: First score 70%, Best score 70%, Attempts 1, icon "Completed above target"; the lesson reads 4/4 Completed, 85%. The other rows are unchanged. |
+| **Remarks** | Confirmed live on production 2026-09-23. Rows update immediately after the mark (only the summary totals lag). |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
+
+---
+
+| Field | Value |
+|---|---|
+| **S.No.** | 44 |
+| **Test Case ID** | TST_PROG_TC_7 |
+| **Title** | Verify the teacher's progress details show the learner's per-component figures after marking |
+| **Linked Requirement** | #LP-035 — Teacher marks the learner's Practice Set; the mark reaches the learner and the progress at both ends (added on user request 2026-09-24, from SOURCE ClassDashboardPage) |
+| **Type** | Positive |
+| **Priority** | High |
+| **Preconditions** | The teacher has marked the run's learner's PS (TST_MRKQ_TC_2, Suite 8b). Teacher on Class data. |
+| **Test Steps** | 1. Switch on "Show progress details".<br>2. Read the learner's Practice Extra and Projects blocks. |
+| **Test Data** | Learner "Learner User" |
+| **Expected Result** | Practice Extra: Completed activities 4/4, above target 2/4, below target 0/4, 85%. Projects: Completed activities 0/5 (0 Gold medals, "-" average). Test: "This student has not activated the code yet". |
+| **Remarks** | Confirmed live on production 2026-09-23. The switch's checkbox is visually hidden — its label is clicked. From SOURCE toggleProgressBar / verifyTeacherAnalyticsBundleLevel. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated 2026-09-24. Grounded by one real mark (user-approved) on run 7's data; debug 9/9 of the marked-state suites. Full run with marking: NOT yet run (user decision). |
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "Suite16": {
+  "Suite17": {
     "Name": "[PARKED 2026-09-23 - user: TC_22/23 not until confirmed; run only together with Suites 1-6 of learningPath.json] LP setup 4B - Learner B signs up and verifies (collab / group activities only)",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
@@ -76,7 +76,7 @@
     "AfterEach": [],
     "After": []
   },
-  "Suite17": {
+  "Suite18": {
     "Name": "LP setup 5B - Teacher invites learner B to the class",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
@@ -200,7 +200,7 @@
     "AfterEach": [],
     "After": []
   },
-  "Suite18": {
+  "Suite19": {
     "Name": "LP setup 6B - Learner B accepts the invite",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
