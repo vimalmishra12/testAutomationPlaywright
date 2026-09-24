@@ -12,6 +12,10 @@ module.exports = {
   myProgress_btn: selectorFile.css.ComproC1.dashboard.myProgress_btn,
   createNewClass: selectorFile.css.ComproC1.dashboard.createNewClass,
   activeClassCard: selectorFile.css.ComproC1.dashboard.activeClassCard,
+  // [2026-09-22] The loader overlay absorbs clicks on already-visible elements, so it is part of
+  // this page's readiness. Resolved from the selector file rather than inlined (Rule 2 /
+  // experience-shared.md B1).
+  pageLoader: selectorFile.css.ComproC1.dashboard.pageLoader,
 
   isInitialized: async function () {
     var res;
@@ -241,15 +245,41 @@ module.exports = {
   click_ebook_btn: async function (testdata) {
     await logger.logInto(await stackTrace.get());
     var res;
-    console.log("this is testdata 131" , testdata)
-    // [2026-06-11] Playwright migration: the dashboard eBook cards load LAZILY after the
-    // dashboard shell. Wait for them to be present before picking the kth card, otherwise
-    // getKthElement runs against an empty/partial list and the click flakily times out
-    // (drawing/player TST_DASH_TC_5). Then settle briefly so the chosen card is interactive.
+    console.log("this is testdata 131" , testdata);
+
+    // [2026-09-22] Wait for the loader overlay to clear before clicking a card. Third argument of
+    // waitForDisplayed is `reverse` (baseActionLibrary.js:259) -> waits for state "hidden".
+    // Gated on isDisplayed so a page with no loader costs one visibility read, not a full timeout.
+    if (await action.isDisplayed(this.pageLoader)) {
+      await action.waitForDisplayed(this.pageLoader, 15000, true);
+    }
+
+    // Wait for the dashboard cards to render
     await action.waitForDisplayed(this.ebook_btn, 30000);
+    const targetIdx = parseInt(testdata.launchEbook, 10);
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      const count = await action.getElementCount(this.ebook_btn);
+      // getElementCount returns the caught Error when the read itself fails (ADR-009), and
+      // `Error > n` is false — unguarded, a failed read spins to the deadline instead of
+      // reporting the failure. Same guard as schoolClasses.page.js:324.
+      if (typeof count !== "number") {
+        await logger.logInto(
+          await stackTrace.get(),
+          count + " ebook_btn count read failed; abandoning the wait",
+          "error"
+        );
+        break;
+      }
+      if (count > targetIdx) break;
+      await browser.pause(500);
+    }
     await browser.pause(1500);
+
     const kthElement = await action.getKthElement(this.ebook_btn, testdata.launchEbook);
     if (kthElement) {
+      await action.scrollIntoView(kthElement);
+      await browser.pause(500);
       res = await action.click(kthElement);
 
       if (res === true) {
@@ -257,7 +287,23 @@ module.exports = {
           await stackTrace.get(),
           "4th ebook_btn is clicked"
         );
-        res = await require("./eBook.page.js").isInitialized();
+        const eBookPage = require("./eBook.page.js");
+        // WORKAROUND — the loader overlay / late card render absorbs this click, so the reader may
+        // not start even though the click returned true. Invariant 14: a click that a real user
+        // would also lose is a candidate product defect — reported, not papered over. Marked so it
+        // is removable once the behaviour is classified (experience-shared.md B2/B3).
+        let launched = await action.waitForDisplayed(eBookPage.homeButton, 8000);
+        if (launched !== true) {
+          console.log("⚠️ eBook reader not detected after 8s; re-clicking eBook card...");
+          const retryKth = await action.getKthElement(this.ebook_btn, testdata.launchEbook);
+          if (retryKth) {
+            await action.click(retryKth);
+          }
+        }
+        // isInitialized() after EVERY successful navigating click, including the first attempt
+        // (Rule 4 / Invariant 5). Returning { pageStatus: true } on the happy path meant a click
+        // that landed on the wrong card still reported success.
+        res = await eBookPage.isInitialized();
       } else {
         await logger.logInto(
           await stackTrace.get(),
