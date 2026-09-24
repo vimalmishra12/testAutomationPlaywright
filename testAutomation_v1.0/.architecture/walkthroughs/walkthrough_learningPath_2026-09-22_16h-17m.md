@@ -451,3 +451,10 @@ None.
   Failure: TLIB_TC_1 — "My library did not open": screenshot shows the tab open with a loading spinner at 30 s (disruption).
   Fix proposed: wait ≤ 90 s for the library search box (as click_addMaterial_btn). Not applied yet.
 - Fix applied (user OK): teacherLibrary.page.js isInitialized waits 90 s (was 30 s). Not verified by a run — user: do not run the full suite.
+- Debug run of Suite 12 (user): 2/2, TLIB_TC_1 8.7 s on teacher _qzro — library loaded fast; the 90 s wait was not exercised. Register TLIB_TC_1 back to Pass.
+
+### Session 7 (cont.) — stability: two full runs (user request)
+- Run 10: **113/113** (510 s; teacher `_z959`, Class kgk8, learner `_e78s`). Run 11: **113/113** (546 s; teacher `_8sw6`,
+  Class htbu, learner `_wf0y`). Both include the marking (Suite8b) and every progress check; the marking-queue wait,
+  the summary re-reads and the 90 s library wait held. Reports kept in the scratchpad (report_run10/11.json).
+- Register: 41 Pass · 0 Fail · 2 Not Run (TC_22/23 on hold) · 1 Blocked (TC_14).

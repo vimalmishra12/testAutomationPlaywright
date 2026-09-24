@@ -243,7 +243,9 @@ From SOURCE `ClassDashboardPage` (marking / analytics), ported without its posit
   figures (`C1.progressMarked`); `PROG_TC_2` back at the end of Suite 8 (pending state, `C1.progressPending`).
 - Phase 2 ✅ 2026-09-24 — full run 8: MRKQ_TC_1 failed (a submission reaches the queue after 4.3–6.6 min; waited 3) → fixed
   (≤ 12 min; Suite8b moved after Suite 14, user OK). **Full run 9: 112/113** (teacher `_qzro`, Class e6tb, learner `_m10b`) — every
-  MRKQ / PROG case green. The one failure: `TLIB_TC_1` — My library still loading at 30 s (disruption); fix APPLIED (≤ 90 s, user OK) — NOT yet verified (no full run, user decision).
+  MRKQ / PROG case green. The one failure: `TLIB_TC_1` — My library still loading at 30 s (disruption); fix APPLIED (≤ 90 s, user OK); debug run of Suite 12 green (8.7 s — fast load, the longer wait not exercised).
+- **Two consecutive clean full runs (2026-09-24): run 10 113/113 and run 11 113/113** (teachers `_z959` / `_8sw6`, Classes kgk8 / htbu,
+  learners `_e78s` / `_wf0y`) — the whole suite incl. marking, progress and every earlier batch. Phase 2 ✅ for the LP work.
 - Deferred by user: the same chain for Projects' own PS (SOURCE `openMarking(1)`).
 
 ### NEXT BATCH — start here if you are asked to "automate the Learning Path" `[2026-09-23]`
