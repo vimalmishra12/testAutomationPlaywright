@@ -859,7 +859,103 @@ fresh-user capability the migration needs).
 **Consequences:** one protected-file change (`testrunner.js`, ~5 lines); `runValues.json` per
 env is the single place to see what a run generates; exec files stay pure JSON (ADR-001).
 
-## ADR-023: Secrets Hardening — `{{env.*}}` Tokens for Plaintext Credentials
+---
+
+## ADR-023: Role-Separated E2E Suite Consolidation and Create-Only Archive Policy
+
+**Status:** Accepted (2026-09-22, revised 2026-09-23) — all three consolidated suites now verified
+green on thor [2026-09-23]: `ebookAccessibilityTest.json` **35/35** (4m),
+`ebookE2EstudentTest.json` **127/127** across 8 suites (13m), `ebookE2EteacherTest.json` **77/77**
+across 6 suites (5m). The 19-step predecessor `ebookFocusA11yTest_thor` was verified 19/19 on
+2026-09-22. An earlier revision of this line asserted the student and teacher suites as verified
+before any such run existed; the runs have now actually been performed.
+
+**Context:** The eBook and Front-of-Class (FOC) test footprint in `ExperienceApp/thor` grew across 17 fragmented execution files and 16 npm scripts, with an estimated ~62% execution duplication (multiple logins across single-test suites, redundant setup journeys, and duplicate twin files). Additionally, teacher workflows spanned separate launch and Presentation Plus assignment files.
+
+**Decision:**
+1. **Role-Separated E2E Suite Pattern (`<domain>E2E<role>Test`):** Consolidate disjoint test files into unified journeys separated by user role:
+    - `ebookE2EstudentTest.json`: Student journey covering reader launch, TOC navigation, full 42-step notes battery (Suite 3), drawing tools, zoom, and pagination teardown (Suite 6).
+
+   - `ebookE2EteacherTest.json`: Comprehensive teacher journey spanning 6 sequential suites (Class 1RB materials, Class 2RB materials, Resource Banks 1 & 2, Presentation Plus launch, and Suite 6 Create Assignment from Presentation Plus).
+   - `ebookFocusA11yMergedTest.json`: Collapses 4 single-test a11y focus suites into a single-login 19-step keyboard navigation journey. Superseded `[2026-09-23]` by **`ebookAccessibilityTest.json`**, which additionally folds in the 16 `TST_EBTF_TC_*` continuous-toolbar steps from `ebookToolbarFocusTest.json` — 35 steps, still one login — and is run by `ebookAccessibilityTest_thor` plus the Rule B companion `visualAcceptance_ebookAccessibility_thor`. Both superseded execution files remain on disk per r4.
+2. **Preserved Teardown Hooks (`APPS_1` / `APPS_2`):** In multi-suite sequential execution, every suite must conclude with an `After` hook triggering profile dropdown -> logout. This preserves session isolation and prevents subsequent suites from failing due to dirty authenticated state.
+3. **r4 Create-Only Archive Invariant:** Never delete, rename, or edit existing test execution files under `testResources/testExecutionFiles/ExperienceApp/thor/`. Merged suites are written to new files; superseded original execution files remain permanently on disk as unreferenced, frozen archives.
+4. **New-Tab URL Commit Waiting:** Tab switches verifying target URLs (`notes.page.js`) must not rely on immediate `global.page.url()` reads. They must use `waitForURL({ waitUntil: "commit" })` with a fallback polling loop to guard against asynchronous tab navigation races.
+
+**Consequences:** ~62% execution runtime saved; single login for a11y focus traversal; existing execution files preserved for reproducibility; robust tab-switch URL verification.
+
+> **Corrected counts `[2026-09-23]`, measured from `git show 9228b5e~1:package.json` vs `package.json`.**
+> An earlier revision of this line said "14 redundant npm scripts retired". The real figures:
+> * **16** eBook/FOC npm scripts retired — this is the number the Context paragraph already names, so
+>   the ADR was internally inconsistent (14 vs 16) rather than merely low.
+> * **29** scripts were removed from `package.json` by the consolidation overall (120 → 94, plus 3
+>   added: `ebookE2EstudentTest_thor`, `ebookE2EteacherTest_thor`, `learningPathTest_prod`). The 13
+>   beyond the eBook/FOC set are unrelated features retired in the same commit (`landingFeatureTest_thor`,
+>   `FooterFeatureTest_thor`, `loginFeatureTest_thor`, `dashboardFeatureTest*_thor`,
+>   `resetPasswordTest_thor`, `visualAcceptance_thor`, `createNewClassTest_thor`, `deleteClassTest_thor`,
+>   the four `*AssignmentFeatureTest_thor`, and `ebookToolbarFocusTest*`'s visual twin).
+>
+> **`package_copyDND.json` is not a complete record of these retirements.** It is a stale copy from a
+> divergent lineage (140 script keys vs 120 pre-merge, carrying whole `_qa` and `_rel` blocks the
+> pre-merge file never had). **5 of the 29 removed scripts do not appear in it at all:**
+> `teacherClassMaterials1RBTest_thor`, `teacherClassMaterials2RBTest_thor`, `teacherEbook1RBTest_thor`,
+> `teacherEbook2RBTest_thor`, `teacherPplusTest_thor` — the five per-book teacher suites folded into
+> `ebookE2EteacherTest.json`. Nothing outside git records those names, and no code reads the file
+> (`tooling/tcMap.js` parses `package.json` only). **Git history is the authoritative record**; the
+> copy is at best a convenience. `[2026-09-23]`
+>
+> **Decision 2 was not honoured on the student file until `[2026-09-23]`.** `ebookE2EstudentTest.json`
+> shipped with an empty `After` on 7 of its 8 suites, so it violated this ADR's own teardown rule and
+> the leak described in `c1-core-shared.md` Part C §C1 was live there. Now fixed.
+
+---
+
+## ADR-024: Stakeholder Summary Report Built After the Run (no core change)
+
+**Status:** Accepted (2026-09-24, user request — Step 1 of the report plan; core files deliberately untouched).
+
+**Context:** The mochawesome report is a developer view: suites and tests in run order with one screenshot
+each. Stakeholders asked for a run summary with the test data used, results grouped by the user who ran them
+(teacher / student / admin), a failure digest, a comparison with the previous run and the production waits.
+The runner's reporter selection lives in protected files (`run.js`, `playwright.setup.js`).
+
+**Decision:**
+1. A separate post-run tool, `tooling/report/buildReport.js` (settings in `tooling/report/report.config.json`),
+   builds `output/reports/TestReports/summary/<exec>_<env>_<date>/index.html` (screenshots embedded, one self-contained file) + a `.zip`. Mochawesome
+   stays the runner's reporter, unchanged.
+2. Inputs are only what every run already writes: the mochawesome JSON (states, durations, errors, end-of-test
+   screenshot), the run's `logs/info_*.json` (suite / hook / test order and every assertion message — the
+   assertion library logs each one before checking it), `runtime/lastRun.json` (ADR-022 accounts) and the
+   manual register `.md` (register title per TC). Requirement IDs (LP-xxx) are left out of titles, and cases not run are not listed (user review 2026-09-24).
+3. The user role of a suite is declared, not guessed: optional `"Role"` and `"Setup": true` on each suite of the
+   execution file. The runner reads suite fields by name, so they are inert for execution (tcMap findings unchanged).
+4. Each build appends a small summary to `output/reports/history/`; the report compares itself with the previous
+   run of the same exec file on the same environment (new failures, fixed, much slower / faster tests).
+5. Checks are counted from the log: every assertion logged in a passed test passed; in a failed test the failing
+   one is the last logged when the error repeats its message.
+
+**Not decided yet (Step 2, needs protected-file confirmation):** per-assertion green / red element highlighting and
+pass-worded check lists need the action / assertion libraries to record the element read and the result.
+
+**Consequences:** one extra command after a run (a `package.json` script would be a protected change); the report is
+only as current as its inputs — build it before the next run overwrites `mochawesome/report.json`, or pass the saved
+files with `--mochawesome` / `--log` / `--runData`.
+
+**Amendment (2026-09-24, user request) — build by default after every run.** `buildReport.js` is no longer an
+opt-in step someone has to ask for; it is run **immediately after every test execution** in this framework (any
+exec file, any environment), as a standard part of reporting results — same footing as showing the mochawesome
+output. If a run accidentally executes more than once in one command (e.g. a shell fallback re-triggering it),
+say so when handing over the report, since only the last run's mochawesome JSON survives to feed it.
+
+---
+
+## ADR-025: Secrets Hardening — `{{env.*}}` Tokens for Plaintext Credentials
+
+> **Renumbered [2026-09-25]** — this landed as ADR-023 on its own branch, but main already
+> carried ADR-023 (Role-Separated E2E Suite Consolidation, #69) and ADR-024 (Stakeholder Summary
+> Report, #73), so on merge it becomes ADR-025. References to the secrets ADR elsewhere
+> (`tooling/secretScan.js`, `.env.example`, `.gitignore`, `authoring-status.md`, the secrets
+> walkthrough) were renumbered with it.
 
 **Status:** Accepted and rolled out (2026-09-23) — all 243 credential fields across 24 files are
 now `{{env.*}}` tokens (pilot: `env.json` + `learningPathData.json`; Step 5: the remaining 224

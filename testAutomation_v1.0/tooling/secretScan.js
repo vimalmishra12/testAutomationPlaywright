@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Secrets-hardening scanner (ADR-023, Step 6). Walks testResources/**\/*.json and env.json and
+ * Secrets-hardening scanner (ADR-025, Step 6). Walks testResources/**\/*.json and env.json and
  * reports any field whose KEY looks like a credential (password/secret/token/api key/access
  * key/client id) but whose VALUE is NOT a "{{env.*}}" token — i.e. leftover plaintext missed by
  * migration. Never prints the value itself, only file + JSON path + key.
@@ -13,7 +13,7 @@ const path = require("path");
 
 const ROOT = process.cwd();
 const SECRET_KEY_RE = /pass(word)?|secret|token|api[_-]?key|access[_-]?key|client[_-]?id/i;
-// UI label / error-message / validation-fixture keys — not credentials (see .architecture/decisions.md ADR-023)
+// UI label / error-message / validation-fixture keys — not credentials (see .architecture/decisions.md ADR-025)
 const NOT_A_CREDENTIAL_JSONPATH_RE = /\.appContent\.|\.tabs\.password$/i;
 const NOT_A_CREDENTIAL_KEY_SUFFIX_RE = /(error|heading|requirements|label|lbl|rules|text|placeholder|helper|btn|button|message|msg|sublbl)$/i;
 const NOT_A_CREDENTIAL_KEYS = new Set(["weakPassword"]);

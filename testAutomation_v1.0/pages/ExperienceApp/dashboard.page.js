@@ -12,6 +12,10 @@ module.exports = {
   myProgress_btn: selectorFile.css.ComproC1.dashboard.myProgress_btn,
   createNewClass: selectorFile.css.ComproC1.dashboard.createNewClass,
   activeClassCard: selectorFile.css.ComproC1.dashboard.activeClassCard,
+  // [2026-09-22] The loader overlay absorbs clicks on already-visible elements, so it is part of
+  // this page's readiness. Resolved from the selector file rather than inlined (Rule 2 /
+  // experience-shared.md B1).
+  pageLoader: selectorFile.css.ComproC1.dashboard.pageLoader,
 
   isInitialized: async function () {
     var res;
@@ -116,6 +120,71 @@ module.exports = {
     if (true == res) res = await action.click(tile);
     if (true != res) return { pageStatus: false, provisioningShown: false };
     return await require("./practiceExtra.page.js").isInitialized_player();
+  },
+
+  /**
+   * LP-027 (TST_DASH_TC_16): the SLE-granted component's tile and class card carry no expiry date,
+   * and launching it shows the app's loading indicator before the player. [2026-09-23, prod]
+   * The indicator is a SPINNER (`div.loader`, ~1 s), not a progress bar; it is polled every 100 ms
+   * from the click until the player chrome shows, because it is gone again within a second.
+   * Readiness = the activity title link (outer page, present for EVERY activity type) — NOT the
+   * iframe, which the Practice Set does not use (a learner resuming at PS has no iframe).
+   */
+  launch_classComponent_watchLoading: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var pe = selectorFile.css.ComproC1.practiceExtra;
+    var card = action.getFilteredLocator(ds.learnerClassCard, className);
+    var tile = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.componentTile, componentName);
+    var out = { tileShown: false, expiryText: null, loaderSeen: false, playerShown: false };
+    out.tileShown = true == (await action.waitForDisplayed(tile, 60000));
+    if (!out.tileShown) return out;
+    // Any "expir…" wording on the tile or its class card (prod shows none: "Practice Extra / Continue learning").
+    var texts = [await action.getText(tile), await action.getText(card)].join("\n");
+    var hit = texts.split("\n").filter(function (l) { return /expir/i.test(l); });
+    out.expiryText = hit.length ? hit.join(" | ") : null;
+    if (true != (await action.click(tile))) return out;
+    // Measured 2026-09-23: loader visible from ~0.2 s to ~1.1 s after the click; 60 s bound for a slow first launch.
+    var deadline = Date.now() + 60000;
+    while (Date.now() < deadline) {
+      if (!out.loaderSeen && true == (await action.isDisplayed(ds.learningPathLoader))) out.loaderSeen = true;
+      if (true == (await action.isDisplayed(pe.activityTitleBtn))) { out.playerShown = true; break; }
+      await browser.pause(100);
+    }
+    return out;
+  },
+
+  /**
+   * [2026-09-23] LP-034 (TST_PROG_TC_1): the class card's "My progress" (qid l-db-cc-btn-2) — looked up
+   * INSIDE the named class card — opens the learner's aggregated progress for that class.
+   */
+  click_classMyProgress: async function (className) {
+    await logger.logInto(await stackTrace.get(), "class:" + className);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var btn = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.learnerMyProgressBtn, "");
+    var res = await action.waitForDisplayed(btn, 60000);
+    if (true == res) res = await action.click(btn);
+    return { opened: true == res && true == (await action.waitForUrl(/\/aggregated-progress/, 30000)) };
+  },
+
+  /**
+   * LP-020 (TST_DASH_TC_15): a verified learner who has NOT yet accepted a class invite (so has no
+   * class and no product). [2026-09-23, prod full run] Such a learner is NOT shown the dashboard: login
+   * routes them straight to the Invitations page with the pending class listed. The landing (route +
+   * this run's class listed) is the readiness signal, so an unfinished page cannot pass for an empty one;
+   * then no class card and no component tile may be visible anywhere on it.
+   */
+  getData_learnerWithoutClass: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    await action.waitForDocumentLoad();
+    var landing = await require("./invitationNotification.page.js").getData_invitationsLanding(className);
+    return {
+      onInvitations: landing.onInvitations,
+      classListed: landing.classListed,
+      classCardShown: true == (await action.isDisplayed(ds.learnerClassCard)),
+      componentShown: true == (await action.isDisplayed(action.getFilteredLocator(ds.componentTile, componentName))),
+    };
   },
 
   /**
@@ -241,15 +310,41 @@ module.exports = {
   click_ebook_btn: async function (testdata) {
     await logger.logInto(await stackTrace.get());
     var res;
-    console.log("this is testdata 131" , testdata)
-    // [2026-06-11] Playwright migration: the dashboard eBook cards load LAZILY after the
-    // dashboard shell. Wait for them to be present before picking the kth card, otherwise
-    // getKthElement runs against an empty/partial list and the click flakily times out
-    // (drawing/player TST_DASH_TC_5). Then settle briefly so the chosen card is interactive.
+    console.log("this is testdata 131" , testdata);
+
+    // [2026-09-22] Wait for the loader overlay to clear before clicking a card. Third argument of
+    // waitForDisplayed is `reverse` (baseActionLibrary.js:259) -> waits for state "hidden".
+    // Gated on isDisplayed so a page with no loader costs one visibility read, not a full timeout.
+    if (await action.isDisplayed(this.pageLoader)) {
+      await action.waitForDisplayed(this.pageLoader, 15000, true);
+    }
+
+    // Wait for the dashboard cards to render
     await action.waitForDisplayed(this.ebook_btn, 30000);
+    const targetIdx = parseInt(testdata.launchEbook, 10);
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      const count = await action.getElementCount(this.ebook_btn);
+      // getElementCount returns the caught Error when the read itself fails (ADR-009), and
+      // `Error > n` is false — unguarded, a failed read spins to the deadline instead of
+      // reporting the failure. Same guard as schoolClasses.page.js:324.
+      if (typeof count !== "number") {
+        await logger.logInto(
+          await stackTrace.get(),
+          count + " ebook_btn count read failed; abandoning the wait",
+          "error"
+        );
+        break;
+      }
+      if (count > targetIdx) break;
+      await browser.pause(500);
+    }
     await browser.pause(1500);
+
     const kthElement = await action.getKthElement(this.ebook_btn, testdata.launchEbook);
     if (kthElement) {
+      await action.scrollIntoView(kthElement);
+      await browser.pause(500);
       res = await action.click(kthElement);
 
       if (res === true) {
@@ -257,7 +352,23 @@ module.exports = {
           await stackTrace.get(),
           "4th ebook_btn is clicked"
         );
-        res = await require("./eBook.page.js").isInitialized();
+        const eBookPage = require("./eBook.page.js");
+        // WORKAROUND — the loader overlay / late card render absorbs this click, so the reader may
+        // not start even though the click returned true. Invariant 14: a click that a real user
+        // would also lose is a candidate product defect — reported, not papered over. Marked so it
+        // is removable once the behaviour is classified (experience-shared.md B2/B3).
+        let launched = await action.waitForDisplayed(eBookPage.homeButton, 8000);
+        if (launched !== true) {
+          console.log("⚠️ eBook reader not detected after 8s; re-clicking eBook card...");
+          const retryKth = await action.getKthElement(this.ebook_btn, testdata.launchEbook);
+          if (retryKth) {
+            await action.click(retryKth);
+          }
+        }
+        // isInitialized() after EVERY successful navigating click, including the first attempt
+        // (Rule 4 / Invariant 5). Returning { pageStatus: true } on the happy path meant a click
+        // that landed on the wrong card still reported success.
+        res = await eBookPage.isInitialized();
       } else {
         await logger.logInto(
           await stackTrace.get(),

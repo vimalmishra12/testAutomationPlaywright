@@ -88,6 +88,31 @@ module.exports = {
         return res;
     },
 
+    /**
+     * LP-029 (TST_C1AS_TC_26, 2026-09-23 prod): class page → Assignments → Create assignment → the
+     * component BY NAME (its qid a-path-2-<n> is positional) → the Learning Path opens in /assignments
+     * mode with its TOC (unit heading) and Cancel / Next. LAUNCH ONLY — Next / Assign are never clicked,
+     * so no assignment is created (user decision 2026-09-23).
+     */
+    launch_componentInCreateAssignment: async function (componentName) {
+        await logger.logInto(await stackTrace.get(), "component:" + componentName);
+        var ca = selectorFile.css.ComproC1.c1assignment;
+        var comp = ca.assignComponentByName.replace(/\{NAME\}/g, componentName);
+        var out = { pickerShown: false, onRoute: false, tocShown: false, unitName: null, cancelShown: false, nextShown: false };
+        var res = await action.waitForDisplayed(this.Assignments, 30000);
+        if (true == res) res = await action.click(this.Assignments);
+        if (true == res) res = await action.waitForDisplayed(this.Createassignment, 30000);
+        if (true == res) res = await action.click(this.Createassignment);
+        out.pickerShown = true == res && true == (await action.waitForDisplayed(comp, 30000));
+        if (!out.pickerShown || true != (await action.click(comp))) return out;
+        out.onRoute = true == (await action.waitForUrl(/\/learning-path\/teacher\/.*\/assignments\//, 60000));
+        out.tocShown = out.onRoute && true == (await action.waitForDisplayed(ca.assignTocSidebar, 30000));
+        if (out.tocShown && true == (await action.waitForDisplayed(ca.assignTocUnitName, 10000))) out.unitName = (await action.getText(ca.assignTocUnitName)).trim();
+        out.cancelShown = true == (await action.isDisplayed(ca.assignCancelBtn));
+        out.nextShown = true == (await action.isDisplayed(ca.assignNextBtn));
+        return out;
+    },
+
     click_Createassignment: async function () {
         await logger.logInto(await stackTrace.get());
         var res = await action.click(this.Createassignment);

@@ -36,7 +36,7 @@ env copy.json
 env.local.json
 env.*.local.json
 
-# Secrets hardening (ADR-023): real values for {{env.*}} tokens in env.json and
+# Secrets hardening (ADR-025): real values for {{env.*}} tokens in env.json and
 # testcaseData JSON live here, local per machine / injected as CI secrets — never commit.
 # .env.example (committed) lists the variable names.
 .env

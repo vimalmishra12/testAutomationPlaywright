@@ -1,0 +1,47 @@
+{
+  "_comment": "Settings for tooling/report/buildReport.js — the stakeholder summary report (Step 1, 2026-09-24). One entry per execution file under execFiles. Values in testData/accounts are read from the data file by jsonPath and may use ADR-022 tokens ({{run.x}} / {{last.x}}), resolved against the run's lastRun.json. Suite roles come from each suite's \"Role\" / \"Setup\" fields in the execution file.",
+  "outputDir": "output/reports/TestReports/summary",
+  "historyDir": "output/reports/history",
+  "historyKeep": 30,
+  "slowTestMs": 60000,
+  "durationChange": { "ratio": 0.5, "minMs": 20000 },
+  "envBadges": {
+    "production": "#b3261e",
+    "thor": "#7c3aed",
+    "qa": "#0b6bcb",
+    "stage": "#c05600",
+    "rel": "#00796b"
+  },
+  "roleOrder": ["Student", "Teacher", "Admin"],
+  "waitPatterns": [
+    "(?:My progress|Class data) settled=\\w+ after \\d+ ms \\(\\d+ reads?\\)",
+    "Marking count \\d+ after \\d+ ms",
+    "the (?:product list|search) settled at \\d+ \\w+"
+  ],
+  "execFiles": {
+    "learningPath.json": {
+      "title": "Cambridge One – Learning Path Test Report",
+      "mode": "Full run — creates a new teacher, learner and class",
+      "dataFile": "testResources/testcaseData/ExperienceApp/{env}/learningPathData.json",
+      "register": "test/Manual/C1App/LearningPath/LearningPath_test_cases.md",
+      "accounts": {
+        "Student": "C1.learnerLogin.email",
+        "Teacher": "C1.teacherLogin.email",
+        "Admin": "C1.adminLogin.email"
+      },
+      "testData": [
+        { "label": "Class", "path": "C1.lpClass.name" },
+        { "label": "Class key", "value": "{{run.lpClassKey}}" },
+        { "label": "Product", "path": "C1.lpClass.material" },
+        { "label": "Components", "paths": ["C1.learnerAccess.componentName", "C1.teacherNlp.componentName"] },
+        { "label": "School key (admin)", "path": "C1.adminLibrary.schoolKey" },
+        { "label": "Practice Set mark", "paths": ["C1.marking.score", "C1.marking.feedback"], "join": " / " }
+      ]
+    },
+    "learningPathDebug.json": {
+      "extends": "learningPath.json",
+      "title": "Cambridge One – Learning Path Debug Report",
+      "mode": "Debug run — reuses the previous run's accounts and class (creates nothing)"
+    }
+  }
+}

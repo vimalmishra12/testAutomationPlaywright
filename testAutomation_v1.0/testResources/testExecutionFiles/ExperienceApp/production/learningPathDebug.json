@@ -1,6 +1,7 @@
 {
-  "Suite7": {
-    "Name": "LP-001, LP-005, LP-006 - Learner opens Practice Extra; TOC close / open",
+  "Suite12": {
+    "Name": "LP-032 - Teacher launches Practice Extra from My library (read-only)",
+    "Role": "Teacher",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -19,23 +20,23 @@
       },
       {
         "id": "TST_LOGI_TC_1",
-        "description": "Type the run's learner e-mail",
+        "description": "Type the run's teacher e-mail",
         "testFile": "./test/ExperienceApp/login.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.learnerLogin"
+            "jsonPath": "C1.teacherLogin"
           }
         ]
       },
       {
         "id": "TST_LOGI_TC_2",
-        "description": "Type the learner password",
+        "description": "Type the run's teacher password",
         "testFile": "./test/ExperienceApp/login.test.js",
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.learnerLogin"
+            "jsonPath": "C1.teacherLogin"
           }
         ]
       },
@@ -55,97 +56,14 @@
         "testData": []
       },
       {
-        "id": "TST_DASH_TC_14",
-        "description": "LP-001: open Practice Extra from the class card",
-        "testFile": "./test/ExperienceApp/dashboard.test.js",
-        "timeout": 300000,
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.learnerAccess"
-          }
-        ]
-      },
-      {
-        "id": "TST_PEXT_TC_1",
-        "description": "LP-001: player iframe shown",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_PEXT_TC_100",
-        "description": "Housekeeping: TOC closed (it self-opens only on a first entry)",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_PEXT_TC_2",
-        "description": "LP-005: open the TOC",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_PEXT_TC_3",
-        "description": "LP-006: close the TOC (also clears the activity for the scorable steps)",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "testData": []
-      },
-      {
-        "id": "TST_PEXT_TC_4",
-        "description": "LP-002: Frame 1",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "id": "TST_TLIB_TC_1",
+        "description": "LP-032: My library - product - View details - Practice Extra opens with its TOC",
+        "testFile": "./test/ExperienceApp/teacherLibrary.test.js",
         "timeout": 180000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.pextScorable.frame1"
-          }
-        ]
-      },
-      {
-        "id": "TST_PEXT_TC_5",
-        "description": "LP-003: Frame 2",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "timeout": 180000,
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.pextScorable.frame2"
-          }
-        ]
-      },
-      {
-        "id": "TST_PEXT_TC_6",
-        "description": "LP-003: Frame 3 (four dropdowns)",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "timeout": 300000,
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.pextScorable.frame3"
-          }
-        ]
-      },
-      {
-        "id": "TST_PEXT_TC_7",
-        "description": "LP-003: Frame 4 (four dropdowns)",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "timeout": 300000,
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.pextScorable.frame4"
-          }
-        ]
-      },
-      {
-        "id": "TST_PEXT_TC_8",
-        "description": "LP-003: full score",
-        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
-        "testData": [
-          {
-            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
-            "jsonPath": "C1.pextScorable.score"
+            "jsonPath": "C1.teacherLp"
           }
         ]
       }

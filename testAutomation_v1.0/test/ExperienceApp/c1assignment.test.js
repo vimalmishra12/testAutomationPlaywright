@@ -124,6 +124,25 @@ module.exports = {
     TST_C1AS_TC_24: async function (testdata) {
         sts = await c1assignment.click_returnToPresentationPlusFromModal();
         await assertion.assertEqual(sts, true, "Return to Presentation Plus button not clicked or return failed");
+    },
+
+    // [2026-09-23] LP-029: the teacher launches the Learning Path component inside Create assignment — it
+    // opens in /assignments mode with its TOC (unit heading) and Cancel / Next. LAUNCH ONLY: Next / Assign
+    // are never clicked, so no assignment is created.
+    TST_C1AS_TC_26: async function (testdata) {
+        sts = await c1assignment.launch_componentInCreateAssignment(testdata.componentName);
+        await assertion.assertEqual(sts.pickerShown, true, "Create assignment did not list '" + testdata.componentName + "'");
+        await assertion.assertEqual(sts.onRoute, true, "The component did not open the Learning Path in assignment mode");
+        await assertion.assertEqual(sts.tocShown, true, "The Learning Path TOC did not render inside Create assignment");
+        await assertion.assertEqual(sts.unitName, testdata.unit, "The assignment TOC does not show '" + testdata.unit + "'");
+        await assertion.assertEqual(sts.cancelShown && sts.nextShown, true, "Cancel / Next are not offered in the assignment TOC");
+    },
+
+    // [2026-09-23] LP-030: the NLP component (Projects) launches from Create assignment exactly like the LP
+    // component — the Learning Path opens in /assignments mode with its TOC and Cancel / Next. Launch only.
+    TST_C1AS_TC_27: async function (testdata) {
+        await module.exports.TST_C1AS_TC_26(testdata);
     }
+
 
 }

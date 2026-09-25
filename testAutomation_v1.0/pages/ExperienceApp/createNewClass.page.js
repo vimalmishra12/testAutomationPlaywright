@@ -395,7 +395,11 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var res;
     res = await action.click(this.addMaterial_btn);
-    await action.waitForDisplayed(this.addMaterial_input, undefined);
+    // [2026-09-24, prod] The materials dialog opens only after /dashboard/api/teacher-materials answers —
+    // measured ~8.5–9 s (up to ~20 s) during the production disruption, and > 30 s in the failed run (it was
+    // near-instant on 2026-09-23). Wait up to 90 s, and FAIL HERE if the dialog never opens: the old 30 s
+    // wait's result was ignored, so this step passed and the failure surfaced one step later, at the search.
+    if (true == res) res = await action.waitForDisplayed(this.addMaterial_input, 90000);
     if (true == res) {
       await logger.logInto(
         await stackTrace.get(),

@@ -15,6 +15,10 @@ complete (check `.architecture/authoring-status.md`; verify the artifacts actual
    mochawesome HTML at `output/reports/TestReports/mochawesome/report.html` (inline screenshots);
    `--report=spec` for console-only. Debug aids: `--trace=true` → `traces/<Suite>.zip` (open at
    https://trace.playwright.dev); `--headless=false` to watch locally.
+3b. **Build the stakeholder summary report by default, unprompted** (ADR-024, amended 2026-09-24):
+   `node tooling/report/buildReport.js`, after EVERY run (not just this phase's final clean runs) —
+   before the next run overwrites `mochawesome/report.json`. Hand the report path + pass/fail
+   summary to the user alongside the raw output.
 4. **On any failure: propose the fix and WAIT for confirmation** (golden rule 6 — no silent edits).
    Classify first:
    - **Selector not found** → wrong/changed selector → fix in the app's selector JSON.

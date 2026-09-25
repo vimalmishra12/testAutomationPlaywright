@@ -1,6 +1,8 @@
 {
   "Suite1": {
     "Name": "LP setup 1 - Teacher signs up and verifies the e-mail",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -67,6 +69,8 @@
   },
   "Suite2": {
     "Name": "LP setup 2 - Teacher logs in and joins the school",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -162,6 +166,8 @@
   },
   "Suite3": {
     "Name": "LP setup 3 - Teacher creates the class with the product",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -308,6 +314,8 @@
   },
   "Suite4": {
     "Name": "LP setup 4 - Learner signs up and verifies the e-mail",
+    "Role": "Student",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -385,6 +393,8 @@
   },
   "Suite5": {
     "Name": "LP setup 5 - Teacher invites the run's learner to the class",
+    "Role": "Teacher",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -417,6 +427,8 @@
   },
   "Suite6": {
     "Name": "LP setup 6 - Learner accepts the invite; product granted by the school licence",
+    "Role": "Student",
+    "Setup": true,
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -432,6 +444,8 @@
     "BeforeEach": [],
     "Test": [
       { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_15", "description": "LP-020: no class card and no Practice Extra before the invite is accepted", "testFile": "./test/ExperienceApp/dashboard.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerNoClass" } ] },
       { "id": "TST_INVI_TC_101", "description": "Housekeeping: wait for the invite in the bell", "testFile": "./test/ExperienceApp/invitationNotification.test.js", "timeout": 240000,
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.invite.notificationWait" } ] },
       { "id": "TST_INVI_TC_1", "description": "Open the bell", "testFile": "./test/ExperienceApp/invitationNotification.test.js", "testData": [] },
@@ -448,6 +462,7 @@
   },
   "Suite7": {
     "Name": "LP-001, LP-005, LP-006 - Learner opens Practice Extra; TOC close / open",
+    "Role": "Student",
     "TestCaseRepo": [
       "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
     ],
@@ -469,8 +484,12 @@
       { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed (it self-opens only on a first entry)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
       { "id": "TST_PEXT_TC_2", "description": "LP-005: open the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
       { "id": "TST_PEXT_TC_3", "description": "LP-006: close the TOC (also clears the activity for the scorable steps)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_15", "description": "LP-013: nothing chosen - Check is not offered (consumes nothing)", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.emptyCheck" } ] },
       { "id": "TST_PEXT_TC_4", "description": "LP-002: Frame 1", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 180000,
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.frame1" } ] },
+      { "id": "TST_PEXT_TC_24", "description": "LP-025: leave the half-done scorable and reopen it - in progress, answer kept, can continue", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.relaunch" } ] },
       { "id": "TST_PEXT_TC_5", "description": "LP-003: Frame 2", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 180000,
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.frame2" } ] },
       { "id": "TST_PEXT_TC_6", "description": "LP-003: Frame 3 (four dropdowns)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 300000,
@@ -479,6 +498,308 @@
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.frame4" } ] },
       { "id": "TST_PEXT_TC_8", "description": "LP-003: full score", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
         "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextScorable.score" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite8": {
+    "Name": "LP-007…011, 014, 015, 018, 019, 026, 027 - TOC drill-down, Flashcards, Practice Set (one PS submission per learner)",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's learner e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the learner password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_16", "description": "LP-027: no expiry date; loading indicator; player opens", "testFile": "./test/ExperienceApp/dashboard.test.js", "timeout": 300000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerAccess" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC (lesson view)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_101", "description": "Housekeeping: TOC at its unit view", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_9", "description": "LP-007: drill into the unit - its activities are listed", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_25", "description": "LP-026: lesson collapse / expand, up to unit view and back in", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_19", "description": "LP-019: open control activated again while open (keyboard) - toggles, one sidebar", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_10", "description": "LP-008: open Flashcards from the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextFlashcards" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_11", "description": "LP-009: page the deck first card to last, no grading", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 180000, "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_12", "description": "LP-010: open the PS from the TOC", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_16", "description": "LP-014: empty answer cannot be submitted", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_13", "description": "LP-011: type, Submit, confirm (ONE per learner)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_17", "description": "LP-015: leave and return - submitted answer shown, no Submit", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPS" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_2", "description": "Open the TOC (lesson view)", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_20", "description": "LP-021: HTML activity completes by itself - viewed, unit completion +1", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextHtml" } ] },
+      { "id": "TST_PEXT_TC_102", "description": "Housekeeping: TOC open at the lesson view of Unit 1", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_21", "description": "LP-022: NEXT ACTIVITY lands on the PDF download page - viewed without downloading", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "timeout": 120000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextPdf" } ] },
+      { "id": "TST_PEXT_TC_100", "description": "Housekeeping: TOC closed", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_102", "description": "Housekeeping: TOC open at the lesson view of Unit 1", "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.pextToc" } ] },
+      { "id": "TST_PEXT_TC_18", "description": "LP-018: lesson-view close keeps the learner in the Learning Path", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PEXT_TC_26", "description": "LP-018: Back returns to the dashboard", "testFile": "./test/ExperienceApp/practiceExtra.test.js", "testData": [] },
+      { "id": "TST_PROG_TC_2", "description": "LP-034: per-activity progress right after the submissions - PS still evaluation pending", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressPending" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite9": {
+    "Name": "LP-028 - Teacher launches Practice Extra from the class Materials tab (read-only)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_CMAT_TC_1", "description": "Open the Materials tab", "testFile": "./test/ExperienceApp/classMaterials.test.js", "testData": [] },
+      { "id": "TST_CMAT_TC_7", "description": "LP-028: Materials - Practice Extra opens the teacher Learning Path with its TOC", "testFile": "./test/ExperienceApp/classMaterials.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite10": {
+    "Name": "LP-031 - Teacher launches the LP component inside Manage student access > Create access rule (NO rule is created)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_CMAT_TC_1", "description": "Open the Materials tab", "testFile": "./test/ExperienceApp/classMaterials.test.js", "testData": [] },
+      { "id": "TST_MSAC_TC_1", "description": "LP-031: rule-creation mode opens with its TOC; Continue is never clicked", "testFile": "./test/ExperienceApp/manageStudentAccess.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite11": {
+    "Name": "LP-029 - Teacher launches the LP component inside Create assignment (NO assignment is created)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_C1AS_TC_26", "description": "LP-029: assignment mode opens with its TOC; Next / Assign are never clicked", "testFile": "./test/ExperienceApp/c1assignment.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite12": {
+    "Name": "LP-032 - Teacher launches Practice Extra from My library (read-only)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_TLIB_TC_1", "description": "LP-032: My library - product - View details - Practice Extra opens with its TOC", "testFile": "./test/ExperienceApp/teacherLibrary.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite13": {
+    "Name": "LP-033 - School admin (prod, MQA Sierra School) launches the LP component from Library > See materials (read-only)",
+    "Role": "Admin",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the school-admin e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.adminLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the school-admin password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.adminLogin" } ] }
+      ,{ "id": "TST_MRPT_TC_201", "description": "Log in as the single-school admin and confirm the school key (MQA-ABC-DEF)", "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.adminLibrary" } ] },
+      { "id": "TST_LIBR_TC_101", "description": "Open the Library tab", "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.adminLibrary" } ] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_UMBP_TC_11", "description": "LP-033: Library - search - See materials - Practice Extra opens the preview with its TOC", "testFile": "./test/ExperienceApp/umbrellaProduct.test.js", "timeout": 240000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.adminLibrary" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite14": {
+    "Name": "LP-030 - Teacher launches the NLP component (Projects) inside Create assignment (NO assignment is created)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_C1AS_TC_27", "description": "LP-030: Projects opens in assignment mode with its TOC; Next / Assign are never clicked", "testFile": "./test/ExperienceApp/c1assignment.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherNlp" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite8b": {
+    "Name": "LP-035 (runs after Suites 9-14: submissions reach the queue after 4-7 min) - Teacher marks the learner's Practice Set (score 70, feedback Good) - mutates the run's own data",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_MRKQ_TC_1", "description": "LP-035: the class has work to mark; the queue lists the learner's PS", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 900000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] },
+      { "id": "TST_MRKQ_TC_2", "description": "LP-035: mark 70 + Good, confirm Ready to send? - marked", "testFile": "./test/ExperienceApp/markingQueue.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.marking" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite15": {
+    "Name": "LP-034 - Teacher sees the learner's progress for the submitted activities (read-only)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's teacher e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the run's teacher password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.teacherLogin" } ] }
+      ,{ "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_DASH_TC_11", "description": "Open the run's class by name (Class data tab)", "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": ["C1.invite.className"] } ] },
+      { "id": "TST_PROG_TC_3", "description": "LP-034/035: Class data - class and learner figures after marking (waits for the summary)", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 720000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] },
+      { "id": "TST_PROG_TC_7", "description": "LP-035: Show progress details - the learner's per-component figures", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] },
+      { "id": "TST_PROG_TC_4", "description": "LP-034/035: teacher per-activity view of the learner (PS marked 70%)", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite16": {
+    "Name": "LP-034 - Learner sees their progress for the submitted activities (runs last: the summary totals lag by minutes)",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      { "id": "launchUrl", "description": "", "testFile": "./core/runner/launchUrl.js", "testData": [] },
+      { "id": "TST_LAND_TC_3", "description": "Open the login page", "testFile": "./test/ExperienceApp/landing.test.js", "testData": [] },
+      { "id": "TST_LOGI_TC_1", "description": "Type the run's learner e-mail", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_2", "description": "Type the learner password", "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.learnerLogin" } ] },
+      { "id": "TST_LOGI_TC_5", "description": "Log in", "testFile": "./test/ExperienceApp/login.test.js", "testData": [] }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      { "id": "TST_DASH_TC_12", "description": "Close the guided tour if shown", "testFile": "./test/ExperienceApp/dashboard.test.js", "testData": [] },
+      { "id": "TST_PROG_TC_1", "description": "LP-034/035: My progress after marking (waits for the summary)", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 720000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] },
+      { "id": "TST_PROG_TC_6", "description": "LP-035: per-activity progress after marking - PS 70%", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] },
+      { "id": "TST_PROG_TC_5", "description": "LP-035: New feedback notification shows the mark and feedback", "testFile": "./test/ExperienceApp/progress.test.js", "timeout": 180000,
+        "testData": [ { "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json", "jsonPath": "C1.progressMarked" } ] }
     ],
     "AfterEach": [],
     "After": []

@@ -256,5 +256,24 @@ module.exports = {
       distinct.length <= types.length,
       "Internal check failed: more distinct types than tiles."
     );
+  },
+
+  /**
+   * [2026-09-23] LP-033 (was TST_UMBP_TC_5 in the LP register — that id is RETIRED in AdminApp-Library,
+   * renamed with the user's OK). School admin (production, MQA Sierra School): Library → search → the
+   * product row → "See materials" → the Learning Path component → it opens for preview on the teacher
+   * route with its TOC. Read-only — "Add to a class" is never touched.
+   */
+  TST_UMBP_TC_11: async function (testdata) {
+    sts = await schoolLibrary.search_product(testdata.productTitle);
+    await assertion.assertEqual(sts, true, "The Library search for '" + testdata.productTitle + "' did not settle");
+    sts = await schoolLibrary.click_productByTitle(testdata.productTitle);
+    await assertion.assertEqual(sts, true, "'See materials' for '" + testdata.productTitle + "' did not open the materials view");
+    sts = await umbrellaProduct.launch_componentByName(testdata.componentName);
+    await assertion.assertEqual(sts, true, "'" + testdata.componentName + "' could not be launched from the materials view");
+    sts = await require("../../pages/ExperienceApp/practiceExtra.page.js").getData_teacherPlayer();
+    await assertion.assertEqual(sts.onRoute, true, "The component did not open the Learning Path preview");
+    await assertion.assertEqual(sts.tocShown, true, "The Learning Path TOC did not render for the admin");
+    await assertion.assertEqual(sts.unitShown, true, "The TOC shows no unit");
   }
 };

@@ -281,6 +281,18 @@
           "description": "Verify the learner sees the class and its component without an activation-code prompt after accepting an invite on a school-licensed school",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_DASH_TC_15",
+          "description": "Verify 'Practice Extra' is not reachable for a learner with no activated product and no class",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASH_TC_16",
+          "description": "Verify an SLE-activated component shows no expiry date and a loading indicator while it launches",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -623,6 +635,18 @@
         {
           "id": "TST_C1AS_TC_24",
           "description": "Click Return to Presentation Plus on modal and verify return",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_26",
+          "description": "Verify a teacher can launch an LP component from the assignment-creation flow",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_C1AS_TC_27",
+          "description": "Verify a teacher can launch an NLP component from the assignment-creation flow",
           "tags": "P1",
           "visualTest": false
         }
@@ -1643,6 +1667,108 @@
           "id": "TST_PEXT_TC_3",
           "description": "Verify the TOC sidebar is hidden when its close control is clicked",
           "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_101",
+          "description": "Housekeeping: bring the TOC sidebar to its unit view",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_9",
+          "description": "Verify a unit's activity list is revealed when the unit is opened from the TOC sidebar",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_25",
+          "description": "Verify a multi-level TOC expands, collapses and returns to the right level with 'Go to unit view'",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_19",
+          "description": "Verify the TOC sidebar stays in one consistent state when the open control is activated again while open",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_10",
+          "description": "Verify the Flashcards activity opens when it is selected from the TOC",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_11",
+          "description": "Verify the flashcard deck can be paged to the end with no grading step",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_12",
+          "description": "Verify the Practice Set answer screen opens when PS is selected from the TOC",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_16",
+          "description": "Verify an empty Practice Set answer cannot be submitted",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_13",
+          "description": "Verify a Practice Set answer is accepted when it is typed and confirmed through the two-step submit",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_17",
+          "description": "Verify a submitted Practice Set shows its answer and no fresh submit when it is revisited",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_18",
+          "description": "Verify closing the lesson-view panel closes the TOC and keeps the learner in the Learning Path",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_26",
+          "description": "Verify the player's Back link returns the learner from the Learning Path to the dashboard",
+          "tags": "P3",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_15",
+          "description": "Verify Check is not offered on a scorable frame until a dropdown option is chosen",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_24",
+          "description": "Verify an unfinished scorable activity stays in progress and restores its checked answers on relaunch",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_20",
+          "description": "Verify an HTML activity completes by itself (no submit) and counts toward the unit completion",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_102",
+          "description": "Housekeeping: bring the TOC to the lesson view of a unit",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PEXT_TC_21",
+          "description": "Verify a downloadable PDF activity is marked viewed when the learner lands on it, with no download or submit",
+          "tags": "P1",
           "visualTest": false
         }
       ]
@@ -3664,6 +3790,12 @@
           "description": "Verify the component list renders correctly for products with differing component counts",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_UMBP_TC_11",
+          "description": "Verify an admin can launch an LP component from the Library tab product materials",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -3985,6 +4117,12 @@
           "description": "Click Back button in folder view",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_CMAT_TC_7",
+          "description": "Verify a teacher can launch a Practice Extra component from the class Materials tab",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -4002,6 +4140,100 @@
         {
           "id": "TST_RBNK_TC_2",
           "description": "Click Back button on Resource Bank page",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Manage student access (teacher)",
+      "moduleId": "MSAC",
+      "testFile": "./test/ExperienceApp/manageStudentAccess.test.js",
+      "testcase": [
+        {
+          "id": "TST_MSAC_TC_1",
+          "description": "Verify a teacher can launch an LP component while creating a lock rule in Manage student access",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "My library (teacher)",
+      "moduleId": "TLIB",
+      "testFile": "./test/ExperienceApp/teacherLibrary.test.js",
+      "testcase": [
+        {
+          "id": "TST_TLIB_TC_1",
+          "description": "Verify a teacher can launch a Practice Extra component from My library",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Progress views (learner My progress / teacher Class data)",
+      "moduleId": "PROG",
+      "testFile": "./test/ExperienceApp/progress.test.js",
+      "testcase": [
+        {
+          "id": "TST_PROG_TC_1",
+          "description": "Verify the learner My progress counts the submitted activities overall and per component",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_2",
+          "description": "Verify the learner per-activity progress shows each submitted activity result",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_3",
+          "description": "Verify the teacher Class data shows the class and learner figures for the submitted activities",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_4",
+          "description": "Verify the teacher per-activity view of a learner matches the learner progress",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_5",
+          "description": "Verify the learner receives the teacher feedback notification with the mark",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_6",
+          "description": "Verify the learner per-activity progress shows the marked Practice Set score",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PROG_TC_7",
+          "description": "Verify the teacher progress details show the learner per-component figures after marking",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Marking queue (teacher marks submitted work)",
+      "moduleId": "MRKQ",
+      "testFile": "./test/ExperienceApp/markingQueue.test.js",
+      "testcase": [
+        {
+          "id": "TST_MRKQ_TC_1",
+          "description": "Verify the marking queue lists the learner Practice Set submission with the score pre-filled",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_MRKQ_TC_2",
+          "description": "Verify a Practice Set is marked when the teacher sends a score and feedback and confirms it",
           "tags": "P1",
           "visualTest": false
         }

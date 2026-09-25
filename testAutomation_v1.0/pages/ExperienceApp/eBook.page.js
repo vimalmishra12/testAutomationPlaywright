@@ -800,8 +800,15 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
   goToPage: async function (pageNumber) {
     await logger.logInto(await stackTrace.get(), "goToPage called for page: " + pageNumber);
     try {
+      await action.waitForDisplayed(this.pageNumber, 10000);
       let res = await action.click(this.pageNumber);
       if (true !== res) return res;
+
+      let isOpened = await action.waitForDisplayed(this.pageNoClearBtn, 3000);
+      if (isOpened !== true) {
+        await action.click(this.pageNumber);
+        await action.waitForDisplayed(this.pageNoClearBtn, 5000);
+      }
 
       res = await action.click(this.pageNoClearBtn);
       if (true !== res) return res;
@@ -1078,54 +1085,27 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
 
   click_hyperlinkNewTab: async function () {
     await logger.logInto(await stackTrace.get());
-    let res;
-    res = await action.click(this.hyperlinkNewTab);
+    // [2026-09-22] This copy still used the WebDriverIO window API (getWindowHandle /
+    // getWindowHandles / switchToWindow / closeWindow). None of those exist on the Playwright
+    // Browser nor on the compat shim (playwright.setup.js -> attachBrowserCompat supplies only
+    // pause, url, getUrl, getTitle, refresh, keys, execute, executeAsync, getWindowSize,
+    // setWindowSize, maximizeWindow, waitUntil), so it threw a TypeError as soon as the click
+    // landed. ADR-016 / Invariant 3: multi-tab handling lives in the action library. This now
+    // mirrors player.page.js:185, which exports the same selector and is asserted the same way.
+    const initialPagesCount = action.getPageCount();
+    var res = await action.click(this.hyperlinkNewTab);
     console.log("val of res is hyperlinkNewTab: ", res);
-
     if (res === true) {
+      await logger.logInto(await stackTrace.get(), "hyperlinkNewTab is clicked");
+      // Waits for the page count to grow past the baseline, then closes the new tab and leaves
+      // global.page on the original one (baseActionLibrary.js:461).
+      res = await action.closeNewTabAndRefocus(initialPagesCount, 5000);
       await logger.logInto(
         await stackTrace.get(),
-        "hyperlinkNewTab is clicked"
-      );
-
-      // Store the original tab handle
-      const originalWindow = await browser.getWindowHandle();
-
-      // Wait for the new tab to open
-      await browser.waitUntil(
-        async () => {
-          const handles = await browser.getWindowHandles();
-          return handles.length > 1;
-        },
-        {
-          timeout: 5000,
-          timeoutMsg: "New tab did not open within the timeout period",
-        }
-      );
-
-      // Automatically switched to the new tab
-      const windowHandles = await browser.getWindowHandles();
-      const newTab = windowHandles.find((handle) => handle !== originalWindow);
-
-      // Ensure we're on the new tab
-      await browser.switchToWindow(newTab);
-
-      // Perform actions on the new tab (if needed)
-      console.log("Performing actions on the new tab");
-
-      // Return to the original tab
-      await browser.switchToWindow(originalWindow);
-
-      // Close the new tab
-      await browser.switchToWindow(newTab);
-      await browser.pause(3000);
-      await browser.closeWindow();
-
-      // Switch back to the original tab after closing the new one
-      await browser.switchToWindow(originalWindow);
-      await logger.logInto(
-        await stackTrace.get(),
-        "Switched back to the original tab and closed the new tab"
+        res === true
+          ? "Switched back to the original tab and closed the new tab"
+          : res + " hyperlinkNewTab tab handling failed",
+        res === true ? undefined : "error"
       );
     } else {
       await logger.logInto(
