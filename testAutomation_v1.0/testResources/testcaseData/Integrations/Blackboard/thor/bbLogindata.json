@@ -3,19 +3,19 @@
     "login": {
       "teacher": {
         "username": "teacher7feb",
-        "password": "Compro11"
+        "password": "{{env.BB_THOR_TEACHER_PASSWORD}}"
       },
       "ltiTeacher": {
         "username": "thornodeepltiteacher",
-        "password": "Compro11"
+        "password": "{{env.BB_THOR_LTITEACHER_PASSWORD}}"
       },
       "ltiStudent": {
         "username": "thortestltistudent",
-        "password": "Compro11"
+        "password": "{{env.BB_THOR_LTISTUDENT_PASSWORD}}"
       },
       "ltiDeeplinkTeacher": {
         "username": "thortestltiteacher",
-        "password": "Compro11"
+        "password": "{{env.BB_THOR_LTIDEEPLINKTEACHER_PASSWORD}}"
       }
     }
   }

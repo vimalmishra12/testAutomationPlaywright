@@ -324,6 +324,6 @@ mapped in `test/Manual/C1App/Onboarding/Onboarding_test_cases.md` (+ `.xlsx`). K
    Also in the register's Open items: `[ASSUMED]` copy to capture live, and whether TC_XCUT_009 (UI/colours)
    is fine as a Phase 3 `visualTest` concern rather than a case.
 4. **Constraints:** new exec files need an npm script → `package.json` is protected (AGENTS.md
-   confirmation); passwords only via `{{env.*}}` (ADR-023); run-generated users via `{{run.*}}` (ADR-022).
+   confirmation); passwords only via `{{env.*}}` (ADR-025); run-generated users via `{{run.*}}` (ADR-022).
 5. **Close the loop:** back-port into `_tcdata.js`, run `node test/Manual/C1App/Onboarding/_generate.js`
    (rewrites `.md` + `.xlsx`), set Status/Comments, update this block. Remove this "NEXT BATCH" section when done.

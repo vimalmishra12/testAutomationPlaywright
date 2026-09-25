@@ -10,7 +10,7 @@
         "firstName": "Teacher",
         "lastName": "User",
         "email": "{{run.lpTeacherEmail}}",
-        "password": "Compro11",
+        "password": "{{env.C1_THOR_TEACHERFORM_PASSWORD}}",
         "country": "India"
       },
       "learnerRole": {
@@ -25,12 +25,12 @@
         "firstName": "Learner",
         "lastName": "User",
         "email": "{{run.lpLearnerEmail}}",
-        "password": "Compro11"
+        "password": "{{env.C1_THOR_LEARNERFORM_PASSWORD}}"
       }
     },
     "teacherLogin": {
       "email": "{{run.lpTeacherEmail}}",
-      "password": "Compro11"
+      "password": "{{env.C1_THOR_TEACHERLOGIN_PASSWORD}}"
     },
     "teacherSchool": {
       "schoolKey": "DNK-CMF-MYN",
@@ -49,7 +49,7 @@
     },
     "learnerLogin": {
       "email": "{{run.lpLearnerEmail}}",
-      "password": "Compro11"
+      "password": "{{env.C1_THOR_LEARNERLOGIN_PASSWORD}}"
     },
     "invite": {
       "className": "{{run.lpClassName}}",
@@ -64,22 +64,50 @@
     },
     "pextScorable": {
       "_comment": "Answers for the cqaautomationbundle1 scorable dropdown activity (BASE04_Dropdown_Scorable) — from SOURCE LearningpathPage.submitScorable. Content-specific.",
-      "frame1": { "frame": 0, "answers": ["is doing"] },
-      "frame2": { "frame": 1, "answers": ["is doing"] },
-      "frame3": { "frame": 2, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
-      "frame4": { "frame": 3, "answers": ["in the middle of the country", "I found a job at a big", "six months ago", "also a little scary sometimes"] },
-      "score": { "expected": "You scored 4 out of 4" }
+      "frame1": {
+        "frame": 0,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "frame2": {
+        "frame": 1,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "frame3": {
+        "frame": 2,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "frame4": {
+        "frame": 3,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "score": {
+        "expected": "You scored 4 out of 4"
+      }
     },
     "mailsac": {
       "teacherVerify": {
         "mailsacUser": "comproqatest21@gmail.com",
-        "mailsacPassword": "Compro11",
+        "mailsacPassword": "{{env.C1_THOR_TEACHERVERIFY_PASSWORD}}",
         "email": "{{run.lpTeacherEmail}}",
         "mailTimeoutMs": 300000
       },
       "learnerVerify": {
         "mailsacUser": "comproqatest21@gmail.com",
-        "mailsacPassword": "Compro11",
+        "mailsacPassword": "{{env.C1_THOR_LEARNERVERIFY_PASSWORD}}",
         "email": "{{run.lpLearnerEmail}}",
         "mailTimeoutMs": 300000
       }

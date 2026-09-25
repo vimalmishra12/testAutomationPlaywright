@@ -77,11 +77,6 @@
           "id": "TST_LTI_IP2_TC_2",
           "description": "Click Ebook component from LTI Test product and verify component page",
           "tags": "P1"
-        },
-        {
-          "id": "TST_LTI_IP2_TC_3",
-          "description": "Reserved — not used (product has only PE and Ebook components)",
-          "tags": "P1"
         }
       ]
     },

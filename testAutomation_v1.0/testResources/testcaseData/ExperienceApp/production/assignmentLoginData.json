@@ -4,7 +4,7 @@
       "user": {
         "validTeacher": {
           "email": "compro+teacher5@mailsac.com",
-          "password": "Compro11",
+          "password": "{{env.C1_PROD_VALIDTEACHER_PASSWORD}}",
           "role": "teacher"
         }
       }

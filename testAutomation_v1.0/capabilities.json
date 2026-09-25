@@ -88,8 +88,8 @@
         "webDriverService": "appium",
         "browserstackLocal": false,
         "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "user": "{{env.BSTACK_USERNAME}}",
+        "key": "{{env.BSTACK_KEY}}"
     },
     "bstack-safari-1920": {
         "capabilities": [
@@ -116,8 +116,8 @@
         "webDriverService": "appium",
         "browserstackLocal": false,
         "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "user": "{{env.BSTACK_USERNAME}}",
+        "key": "{{env.BSTACK_KEY}}"
     },
     "device": {
         "capabilities": [
@@ -159,8 +159,8 @@
         "webDriverService": "appium",
         "browserstackLocal": false,
         "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "user": "{{env.BSTACK_USERNAME}}",
+        "key": "{{env.BSTACK_KEY}}"
     },
     "bstack-ios-iphone12pro": {
         "capabilities": [
@@ -185,8 +185,8 @@
         "webDriverService": "appium",
         "browserstackLocal": false,
         "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "user": "{{env.BSTACK_USERNAME}}",
+        "key": "{{env.BSTACK_KEY}}"
     },
     "applitools-chrome-1920": {
         "capabilities": [
@@ -211,7 +211,7 @@
         "eyes": {
             "batch": "Acceptance",
             "matchLevel": "Layout",
-            "apiKey": "WCylilnK2R9V9X2vyMC1SVNXTgv9kgelAUtdD9pKqh0110",
+            "apiKey": "{{env.APPLITOOLS_API_KEY}}",
             "setForceFullPageScreenshot": true,
             "stitchMode": "CSS"
         }
