@@ -1,0 +1,53 @@
+{
+  "C1": {
+    "ebookMapping": {
+      "scenario1": {
+        "book1": {
+          "title": "vm_automation_first_ebook_pplus_1rb",
+          "id": "vm_automation_first_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "book2": {
+          "title": "vm_automation_second_ebook_pplus_1rb",
+          "id": "vm_automation_second_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "mappedPage": "ii",
+        "mappedPageLabel": "ii",
+        "coverPage": "cover",
+        "coverPageLabel": "-"
+      },
+      "scenario2": {
+        "book1": {
+          "title": "vm_automation_first_ebook_pplus_1rb",
+          "id": "vm_automation_first_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "book2": {
+          "title": "vm_automation_second_ebook_pplus_1rb",
+          "id": "vm_automation_second_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "book3": {
+          "title": "vm_automation_Third_ebook_pplus_1rb dt",
+          "id": "vm_automation_third_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "mappedPage": "ii",
+        "mappedPageLabel": "ii",
+        "coverPage": "cover",
+        "coverPageLabel": "-"
+      },
+      "teardown": {
+        "book1": {
+          "title": "vm_automation_first_ebook_pplus_1rb",
+          "id": "vm_automation_first_ebook_pplus_1rb",
+          "switchTimeoutMs": 60000
+        },
+        "coverPage": "cover",
+        "coverPageLabel": "-",
+        "maxPreviousClicks": 10
+      }
+    }
+  }
+}
