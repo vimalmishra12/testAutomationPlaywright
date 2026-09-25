@@ -45,7 +45,7 @@ Analysed `FOC-_Web_Mapping Cases.xlsx` (2 scenarios: Presentation Plus book-to-b
 None new (ADR-011 reuse of Before/After TCs; Invariant 14 followed — the flake was reported, the wait was not lengthened).
 
 ## Protected Files Touched
-None yet — `package.json` script `eBookMappingTest_Thor` is pending user confirmation.
+`package.json` — added script `eBookMappingTest_Thor` (user-confirmed 2026-09-25).
 
 ## Pending / Follow-up
 - Confirm and add the npm script; decide on the intermittent switch-back; confirm the sheet's "next page" step and the unmapped-page rule (manual Open items 1–4); `npm install` (jszip, exceljs missing locally) to run `tooling/report/buildReport.js`.

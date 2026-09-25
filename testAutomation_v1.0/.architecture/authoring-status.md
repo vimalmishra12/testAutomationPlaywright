@@ -334,4 +334,4 @@ Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-p
 - Phase 2 ✅ 2026-09-25 — 18/18 passing, 2 consecutive clean runs (Book 1 Cover setup `TST_EMAP_TC_5` + teardown); one earlier intermittent switch-back failure recorded in the manual Open items
 - Phase 3 ⬜ pending
 - **Not built:** `TST_EMAP_TC_3..4` (manual only — the expected result for an unmapped page is unconfirmed)
-- Follow-up: npm script `eBookMappingTest_Thor` awaits the package.json protected-file confirmation (run via the equivalent `node core/runner/run.js …` command meanwhile)
+- Follow-up: none — npm script `eBookMappingTest_Thor` added (user-confirmed 2026-09-25)
