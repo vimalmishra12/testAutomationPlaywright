@@ -327,3 +327,11 @@ mapped in `test/Manual/C1App/Onboarding/Onboarding_test_cases.md` (+ `.xlsx`). K
    confirmation); passwords only via `{{env.*}}` (ADR-023); run-generated users via `{{run.*}}` (ADR-022).
 5. **Close the loop:** back-port into `_tcdata.js`, run `node test/Manual/C1App/Onboarding/_generate.js`
    (rewrites `.md` + `.xlsx`), set Status/Comments, update this block. Remove this "NEXT BATCH" section when done.
+
+## ebookMappingTest (ExperienceApp, thor) — `eBookMappingTest_Thor`
+Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-presentation-plus.md` Part D · manual: `test/Manual/C1App/FOC/ebookMapping_test_cases.md`
+- Phase 1 ✅ 2026-09-25 — `TST_EMAP_TC_1..2, 5, 6`; first run 9 passing / 1 failing (TC_2: the Book 3 → Book 2 switch-back did not take effect once); visual candidates: none (live reader state, no fixed baseline)
+- Phase 2 ✅ 2026-09-25 — 18/18 passing, 2 consecutive clean runs (Book 1 Cover setup `TST_EMAP_TC_5` + teardown); one earlier intermittent switch-back failure recorded in the manual Open items
+- Phase 3 ⬜ pending
+- **Not built:** `TST_EMAP_TC_3..4` (manual only — the expected result for an unmapped page is unconfirmed)
+- Follow-up: npm script `eBookMappingTest_Thor` awaits the package.json protected-file confirmation (run via the equivalent `node core/runner/run.js …` command meanwhile)
