@@ -76,7 +76,7 @@ certificate, run-generated users), then the screen file.
 | Screen | Automation module | File |
 |---|---|---|
 | **Shared across teacher / learner screens** | — | [`c1-core-shared.md`](ExperienceApp/c1-core-shared.md) |
-| Signup, e-mail verification, teacher account setup / join a school | `SNUP` `TSET` | [`onboarding.md`](ExperienceApp/onboarding.md) |
+| Signup, e-mail verification, teacher account setup / join a school; homepage, login, reset password, parent/child, invite signup (onboarding register, 2026-09-24) | `SNUP` `TSET` `LAND` `FOOT` `LOGI` `RESE` `PCHD`(proposed) | [`onboarding.md`](ExperienceApp/onboarding.md) |
 | Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
 | Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
 | Class Materials — bundle & component launch | `CMAT` | [`foc-class-materials.md`](ExperienceApp/foc-class-materials.md) |
@@ -105,6 +105,11 @@ five distinct screens, which is the ADR’s primary trigger for a file of its ow
 one intentional de-indent, and the single dropped line (the Thor URL) already stands verbatim in
 this file’s environment table above. Original file sha256
 `5241740AC8A859DC21885E2C3547F57B3EFCF5A362EFA9554AB42B9383AF80CB` (13,811 bytes); git history holds it.
+
+> **Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
+> notes, drawing tool and the teacher/student roles — which accounts for **16 of 51** C1 page
+> objects. When that work starts, it gets its own area shared file and per-screen files under
+> `ExperienceApp/`, following the same pattern (ADR-020).
 
 ### Migration note [2026-08-21]
 

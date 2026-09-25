@@ -6,6 +6,12 @@
 > Living document — append, never overwrite; `[ASSUMED]` until seen live.
 > *First seeded: [2026-09-22]* — SOURCE playwright-automation-c1 `OnboardingPage` / `DashboardPage`
 > + live checks on thor and production.
+>
+> **Planning / automating onboarding? `[2026-09-24]`** The test cases are ALREADY DESIGNED — 63 TCs in
+> `test/Manual/C1App/Onboarding/` (from the team's `OnboardingApp_Test_Plan.xlsx`). **Do not redesign
+> them.** Start at `.architecture/authoring-status.md` → block `onboarding` → "NEXT BATCH" (batch order,
+> the open questions to ask the user, constraints), then the `c1-test-authoring` skill. Rows marked
+> 🔴/🟡 "Manual only" in the register's "Automation Scope" column are never automated.
 
 ---
 
@@ -54,6 +60,38 @@
 - Joining is **durable** (the teacher stays affiliated).
 - SOURCE: prod sometimes answers Join with **"There was a problem on server"** (an alert). Not seen
   in our 2026-09-22 runs (0 occurrences in 3 joins).
+
+### A6. From the team's onboarding test plan `[2026-09-24 — source-stated, not yet seen by us]`
+Source: `OnboardingApp_Test_Plan.xlsx` (Legend + cases), now the manual register
+`test/Manual/C1App/Onboarding/` (63 TCs). Its team calls the age thresholds "confirmed live"; the
+rest is their expected behaviour — treat as `[ASSUMED]` until our Phase 1 sees it.
+- **Learner age gate is location-dependent** (refines A2): India blocks 13–15 / allows 16+; United
+  Kingdom blocks 11–12 / allows 13+. Age options 18+, then 17 down to 5. Blocked screen "We're sorry"
+  + "Please ask your parent or teacher to sign you up" + "Go back". Teacher, Parent and **invite**
+  sign-up have no age gate.
+- **Parent form** (resolves A2's `[ASSUMED]` row): Teacher-style form + an extra checkbox *"I am 18
+  years of age or older and I am the parent or guardian of any child whose account I set up"*; the form
+  will not submit without it.
+- **Learner form:** Location is pre-filled from the age screen and locked. **Invite sign-up** (e-mail
+  "View invite"): Learner form, School email pre-filled + disabled, Location empty and editable.
+- **Validation copy:** "This field is required" · "E-mail address is invalid." · "Password does not
+  meet complexity requirements" · Terms alert "Please confirm that you have read and understood the
+  Terms of use".
+- **Login:** blank → "Please enter your username or email address" / "Please enter your password";
+  wrong password → "Please check your login and password and try again. You are limited to 5
+  attempts, or you can reset your password"; **locked after 5 consecutive failures** — never test on
+  a shared account.
+- **Reset password:** the "Reset password email sent" confirmation is identical for registered and
+  unregistered e-mails (by design, no account enumeration).
+- **First-login Terms gate:** a bulk-created adult username account meets "Welcome to Cambridge One"
+  + "I accept the Terms of use" + Submit once, on its first login only.
+- **Temporary password:** a Teacher (class roster → Options → Change password) or Admin (Students tab →
+  Action Menu `[ASSUMED]`) sets one; the student's next login forces a temporary + new + confirm
+  password screen before the dashboard.
+- **Other sign-in routes:** Support Admin = Okta SSO via `<app URL>/?p=<email>&t=saml` (not the Log in
+  form); Edulog = `<app URL>/edulog` (SAML); CambridgeGO = cambridgedev.org/go-dev/ (thor),
+  /go-stg/ (other lower envs), cambridge.org/go (prod); Facebook/Google/Apple buttons on the Log in and
+  every registration form. **All manual-only** (user, 2026-09-24).
 
 ---
 

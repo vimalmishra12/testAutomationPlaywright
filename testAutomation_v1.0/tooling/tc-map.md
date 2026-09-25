@@ -2108,6 +2108,15 @@ One row per TC. **Suites** shows every execution file that runs it and the hook 
 | `TST_TSET_TC_3` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_prod |
 | `TST_TSET_TC_4` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_prod |
 
+### TSET
+
+| TC | Test file | Visual | Suites (exec file / hook) | npm script |
+|---|---|---|---|---|
+| `TST_TSET_TC_1` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_thor<br>learningPathTest_prod |
+| `TST_TSET_TC_2` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_thor<br>learningPathTest_prod |
+| `TST_TSET_TC_3` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_thor<br>learningPathTest_prod |
+| `TST_TSET_TC_4` | ExperienceApp/teacherAccountSetup.test.js | false | learningPath / Test<br>learningPath / Test | learningPathTest_thor<br>learningPathTest_prod |
+
 ### UMBP
 
 | TC | Test file | Visual | Suites (exec file / hook) | npm script |
