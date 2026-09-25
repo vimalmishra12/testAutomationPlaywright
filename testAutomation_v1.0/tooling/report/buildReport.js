@@ -207,11 +207,17 @@ function buildModel() {
   const runData = loadRunData(appType, env);
   const register = parseRegister(cfg.register && abs(cfg.register));
 
+  // dataFile may be a list (e.g. NLP's own data + learningPathData.json, whose setup chain it reuses): merged per
+  // top-level key (C1), earlier files winning.
   let data = {};
-  if (cfg.dataFile) {
-    const df = abs(cfg.dataFile.replace("{env}", env));
-    if (fs.existsSync(df)) data = JSON.parse(fs.readFileSync(df, "utf8"));
-  }
+  [].concat(cfg.dataFile || []).slice().reverse().forEach((f) => {
+    const df = abs(f.replace("{env}", env));
+    if (!fs.existsSync(df)) return;
+    const d = JSON.parse(fs.readFileSync(df, "utf8"));
+    Object.keys(d).forEach((k) => {
+      data[k] = d[k] && typeof d[k] === "object" && !Array.isArray(d[k]) ? Object.assign({}, data[k], d[k]) : d[k];
+    });
+  });
   const val = (p) => resolveTokens(getPath(data, p), runData.data);
 
   const envCfg = (() => {
