@@ -410,7 +410,12 @@ exports.mochaHooks = {
             // Capture as a base64 data URI and embed it INLINE in the report. This
             // avoids any relative-path resolution problem — the image lives inside
             // report.html itself, so it shows no matter where the file is opened.
-            const buf = await global.page.screenshot({ fullPage: false });
+            // [2026-09-24] Full-page capture (whole scrollable document, not just the 1920x1080
+            // viewport) for the stakeholder report and mochawesome — confirmed by user. Content that
+            // scrolls inside an inner panel / iframe still shows only its visible part. Falls back to
+            // the viewport shot if the full-page capture fails, so a test never loses its screenshot.
+            const buf = await global.page.screenshot({ fullPage: true })
+                .catch(() => global.page.screenshot({ fullPage: false }));
             const dataUri = "data:image/png;base64," + buf.toString("base64");
             mochaAddContext(this, { title: "Screenshot (end of test)", value: dataUri });
         } catch (err) {

@@ -123,6 +123,71 @@ module.exports = {
   },
 
   /**
+   * LP-027 (TST_DASH_TC_16): the SLE-granted component's tile and class card carry no expiry date,
+   * and launching it shows the app's loading indicator before the player. [2026-09-23, prod]
+   * The indicator is a SPINNER (`div.loader`, ~1 s), not a progress bar; it is polled every 100 ms
+   * from the click until the player chrome shows, because it is gone again within a second.
+   * Readiness = the activity title link (outer page, present for EVERY activity type) — NOT the
+   * iframe, which the Practice Set does not use (a learner resuming at PS has no iframe).
+   */
+  launch_classComponent_watchLoading: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var pe = selectorFile.css.ComproC1.practiceExtra;
+    var card = action.getFilteredLocator(ds.learnerClassCard, className);
+    var tile = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.componentTile, componentName);
+    var out = { tileShown: false, expiryText: null, loaderSeen: false, playerShown: false };
+    out.tileShown = true == (await action.waitForDisplayed(tile, 60000));
+    if (!out.tileShown) return out;
+    // Any "expir…" wording on the tile or its class card (prod shows none: "Practice Extra / Continue learning").
+    var texts = [await action.getText(tile), await action.getText(card)].join("\n");
+    var hit = texts.split("\n").filter(function (l) { return /expir/i.test(l); });
+    out.expiryText = hit.length ? hit.join(" | ") : null;
+    if (true != (await action.click(tile))) return out;
+    // Measured 2026-09-23: loader visible from ~0.2 s to ~1.1 s after the click; 60 s bound for a slow first launch.
+    var deadline = Date.now() + 60000;
+    while (Date.now() < deadline) {
+      if (!out.loaderSeen && true == (await action.isDisplayed(ds.learningPathLoader))) out.loaderSeen = true;
+      if (true == (await action.isDisplayed(pe.activityTitleBtn))) { out.playerShown = true; break; }
+      await browser.pause(100);
+    }
+    return out;
+  },
+
+  /**
+   * [2026-09-23] LP-034 (TST_PROG_TC_1): the class card's "My progress" (qid l-db-cc-btn-2) — looked up
+   * INSIDE the named class card — opens the learner's aggregated progress for that class.
+   */
+  click_classMyProgress: async function (className) {
+    await logger.logInto(await stackTrace.get(), "class:" + className);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var btn = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.learnerMyProgressBtn, "");
+    var res = await action.waitForDisplayed(btn, 60000);
+    if (true == res) res = await action.click(btn);
+    return { opened: true == res && true == (await action.waitForUrl(/\/aggregated-progress/, 30000)) };
+  },
+
+  /**
+   * LP-020 (TST_DASH_TC_15): a verified learner who has NOT yet accepted a class invite (so has no
+   * class and no product). [2026-09-23, prod full run] Such a learner is NOT shown the dashboard: login
+   * routes them straight to the Invitations page with the pending class listed. The landing (route +
+   * this run's class listed) is the readiness signal, so an unfinished page cannot pass for an empty one;
+   * then no class card and no component tile may be visible anywhere on it.
+   */
+  getData_learnerWithoutClass: async function (className, componentName) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    await action.waitForDocumentLoad();
+    var landing = await require("./invitationNotification.page.js").getData_invitationsLanding(className);
+    return {
+      onInvitations: landing.onInvitations,
+      classListed: landing.classListed,
+      classCardShown: true == (await action.isDisplayed(ds.learnerClassCard)),
+      componentShown: true == (await action.isDisplayed(action.getFilteredLocator(ds.componentTile, componentName))),
+    };
+  },
+
+  /**
    * Closes the IntroJS guided tour if one shows after login, and reports whether the dashboard
    * is left usable. [2026-09-22, prod] The tour re-appears on EVERY fresh login of a new
    * teacher, and mounts ~1.8 s after the dashboard is ready — so it gets TOUR_LATE_MS to show

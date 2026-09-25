@@ -25,6 +25,13 @@ dashboard → the class card → class page with the **class key** (`span.class-
   admin bulk form (`admin-shared.md` §A4). SOURCE saw the dashboard list lag after a class change
   (REL), so allow time for the new card to appear.
 - SOURCE: material search can take minutes on a slow day `[ASSUMED on prod — seconds in our runs]`.
+- **"Add materials" opens its dialog only after `/dashboard/api/teacher-materials` answers.** `[2026-09-24, prod]`
+  Near-instant on 2026-09-23; during the production disruption ("Temporary disruption to Cambridge One") it took
+  ~8.5–9 s (up to ~20 s) in probes and > 30 s in a failed full run. `click_addMaterial_btn` now waits up to 90 s and
+  FAILS at that step if the dialog never opens (before, it ignored a 30 s wait's result and the failure showed one
+  step later, at the search). In one disrupted run every class step "passed" yet the class was created WITHOUT
+  its product (teacher Materials: "This class isn't using any learning materials at the moment") — a product-side
+  failure, not reproduced; report it if it recurs, do not work around it.
 
 ### A2. Invite a learner → learner accepts (SLE school) `[2026-09-22, prod]`
 - Teacher: class → students (`cView-43`) → Add students → **Adults** → Next → e-mail → Invite; the

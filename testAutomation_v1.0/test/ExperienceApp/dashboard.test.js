@@ -109,6 +109,25 @@ module.exports = {
     await assertion.assertEqual(sts.pageStatus, true, "'" + testdata.componentName + "' of class '" + testdata.className + "' did not open the Learning Path player");
   },
 
+  // [2026-09-23] LP-020: before accepting the invite the learner lands on the Invitations page (not the
+  // dashboard) — no class card and no "Practice Extra" anywhere.
+  TST_DASH_TC_15: async function (testdata) {
+    sts = await dashboard.getData_learnerWithoutClass(testdata.className, testdata.componentName);
+    await assertion.assertEqual(sts.onInvitations, true, "The learner with a pending invite was not taken to the Invitations page");
+    await assertion.assertEqual(sts.classListed, true, "Invitation for '" + testdata.className + "' not listed on the Invitations page");
+    await assertion.assertEqual(sts.classCardShown, false, "A class card is shown before the learner joined a class");
+    await assertion.assertEqual(sts.componentShown, false, "'" + testdata.componentName + "' is reachable without a class / product");
+  },
+
+  // [2026-09-23] LP-027: the SLE component shows no expiry date and a loading indicator before the player.
+  TST_DASH_TC_16: async function (testdata) {
+    sts = await dashboard.launch_classComponent_watchLoading(testdata.className, testdata.componentName);
+    await assertion.assertEqual(sts.tileShown, true, "'" + testdata.componentName + "' is not shown in class '" + testdata.className + "'");
+    await assertion.assertEqual(sts.expiryText, null, "An expiry date is shown for the SLE component: " + sts.expiryText);
+    await assertion.assertEqual(sts.loaderSeen, true, "No loading indicator was shown while the component launched");
+    await assertion.assertEqual(sts.playerShown, true, "The Learning Path player did not open");
+  },
+
   TST_DASH_TC_12: async function (testdata) {
     sts = await dashboard.close_introTourIfShown();
     await assertion.assertEqual(sts.tourClosed, true, 'Guided tour is still covering the dashboard');

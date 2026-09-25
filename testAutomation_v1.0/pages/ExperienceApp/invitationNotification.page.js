@@ -96,6 +96,19 @@ return { found: found };
  * disabled. Waiting for the NAMED class row is the real "list loaded" signal (Invariant 5), and
  * picks this run's invitation even if the learner had others.
  */
+/**
+ * [2026-09-23, prod full run] READ-ONLY. Where a learner with a pending invite and no class lands after
+ * login: the app routes them straight to the Invitations page ("Invitations (1)", the class listed,
+ * Accept disabled) — NOT to the learner dashboard. Reports the route and whether `className` is listed;
+ * ticks nothing (select_invitationByClass does that later in the same suite).
+ */
+getData_invitationsLanding: async function (className) {
+await logger.logInto(await stackTrace.get(), "class:" + className);
+var sel = selectorFile.css.ComproC1.invitationNotification.invitedClassCheckbox.replace("{CLASS_NAME}", className);
+var onInvitations = true == (await action.waitForUrl(/\/dashboard\/invitation\//, 60000));
+return { onInvitations: onInvitations, classListed: onInvitations && true == (await action.waitForDisplayed(sel, 30000)) };
+},
+
 select_invitationByClass: async function (className) {
 await logger.logInto(await stackTrace.get(), "class:" + className);
 var sel = selectorFile.css.ComproC1.invitationNotification.invitedClassCheckbox.replace("{CLASS_NAME}", className);

@@ -122,6 +122,26 @@ module.exports = {
    *
    * @returns {{tileCount: number, components: Array<{index: number, type: string, name: string}>}}
    */
+  /**
+   * [2026-09-23] LP-032 / LP-033: launches a component from the materials view by its tile text (the
+   * tile qid is shared by every tile, so it cannot address one). On cqaautomationbundle1 (prod) the
+   * tiles read exactly "Practice Extra", "Projects", "Test"; the Learning Path opens in the SAME tab on
+   * the teacher route. The caller verifies the player (practiceExtra.getData_teacherPlayer).
+   */
+  launch_componentByName: async function (componentName) {
+    await logger.logInto(await stackTrace.get(), "component:" + componentName);
+    // ⚠️ This Vue/Nuxt page is SERVER-RENDERED: its tiles are visible while document.readyState is still
+    // "loading", before the JS that handles the click has run — a click then is silently ignored
+    // (measured 2026-09-23, prod: 2 of 8 immediate clicks, both made while "loading"; every click after
+    // "complete" navigated). So wait for the document load BEFORE clicking. The click targets the tile's
+    // link ("" = no text filter on it); the tile's licence lines sit outside it.
+    var link = action.getNestedFilteredLocator(this.componentTile, componentName, selectorFile.css.ComproC1.umbrellaProduct.componentLink, "");
+    var res = await action.waitForDisplayed(link, PAGE_TIMEOUT);
+    if (true == res) res = await action.waitForDocumentLoad();
+    if (true == res) res = await action.click(link);
+    return res;
+  },
+
   getData_components: async function () {
     await logger.logInto(await stackTrace.get(), "reading the component tiles");
     var tileCount = await action.getElementCount(this.componentTile);

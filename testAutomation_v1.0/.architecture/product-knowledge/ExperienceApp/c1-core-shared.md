@@ -28,6 +28,16 @@
 - `.introjs-overlay` is **not always rendered** — do not use it as the "tour is up" signal
   (SOURCE did; it missed the tour on prod).
 
+### A2b. NPS survey popup `[2026-09-24, prod; rule from the user]`
+- `<cg-survey id="cg-survey-popup" surveytype="POP_UP" … touchpoint "ELT NPS Cambridge One">` — shown on a user's
+  **THIRD login in the SAME browser**, then remembered in that browser for **30 days**; it appears **~10 s AFTER
+  login** (user, 2026-09-24) — so it can land mid-flow, over whatever the user is doing. While up it **intercepts
+  pointer events** (seen once blocking a click in a probe).
+- **The framework never meets it:** every suite gets a FRESH browser context (no storage carried over), so each
+  login is that browser's first. Only a persistent profile (e.g. a probe script reusing a user-data dir, or a
+  manual tester's own browser) reaches the third login. No handler is built — its close control was not
+  captured (it did not re-appear, as expected from the 30-day cache). Build one only if a suite ever keeps storage.
+
 ### A3. Cookie banner
 - Thor/prod landing shows a custom banner (`[qid="cookies-2"]`, "Accept cookies"); the login
   page can show it too. `login.acceptCookies()` (used by `TST_LOGI_TC_5`) handles it.
