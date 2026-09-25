@@ -1974,6 +1974,34 @@
         "closeMessageBtn": "button[title='Close message view'], button.btn-secondary:has-text('Close')",
         "emailHtmlFrame": "iframe[title='Email HTML preview']",
         "verifyLink": "td > a"
+      },
+      "onboarding": {
+        "footerOurApproaches": "a[qid=\"cFooter-5\"]",
+        "footerFAQs": "a[qid=\"cFooter-9\"], a.footer-link:has-text(\"FAQs\"), a[href*=\"faq\"]",
+        "footerHelp": "a[qid=\"cFooter-6\"]",
+        "login_btn": "input[value=\"Log in\"]",
+        "password_tbox": "#gigya-password-56383998600152700",
+        "loginPassword_eye": "a.toggle-hide, a.show-eye, a[aria-label*=\"Password\"], a.hide-eye",
+        "activeErrorMsgs": ".gigya-error-msg-active, span.gigya-error-msg-active",
+        "teacherRadio": "#teacher-radio > .r-container > .checkmark",
+        "learnerRadio": "#learner-radio > .r-container > .checkmark",
+        "parentRadio": "#parent-radio > .r-container > .checkmark",
+        "roleNextBtn": "[value='Next']",
+        "roleConfirmDialog": ".modal-content:has([qid='conf-2'])",
+        "roleConfirmContinueBtn": "[qid='conf-2']",
+        "roleConfirmGoBackBtn": "[qid='conf-1'], button:has-text('No, go back'), a:has-text('No, go back')",
+        "rolePageLoginLink": "a:has-text('Log in'), a[href*='/login']",
+        "learnerCountryInput": "#gigya-textbox-68426077600495230",
+        "learnerAgeDropdown": "#gigya-dropdown-119533224137288220",
+        "countryOption": ".autocomplete-items div",
+        "underageScreen": "p:has-text(\"adult’s help\"), p:has-text(\"parent or teacher\"), :has-text(\"We’re sorry\"), :has-text(\"We're sorry\")",
+        "underageGoBackBtn": "input[value=\"Go back\"]",
+        "regFirstNameInput": "#gigya-textbox-120640165044771760",
+        "regLastNameInput": "#gigya-textbox-56649036382991330",
+        "regEmailInput": "#gigya-loginID-109656003259475650",
+        "regPasswordInput": "#gigya-password-56383998600152700",
+        "regSignUpSubmitBtn": "[value=\"Sign up\"]",
+        "regLoginLink": "a[title=\"Login\"]"
       }
     }
   }

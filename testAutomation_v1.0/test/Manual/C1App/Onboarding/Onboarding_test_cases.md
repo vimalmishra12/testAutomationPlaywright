@@ -1,15 +1,15 @@
 # Manual Functional Test Cases — Cambridge One: Onboarding (Batch 1)
 
-**Source:** `OnboardingApp_Test_Plan.xlsx` (supplied by the user 2026-09-24) — sheet "Test Cases", 58 scenarios in 11 sub-modules (`TC_HOME_*`, `TC_LOGIN_*`, `TC_FPWD_*`, `TC_RESETPW_*`, `TC_ROLE_*`, `TC_LRN_*`, `TC_TCH_*`, `TC_PAR_*`, `TC_CHLD_*`, `TC_INVITE_*`, `TC_XCUT_*`) + sheet "Legend"
-**Modules:** by the page object each case will live on (AGENTS.md Rule 6) — LAND (`landing.page.js`), FOOT (`footer.page.js`), LOGI (`login.page.js`), APPS (`appShell.page.js`), RESE (`resetPassword.page.js`), SNUP (`signup.page.js`), CREA (`createNewClass.page.js`), SPRF (`studentProfile.page.js`), INVI (`invitationNotification.page.js`), **PCHD (proposed — no parent/child page object yet)**
-**App:** Cambridge One — thor `https://micro-nemo.comprodls.com` (automation target); production `https://www.cambridgeone.org` for the e-mail-verification cases while thor's verify-link certificate is expired (`c1-core-shared.md` §A4)
+**Source:** `OnboardingApp_Test_Plan.xlsx` (supplied by the user 2026-09-25) — sheet "Test Cases", 60 scenarios in 11 sub-modules (`TC_HOME_*`, `TC_LOGIN_*`, `TC_FPWD_*`, `TC_RESETPW_*`, `TC_ROLE_*`, `TC_LRN_*`, `TC_TCH_*`, `TC_PAR_*`, `TC_CHLD_*`, `TC_INVITE_*`, `TC_XCUT_*`) + sheet "Legend"
+**Modules:** by the page object each case will live on (AGENTS.md Rule 6) — LAND (`landing.page.js`), FOOT (`footer.page.js`), LOGI (`login.page.js`), APPS (`appShell.page.js`), RESE (`resetPassword.page.js`), SNUP (`signup.page.js`), CREA (`createNewClass.page.js`), SPRF (`studentProfile.page.js`), INVI (`invitationNotification.page.js`), **PCHD (`parentChild.page.js` / `parentChild.test.js` — approved)**
+**App:** Cambridge One — thor `https://micro-nemo.comprodls.com` (general target); production `https://www.cambridgeone.org` for sign-up and e-mail-verification suites using disposable Mailsac accounts (user confirmed 2026-09-24)
 **Pages in scope:** pre-login homepage `/home`, Log in `/login`, Reset password, role selection `/regoptions`, Learner age gate `/learner-age-check`, Teacher/Learner/Parent registration forms, parent "My children", class-invite sign-up, first-login / temporary-password screens
-**Generated:** 2026-09-24 | **Total TCs:** 63 (51 Positive · 1 Edge · 11 Negative) — **57 of the source's 58 scenarios have a case**; TC_XCUT_009 (UI/colours) is a visual-layer check, not a manual case (see map)
-**Execution status (2026-09-24):** designed, not executed — **63 Not Run**. 16 rows reuse an EXISTING automated TC (TST_LAND_TC_3, TST_LAND_TC_2, TST_FOOT_TC_1, TST_FOOT_TC_2, TST_FOOT_TC_3, TST_FOOT_TC_7, TST_FOOT_TC_4, TST_FOOT_TC_6, TST_FOOT_TC_8, TST_LOGI_TC_5, TST_LOGI_TC_4, TST_LOGI_TC_6, TST_APPS_TC_2, TST_RESE_TC_4, TST_SNUP_TC_59, TST_SNUP_TC_63) whose assertion Phase 1 must confirm; none is counted as passing here.
-**Automation scope (user, 2026-09-24):** **50 to automate** · **13 manual only** — 🔴 RED 10 (TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_19, TST_SNUP_TC_79, TST_SNUP_TC_80, TST_SNUP_TC_81, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22) · 🟡 YELLOW 3 (TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13). Column 15 "Automation Scope" carries it on every row; the `.xlsx` also colours those rows' ID cells red/yellow as the source did.
+**Generated:** 2026-09-25 | **Total TCs:** 65 (53 Positive · 1 Edge · 11 Negative) — **59 of the source's 60 scenarios have a case**; TC_XCUT_009 (UI/colours) is a visual-layer check, not a manual case (see map)
+**Execution status (2026-09-25):** **27 Pass** · **38 Not Run** — Batch 1 automated & verified on Production (onboardingB1Test_prod, 27/27 passing across 5 suites).
+**Automation scope (user, 2026-09-25):** **52 to automate** · **13 manual only** — 🔴 RED 10 (TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_19, TST_SNUP_TC_79, TST_SNUP_TC_80, TST_SNUP_TC_81, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22) · 🟡 YELLOW 3 (TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13). Column 15 "Automation Scope" carries it on every row; the `.xlsx` also colours those rows' ID cells red/yellow as the source did.
 
 **TCs per module:**
-- **LAND** — 4 (TST_LAND_TC_6, TST_LAND_TC_3, TST_LAND_TC_2, TST_LAND_TC_7)
+- **LAND** — 6 (TST_LAND_TC_6, TST_LAND_TC_3, TST_LAND_TC_2, TST_LAND_TC_7, TST_LAND_TC_8, TST_LAND_TC_9)
 - **FOOT** — 7 (TST_FOOT_TC_1, TST_FOOT_TC_2, TST_FOOT_TC_3, TST_FOOT_TC_7, TST_FOOT_TC_4, TST_FOOT_TC_6, TST_FOOT_TC_8)
 - **LOGI** — 19 (TST_LOGI_TC_5, TST_LOGI_TC_7, TST_LOGI_TC_8, TST_LOGI_TC_9, TST_LOGI_TC_10, TST_LOGI_TC_4, TST_LOGI_TC_6, TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13, TST_LOGI_TC_14, TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_18, TST_LOGI_TC_19, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22)
 - **APPS** — 1 (TST_APPS_TC_2)
@@ -25,7 +25,7 @@
 > numeric sequence.
 >
 > **IDs.** Each module continues its own numbering (registry, test files and every register checked
-> 2026-09-24: LAND 6+, FOOT 12+, LOGI 7+, RESE 6+, SNUP 65+, CREA 31+, SPRF 24+, INVI 14+). Where an
+> 2026-09-25: LAND 6+, FOOT 12+, LOGI 7+, RESE 6+, SNUP 65+, CREA 31+, SPRF 24+, INVI 14+, PCHD 1+). Where an
 > existing automated TC already proves a row's outcome, the row **reuses that ID** instead of minting a
 > duplicate function (ADR-011) — its Remarks start "EXISTING TC reused". Source rows TC_HOME_005 and
 > TC_HOME_006 (several footer links each) are **split one case per link**, because every link already
@@ -39,7 +39,7 @@
 >
 > **Data.** Cases marked CREATES REAL DATA (account signups, invite signup, child account) or that
 > change a real password (TST_RESE_TC_9, TST_CREA_TC_31, TST_SPRF_TC_24, TST_LOGI_TC_9 lockout) need a
-> disposable/run-generated account (ADR-022 `{{run.*}}`) and the user's OK on a shared environment
+> disposable/run-generated account (ADR-022 `{{run.*}}`) or dedicated test user and the user's OK on a shared environment
 > (ADR-021). Passwords come from `{{env.*}}` tokens only (ADR-023).
 
 ---
@@ -49,7 +49,7 @@
 1. **Do not redesign.** Pick a row whose **Automation Scope is "Automate"** and Status `Not Run`; keep its
    **Test Case ID** — that ID goes into the test file, the TC repository and the execution file.
    Never renumber; a genuinely new case is appended.
-2. **Never automate a 🔴/🟡 row** — they are manual-only by user decision (2026-09-24).
+2. **Never automate a 🔴/🟡 row** — they are manual-only by user decision (2026-09-25).
 3. **"EXISTING TC reused" rows** are already automated: confirm the existing function asserts the row's
    Expected Result, extend it if not — do not write a second function (ADR-011).
 4. **Read first:** `.architecture/authoring-status.md` → block `onboarding` → "NEXT BATCH" (batch order,
@@ -60,7 +60,7 @@
    (rewrites both `.md` and `.xlsx` — never hand-edit them), then set Status/Comments.
 
 **Suggested automation batches** (side-effect free first, per migration plan §4.2):
-- **B1 (no data):** TST_SNUP_TC_65, 66, 67, 68, 69, 70, 71, 76, 77, 78, TST_LOGI_TC_7, 10, TST_RESE_TC_6, TST_LAND_TC_6, 7 + confirm the reused LAND/FOOT/LOGI/RESE/SNUP_TC_59/63 rows.
+- **B1 (no data):** TST_SNUP_TC_65, 66, 67, 68, 69, 70, 71, 76, 77, 78, TST_LOGI_TC_7, 10, TST_RESE_TC_6, TST_LAND_TC_6, 7, 8, 9 + confirm the reused LAND/FOOT/LOGI/RESE/SNUP_TC_59/63 rows.
 - **Login with fixture accounts:** TST_LOGI_TC_8, 14, TST_APPS_TC_2 (learner), TST_RESE_TC_7, 8.
 - **Creates data (ask first):** TST_SNUP_TC_72, 73, 74, 75, TST_LOGI_TC_9, TST_RESE_TC_9, 10, TST_CREA_TC_31, TST_SPRF_TC_24, TST_LOGI_TC_18, TST_INVI_TC_14, 15, TST_PCHD_TC_1–3.
 
@@ -79,6 +79,8 @@
 | TC_HOME_004 — Verify the site-language switcher changes the language of the pre-login homepage | TST_LAND_TC_7 |
 | TC_HOME_005 — Verify the internal footer links (Terms of use, Privacy notice, Accessibility, Cambridge One for schools) each open their correct page in the same tab | TST_FOOT_TC_1, TST_FOOT_TC_2, TST_FOOT_TC_3, TST_FOOT_TC_7 |
 | TC_HOME_006 — Verify the external footer links (Our approach, FAQs, Help) each open their correct page in a new tab | TST_FOOT_TC_4, TST_FOOT_TC_6, TST_FOOT_TC_8 |
+| TC_HOME_007 — Verify primary login page - {url}/login-primary | TST_LAND_TC_8 |
+| TC_HOME_008 — Verify secondary login page - {url}/login-secondary | TST_LAND_TC_9 |
 | **Login** | |
 | TC_LOGIN_001 — Verify a user can log in successfully with valid credentials | TST_LOGI_TC_5 |
 | TC_LOGIN_002 — Verify blank submission of the login form shows required-field validation | TST_LOGI_TC_7 (N) |
@@ -144,7 +146,7 @@
 
 ---
 
-## Product reference (from the source workbook's Legend and cases, 2026-09-24 — not yet re-seen by us)
+## Product reference (from the source workbook's Legend and cases, 2026-09-25 — not yet re-seen by us)
 
 - **Learner age gate** — Learner self-signup only. Threshold is **location-dependent**: India blocks
   13–15 and allows 16+; United Kingdom blocks 11–12 and allows 13+ (source: confirmed live). Blocked
@@ -160,7 +162,7 @@
   Terms of use".
 - **Login copy** — blank: "Please enter your username or email address" / "Please enter your
   password"; wrong password: "Please check your login and password and try again. You are limited to 5
-  attempts, or you can reset your password". Lockout after 5 consecutive failures.
+  attempts, or you can reset your password". Lockout after 5 consecutive failures (2-minute lockout duration).
 - **Reset password** — blank: "This field is required"; any e-mail (registered or not): "Reset password
   email sent" + *"If your email is linked to a Cambridge account, you will receive a link to reset your
   password. If you don't receive it, please check your junk mail"* — identical by design.
@@ -197,9 +199,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. Header: Cambridge One logo/home link, 'Help' link, the site-language switcher and a 'Log in' link.<br>2. Hero: heading 'Cambridge One', sub-heading 'Your home for digital learning', a 'Log in' link and a 'Sign up' link.<br>3. Footer: 'Terms of use', 'Privacy notice', 'Accessibility', 'Our approach', 'FAQs', 'Cambridge One for schools', a copyright line and 'Help'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Extends the existing TST_LAND_TC_5 (hero heading/sub-heading/buttons/logo) with the header and footer items — a new function, not a duplicate. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: header logo/home link, language switcher, login/signup buttons, heading text, and all footer links are visible. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -219,9 +221,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Log in page opens (URL '/login') showing the 'Log in' form. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LAND_TC_3 already clicks Log in and checks the login page is launched. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking Log in navigates to the login page (/login). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 2, Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -241,9 +243,9 @@
 | **Test Data** | — |
 | **Expected Result** | The 'Sign up' role-selection page opens (URL '/regoptions') showing the 'Select your role' options. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LAND_TC_2 already clicks Sign up and checks the signup page is launched (used by the LP setup chain). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking Sign up opens the role selection screen (/regoptions). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 4, Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -263,9 +265,9 @@
 | **Test Data** | Language: 'Español' |
 | **Expected Result** | 1. The switcher expands to a list of languages with the current language marked as selected.<br>2. After choosing another language, the header, hero and footer text change to it and the switcher's label shows the newly selected language. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. The existing TST_LAND_TC_4 only opens the dropdown (asserts the click); this case asserts the outcome. Automation reuses LAND_TC_4 for the click. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: language switcher expands, changes language to Español, and reverts back to English. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -285,9 +287,9 @@
 | **Test Data** | — |
 | **Expected Result** | The page opens in the same tab with heading 'Terms of use'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Source row split one case per link. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_1 already clicks the link and checks the page is launched (footer.test.js, active). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Terms of use page opens with expected heading in the same tab. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -305,9 +307,9 @@
 | **Test Data** | — |
 | **Expected Result** | The page opens in the same tab with heading 'Privacy Notice'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_2 already clicks the link and checks the page is launched (active). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Privacy notice page opens with expected heading in the same tab. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -325,9 +327,9 @@
 | **Test Data** | — |
 | **Expected Result** | The page opens in the same tab with heading 'Accessibility on Cambridge One'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_3 already clicks the link and checks the page is launched (active). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Accessibility page opens with expected heading in the same tab. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -345,9 +347,9 @@
 | **Test Data** | — |
 | **Expected Result** | The page opens in the same tab with heading 'Do I need a school account?'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_7 already clicks the link and checks the page is launched (active). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Cambridge One for schools page opens in the same tab. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -367,9 +369,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Cambridge English site opens in a NEW tab; the original homepage tab stays open and unchanged. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Source row split one case per link. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_4 already is registered but COMMENTED OUT in footer.test.js — re-enable it and make it assert the new tab (ADR-016 tab helpers). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Our approach link opens Cambridge English site in new tab and refocuses. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -387,9 +389,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Cambridge One help centre opens in a NEW tab. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_6 already is registered but COMMENTED OUT in footer.test.js — re-enable it and make it assert the new tab. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: FAQs opens help centre in a new tab and refocuses. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -407,6 +409,50 @@
 | **Test Data** | — |
 | **Expected Result** | The Cambridge One help centre opens in a NEW tab. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_FOOT_TC_8 already is registered but COMMENTED OUT in footer.test.js — re-enable it and make it assert the new tab. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
+| **Actual Result** | Verified on Production: Help opens help centre in a new tab and refocuses. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 1) |
+| **Automation Scope** | Automate |
+
+---
+
+### Requirement TC_HOME_007 — Verify primary login page - {url}/login-primary
+
+| Field | Value |
+|---|---|
+| **S.No.** | 12 |
+| **Test Case ID** | TST_LAND_TC_8 |
+| **Title** | Verify primary login page - {url}/login-primary |
+| **Linked Requirement** | TC_HOME_007 — Verify primary login page - {url}/login-primary |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | User is not logged in; pre-login homepage open. |
+| **Test Steps** | 1. Go to the pre-login homepage / navigate to {url}/login-primary. |
+| **Test Data** | — |
+| **Expected Result** | 1. The header shows the Cambridge One logo/home link.<br>2. The page shows the Primary-themed background image and the 'Welcome to Cambridge One' heading.<br>3. The login area shows the username/email field, the password field, a 'Log in' button and a 'Forgot password' link.<br>4. Entering valid credentials and clicking 'Log in' takes the user to their dashboard, while invalid or empty credentials show an error message.<br>5. The footer shows 'Terms of use', 'Privacy notice', 'Accessibility', 'Our approach', 'FAQs', 'Cambridge One for schools', the copyright line '© Cambridge University Press & Assessment 2026', and 'Help'. |
+| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Direct entry to the primary-themed login route. |
+| **Actual Result** | *(blank in design)* |
+| **Status** | Not Run |
+| **Comments / Defect ID** | *(blank in design)* |
+| **Automation Scope** | Automate |
+
+---
+
+### Requirement TC_HOME_008 — Verify secondary login page - {url}/login-secondary
+
+| Field | Value |
+|---|---|
+| **S.No.** | 13 |
+| **Test Case ID** | TST_LAND_TC_9 |
+| **Title** | Verify secondary login page - {url}/login-secondary |
+| **Linked Requirement** | TC_HOME_008 — Verify secondary login page - {url}/login-secondary |
+| **Type** | Positive |
+| **Priority** | Medium |
+| **Preconditions** | User is not logged in; pre-login homepage open. |
+| **Test Steps** | 1. Go to the pre-login homepage / navigate to {url}/login-secondary. |
+| **Test Data** | — |
+| **Expected Result** | 1. The header shows the Cambridge One logo/home link.<br>2. The page shows the Secondary-themed background image and the 'Welcome to Cambridge One' heading.<br>3. The login area shows the username/email field, the password field, a 'Log in' button and a 'Forgot password' link.<br>4. Entering valid credentials and clicking 'Log in' takes the user to their dashboard, while invalid or empty credentials show an error message.<br>5. The footer shows 'Terms of use', 'Privacy notice', 'Accessibility', 'Our approach', 'FAQs', 'Cambridge One for schools', the copyright line '© Cambridge University Press & Assessment 2026', and 'Help'. |
+| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Direct entry to the secondary-themed login route. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -420,7 +466,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 12 |
+| **S.No.** | 14 |
 | **Test Case ID** | TST_LOGI_TC_5 |
 | **Title** | Verify the user lands on their role's dashboard when valid credentials are submitted |
 | **Linked Requirement** | TC_LOGIN_001 — Verify a user can log in successfully with valid credentials |
@@ -442,7 +488,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 13 |
+| **S.No.** | 15 |
 | **Test Case ID** | TST_LOGI_TC_7 |
 | **Title** | Verify required-field errors are shown when the login form is submitted blank |
 | **Linked Requirement** | TC_LOGIN_002 — Verify blank submission of the login form shows required-field validation |
@@ -453,9 +499,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. The 'Login' field shows 'Please enter your username or email address'.<br>2. The Password field shows 'Please enter your password'.<br>3. The user stays on the Log in page — no login attempt is submitted. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Side-effect free. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: required-field validation messages displayed for username and password fields on blank submit. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -464,7 +510,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 14 |
+| **S.No.** | 16 |
 | **Test Case ID** | TST_LOGI_TC_8 |
 | **Title** | Verify the generic credentials error is shown when the password is wrong |
 | **Linked Requirement** | TC_LOGIN_003 — Verify login fails with an incorrect password and shows the generic credentials error |
@@ -486,17 +532,17 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 15 |
+| **S.No.** | 17 |
 | **Test Case ID** | TST_LOGI_TC_9 |
 | **Title** | Verify the account is temporarily locked when 5 consecutive login attempts fail |
 | **Linked Requirement** | TC_LOGIN_004 — Verify the account is temporarily locked after 5 consecutive failed login attempts |
 | **Type** | Negative |
 | **Priority** | High |
-| **Preconditions** | A registered, DISPOSABLE test account exists (not used by any other case). User is on the Log in page (homepage → "Log in"). |
+| **Preconditions** | A dedicated test account (cqatestuserforblockDND@mailsac.com) exists for lockout testing. User is on the Log in page (homepage → "Log in"). |
 | **Test Steps** | 1. Enter the account's e-mail with an incorrect password and click 'Log in'.<br>2. Repeat 4 more times (5 failures in total); note the message on the 5th.<br>3. Try a 6th time with the CORRECT password. |
-| **Test Data** | <DISPOSABLE_ACCOUNT_EMAIL>; wrong password ×5, then the correct password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
-| **Expected Result** | 1. Each of the first 5 attempts shows the 'check your login and password' alert referencing the 5-attempt limit.<br>2. After the 5th failure the account is temporarily locked: the 6th attempt, even with the correct password, is rejected. |
-| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. LOCKS AN ACCOUNT — never a shared/pool account (migration plan Q10). Needs a disposable account per run (e.g. one created by the signup suite). Lockout duration and the exact 5th/6th-attempt copy are [ASSUMED] — not stated in the source. |
+| **Test Data** | cqatestuserforblockDND@mailsac.com; wrong password ×5, then the correct password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Expected Result** | 1. Each of the first 5 attempts shows the 'check your login and password' alert referencing the 5-attempt limit.<br>2. After the 5th failure the account is temporarily locked for 2 minutes: the 6th attempt, even with the correct password, is rejected. |
+| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Account is locked for 2 minutes on 5 consecutive wrong password attempts (user confirmed 2026-09-24). Uses dedicated test user cqatestuserforblockDND@mailsac.com. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
@@ -508,7 +554,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 16 |
+| **S.No.** | 18 |
 | **Test Case ID** | TST_LOGI_TC_10 |
 | **Title** | Verify the password is revealed and masked again when 'Show Password' is toggled twice on the login form |
 | **Linked Requirement** | TC_LOGIN_005 — Verify the 'Show Password' toggle reveals and re-hides the password on the login form |
@@ -519,9 +565,9 @@
 | **Test Data** | Any string, e.g. 'TestPassword123' |
 | **Expected Result** | 1. After the first click the typed password is visible as plain text.<br>2. After the second click it is masked again. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. The existing TST_LOGI_TC_3 (login.test.js, not registered in C1TCRepository) only clicks the eye icon; this case asserts the field type. Automation reuses the click. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: password field type changes from password to text and back to password on clicking show password toggle. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -530,7 +576,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 17 |
+| **S.No.** | 19 |
 | **Test Case ID** | TST_LOGI_TC_4 |
 | **Title** | Verify the Reset password screen opens when 'Forgotten your password?' is clicked |
 | **Linked Requirement** | TC_LOGIN_006 — Verify 'Forgotten your password?' navigates to the Reset password screen |
@@ -541,9 +587,9 @@
 | **Test Data** | — |
 | **Expected Result** | The 'Reset password' screen opens with an Email field and a 'Reset password' button. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LOGI_TC_4 already clicks Forgotten your password and checks the reset page is launched. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Forgotten your password link navigates to the reset password form. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -552,7 +598,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 18 |
+| **S.No.** | 20 |
 | **Test Case ID** | TST_LOGI_TC_6 |
 | **Title** | Verify the Sign up role-selection page opens when 'Don't have an account yet?' is clicked |
 | **Linked Requirement** | TC_LOGIN_007 — Verify 'Don't have an account yet?' on the login form navigates to Sign up |
@@ -574,7 +620,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 19 |
+| **S.No.** | 21 |
 | **Test Case ID** | TST_LOGI_TC_11 |
 | **Title** | Verify a learner with a username-based account (no e-mail) can log in with the username |
 | **Linked Requirement** | TC_LOGIN_008 — Verify a learner with a username-based account (no email) can log in using their username |
@@ -596,7 +642,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 20 |
+| **S.No.** | 22 |
 | **Test Case ID** | TST_LOGI_TC_12 |
 | **Title** | Verify the Terms of use gate is not shown again when a bulk-created adult username account logs in a second time |
 | **Linked Requirement** | TC_LOGIN_009 — Verify a bulk-created adult username account logging in for the second time does not have to accept the Terms of use |
@@ -618,7 +664,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 21 |
+| **S.No.** | 23 |
 | **Test Case ID** | TST_LOGI_TC_13 |
 | **Title** | Verify the user cannot pass the first-login Terms of use gate when Submit is clicked without accepting |
 | **Linked Requirement** | TC_LOGIN_010 — Verify the first-login Terms of use onboarding gate does not let the user proceed without accepting |
@@ -640,7 +686,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 22 |
+| **S.No.** | 24 |
 | **Test Case ID** | TST_LOGI_TC_14 |
 | **Title** | Verify an Admin reaches the admin dashboard when logging in through the standard Log in form |
 | **Linked Requirement** | TC_LOGIN_011 — Verify an Admin can log in via the standard Log in form |
@@ -662,7 +708,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 23 |
+| **S.No.** | 25 |
 | **Test Case ID** | TST_LOGI_TC_15 |
 | **Title** | Verify a Support Admin signs in through Okta single sign-on and lands on the Support Admin Search page |
 | **Linked Requirement** | TC_LOGIN_012 — Verify a Support Admin logs in via Okta single sign-on |
@@ -684,7 +730,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 24 |
+| **S.No.** | 26 |
 | **Test Case ID** | TST_LOGI_TC_16 |
 | **Title** | Verify a CambridgeGO-provisioned user can log in |
 | **Linked Requirement** | TC_LOGIN_013 — Verify a CambridgeGO-provisioned user can log in |
@@ -706,7 +752,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 25 |
+| **S.No.** | 27 |
 | **Test Case ID** | TST_LOGI_TC_17 |
 | **Title** | Verify an Edulog-provisioned user can log in |
 | **Linked Requirement** | TC_LOGIN_014 — Verify an Edulog-provisioned user can log in |
@@ -728,7 +774,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 26 |
+| **S.No.** | 28 |
 | **Test Case ID** | TST_APPS_TC_2 |
 | **Title** | Verify a logged-out Learner lands on the pre-login homepage when Log out is clicked |
 | **Linked Requirement** | TC_LOGIN_015 — Verify logging out as a Learner lands on the pre-login home page |
@@ -752,7 +798,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 27 |
+| **S.No.** | 29 |
 | **Test Case ID** | TST_RESE_TC_6 |
 | **Title** | Verify a required-field error is shown when the Reset password form is submitted with a blank e-mail |
 | **Linked Requirement** | TC_FPWD_001 — Verify submitting the Reset password form with a blank email shows a required-field error |
@@ -763,9 +809,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. The Email field shows 'This field is required'.<br>2. No reset e-mail is sent; the user stays on the screen. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx.  |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: submitting blank email displays 'This field is required' error message. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 3 via TST_RESE_TC_2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -774,7 +820,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 28 |
+| **S.No.** | 30 |
 | **Test Case ID** | TST_RESE_TC_7 |
 | **Title** | Verify a generic confirmation is shown when a registered e-mail is submitted for password reset |
 | **Linked Requirement** | TC_FPWD_002 — Verify submitting the Reset password form with a valid email shows a generic confirmation, without revealing whether the account exists |
@@ -796,7 +842,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 29 |
+| **S.No.** | 31 |
 | **Test Case ID** | TST_RESE_TC_8 |
 | **Title** | Verify the same generic confirmation is shown when an unregistered e-mail is submitted for password reset |
 | **Linked Requirement** | TC_FPWD_003 — Verify submitting the Reset password form with an email that has no matching account shows the same generic confirmation message |
@@ -818,7 +864,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 30 |
+| **S.No.** | 32 |
 | **Test Case ID** | TST_RESE_TC_4 |
 | **Title** | Verify the Log in form is shown again when 'Back to login' is clicked on the Reset password screen |
 | **Linked Requirement** | TC_FPWD_004 — Verify 'Back to login' returns from the Reset password screen to the Log in form |
@@ -829,9 +875,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Log in form is shown again. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_RESE_TC_4 already clicks Back to login and checks the login page is launched. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking Back to login navigates back to the Login form. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -840,7 +886,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 31 |
+| **S.No.** | 33 |
 | **Test Case ID** | TST_RESE_TC_9 |
 | **Title** | Verify the user can log in with the new password when it is set through the e-mailed reset link |
 | **Linked Requirement** | TC_FPWD_005 — Verify a user can set a new password via the emailed reset link and log in with the updated password |
@@ -862,7 +908,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 32 |
+| **S.No.** | 34 |
 | **Test Case ID** | TST_RESE_TC_10 |
 | **Title** | Verify a fresh login succeeds with the newly reset password after logging out |
 | **Linked Requirement** | TC_FPWD_006 — Verify a user can log in with the newly reset password after resetting it via the emailed link |
@@ -886,7 +932,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 33 |
+| **S.No.** | 35 |
 | **Test Case ID** | TST_CREA_TC_31 |
 | **Title** | Verify a Teacher can set a temporary password for an enrolled student from the class roster's 'Change password' |
 | **Linked Requirement** | TC_RESETPW_001 — Verify a Teacher can set a temporary password for an enrolled student, and the student sets their own new password on first login with it |
@@ -906,7 +952,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 34 |
+| **S.No.** | 36 |
 | **Test Case ID** | TST_LOGI_TC_18 |
 | **Title** | Verify a student who logs in with a temporary password must set a new password before reaching the dashboard |
 | **Linked Requirement** | TC_RESETPW_001 — Verify a Teacher can set a temporary password for an enrolled student, and the student sets their own new password on first login with it |
@@ -928,7 +974,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 35 |
+| **S.No.** | 37 |
 | **Test Case ID** | TST_SPRF_TC_24 |
 | **Title** | Verify an Admin can set a temporary password for a student from the Students tab row's Action Menu |
 | **Linked Requirement** | TC_RESETPW_002 — Verify an Admin can set a temporary password for a student from the Students tab, and the student sets their own new password on first login with it |
@@ -952,7 +998,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 36 |
+| **S.No.** | 38 |
 | **Test Case ID** | TST_SNUP_TC_65 |
 | **Title** | Verify the role-selection page shows Learner, Teacher and Parent with no role pre-selected and Next disabled |
 | **Linked Requirement** | TC_ROLE_001 — Verify the role-selection page shows Learner, Teacher, and Parent options with no role pre-selected |
@@ -963,9 +1009,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. Heading 'Sign up', the text 'Select your role', a note that only one role can be chosen per account, and three options: Learner, Teacher, Parent.<br>2. No role is selected and 'Next' cannot be clicked. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. onboarding.md §A1: Next is natively disabled until a role is picked (seen live, thor 2026-09-22). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Learner, Teacher, and Parent role options are displayed with none pre-selected and Next button disabled. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -974,7 +1020,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 37 |
+| **S.No.** | 39 |
 | **Test Case ID** | TST_SNUP_TC_66 |
 | **Title** | Verify a confirmation dialog naming the role is shown when a role is selected and 'Next' is clicked |
 | **Linked Requirement** | TC_ROLE_002 — Verify selecting a role and clicking 'Next' shows a confirmation dialog naming the selected role |
@@ -985,9 +1031,9 @@
 | **Test Data** | Role: 'Teacher' |
 | **Expected Result** | A dialog titled 'You cannot change your role later on' states 'You have selected Teacher. Please check this is the right role', with 'Yes, continue' and 'No, go back' buttons. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. The existing TST_SNUP_TC_59 checks the dialog NAMES the role and then continues; this case asserts the full copy and both buttons and stops at the dialog. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: modal dialog confirms selected role ('You have selected Teacher. Please check this is the right role') with 'Yes, continue' and 'No, go back' buttons. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -996,7 +1042,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 38 |
+| **S.No.** | 40 |
 | **Test Case ID** | TST_SNUP_TC_67 |
 | **Title** | Verify the dialog closes and the chosen role stays selected when 'No, go back' is clicked |
 | **Linked Requirement** | TC_ROLE_003 — Verify 'No, go back' on the role-confirmation dialog closes the dialog and keeps the previously selected role |
@@ -1007,9 +1053,9 @@
 | **Test Data** | Role: 'Teacher' |
 | **Expected Result** | The dialog closes, the user stays on the role-selection page and 'Teacher' is still selected. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx.  |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking 'No, go back' closes dialog and retains previously selected role. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1018,7 +1064,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 39 |
+| **S.No.** | 41 |
 | **Test Case ID** | TST_SNUP_TC_59 |
 | **Title** | Verify the role's registration flow opens when 'Yes, continue' is clicked on the role-confirmation dialog |
 | **Linked Requirement** | TC_ROLE_004 — Verify 'Yes, continue' on the role-confirmation dialog proceeds to that role's registration flow |
@@ -1029,9 +1075,9 @@
 | **Test Data** | Role: 'Parent' (source); data-driven for Teacher / Learner / Parent |
 | **Expected Result** | The dialog closes and the role's registration flow opens — Teacher and Parent: the name/e-mail/password form directly; Learner: the age and location step first. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_SNUP_TC_59 already selects a role, checks the dialog names it, clicks Yes, continue and checks the role's next screen (data: role, expectedScreen) — run it for Parent too. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking 'Yes, continue' on confirmation dialog navigates to the role registration flow (Learner age gate). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5 via TST_SNUP_TC_69) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1040,7 +1086,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 40 |
+| **S.No.** | 42 |
 | **Test Case ID** | TST_SNUP_TC_68 |
 | **Title** | Verify the Log in form is shown when 'Login' is clicked on the role-selection page |
 | **Linked Requirement** | TC_ROLE_005 — Verify 'Login' on the role-selection page navigates to the Log in form |
@@ -1051,9 +1097,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Log in form is shown. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx.  |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking Login link on role selection page navigates to Login form. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1064,7 +1110,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 41 |
+| **S.No.** | 43 |
 | **Test Case ID** | TST_SNUP_TC_69 |
 | **Title** | Verify an age and location screen is shown before the registration form when the Learner role is confirmed |
 | **Linked Requirement** | TC_LRN_001 — Verify selecting the Learner role leads to an age and location screen before the registration form |
@@ -1075,9 +1121,9 @@
 | **Test Data** | — |
 | **Expected Result** | An age and location screen with a Location field, a 'Your age' dropdown (options 18+, then 17 down to 5) and a 'Next' button. The name/e-mail/password form is NOT shown yet. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. URL /learner-age-check (onboarding.md §A2). ⚠️ On thor the first-name box also reported visible on this screen (onboarding.md §A2) — check. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: learner age check screen (/learner-age-check) is displayed with Location field and Your age dropdown. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1086,7 +1132,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 42 |
+| **S.No.** | 44 |
 | **Test Case ID** | TST_SNUP_TC_70 |
 | **Title** | Verify self-registration is blocked when an under-age value is chosen on the Learner age screen |
 | **Linked Requirement** | TC_LRN_002 — Verify selecting an under-age value on the Learner age screen blocks self-registration |
@@ -1097,9 +1143,9 @@
 | **Test Data** | Age 13–15; Location 'India' |
 | **Expected Result** | 1. A 'We're sorry' screen instead of the form: 'Cambridge One welcomes every learner, but our younger students need an adult's help to set up an account' and 'Please ask your parent or teacher to sign you up', with a 'Go back' button.<br>2. No account is created. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Legend 'Learner age gate': India blocks 13–15 (source: confirmed live). Side-effect free. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: selecting underage (13-15) for India displays 'We\'re sorry' blocked screen and 'Go back' button. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1108,7 +1154,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 43 |
+| **S.No.** | 45 |
 | **Test Case ID** | TST_SNUP_TC_71 |
 | **Title** | Verify the Learner under-age threshold changes when the Location changes |
 | **Linked Requirement** | TC_LRN_003 — Verify the Learner under-age threshold depends on the selected Location |
@@ -1119,9 +1165,9 @@
 | **Test Data** | Age '15' + 'India'; age '15' + 'United Kingdom' |
 | **Expected Result** | 1. Age 15 + India is blocked by the 'We're sorry' screen.<br>2. Age 15 + United Kingdom is NOT blocked and reaches the registration form. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Legend 'Learner age gate': threshold is location-dependent — India blocks 13–15 / allows 16+; United Kingdom blocks 11–12 / allows 13+ (source: confirmed live). Boundary pairs worth adding in Phase 1: India 15/16, UK 12/13. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: age dropdown presents options (18+, 17 down to 5); age options verified on learner age check screen. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1130,7 +1176,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 44 |
+| **S.No.** | 46 |
 | **Test Case ID** | TST_SNUP_TC_63 |
 | **Title** | Verify the Learner registration form opens when an age of 16 or older is chosen with location India |
 | **Linked Requirement** | TC_LRN_004 — Verify selecting an age of 16 or older on the Learner age screen allows the user to proceed to the registration form |
@@ -1141,9 +1187,9 @@
 | **Test Data** | Age '16' or '18+'; Location 'India' |
 | **Expected Result** | The Learner registration form (First name, Last name, School email, Password, Location) is shown — not the 'We're sorry' screen. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_SNUP_TC_63 already sets country + age and checks the learner profile form opens (LP setup chain). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: selecting age 16+ (18+) with Location India allows user to proceed to the Learner registration profile form. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5 via TST_SNUP_TC_76 prerequisite) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1152,7 +1198,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 45 |
+| **S.No.** | 47 |
 | **Test Case ID** | TST_SNUP_TC_72 |
 | **Title** | Verify a Learner (16+, India) account is created and reaches the learner dashboard when the form is submitted and verified |
 | **Linked Requirement** | TC_LRN_005 — Verify a Learner (16+, India) can complete the registration form and create an account |
@@ -1174,7 +1220,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 46 |
+| **S.No.** | 48 |
 | **Test Case ID** | TST_SNUP_TC_76 |
 | **Title** | Verify validation errors are shown when the Learner form is submitted with blank names, an invalid e-mail and a weak password |
 | **Linked Requirement** | TC_LRN_006 — Verify the Learner registration form shows validation errors for blank required fields, an invalid email, and a weak password |
@@ -1185,9 +1231,9 @@
 | **Test Data** | School email 'not-an-email'; password 'abc' |
 | **Expected Result** | 1. First name and Last name each show 'This field is required'.<br>2. School email shows 'E-mail address is invalid.'<br>3. Password shows 'Password does not meet complexity requirements'.<br>4. No account is created; the user stays on the form. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Side-effect free (never submits a valid form). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: required-field errors ('This field is required') displayed for First name and Last name on blank form submission. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1198,7 +1244,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 47 |
+| **S.No.** | 49 |
 | **Test Case ID** | TST_SNUP_TC_73 |
 | **Title** | Verify a Teacher account is created and reaches the teacher dashboard when the registration form is submitted and verified |
 | **Linked Requirement** | TC_TCH_001 — Verify a Teacher can complete the registration form and create an account |
@@ -1220,7 +1266,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 48 |
+| **S.No.** | 50 |
 | **Test Case ID** | TST_SNUP_TC_77 |
 | **Title** | Verify validation errors and the Terms alert are shown when the Teacher form is submitted incomplete |
 | **Linked Requirement** | TC_TCH_002 — Verify the Teacher registration form shows validation errors for blank required fields, an invalid email, a weak password, and an unchecked Terms checkbox |
@@ -1244,7 +1290,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 49 |
+| **S.No.** | 51 |
 | **Test Case ID** | TST_SNUP_TC_74 |
 | **Title** | Verify a Parent account is created and reaches the parent dashboard when the registration form is submitted and verified |
 | **Linked Requirement** | TC_PAR_001 — Verify a Parent can complete the registration form and create an account |
@@ -1266,7 +1312,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 50 |
+| **S.No.** | 52 |
 | **Test Case ID** | TST_SNUP_TC_75 |
 | **Title** | Verify the Parent form does not submit when the 'parent or guardian' checkbox is left unchecked |
 | **Linked Requirement** | TC_PAR_002 — Verify the Parent registration form requires the 'parent or guardian' age-confirmation checkbox before submitting |
@@ -1290,7 +1336,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 51 |
+| **S.No.** | 53 |
 | **Test Case ID** | TST_PCHD_TC_1 |
 | **Title** | Verify a Parent can create a child's account from 'My children' |
 | **Linked Requirement** | TC_CHLD_001 — Verify a Parent can create a child's account from 'My children' |
@@ -1312,7 +1358,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 52 |
+| **S.No.** | 54 |
 | **Test Case ID** | TST_PCHD_TC_2 |
 | **Title** | Verify 'Next' does not proceed on 'Create my child's account' while a required field or the consent checkbox is missing |
 | **Linked Requirement** | TC_CHLD_002 — Verify 'Next' on 'Create my child's account' stays blocked until every required field and the consent checkbox are complete |
@@ -1334,7 +1380,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 53 |
+| **S.No.** | 55 |
 | **Test Case ID** | TST_PCHD_TC_3 |
 | **Title** | Verify a newly created child's account reaches a learner dashboard when it logs in for the first time |
 | **Linked Requirement** | TC_CHLD_003 — Verify a newly created child's account can log in for the first time |
@@ -1358,7 +1404,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 54 |
+| **S.No.** | 56 |
 | **Test Case ID** | TST_INVI_TC_14 |
 | **Title** | Verify a not-yet-registered invitee can sign up from the class invite e-mail's 'View invite' link |
 | **Linked Requirement** | TC_INVITE_001 — Verify a brand-new user invited to a class by a teacher can sign up via the invite email |
@@ -1380,7 +1426,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 55 |
+| **S.No.** | 57 |
 | **Test Case ID** | TST_INVI_TC_15 |
 | **Title** | Verify a logged-in, already-registered learner lands on their own dashboard when opening a class invite link |
 | **Linked Requirement** | TC_INVITE_002 — Verify an existing, already-registered learner who clicks a class invite link while logged in is taken to their own dashboard |
@@ -1404,7 +1450,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 56 |
+| **S.No.** | 58 |
 | **Test Case ID** | TST_LOGI_TC_19 |
 | **Title** | Verify the social sign-in buttons (Facebook, Google, Apple) are present on the Log in form |
 | **Linked Requirement** | TC_XCUT_001 — Verify social sign-in buttons (Facebook, Google, Apple) are present on the Log in form |
@@ -1426,7 +1472,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 57 |
+| **S.No.** | 59 |
 | **Test Case ID** | TST_SNUP_TC_79 |
 | **Title** | Verify the social sign-in buttons (Facebook, Google, Apple) are present on the Teacher registration form |
 | **Linked Requirement** | TC_XCUT_002 — Verify social sign-in buttons (Facebook, Google, Apple) are present on the Teacher registration form |
@@ -1448,7 +1494,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 58 |
+| **S.No.** | 60 |
 | **Test Case ID** | TST_SNUP_TC_80 |
 | **Title** | Verify the social sign-in buttons (Facebook, Google, Apple) are present on the Learner registration form |
 | **Linked Requirement** | TC_XCUT_003 — Verify social sign-in buttons (Facebook, Google, Apple) are present on the Learner registration form |
@@ -1470,7 +1516,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 59 |
+| **S.No.** | 61 |
 | **Test Case ID** | TST_SNUP_TC_81 |
 | **Title** | Verify the social sign-in buttons (Facebook, Google, Apple) are present on the Parent registration form |
 | **Linked Requirement** | TC_XCUT_004 — Verify social sign-in buttons (Facebook, Google, Apple) are present on the Parent registration form |
@@ -1492,7 +1538,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 60 |
+| **S.No.** | 62 |
 | **Test Case ID** | TST_LOGI_TC_20 |
 | **Title** | Verify 'Sign in with Facebook' opens Facebook's login page and signs the user in to Cambridge One |
 | **Linked Requirement** | TC_XCUT_005 — Verify 'Sign in with Facebook' opens Facebook's own login page to authenticate |
@@ -1514,7 +1560,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 61 |
+| **S.No.** | 63 |
 | **Test Case ID** | TST_LOGI_TC_21 |
 | **Title** | Verify 'Sign in with Google' opens Google's sign-in page and signs the user in to Cambridge One |
 | **Linked Requirement** | TC_XCUT_006 — Verify 'Sign in with Google' opens Google's own sign-in page to authenticate |
@@ -1536,7 +1582,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 62 |
+| **S.No.** | 64 |
 | **Test Case ID** | TST_LOGI_TC_22 |
 | **Title** | Verify 'Sign in with Apple' opens Apple's sign-in page and signs the user in to Cambridge One |
 | **Linked Requirement** | TC_XCUT_007 — Verify 'Sign in with Apple' opens Apple's own sign-in page to authenticate |
@@ -1558,7 +1604,7 @@
 
 | Field | Value |
 |---|---|
-| **S.No.** | 63 |
+| **S.No.** | 65 |
 | **Test Case ID** | TST_SNUP_TC_78 |
 | **Title** | Verify the Log in page opens when 'Have an account already? / Login' is clicked on a registration form |
 | **Linked Requirement** | TC_XCUT_008 — Verify 'Have an account already? / Login' on a registration form returns to the Log in page |
@@ -1569,9 +1615,9 @@
 | **Test Data** | Role: 'Parent' (source); data-driven for Teacher / Learner |
 | **Expected Result** | The Log in form is shown. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx.  |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking Login link on Learner registration form returns user to Login page (/login). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB1Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1587,9 +1633,9 @@ _none — not a functional case. A look-and-feel regression check is what the fr
 1. **No live grounding yet** (all rows): expected results are the source team's. Confirm live in Phase 1, starting with the side-effect-free B1 set.
 2. **TST_SPRF_TC_24 entry point** `[ASSUMED]` (source Legend): Students tab row Action Menu → change password. Also settle its overlap with TST_SPRF_TC_8 / TST_SPRF_TC_23 (Manage account → Password tab) — same flow or two?
 3. **TST_RESE_TC_10 vs TST_RESE_TC_9**: the source's TC_FPWD_005 already ends with the login that TC_FPWD_006 checks. Keep both, or fold TC_10 into TC_9?
-4. **TST_LOGI_TC_9 (lockout)**: lockout duration and the 5th/6th-attempt copy are not in the source; needs a disposable account per run (migration plan Q10).
+4. **TST_LOGI_TC_9 (lockout)**: Lockout duration is confirmed as 2 minutes (user confirmed 2026-09-24); executed against the dedicated test user `cqatestuserforblockDND@mailsac.com`. Unblocked.
 5. **Copy not stated by the source**: guardian-checkbox error (TST_SNUP_TC_75), child-form inline errors (TST_PCHD_TC_2), teacher Change-password confirmation (TST_CREA_TC_31) — capture verbatim.
-6. **Thor blockers carried over**: the verify-link certificate (c1-core-shared.md §A4) blocks TST_SNUP_TC_72/73/74 on thor (and possibly TST_RESE_TC_9 — check the reset-link host); SOURCE reported child creation failing on thor (TST_PCHD_TC_1).
-7. **Proposed module PCHD** and the module choice for TST_CREA_TC_31 / TST_INVI_TC_14 — confirm against the page objects Phase 1 actually creates; re-code before automating if they differ.
+6. **Sign-up / Email verification environment**: Sign-up and email-verification suites run on Production using disposable Mailsac accounts (`learningPathTest_prod` pattern; user confirmed 2026-09-24).
+7. **Module PCHD**: Approved module code `PCHD` (`parentChild.page.js` / `parentChild.test.js`).
 8. **Footer TCs TST_FOOT_TC_4/6/8** are registered but commented out in `footer.test.js`; they need re-enabling with a new-tab assertion.
 9. **TC_XCUT_009 (UI/colours)**: no manual case — handled by `visualTest` promotion at Phase 3 (AGENTS.md §8). Confirm that is acceptable.
