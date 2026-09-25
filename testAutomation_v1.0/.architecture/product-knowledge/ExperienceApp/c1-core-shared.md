@@ -95,3 +95,53 @@ iframe → load it in the **same tab** (no popup) → wait for the app host. Arr
 
 Fixed data used as-is from SOURCE: prod school **MQA Sierra School** `MQA-ABC-DEF`; thor school
 "ankur test school A (DO NOT USE)" `DNK-CMF-MYN`; product `cqaautomationbundle1`.
+
+---
+
+## Part C — Cross-screen rules for the C1 surface `[2026-09-23]`
+
+> Moved out of `class-materials-ebook-foc.md` under ADR-020. These apply to **every** screen on
+> the teacher / learner surface, which is why they sit here and not in a screen file.
+
+### C1. Multi-suite session teardown (`APPS_1` / `APPS_2`)
+
+* **The Trap:** In multi-suite test files like `ebookE2EteacherTest.json` (which executes 6 sequential suites), failing to log out at the end of each suite leaves cached authentication tokens and cookies in the browser. When the subsequent suite attempts `launchUrl`, it lands on a dirty dashboard rather than the login screen, causing the login steps to fail.
+* **The Solution:** Every suite in a multi-suite file — teacher **and** student — must conclude with an `After` teardown block calling `TST_APPS_TC_1` (open user profile dropdown) and `TST_APPS_TC_2` (click log out and verify landing page loaded). `[2026-09-23]`
+* **Close the reader first.** If the suite ends with the eBook reader still open, logout is preceded by
+  `TST_EBOO_TC_5` (Home → dashboard). `ebookE2EstudentTest.json` Suite 6 already used this
+  `… EBOO_5, APPS_1, APPS_2` ordering; it is now applied to Suites 1, 2, 4, 5 and 7 as well.
+  **Verified `[2026-09-23]`** — a full thor run passed 127/127 across all 8 suites, and every suite's
+  `After` block executed, so the ordering holds after the drawing (Suite 4) and timer (Suite 5) suites
+  where an open overlay was the risk.
+
+* **Duplicate TC ids — resolution is by `testFile` first.** `TST_APPS_TC_1` / `TST_APPS_TC_2` are
+  registered **twice** in `C1TCRepository.json`: under module `Login` (`login.test.js`, "Click Sign
+  Up button") and under module `appShell` (`appShell.test.js`, "Click on prod drop down" / "Click
+  Log out button"). The runner matches the execution step's `testFile` against the module's
+  `testFile` before it compares ids (`core/runner/testrunner.js:550` then `:557`), so the id alone
+  is ambiguous and the step is not. **Always write `./test/ExperienceApp/appShell.test.js` in a
+  teardown step** — omitting or mistyping it silently resolves to the Sign Up module. Worth
+  de-duplicating the registry entry separately. `[2026-09-23]`
+
+### C2. r4 create-only archive invariant
+
+* **Rule:** Never delete, rename, or edit existing test execution files under `testResources/testExecutionFiles/ExperienceApp/thor/`.
+* When consolidating test suites (such as the 17 individual eBook/FOC suites into the 3 consolidated suites), the consolidated suites are created as **new files** (`ebookE2EstudentTest.json`, `ebookE2EteacherTest.json`, `ebookFocusA11yMergedTest.json`). The superseded original files are retained permanently on disk as frozen archives so that historical execution paths remain reproducible.
+
+### C3. Login nodes shared by the C1 suites
+
+* **Teacher Login:**
+  * Node: `C1.login.user.validTeacher`
+* **Student Login:**
+  * Node: `C1.login.user.validStudent`
+
+### C4. Consolidated execution suites
+
+| NPM Script | Execution File | Suites / Focus |
+|---|---|---|
+| `npm run ebookE2EstudentTest_thor` | `ebookE2EstudentTest.json` | 8 student suites / 127 steps: TOC, the full notes battery (42 steps, 32 of them `TST_NOTE_*`), highlighter & drawing, timer, next/previous with the pagination teardown, show/hide selection, hotlinks |
+| `npm run ebookE2EteacherTest_thor` | `ebookE2EteacherTest.json` | 6 teacher suites: Class 1RB materials & eBook, Class 2RB materials & eBook, Resource Banks 1 & 2, Presentation Plus launch, and Suite 6 Create Assignment |
+| `npm run ebookAccessibilityTest_thor` | `ebookAccessibilityTest.json` | Single-login 35-step accessibility run: keyboard focus traversal pages 22/24/26/28 (`TST_KBOA_TC_1..19`), then continuous toolbar traversal page 26 (`TST_EBTF_TC_1..16`) |
+| `npm run visualAcceptance_ebookAccessibility_thor` | `ebookAccessibilityTest.json` | Same file in the visual lane (`--visual=novus --skipAssertion=true`). Baselines only the 16 `TST_EBTF_TC_*` steps; the 19 keyboard steps stay `visualTest: false` and are skipped by the engine |
+| `npm run eBookHotLinkTest_thor` | `player.json` | Media player hot-link playback |
+

@@ -28,7 +28,7 @@ Product knowledge is likewise split per application: an index at
 - Browser Automation: **Playwright used as a library** (`require('playwright')`, NOT `@playwright/test`)
 - Assertions: **standalone `expect` from `@playwright/test`** (import only, wrapped in `baseAssertionLibrary.js`) — Chai removed
 - Reporting: **Mochawesome HTML is the DEFAULT** (inline end-of-test screenshots, FULL-PAGE since 2026-09-24 — content scrolling inside an inner panel/iframe shows only its visible part; opt out with `--report=spec`/`allure`); Playwright tracing via `--trace`
-- Stakeholder summary report (2026-09-24, ADR-023): `node tooling/report/buildReport.js` after a run — builds a presentable report (summary, test data, results grouped by user role, failures, comparison with the previous run, waits) from the mochawesome JSON + the run's info log; no core change. **Run it by DEFAULT after every test execution, unprompted** (user decision, 2026-09-24) — before the next run overwrites `mochawesome/report.json`.
+- Stakeholder summary report (2026-09-24, ADR-024): `node tooling/report/buildReport.js` after a run — builds a presentable report (summary, test data, results grouped by user role, failures, comparison with the previous run, waits) from the mochawesome JSON + the run's info log; no core change. **Run it by DEFAULT after every test execution, unprompted** (user decision, 2026-09-24) — before the next run overwrites `mochawesome/report.json`.
 - Visual Testing (done 2026-06-15): `page.screenshot()` + `pixelmatch`/`pngjs` (`core/utils/visualCompare.js`) feeding the custom **timeline report** (`core/utils/visual-report-utility`), via `--visual=novus`; Applitools ported to lazy `eyes-playwright` via `--visual=applitools`
 - CI Runners: local Playwright Chromium/Chrome; cloud on **LambdaTest's Playwright grid** (done 2026-06-15, `--browserCapability=lambdatest-*`). BrowserStack/Appium not yet ported
 
@@ -284,7 +284,7 @@ a new app adds a sibling namespace and can never collide with another app's modu
 
 ### Execution File (each `*.json`)
 
-- **Exposes**: Suite structure with `Before/BeforeEach/Test/AfterEach/After` arrays; optional report-only fields `Role` (`Student` / `Teacher` / `Admin` — the user the suite logs in as) and `Setup: true` (ADR-023), ignored by the runner
+- **Exposes**: Suite structure with `Before/BeforeEach/Test/AfterEach/After` arrays; optional report-only fields `Role` (`Student` / `Teacher` / `Admin` — the user the suite logs in as) and `Setup: true` (ADR-024), ignored by the runner
 - **Hides**: Nothing — pure configuration
 - **Contract**: Every `id` must exist in `C1TCRepository.json`; every `testFile` must be a valid path
 - **Dependencies**: TC Repository, test data files, test files

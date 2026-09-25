@@ -63,10 +63,22 @@ module.exports = {
     click_loginBtn: async function () {
         await logger.logInto(await stackTrace.get());
         var res;
+        await action.waitForDisplayed(this.loginBtn, 15000);
         res = await action.click(this.loginBtn);
         if (true == res) {
             await logger.logInto(await stackTrace.get(), " loginBtn is clicked");
-            res = await require('./login.page').isInitialized();
+            const loginPage = require('./login.page');
+            let isInit = await action.waitForDisplayed(loginPage.userName_tbox, 6000);
+            if (isInit !== true) {
+                // WORKAROUND — loginBtn can be clickable before Gigya has attached its handlers, so
+                // the first click is absorbed (experience-shared.md A2/B2). Invariant 14: this is a
+                // candidate product defect, marked so it is removable once classified — do not copy
+                // this pattern to another screen before that question is answered.
+                if (await action.isDisplayed(this.loginBtn)) {
+                    await action.click(this.loginBtn);
+                }
+            }
+            res = await loginPage.isInitialized();
         }
         else {
             await logger.logInto(await stackTrace.get(), res + "loginBtn is NOT clicked", 'error');

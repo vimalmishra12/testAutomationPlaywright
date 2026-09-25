@@ -1,4 +1,4 @@
-# Stakeholder summary report (ADR-023)
+# Stakeholder summary report (ADR-024)
 
 A presentable report built **after** a run, alongside the normal mochawesome report.
 

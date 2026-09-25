@@ -37,6 +37,11 @@
 | ↳ Signup, e-mail verification, teacher account setup — `SNUP` / `TSET` | `ExperienceApp` | [`ExperienceApp/onboarding.md`](product-knowledge/ExperienceApp/onboarding.md) |
 | ↳ Teacher dashboard — create a class, invite; learner accepts — `ENTE` / `CREA` / `INVI` / `DASH` | `ExperienceApp` | [`ExperienceApp/teacher-dashboard-class-page.md`](product-knowledge/ExperienceApp/teacher-dashboard-class-page.md) |
 | ↳ Learning Path player (Practice Extra) — `PEXT` | `ExperienceApp` | [`ExperienceApp/learning-path-player.md`](product-knowledge/ExperienceApp/learning-path-player.md) |
+| ↳ Class Materials — bundle & component launch — `CMAT` | `ExperienceApp` | [`ExperienceApp/foc-class-materials.md`](product-knowledge/ExperienceApp/foc-class-materials.md) |
+| ↳ Resource Bank — `RBNK` | `ExperienceApp` | [`ExperienceApp/foc-resource-bank.md`](product-knowledge/ExperienceApp/foc-resource-bank.md) |
+| ↳ eBook reader — shell, TOC, reader tools — `EBOO` `DRAW` `PLAY` `TIME` `SHOW` `KBOA` | `ExperienceApp` | [`ExperienceApp/foc-ebook-reader.md`](product-knowledge/ExperienceApp/foc-ebook-reader.md) |
+| ↳ Notes tool — `NOTE` | `ExperienceApp` | [`ExperienceApp/foc-notes.md`](product-knowledge/ExperienceApp/foc-notes.md) |
+| ↳ Front-of-Class (Presentation Plus) & assignment creation — `C1AS` | `ExperienceApp` | [`ExperienceApp/foc-presentation-plus.md`](product-knowledge/ExperienceApp/foc-presentation-plus.md) |
 
 > **`ExperienceApp.md` is an INDEX (ADR-020).** Read it for the app header, environment URLs and the
 > file map, then `admin-shared.md`, then the per-screen file(s) your task touches. Do not append

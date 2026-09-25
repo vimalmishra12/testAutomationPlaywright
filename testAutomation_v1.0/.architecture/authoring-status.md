@@ -267,3 +267,63 @@ From SOURCE `ClassDashboardPage` (marking / analytics), ported without its posit
 5. **Close the loop:** update the register (Status + `Comments`) via
    `node test/Manual/C1App/LearningPath/_generate.js` after back-porting into `_tcdata*.js`, and update
    this block. Remove this "NEXT BATCH" section when the LP work is finished.
+
+## ebookFocusA11yMergedTest (ExperienceApp, thor) — superseded by `ebookAccessibilityTest_thor`
+Modules `KBOA` (keyboard accessibility focus traversal) · knowledge: `foc-ebook-reader.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
+- Phase 1 ✅ 2026-09-22 — `TST_KBOA_TC_1..19`; collapsed 4 logins into 1; visual candidates: none
+- Phase 2 ✅ 2026-09-22 — **19/19 passing (110s)** on Thor, single login
+- Phase 3 ⬜ pending
+
+## ebookAccessibilityTest (ExperienceApp, thor) — `ebookAccessibilityTest_thor` + `visualAcceptance_ebookAccessibility_thor`
+Modules `KBOA` + `EBTF` (single login: focus traversal pages 22/24/26/28, then continuous toolbar traversal on page 26) · knowledge: `foc-ebook-reader.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
+- Phase 1 ✅ 2026-09-23 — `ebookAccessibilityTest.json` created (r4 create-only: `ebookFocusA11yMergedTest.json` and `ebookToolbarFocusTest.json` stay frozen on disk). 35 `Test` steps on one login = `TST_KBOA_TC_1..19` then `TST_EBTF_TC_1..16`; `After` = `TST_EBOO_TC_5`, `TST_APPS_TC_1`, `TST_APPS_TC_2`. All 38 steps verified to resolve in `C1TCRepository.json` through the runner's `testFile`→id rule.
+- **Visual:** the 16 `TST_EBTF_TC_*` keep `visualTest: true` / `P1` in the repository, so AGENTS.md §8 Rule B requires a companion `visualAcceptance_ebookAccessibility_thor` script. Only those 16 baseline — `testrunner.js:186-192` reads the per-step flag and falls back to the repo value, and the 19 `TST_KBOA_TC_*` stay `false`.
+- **Coverage note:** before this file the 16 `TST_EBTF_TC_*` P1 TCs ran in **no** live npm script — both their scripts (`ebookToolbarFocusTest_thor`, `ebookToolbarFocusTestVisual_thor`) were retired in `9228b5e`. After the map regeneration on 2026-09-23 `tooling/tc-map.md` now resolves them to `ebookAccessibilityTest_thor` and `visualAcceptance_ebookAccessibility_thor`, so the gap is closed and provable from the generated map.
+- Phase 2 ✅ 2026-09-23 — **35/35 passing (4m, 222.8s)** on Thor: all 19 `TST_KBOA_TC_*` and all 16 `TST_EBTF_TC_*` green on one login, teardown included. Run as `node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookAccessibilityTest.json` which is byte-identical to `npm run ebookAccessibilityTest_thor` as added later the same day — for reference the 19-step predecessor took 110s, so adding the 16 toolbar steps cost ~113s and no second login.
+- Phase 3 ⬜ pending — visual baselines were bootstrapped once by the first `--visual=novus` run (16 PNGs, gitignored) and have not yet been exercised in compare mode against a deliberate change; per the repo convention each engineer and CI runner owns its own baselines.
+
+## ebookE2EstudentTest (ExperienceApp, thor) — `ebookE2EstudentTest_thor`
+Modules `EBOO` · `NOTE` · `DRAW` · `TIME` · `SHOW` · `PLAY` · `PAGE` · `COMM` (student reader master E2E) · knowledge: `foc-ebook-reader.md` + `foc-notes.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
+- Phase 1 ✅ 2026-09-22 — 8 suites consolidated (127 `Test` steps); Suite 3 embeds the 42-step notes battery (32 `TST_NOTE_*` steps over 14 distinct ids — the module registers 16 TCs, `…TC_1..15` and `18`; `TST_NOTE_TC_2` and `TST_NOTE_TC_5` are registered but not run by any suite); Suite 6 teardown; visual candidates: none. `[counts measured 2026-09-23]`
+- Phase 2 ✅ 2026-09-23 — **127/127 passing (13m)** on Thor across all 8 suites, invoked as `node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookE2EstudentTest.json`. Every suite's `After` logout executed after the teardown block was added.
+- Phase 3 ⬜ pending
+
+## ebookE2EteacherTest (ExperienceApp, thor) — `ebookE2EteacherTest_thor`
+Modules `CMAT` · `RBNK` · `EBOO` · `C1AS` · `APPS` (teacher materials, eBook, resource banks, Presentation Plus, and assignment creation) · knowledge: `foc-class-materials.md` + `foc-resource-bank.md` + `foc-ebook-reader.md` + `foc-presentation-plus.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md` (r5 Approach A)
+- Phase 1 ✅ 2026-09-23 — 6 suites consolidated (Suites 1–5: Class 1RB/2RB materials & eBooks, RBNK 1 & 2, Presentation Plus launch; Suite 6: Assignment Creation from Presentation Plus TOC); `TST_APPS_TC_1/2` teardown per suite
+- Phase 2 ✅ 2026-09-23 — **77/77 passing (5m)** on Thor across all 6 suites, including Suite 6's assignment-creation round trip (`TST_C1AS_TC_24` return-to-Presentation-Plus verified).
+- Phase 3 ⬜ pending
+
+## onboarding (ExperienceApp, thor; e-mail verification cases need prod) — no npm script yet
+Modules `LAND` · `FOOT` · `LOGI` · `APPS` · `RESE` · `SNUP` · `CREA` · `SPRF` · `INVI` · **`PCHD` (proposed)** — source: the team's `OnboardingApp_Test_Plan.xlsx` (58 scenarios) · knowledge: `onboarding.md` (§A6 = the source's product facts), `c1-core-shared.md` · manual register: `test/Manual/C1App/Onboarding/` (63 TCs)
+- Manual register ✅ 2026-09-24 — 63 TCs, all Not Run: **50 to automate**, **13 manual-only** (🔴 10 + 🟡 3, column "Automation Scope" — NEVER automate them, user decision 2026-09-24), 16 rows reuse an existing automated TC ID (ADR-011)
+- Phase 1 / 2 / 3 ⬜ — not started. **Nothing was grounded live**: every expected result is the source team's until Phase 1 confirms it.
+
+### NEXT BATCH — start here if you are asked to "automate onboarding" `[2026-09-24]`
+**The cases are already designed.** Do not re-derive them from the source workbook: every scenario is
+mapped in `test/Manual/C1App/Onboarding/Onboarding_test_cases.md` (+ `.xlsx`). Keep their TC IDs.
+1. **Read first:** this block · `product-knowledge/ExperienceApp/c1-core-shared.md` → `onboarding.md` ·
+   the register `.md` (sections "How to automate a case from this register", the coverage map and
+   **"Open items"**) · then the `c1-test-authoring` skill.
+2. **Batches (side-effect free first):**
+   - **B1 — no data (start here):** `TST_SNUP_TC_65..71, 76, 77, 78`, `TST_LOGI_TC_7, 10`, `TST_RESE_TC_6`,
+     `TST_LAND_TC_6, 7` + confirm the 16 reused rows (`LAND_TC_2/3`, `FOOT_TC_1/2/3/4/6/7/8`,
+     `LOGI_TC_4/5/6`, `APPS_TC_2`, `RESE_TC_4`, `SNUP_TC_59/63`) assert what the register says —
+     `FOOT_TC_4/6/8` are commented out in `footer.test.js` and must be re-enabled.
+   - **B2 — fixture accounts:** `TST_LOGI_TC_8, 14`, `TST_RESE_TC_7, 8`.
+   - **B3 — creates data, ASK FIRST (ADR-021):** `TST_SNUP_TC_72..75`, `TST_LOGI_TC_9` (lockout — disposable
+     account only), `TST_RESE_TC_9, 10`, `TST_CREA_TC_31`, `TST_SPRF_TC_24`, `TST_LOGI_TC_18`,
+     `TST_INVI_TC_14, 15`, `TST_PCHD_TC_1..3`.
+3. **Open questions for the user (answer before the batch that needs them):**
+   1. Module code `PCHD` for parent/child OK? (B3)
+   2. `SPRF_TC_24` (Students tab Action Menu → temporary password) vs `SPRF_TC_8/23` (Manage account →
+      Password tab) — same flow or two? (B3)
+   3. Keep `RESE_TC_10`, or fold it into `RESE_TC_9`? (B3)
+   4. Signup/verification cases: run on prod (like `learningPathTest_prod`) or wait for thor's expired
+      verify-link certificate (`c1-core-shared.md` §A4)? (B3)
+   Also in the register's Open items: `[ASSUMED]` copy to capture live, and whether TC_XCUT_009 (UI/colours)
+   is fine as a Phase 3 `visualTest` concern rather than a case.
+4. **Constraints:** new exec files need an npm script → `package.json` is protected (AGENTS.md
+   confirmation); passwords only via `{{env.*}}` (ADR-023); run-generated users via `{{run.*}}` (ADR-022).
+5. **Close the loop:** back-port into `_tcdata.js`, run `node test/Manual/C1App/Onboarding/_generate.js`
+   (rewrites `.md` + `.xlsx`), set Status/Comments, update this block. Remove this "NEXT BATCH" section when done.

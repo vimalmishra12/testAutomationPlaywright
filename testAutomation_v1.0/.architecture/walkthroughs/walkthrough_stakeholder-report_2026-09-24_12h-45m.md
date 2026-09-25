@@ -55,10 +55,10 @@ of full runs 10 and 11, as the user asked. No suite was run.
   - Admin: Suite 13
 - **Check:** the runner reads suite fields by name. The `tcMap --findings` output is identical with and without the new fields.
 
-### 4. .architecture/decisions.md (ADR-023), .architecture/system.md
+### 4. .architecture/decisions.md (ADR-024), .architecture/system.md
 - **Type:** Modified
 - **Layer:** Docs
-- **What changed:** Added ADR-023 for the report built after the run. Recorded the report-only suite fields in the Execution File contract.
+- **What changed:** Added ADR-024 for the report built after the run. Recorded the report-only suite fields in the Execution File contract.
 
 ## Verification (no suite run — user decision)
 - **Run 10 report, then run 11 report:**
@@ -112,7 +112,7 @@ All three are done in `tooling/report/buildReport.js`, and the reports were rebu
   - Screenshots are embedded as data URIs, so the page is one self-contained file (about 12.6 MB for a full run; the zip is about 8.9 MB). There is no `shots/` folder any more.
   - Each test ID with a screenshot (📷) is a link. It opens that screenshot in a viewer without opening or closing the test row. The screenshots in the test rows and in the failure cards open the same viewer.
 
-### 2. tooling/report/README.md, .architecture/decisions.md (ADR-023 items 1–2)
+### 2. tooling/report/README.md, .architecture/decisions.md (ADR-024 items 1–2)
 - **Type:** Modified
 - **Layer:** Docs
 - **What changed:** Updated to match: one embedded file, no not-run list, no requirement IDs.
@@ -137,7 +137,7 @@ None.
 ## Summary
 - **Committed** (at the user's request):
   - `d1b1a3f`: records from full runs 10 and 11
-  - `46a4e2b`: the stakeholder report (ADR-023)
+  - `46a4e2b`: the stakeholder report (ADR-024)
 - **Full-page screenshots:**
   - The user asked about full-page screenshots and confirmed the protected-file change.
   - The end-of-test screenshot now captures the whole page. If the full-page capture fails, it falls back to the visible screen.

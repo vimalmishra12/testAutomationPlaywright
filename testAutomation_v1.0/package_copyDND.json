@@ -31,6 +31,7 @@
     "eBookHotLinkTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=player.json --browserCapability=desktop-chrome-1920",
     "ebooksE2ETest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebooksE2ETest.json --browserCapability=desktop-chrome-1920",
     "ebookFocusA11yTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookFocusA11yTest.json --browserCapability=desktop-chrome-1920",
+    "createAssignmentPplusTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=createAssignmentPresentationPlusTest.json --browserCapability=desktop-chrome-1920",
     "ebookToolbarFocusTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookToolbarFocusTest.json --browserCapability=desktop-chrome-1920",
     "ebookToolbarFocusTestVisual_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=ebookToolbarFocusTest.json --browserCapability=desktop-chrome-1920 --visual=novus --skipAssertion=true",
     "manageReportsTest_thor": "node core/runner/run.js --appType=ExperienceApp --testEnv=thor --testExecFile=manageReportsTest.json --browserCapability=desktop-chrome-1920",
