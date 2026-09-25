@@ -11,7 +11,10 @@
         var idx = trimmed.indexOf('=');
         if (idx === -1) return;
         var key = trimmed.slice(0, idx).trim();
-        var val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+        var val = trimmed.slice(idx + 1).trim();
+        var commentIdx = val.indexOf('#');
+        if (commentIdx !== -1) val = val.slice(0, commentIdx).trim();
+        val = val.replace(/^["']|["']$/g, '');
         if (process.env[key] === undefined) process.env[key] = val;
     });
 })();
