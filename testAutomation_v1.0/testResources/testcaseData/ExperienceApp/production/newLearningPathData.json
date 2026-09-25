@@ -1,0 +1,378 @@
+{
+  "C1": {
+    "_comment": "New Learning Path (NLP) — the 'Projects' component (product cqaautomationpr1) of cqaautomationbundle1 on PRODUCTION, scenario sheet nlp-scenarios.xlsx (TC-NLP-001…022). Values captured live 2026-09-25 (learner _mhfh, teacher _r04f, Class 036n). The fresh-user setup chain (teacher, class, learner) reuses learningPathData.json; tokens are ADR-022 {{run.*}} values of the same run.",
+    "nlpAccess": {
+      "_comment": "TC-NLP-011 — TST_DASH_TC_13: the SLE school licence grants the product, so Projects is on the class card with no activation code.",
+      "className": "{{run.lpClassName}}",
+      "componentName": "Projects"
+    },
+    "nlpLaunch": {
+      "_comment": "TC-NLP-001/002/018 — TST_DASH_TC_17. firstLaunch: the run's learner has never launched Projects, so the provisioning screen + progress bar must show (measured ~64 s to 100 % on prod). A --runData=last debug learner has, so the debug exec file uses nlpRelaunch.",
+      "className": "{{run.lpClassName}}",
+      "componentName": "Projects",
+      "firstLaunch": true,
+      "timeoutMs": 300000
+    },
+    "nlpRelaunch": {
+      "className": "{{run.lpClassName}}",
+      "componentName": "Projects",
+      "firstLaunch": false,
+      "timeoutMs": 300000
+    },
+    "nlpToc": {
+      "_comment": "TC-NLP-001/016 — the Projects TOC as captured 2026-09-25 AFTER the product update (HTML + PDF added): 1 unit, 1 lesson, 7 numbered activities; medal icons on the scorable types (scorable, PS, Group PS). No 'Version' labels in this product.",
+      "productTitle": "cqaautomationbundle1",
+      "componentName": "Projects",
+      "unit": "Unit 1",
+      "unitNumber": "1",
+      "lesson": "Lesson 1",
+      "activities": [
+        "1. BASE04_Dropdown_Scorable.zip",
+        "2. Flashcards.zip",
+        "3. PS",
+        "4. Non-scorable HTML activity",
+        "5. test pdf",
+        "6. Collaborative Task",
+        "7. Group PS"
+      ],
+      "medalActivities": [
+        "1. BASE04_Dropdown_Scorable.zip",
+        "3. PS",
+        "7. Group PS"
+      ],
+      "probeActivity": "1. BASE04_Dropdown_Scorable.zip",
+      "openLabel": "1. BASE04_Dropdown_Scorable.zip",
+      "openTitle": "BASE04_Dropdown_Scorable.zip"
+    },
+    "nlpScorable": {
+      "_comment": "TC-NLP-003/004/017 — same content and answers as the classic LP's scorable (SOURCE). In NLP a finished scorable reopens as a FRESH attempt.",
+      "frame1": {
+        "activityLabel": "1. BASE04_Dropdown_Scorable.zip",
+        "activityTitle": "BASE04_Dropdown_Scorable.zip",
+        "frame": 0,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "relaunch": {
+        "activityLabel": "1. BASE04_Dropdown_Scorable.zip",
+        "activityTitle": "BASE04_Dropdown_Scorable.zip",
+        "frame": 0,
+        "answerCount": 1,
+        "unitStatus": "In progress"
+      },
+      "frame2": {
+        "frame": 1,
+        "answers": [
+          "is doing"
+        ]
+      },
+      "frame3": {
+        "frame": 2,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "frame4": {
+        "frame": 3,
+        "answers": [
+          "in the middle of the country",
+          "I found a job at a big",
+          "six months ago",
+          "also a little scary sometimes"
+        ]
+      },
+      "result": {
+        "heading": "Amazing!",
+        "expected": "You scored 4 out of 4"
+      }
+    },
+    "nlpFlashcards": {
+      "activityTitle": "Flashcards.zip"
+    },
+    "nlpPS": {
+      "_comment": "TC-NLP-006 — SOURCE's answer text. The badge reads 'Submitted' (its medal img alt: 'Activity status: evaluation pending'). One submission per learner.",
+      "activityTitle": "PS",
+      "answer": "Submitting PS activity",
+      "badge": "Submitted"
+    },
+    "nlpExit": {
+      "dashboardUrl": "/dashboard/learner/dashboard"
+    },
+    "teacherNlp": {
+      "_comment": "TC-NLP-012/013/014 — teacher entry points on the run's class and My library (read-only; nothing is saved). Manage student access > Create access rule opens Projects in the CLASSIC LP player (/learning-path/teacher/…/create-access), so TST_MSAC_TC_1 is reused unchanged.",
+      "bundleName": "cqaautomationbundle1",
+      "componentName": "Projects",
+      "unit": "Unit 1",
+      "productId": "cqaautomationbundle1",
+      "productTitle": "cqaautomationbundle1",
+      "activityLabel": "1. BASE04_Dropdown_Scorable.zip",
+      "activityTitle": "BASE04_Dropdown_Scorable.zip"
+    },
+    "adminNlp": {
+      "_comment": "TC-NLP-015 — production single-school admin of MQA Sierra School (as LP-033). The sheet's example product 'R55 Multi Component Umbrella' is replaced by the run's own bundle (user decision 2026-09-25).",
+      "schoolKey": "MQA-ABC-DEF",
+      "productTitle": "cqaautomationbundle1",
+      "searchBanner": "Showing search results for cqaautomationbundle1",
+      "componentName": "Projects",
+      "activityLabel": "1. BASE04_Dropdown_Scorable.zip",
+      "activityTitle": "BASE04_Dropdown_Scorable.zip"
+    },
+    "nlpMarking": {
+      "_comment": "TC-NLP-008 — the teacher marks the run's learner's Projects PS (score 70 pre-filled, feedback 'Good' — as LP-035; user decision 2026-09-25). Seen on prod 2026-09-25: the queue lists 'Projects (1) cqaautomationbundle1' > 'Unit 1: Lesson 1 / PS' ~4 min after the submission.",
+      "course": "Projects",
+      "item": "Unit 1: Lesson 1 / PS",
+      "learnerName": "Learner User",
+      "prefilledScore": "70",
+      "score": 70,
+      "feedback": "Good",
+      "confirmTitle": "Ready to send?",
+      "countTimeoutMs": 720000,
+      "reloadEveryMs": 20000,
+      "minCount": 2,
+      "unmarkedAfter": "Unmarked (1)",
+      "_comment_two": "[2026-09-25] The run makes TWO submissions (PS + Group PS): wait until both are in the queue (minCount 2), mark the PS first — one stays unmarked."
+    },
+    "nlpGroup": {
+      "_comment": "TC-NLP-021/022 setup — TST_CGRP_TC_1: the teacher groups the run's two learners (by e-mail) under a run-generated name. Mutates the run's own class only (user decision 2026-09-25).",
+      "groupName": "{{run.lpGroupName}}",
+      "studentEmails": [
+        "{{run.lpLearnerEmail}}",
+        "{{run.lpLearner2Email}}"
+      ]
+    },
+    "nlpCollab": {
+      "_comment": "TC-NLP-021 — comments as seen live 2026-09-25: author 'Learner User' / 'LearnerB User'; the teacher's comment author reads 'Teacher User' (a separate 'Teacher' tag sits beside it). Ready is never clicked.",
+      "learnerA": {
+        "comment": "Comment from learner A",
+        "activityLabel": "6. Collaborative Task",
+        "activityTitle": "Collaborative Task",
+        "groupName": "{{run.lpGroupName}}"
+      },
+      "learnerB": {
+        "expected": [
+          {
+            "actor": "Learner User",
+            "text": "Comment from learner A"
+          }
+        ],
+        "comment": "Comment from learner B",
+        "activityLabel": "6. Collaborative Task",
+        "activityTitle": "Collaborative Task",
+        "groupName": "{{run.lpGroupName}}"
+      },
+      "teacher": {
+        "expected": [
+          {
+            "actor": "Learner User",
+            "text": "Comment from learner A"
+          },
+          {
+            "actor": "LearnerB User",
+            "text": "Comment from learner B"
+          }
+        ],
+        "comment": "Comment from the teacher",
+        "activityLabel": "6. Collaborative Task",
+        "activityTitle": "Collaborative Task",
+        "groupName": "{{run.lpGroupName}}"
+      },
+      "learnerAback": {
+        "expected": [
+          {
+            "actor": "Learner User",
+            "text": "Comment from learner A"
+          },
+          {
+            "actor": "LearnerB User",
+            "text": "Comment from learner B"
+          },
+          {
+            "actor": "Teacher User",
+            "text": "Comment from the teacher"
+          }
+        ],
+        "activityLabel": "6. Collaborative Task",
+        "activityTitle": "Collaborative Task",
+        "groupName": "{{run.lpGroupName}}"
+      }
+    },
+    "nlpGroupPs": {
+      "_comment": "TC-NLP-022 — learner A submits for the group; the confirmation and the submitted line as seen live 2026-09-25. One submission per group.",
+      "activityLabel": "7. Group PS",
+      "activityTitle": "Group PS",
+      "title": "Group answer title",
+      "answer": "Group PS answer from learner A",
+      "confirmTitle": "Ready to submit your group's work?",
+      "submittedBy": "Learner User on behalf of {{run.lpGroupName}}",
+      "badge": "Submitted"
+    },
+    "nlpGroupMarking": {
+      "_comment": "TC-NLP-022 — the teacher marks the Group PS once for the group (score 90, feedback 'Well Done' — agreed with the user 2026-09-23). In the queue the submission is listed under the GROUP name; seen ~4 min after submitting.",
+      "course": "Projects",
+      "item": "Unit 1: Lesson 1 / Group PS",
+      "learnerName": "{{run.lpGroupName}}",
+      "prefilledScore": "70",
+      "score": 90,
+      "feedback": "Well Done",
+      "confirmTitle": "Ready to send?",
+      "countTimeoutMs": 720000,
+      "reloadEveryMs": 20000,
+      "unmarkedAfter": "Unmarked (0)",
+      "unmarkedSettleMs": 1200000,
+      "_comment_settle": "[2026-09-25, run 4] Once learner B has launched the product, the counters read 'Unmarked (2)' right after the Group PS mark (list empty) and reached 0 within ~15 min — MRKQ_TC_2 re-reads the tab every 20 s for up to 20 min (user decision: keep the check, wait for it)."
+    },
+    "nlpGroupPsMarked": {
+      "_comment": "TC-NLP-022 — after the teacher's one mark, EACH member's Group PS shows 'Score : 90 %' and the teacher block 'Score: 90 % Feedback: Well Done' (seen live 2026-09-25, learner B).",
+      "activityLabel": "7. Group PS",
+      "activityTitle": "Group PS",
+      "title": "Group answer title",
+      "answer": "Group PS answer from learner A",
+      "confirmTitle": "Ready to submit your group's work?",
+      "submittedBy": "Learner User on behalf of {{run.lpGroupName}}",
+      "badge": "Submitted",
+      "score": "90",
+      "feedback": "Well Done"
+    },
+    "nlpProgress": {
+      "_comment": "TC-NLP-009/010 — the END state of every full run after the Projects update (7 activities; Projects totals /6 — one activity is not counted — and /11 overall). Learner A: scorable 4/4, flashcards, PS 70, HTML, PDF, a Collaborative Task comment (Ready never clicked), Group PS 90. Figures read live 2026-09-25 on run 2's users (teacher card / details settled first; the learner summary lags by minutes). Projects counts GOLD MEDALS.",
+      "className": "{{run.lpClassName}}",
+      "learnerName": "Learner User",
+      "product": "cqaautomationbundle1",
+      "component": "Projects",
+      "learnerSummary": [
+        "Completed activities: 5/11",
+        "Activities completed above target score : 3/5",
+        "87% Average score"
+      ],
+      "learnerComponents": {
+        "Projects": [
+          "Completed activities: 5/6",
+          "3 Gold medals",
+          "87%"
+        ]
+      },
+      "activities": [
+        {
+          "name": "BASE04_Dropdown_Scorable.zip",
+          "text": [
+            "First score 100%",
+            "Best score 100%",
+            "Attempts 1"
+          ]
+        },
+        {
+          "name": "Flashcards.zip",
+          "text": [
+            "Viewed"
+          ],
+          "status": "Activity status: viewed"
+        },
+        {
+          "name": "PS",
+          "text": [
+            "First score 70%",
+            "Best score 70%",
+            "Attempts 1"
+          ]
+        },
+        {
+          "name": "Non-scorable HTML activity",
+          "text": [
+            "Viewed"
+          ],
+          "status": "Activity status: viewed"
+        },
+        {
+          "name": "test pdf",
+          "text": [
+            "Viewed"
+          ],
+          "status": "Activity status: viewed"
+        },
+        {
+          "name": "Group PS",
+          "text": [
+            "First score 90%",
+            "Best score 90%",
+            "Attempts 1"
+          ]
+        }
+      ],
+      "teacherClass": [
+        "Average completed activities: 27%",
+        "4 /6",
+        "88%"
+      ],
+      "teacherStudent": [
+        "Completed activities: 5/11",
+        "3/5",
+        "87%"
+      ],
+      "teacherDetails": {
+        "Projects": [
+          "Completed activities: 5/6",
+          "3 Gold medals",
+          "87%"
+        ]
+      },
+      "feedbackItem": "New feedback PS Your teacher",
+      "score": "70",
+      "feedback": "Good",
+      "settleTimeoutMs": 600000,
+      "reloadEveryMs": 20000,
+      "_comment_B": "[2026-09-25] The 'known behaviour' (learner B not credited with the group mark) is addressed in setup: learner B launches Practice Extra and Projects right after accepting (user). Class figures include B: (5+1)/22 = 27%, above target 3+1 of 5+1, average 88% — derived, to be confirmed by full run 4."
+    },
+    "nlpProgressB": {
+      "_comment": "TC-NLP-022 — learner B only took part through the group: the Group PS's one mark reaches B as its own feedback (bell: 'New feedback Group PS …').",
+      "feedbackItem": "New feedback Group PS",
+      "score": "90",
+      "feedback": "Well Done"
+    },
+    "nlpHtml": {
+      "_comment": "TC-NLP-019 — seen 2026-09-25: loads in the activity iframe, no submit; after × the TOC row shows the completed tick. The sheet's ~3 s dwell is honoured before leaving.",
+      "activityLabel": "4. Non-scorable HTML activity",
+      "activityTitle": "Non-scorable HTML activity",
+      "dwellMs": 3000
+    },
+    "nlpPdf": {
+      "_comment": "TC-NLP-020 — same rule as the classic LP PDF (LP-022, user decision 2026-09-25): land via NEXT ACTIVITY from the HTML activity; a download page (not the PDF); landing marks it completed; Download never clicked. Leaving at once did not complete it (run 3) — the page gets the HTML dwell (3 s) before x.",
+      "fromLabel": "4. Non-scorable HTML activity",
+      "fromTitle": "Non-scorable HTML activity",
+      "activityLabel": "5. test pdf",
+      "activityTitle": "test pdf",
+      "instructions": "Download the test pdf below and complete this activity",
+      "fileName": "Sample1.pdf",
+      "dwellMs": 3000
+    },
+    "nlpProgressTeacherB": {
+      "_comment": "TC-NLP-010/022 — learner B's figures in the teacher's Class data: B only took part through the group, so the group's Group PS mark (90) is B's one completed activity. Derived from run 1's observed 1/10 · 1/1 · 90% with the 7-activity totals — to be confirmed by full run 4.",
+      "className": "{{run.lpClassName}}",
+      "learnerName": "LearnerB User",
+      "product": "cqaautomationbundle1",
+      "component": "Projects",
+      "teacherClass": [
+        "Average completed activities: 27%",
+        "4 /6",
+        "88%"
+      ],
+      "teacherStudent": [
+        "Completed activities: 1/11",
+        "1/1",
+        "90%"
+      ],
+      "teacherDetails": {
+        "Projects": [
+          "Completed activities: 1/6",
+          "1 Gold medal",
+          "90%"
+        ]
+      },
+      "settleTimeoutMs": 600000,
+      "reloadEveryMs": 20000
+    }
+  }
+}

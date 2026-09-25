@@ -268,6 +268,29 @@ From SOURCE `ClassDashboardPage` (marking / analytics), ported without its posit
    `node test/Manual/C1App/LearningPath/_generate.js` after back-porting into `_tcdata*.js`, and update
    this block. Remove this "NEXT BATCH" section when the LP work is finished.
 
+## newLearningPath (ExperienceApp, production) — `newLearningPathTest_prod` (`newLearningPath.json`)
+Modules **`NLPP`** (`newLearningPath.page.js`, new) · **`CGRP`** (`classGroups.page.js`, new) · `DASH_TC_17` (new) · reused `DASH_TC_13`,
+`MSAC_TC_1`, `MRKQ_TC_1/2`, `PROG_TC_1/3/4/5/6/7` + the LP setup chain · scenario sheet `D:\Playwright\Test_Cases_CUP\nlp-scenarios.xlsx`
+(TC-NLP-001…022) · **creates per full run: 1 teacher + affiliation, 1 class, learners A + B, 1 group, progress, 2 submissions, 2 marks,
+3 comments** (user decisions 2026-09-25: own exec file, run's own bundle for previews, group cases automated, teacher marks) ·
+knowledge: `new-learning-path.md` · register: `test/Manual/C1App/NewLearningPath/` (25+9 rows, generated)
+- Phase 1 ✅ 2026-09-25 — grounded live first (read-only probes on learner `_mhfh` / teacher `_r04f`; groups on run 1's Class jyaf)
+- Phase 2 — run 1 (learner + previews + PS marking, 12 suites) **70/70** (teacher `_6fho`, Class jyaf, learner `_sh6x`); group debug on
+  those users 5/5 after two fixes (comments load after the editor; teacher author text). **Full run 2 (22 suites) 125/127** (teacher `_5d2i`,
+  Class qjug, learners `_r4cx` / B `_x40g`): only `TST_PROG_TC_3` ×2 — the Group PS mark is not counted for learner B in Class data.
+  **User decision 2026-09-25: known application behaviour** — class-level figures asserted by label only, the learner-B step removed;
+  re-verified on run 2's users 5/5. Register: 32 Pass · 2 Blocked.
+- Phase 3 ⏭️ not assessed — every TC `visualTest: false` (all data run-generated: names, keys, dates → no visual candidates)
+- **TC-NLP-019/020 unblocked 2026-09-25** (Projects updated: HTML + PDF, 7 activities) — `NLPP_TC_13/14`. Full run 3 (npm script) 125/128: the PDF was
+  left at once (not completed) + 2 knock-on progress rows; fixed per the user's rule "same as the PDF in LP" (land via NEXT ACTIVITY from the
+  HTML activity, dwell, never download) → debug on run 3's users (teacher `_m3rm`, Class rsgb) **11/11**. Register: **34 Pass**.
+- **Supersedes** the classic LP register's ON-HOLD LP-023/024 (`PEXT_TC_22/23`): the group flows now run in this suite; the parked
+  `learningPathGroups.json` stays on disk (r4).
+- **2026-09-25 — full run 5 135/135 (clean)** (teacher `_5srg`, Class brvp, learners `_3jsj` / B `_6bu5`). Two user fixes since run 3:
+  (1) learner B launches Practice Extra + Projects in setup (Suite 9) before group work → B is credited with the group mark, the class and B
+  figures are asserted again (27% · 4 /6 · 88%; B 1/11 · 1/1 · 90%) — the "known behaviour" is withdrawn; (2) the Group PS marking step waits
+  for the unmarked counter to settle (run 4: "Unmarked (2)" with an empty list, 0 within ~15 min; run 5: settled in 22 s). Register: 34 Pass.
+
 ## ebookFocusA11yMergedTest (ExperienceApp, thor) — superseded by `ebookAccessibilityTest_thor`
 Modules `KBOA` (keyboard accessibility focus traversal) · knowledge: `foc-ebook-reader.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md`
 - Phase 1 ✅ 2026-09-22 — `TST_KBOA_TC_1..19`; collapsed 4 logins into 1; visual candidates: none

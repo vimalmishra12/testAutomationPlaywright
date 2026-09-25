@@ -155,6 +155,30 @@ module.exports = {
   },
 
   /**
+   * [2026-09-25] TC-NLP-001/002/018 (TST_DASH_TC_17): launches a NEW Learning Path component (e.g. "Projects") from
+   * the named class card and follows it to the NLP TOC. Reads the tile + card text for any expiry wording first (SLE:
+   * none), then hands the launch to newLearningPath.watch_launch, which records the loader, the one-time
+   * provisioning screen and its progress bar on the way. A learner's first launch of a product took ~64 s on prod,
+   * so the bound is `timeoutMs` (the suite gives 300 s).
+   */
+  launch_classNlpComponent: async function (className, componentName, timeoutMs) {
+    await logger.logInto(await stackTrace.get(), "class:" + className + " component:" + componentName);
+    var ds = selectorFile.css.ComproC1.dashboard;
+    var card = action.getFilteredLocator(ds.learnerClassCard, className);
+    var tile = action.getNestedFilteredLocator(ds.learnerClassCard, className, ds.componentTile, componentName);
+    var out = { tileShown: false, tileText: null, expiryText: null, clicked: false };
+    out.tileShown = true == (await action.waitForDisplayed(tile, 60000));
+    if (!out.tileShown) return out;
+    out.tileText = String(await action.getText(tile)).replace(/\s+/g, " ").trim();
+    var texts = [await action.getText(tile), await action.getText(card)].join("\n");
+    var hit = texts.split("\n").filter(function (l) { return /expir/i.test(l); });
+    out.expiryText = hit.length ? hit.join(" | ") : null;
+    out.clicked = true == (await action.click(tile));
+    if (!out.clicked) return out;
+    return Object.assign(out, await require("./newLearningPath.page.js").watch_launch(ds.learningPathLoader, timeoutMs || 300000));
+  },
+
+  /**
    * [2026-09-23] LP-034 (TST_PROG_TC_1): the class card's "My progress" (qid l-db-cc-btn-2) — looked up
    * INSIDE the named class card — opens the learner's aggregated progress for that class.
    */

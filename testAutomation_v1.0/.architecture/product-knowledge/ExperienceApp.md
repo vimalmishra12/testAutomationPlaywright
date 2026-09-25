@@ -79,6 +79,7 @@ certificate, run-generated users), then the screen file.
 | Signup, e-mail verification, teacher account setup / join a school; homepage, login, reset password, parent/child, invite signup (onboarding register, 2026-09-24) | `SNUP` `TSET` `LAND` `FOOT` `LOGI` `RESE` `PCHD`(proposed) | [`onboarding.md`](ExperienceApp/onboarding.md) |
 | Teacher dashboard — create a class, class key, invite; learner accepts (SLE access) | `ENTE` `CREA` `INVI` `DASH` | [`teacher-dashboard-class-page.md`](ExperienceApp/teacher-dashboard-class-page.md) |
 | Learning Path player (Practice Extra) — entry, TOC, scorable activity | `PEXT` `DASH` | [`learning-path-player.md`](ExperienceApp/learning-path-player.md) |
+| New Learning Path (NLP — "Projects"): vertical TOC, activities, group Collaborative Task / Group PS, previews; class groups `[2026-09-25]` | `NLPP` `CGRP` `DASH` | [`new-learning-path.md`](ExperienceApp/new-learning-path.md) |
 | Class Materials — bundle & component launch | `CMAT` | [`foc-class-materials.md`](ExperienceApp/foc-class-materials.md) |
 | Resource Bank | `RBNK` | [`foc-resource-bank.md`](ExperienceApp/foc-resource-bank.md) |
 | eBook reader — shell, TOC, reader tools (drawing, media, timer, show/hide, keyboard focus) | `EBOO` `DRAW` `PLAY` `TIME` `SHOW` `KBOA` | [`foc-ebook-reader.md`](ExperienceApp/foc-ebook-reader.md) |

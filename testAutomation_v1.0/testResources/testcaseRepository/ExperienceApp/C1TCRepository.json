@@ -335,6 +335,12 @@
           "description": "Verify an SLE-activated component shows no expiry date and a loading indicator while it launches",
           "tags": "P1",
           "visualTest": false
+        },
+        {
+          "id": "TST_DASH_TC_17",
+          "description": "Verify the SLE-granted NLP component shows no expiry date and, launched from the named class card, opens its table of contents (a first launch shows the provisioning screen with its progress bar)",
+          "tags": "P1",
+          "visualTest": false
         }
       ]
     },
@@ -3760,6 +3766,146 @@
         {
           "id": "TST_PEXT_TC_21",
           "description": "Verify a downloadable PDF activity is marked viewed when the learner lands on it, with no download or submit",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "New Learning Path player (NLP — Projects)",
+      "moduleId": "NLPP",
+      "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+      "testcase": [
+        {
+          "id": "TST_NLPP_TC_1",
+          "description": "Verify the NLP table of contents shows the product, the component and its activities when the component is launched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_2",
+          "description": "Verify the NLP table of contents is a single vertical page with a numbered unit, its lesson and numbered activities, and that the unit collapses and expands and an opened activity closes back to it",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_3",
+          "description": "Verify Exercise 1's dropdown shows the chosen value and can be checked when the scorable activity is opened from the NLP table of contents",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_4",
+          "description": "Verify an unfinished scorable shows as in progress in the NLP table of contents and restores its checked answer when relaunched",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_5",
+          "description": "Verify Next advances to the following exercise and its dropdowns register their answers when checked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_6",
+          "description": "Verify the result screen reads 'You scored 4 out of 4' when every exercise of the scorable activity is answered correctly",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_7",
+          "description": "Verify the flashcard deck pages to its last card and offers the NEXT ACTIVITY bridge when opened via 'Next activity'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_8",
+          "description": "Verify the Practice Set shows a 'Submitted' badge with the answer when it is submitted and confirmed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_9",
+          "description": "Verify Close Activity returns to the NLP table of contents and its Cambridge One Home logo returns to the dashboard with its profile menu",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_10",
+          "description": "Verify a teacher can preview the NLP component and open its activities when it is launched from the class Materials tab",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_11",
+          "description": "Verify a teacher can preview the NLP component and open its activities when it is launched from My library",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_12",
+          "description": "Verify a school admin can preview the NLP component and open its activities when it is launched from the Library tab's See materials",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_15",
+          "description": "Verify a grouped learner can post a comment on the Collaborative Task, which is headed by their group's name",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_16",
+          "description": "Verify a group member sees the earlier comments of the group with their authors on the Collaborative Task and can add their own",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_17",
+          "description": "Verify the teacher can open the group's Collaborative Task from the preview, see the learners' comments and add a comment",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_18",
+          "description": "Verify a learner can submit the Group PS on behalf of the group after confirming 'Ready to submit your group's work?'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_19",
+          "description": "Verify the other group member sees the group's submitted Group PS read-only",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_20",
+          "description": "Verify every group member sees the teacher's single mark and feedback on the group's Group PS",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_13",
+          "description": "Verify the HTML activity renders and is marked completed in the NLP table of contents after a short dwell with no submit",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_NLPP_TC_14",
+          "description": "Verify the PDF activity opens its download page and is marked completed in the NLP table of contents without downloading",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Class groups (teacher)",
+      "moduleId": "CGRP",
+      "testFile": "./test/ExperienceApp/classGroups.test.js",
+      "testcase": [
+        {
+          "id": "TST_CGRP_TC_1",
+          "description": "Verify the teacher can create a group of the class's learners and it is listed with its students",
           "tags": "P1",
           "visualTest": false
         }

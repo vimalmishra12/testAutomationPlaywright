@@ -8,8 +8,10 @@ var sts;
 module.exports = {
   // LP-035: the class shows work to mark, and the queue lists the learner's PS submission (pre-filled score).
   TST_MRKQ_TC_1: async function (testdata) {
-    sts = await markingQueue.getData_classMarkingCount(testdata.countTimeoutMs, testdata.reloadEveryMs);
-    await assertion.assert(sts.count >= 1, "The class shows no work to mark (Marking count " + sts.count + " after " + sts.waitedMs + " ms)");
+    // [2026-09-25] minCount (default 1): the NLP suite waits for BOTH of its submissions (PS + Group PS) before marking.
+    var minCount = testdata.minCount || 1;
+    sts = await markingQueue.getData_classMarkingCount(testdata.countTimeoutMs, testdata.reloadEveryMs, minCount);
+    await assertion.assert(sts.count >= minCount, "The class shows fewer than " + minCount + " submission(s) to mark (Marking count " + sts.count + " after " + sts.waitedMs + " ms)");
     sts = await markingQueue.open_submission(testdata.course, testdata.item, testdata.learnerName);
     await assertion.assertEqual(sts.queueShown, true, "The marking queue did not open");
     await assertion.assert(/Unmarked \(\d+\)/.test(sts.unmarkedTab || "") && !/Unmarked \(0\)/.test(sts.unmarkedTab), "The queue shows nothing unmarked: " + sts.unmarkedTab);
@@ -28,6 +30,16 @@ module.exports = {
     await assertion.assertEqual(sts.submissionScore, String(testdata.score), "The submission does not show the score " + testdata.score);
     await assertion.assertEqual(sts.teacherScore, String(testdata.score), "The teacher's feedback block does not show the score " + testdata.score);
     await assertion.assertEqual(sts.teacherFeedback, testdata.feedback, "The teacher's feedback block does not show the feedback");
-    await assertion.assertEqual(sts.unmarkedTab, "Unmarked (0)", "The submission is still unmarked");
+    // [2026-09-25] unmarkedAfter (default "Unmarked (0)"): with two submissions the first mark leaves "Unmarked (1)".
+    var expectedTab = testdata.unmarkedAfter || "Unmarked (0)";
+    var tab = sts.unmarkedTab;
+    // [2026-09-25] unmarkedSettleMs (opt-in, NLP Group PS): the counter can lag the mark by minutes — re-read until it
+    // settles (bounded). Without it the count is read once, as before (LP suite unchanged).
+    if (testdata.unmarkedSettleMs && tab !== expectedTab) {
+      var settled = await markingQueue.getData_unmarkedTabSettled(expectedTab, testdata.unmarkedSettleMs, testdata.reloadEveryMs);
+      await logger.logInto(await stackTrace.get(), "Unmarked tab '" + settled.unmarkedTab + "' after " + settled.waitedMs + " ms (" + settled.attempts + " reads)");
+      tab = settled.unmarkedTab;
+    }
+    await assertion.assertEqual(tab, expectedTab, "The unmarked count did not drop as expected after marking");
   },
 };
