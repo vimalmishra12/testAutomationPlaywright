@@ -29,6 +29,9 @@
 const { chromium, webkit, firefox } = require("playwright");
 const fs = require("fs");
 const nodePath = require("path");
+// [2026-09-25] ADR-025 assertion evidence report — confirmed by user. The root hooks below
+// start / measure / save / build it; every call is a no-op unless --assertReport=true.
+const evidence = require("../utils/assertionEvidence.js");
 
 // mochawesome screenshot attachment (Timeline-style report). Loaded lazily so the
 // framework does not hard-depend on mochawesome when other reporters are used.
@@ -391,6 +394,9 @@ exports.mochaHooks = {
      */
     beforeEach: async function () {
         global.__activeFrame = null;
+        // ADR-025: start this test's evidence record (reads + checks). Root hooks run before the
+        // suite-level BeforeEach, so reads made by a BeforeEach TC belong to the test they prepare.
+        evidence.beginTest();
     },
 
     /**
@@ -405,8 +411,19 @@ exports.mochaHooks = {
         if (global.__isCloud && this.currentTest && this.currentTest.state === "failed") {
             global.__ltSuiteFailed = true;
         }
-        if (!SHOTS_ENABLED || !mochaAddContext || !global.page) return;
+        // [2026-09-25] ADR-025 — confirmed by user. With --assertReport=true the screenshot is also
+        // needed by the assertion evidence report (even under --report=spec). With the flag off,
+        // `evidence.enabled` is false and this is the original early return.
+        const wantMocha = SHOTS_ENABLED && !!mochaAddContext;
+        if (!global.page || (!wantMocha && !evidence.enabled)) {
+            if (evidence.enabled) evidence.finishTest(this.currentTest, null, null);
+            return;
+        }
+        let buf = null, measured = null;
         try {
+            // ADR-025: measure the checked elements BEFORE the capture, so the boxes describe the
+            // frame that is captured. Returns null at once when the flag is off.
+            measured = await evidence.measure(global.page);
             // Capture as a base64 data URI and embed it INLINE in the report. This
             // avoids any relative-path resolution problem — the image lives inside
             // report.html itself, so it shows no matter where the file is opened.
@@ -414,13 +431,17 @@ exports.mochaHooks = {
             // viewport) for the stakeholder report and mochawesome — confirmed by user. Content that
             // scrolls inside an inner panel / iframe still shows only its visible part. Falls back to
             // the viewport shot if the full-page capture fails, so a test never loses its screenshot.
-            const buf = await global.page.screenshot({ fullPage: true })
+            buf = await global.page.screenshot({ fullPage: true })
                 .catch(() => global.page.screenshot({ fullPage: false }));
-            const dataUri = "data:image/png;base64," + buf.toString("base64");
-            mochaAddContext(this, { title: "Screenshot (end of test)", value: dataUri });
+            if (wantMocha) {
+                const dataUri = "data:image/png;base64," + buf.toString("base64");
+                mochaAddContext(this, { title: "Screenshot (end of test)", value: dataUri });
+            }
         } catch (err) {
             console.log("[pw-setup] screenshot attach skipped:", err.message);
         }
+        // ADR-025: save this test's evidence record + the same screenshot. No-op when the flag is off.
+        evidence.finishTest(this.currentTest, buf, measured);
     },
 
     /**
@@ -438,5 +459,8 @@ exports.mochaHooks = {
         if (global.__pwContext) await global.__pwContext.close().catch(() => {});
         if (global.browser) await global.browser.close().catch(() => {});
         console.log("[pw-setup] Browser torn down.");
+        // [2026-09-25] ADR-025 — confirmed by user. Build the assertion evidence report from the
+        // records the run wrote. No-op when the flag is off; a build failure only logs.
+        evidence.finishRun();
     }
 };

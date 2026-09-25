@@ -238,7 +238,7 @@ var DATA = /*__DATA__*/null;
     if (t.state === "failed") box.classList.add("open");
     var row = el("div", "row");
     row.appendChild(el("span", "icon", t.state === "passed" ? "✔" : t.state === "failed" ? "✘" : "–"));
-    row.appendChild(el("div", "title", t.title));
+    row.appendChild(el("div", "title", t.title + (t.state === "retried" ? " — attempt " + ((t.attempt || 0) + 1) + ", retried" : (t.attempt ? " — attempt " + (t.attempt + 1) : ""))));
     var checks = t.checks || [];
     var np = checks.filter(function (c) { return c.status === "passed"; }).length;
     var nf = checks.length - np;
@@ -263,19 +263,30 @@ var DATA = /*__DATA__*/null;
         img.alt = "Screenshot at the end of " + t.title;
         img.src = t.shot.src;
         shot.appendChild(img);
+        // One outline per element box. Several checks on the same element (e.g. displayed,
+        // value and placeholder of one search box) would otherwise stack exactly on top of each
+        // other and hide all but the last badge — so they share one mark with a combined badge.
+        var groups = [], byBox = {};
         checks.forEach(function (c) {
           (c.targets || []).forEach(function (x) {
             if (x.state !== "shown" || !x.box || !t.shot.w || !t.shot.h) return;
-            var m = el("div", "mark " + c.status + (c.link === "inferred" ? " inferred" : ""));
-            m.dataset.n = c.n;
-            m.style.left = (100 * x.box.x / t.shot.w) + "%";
-            m.style.top = (100 * x.box.y / t.shot.h) + "%";
-            m.style.width = (100 * x.box.w / t.shot.w) + "%";
-            m.style.height = (100 * x.box.h / t.shot.h) + "%";
-            m.appendChild(el("span", "badge", c.n + (c.status === "passed" ? " ✔" : " ✘")));
-            m.title = c.message;
-            shot.appendChild(m);
+            var k = [x.box.x, x.box.y, x.box.w, x.box.h].join(",");
+            if (!byBox[k]) { byBox[k] = { box: x.box, checks: [] }; groups.push(byBox[k]); }
+            if (byBox[k].checks.indexOf(c) < 0) byBox[k].checks.push(c);
           });
+        });
+        groups.forEach(function (g) {
+          var anyFail = g.checks.some(function (c) { return c.status === "failed"; });
+          var allInferred = g.checks.every(function (c) { return c.link === "inferred"; });
+          var m = el("div", "mark " + (anyFail ? "failed" : "passed") + (allInferred ? " inferred" : ""));
+          m.dataset.ns = g.checks.map(function (c) { return c.n; }).join(" ");
+          m.style.left = (100 * g.box.x / t.shot.w) + "%";
+          m.style.top = (100 * g.box.y / t.shot.h) + "%";
+          m.style.width = (100 * g.box.w / t.shot.w) + "%";
+          m.style.height = (100 * g.box.h / t.shot.h) + "%";
+          m.appendChild(el("span", "badge", g.checks.map(function (c) { return c.n; }).join("·") + (anyFail ? " ✘" : " ✔")));
+          m.title = g.checks.map(function (c) { return c.n + ". " + (c.status === "passed" ? "✔ " : "✘ ") + c.message; }).join("\n");
+          shot.appendChild(m);
         });
         left.appendChild(shot);
         left.appendChild(el("div", "caption", "Screen at the end of the test. Hover a mark or a check to link them."));
@@ -324,10 +335,19 @@ var DATA = /*__DATA__*/null;
       body.appendChild(det);
 
       // hover a mark <-> its check line
-      function hot(n, on) { box.querySelectorAll('[data-n="' + n + '"]').forEach(function (e) { e.classList.toggle("hot", on); }); }
+      // A mark carries every check number it stands for (data-ns); a check line carries one (data-n).
+      function hot(ns, on) {
+        ns.forEach(function (n) {
+          box.querySelectorAll('.checks li[data-n="' + n + '"]').forEach(function (e) { e.classList.toggle("hot", on); });
+          box.querySelectorAll(".mark").forEach(function (e) {
+            if (e.dataset.ns.split(" ").indexOf(String(n)) >= 0) e.classList.toggle("hot", on);
+          });
+        });
+      }
       box.querySelectorAll(".mark, .checks li").forEach(function (e) {
-        e.addEventListener("mouseenter", function () { hot(e.dataset.n, true); });
-        e.addEventListener("mouseleave", function () { hot(e.dataset.n, false); });
+        var ns = e.dataset.ns ? e.dataset.ns.split(" ") : [e.dataset.n];
+        e.addEventListener("mouseenter", function () { hot(ns, true); });
+        e.addEventListener("mouseleave", function () { hot(ns, false); });
       });
     }
     box.appendChild(body);

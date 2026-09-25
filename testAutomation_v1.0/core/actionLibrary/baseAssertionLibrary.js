@@ -83,5 +83,11 @@ function _evaluateAndAssert(skipAssertion) {
     return out;
 }
 
+// [2026-09-25] ADR-025 assertion evidence report — confirmed by user. With --assertReport=true
+// each assertion is wrapped so its pass / fail is recorded for the report; the original
+// function runs unchanged and its error is re-thrown as-is (same message, same ADR-009 loose
+// equality). Without the flag — or with skipAssertion — the object is returned untouched.
+const evidence = require("../utils/assertionEvidence.js");
+
 // skipAssertion resolved ONCE at module load — identical to the Chai version (ADR-008).
-module.exports = _evaluateAndAssert(argv.skipAssertion);
+module.exports = evidence.wrapAssertions(_evaluateAndAssert(argv.skipAssertion));

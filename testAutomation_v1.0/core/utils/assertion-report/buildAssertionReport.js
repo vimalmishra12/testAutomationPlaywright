@@ -46,7 +46,7 @@ function build(runDir) {
     });
     // Escape so no recorded string (a message, a page text) can close the <script> block.
     const json = JSON.stringify({ meta: meta, tests: tests })
-        .replace(/</g, "\\u003c").replace(/ /g, "\\u2028").replace(/ /g, "\\u2029");
+        .replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
     // A replacer FUNCTION, not a string: a string replacement would expand `$&`, `$1` … found in the data.
     const html = fs.readFileSync(TEMPLATE, "utf8").replace("/*__DATA__*/null", function () { return json; });
     const out = nodePath.join(runDir, "index.html");

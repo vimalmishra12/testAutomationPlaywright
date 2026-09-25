@@ -936,6 +936,7 @@ The runner's reporter selection lives in protected files (`run.js`, `playwright.
 
 **Not decided yet (Step 2, needs protected-file confirmation):** per-assertion green / red element highlighting and
 pass-worded check lists need the action / assertion libraries to record the element read and the result.
+→ **Decided 2026-09-25 in ADR-025** (assertion evidence report, behind `--assertReport=true`).
 
 **Consequences:** one extra command after a run (a `package.json` script would be a protected change); the report is
 only as current as its inputs — build it before the next run overwrites `mochawesome/report.json`, or pass the saved
@@ -946,3 +947,72 @@ opt-in step someone has to ask for; it is run **immediately after every test exe
 exec file, any environment), as a standard part of reporting results — same footing as showing the mochawesome
 output. If a run accidentally executes more than once in one command (e.g. a shell fallback re-triggering it),
 say so when handing over the report, since only the last run's mochawesome JSON survives to feed it.
+
+---
+
+## ADR-025: Assertion Evidence Report — Pass / Fail Marks on the End-of-Test Screenshot
+
+**Status:** Accepted (2026-09-25, user request; pilot suite `adminStudentsTab`). Implements ADR-024's "Step 2".
+Protected-file changes confirmed by the user the same day.
+
+**Context:** The mochawesome report shows one screenshot per test but not *what was checked on it*. The
+request: a mochawesome-like report where every element an assertion checked is marked on that screenshot —
+✔ green for a passed check, ✘ red for the failed one. Two facts shape the design:
+1. **Assertions receive values, not elements.** `assertion.assertEqual(sts.searchBtnDisplayed, true, …)` never
+   sees `#searchBtn`; only `baseActionLibrary` does, one layer down.
+2. **Page objects batch their reads.** `schoolStudents.getData_studentsTabLayout()` reads 12 values into one
+   object and `TST_SLST_TC_1` then asserts 8 of them — all `true`. Linking a check to "the read that returned
+   the same value" would put most marks on the wrong element.
+
+**Decision:**
+1. **Opt-in flag `--assertReport=true`.** Off (the default) = no behaviour change: every hook returns on its
+   first line. Also off under `--skipAssertion=true` (ADR-008 — nothing is asserted). Verified on the fixture
+   below: flag-off results and mochawesome output are identical to `main`.
+2. **All logic in one non-protected module, `core/utils/assertionEvidence.js`.** The protected files only call it:
+   `baseActionLibrary` — one `evidence.recordRead(...)` line in each of the 11 read methods (isEnabled,
+   isClickable, isDisplayed, isSelected, getValue, getText, getTextIfPresent, getAttribute, getElementCount,
+   getCSSProperty, isExisting); clicks / typing are not recorded. `baseAssertionLibrary` — exports
+   `evidence.wrapAssertions(...)`, which runs the original assertion unchanged and re-throws its error as-is.
+   `playwright.setup.js` — `beginTest()` in the root beforeEach, `measure()` just BEFORE the existing screenshot
+   and `finishTest()` after it in the root afterEach, `finishRun()` in afterAll.
+3. **Checks are linked to reads BY NAME, from the source lines on the stack** — never by value alone:
+   - a read's *key* is the name its value is stored under on the page-object line that made it
+     (`searchBtnDisplayed: await action.isDisplayed(this.searchBtn)` → `searchBtnDisplayed`; `var label = await
+     action…` → `label`; `return await action…` → a returned read), plus the *test line* that was executing;
+   - a check's *first argument* is parsed from the test line (`sts.searchBtnDisplayed`, `rows[0].firstName`);
+   - they match when the read was made while the test ran the line that last assigned the variable (`sts = await
+     …`) AND its key is the referenced member. `rows[k].x` takes the k-th element read under key `x`. An inline
+     call (`assertEqual(await po.getCount(), …)`) matches the read made on the assertion's own line;
+   - nothing matched → the check is listed with **"no element"** (e.g. `clickStatus`, `rows.length`, a value read
+     via `browser.getUrl`). Several same-name candidates on different elements → **"inferred"** (dashed outline).
+4. **Measured at the end, on the captured frame.** Each linked element's box is measured just before the
+   full-page screenshot (viewport box + scroll offset — also for `position: fixed`, which Chromium's full-page
+   capture paints at the scroll position). An element is **not drawn** when it is gone (`absent`), was checked to
+   be absent (`absentAsChecked`), now shows a different value than the one checked (`changed` — covers positional
+   selectors that now point at another row, Invariant 2), is mostly hidden inside a scrolling panel (`clipped`), or
+   lies outside the image (`offscreen`). The check is still listed with that reason. Same-box checks share one
+   mark with a combined badge (`2·3·4 ✔`).
+5. **Output** `output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/`: `evidence.jsonl` (one record per
+   test, appended as each test ends, so a crashed run keeps what finished), `shots/NNNN.png`, `run.json`, and
+   `index.html` — one self-contained file built in afterAll by `core/utils/assertion-report/buildAssertionReport.js`
+   (rebuild by hand with `--from=<dir>`). It does not read mochawesome, so it also works with `--report=spec`.
+   The builder lives under `core/utils/`, not `tooling/`, because the runner calls it (AGENTS.md §9).
+
+**Verification (2026-09-25):** a scratch fixture app (never committed) with elements at known pixel positions, run
+through the real `run.js`: every mark was pixel-exact; all 8 `true` checks of a batched getter linked to the right
+element; rows, inline calls, failed / changed / clipped / absent / far-below-the-fold / fixed-header / scrolled
+page, a retried attempt and a non-assertion failure were all reported correctly. The parser also resolved all 63
+assertions of `adminStudentsTab.test.js` statically. **Not yet run live on thor** — the session's network policy
+blocked the host; the pilot run is the next step.
+
+**Consequences:**
+- A mark means "this check passed / failed on this element"; the screenshot is from the END of the test.
+  A ✔ does not claim the element still shows the checked state — changes are caught by the `changed` rule only
+  for re-readable reads (text, visibility, enabled, checked, input value, existence; not attributes, CSS, counts).
+- Linking depends on the house style (a named read in the page object, the value asserted through a variable or
+  an inline call). Values transformed in a helper before the test sees them (`getData_studentCount` parses a
+  number out of `raw`) show "no element" — honest, not wrong.
+- ADR-019 is unchanged: evidence is still the end-of-test frame, so cleanup must stay out of `AfterEach`.
+- A per-assertion snapshot (a picture at the moment of each check) would need a new capture point, not a redesign:
+  the per-check data is already recorded.
+

@@ -29,6 +29,7 @@ Product knowledge is likewise split per application: an index at
 - Assertions: **standalone `expect` from `@playwright/test`** (import only, wrapped in `baseAssertionLibrary.js`) — Chai removed
 - Reporting: **Mochawesome HTML is the DEFAULT** (inline end-of-test screenshots, FULL-PAGE since 2026-09-24 — content scrolling inside an inner panel/iframe shows only its visible part; opt out with `--report=spec`/`allure`); Playwright tracing via `--trace`
 - Stakeholder summary report (2026-09-24, ADR-024): `node tooling/report/buildReport.js` after a run — builds a presentable report (summary, test data, results grouped by user role, failures, comparison with the previous run, waits) from the mochawesome JSON + the run's info log; no core change. **Run it by DEFAULT after every test execution, unprompted** (user decision, 2026-09-24) — before the next run overwrites `mochawesome/report.json`.
+- Assertion evidence report (2026-09-25, ADR-025): opt-in `--assertReport=true` — a mochawesome-style HTML report with a ✔ / ✘ mark on every element an assertion checked, drawn on the end-of-test screenshot. Recorder `core/utils/assertionEvidence.js` (called from the action / assertion libraries and the root hooks); builder `core/utils/assertion-report/`; output `output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/index.html`. No effect without the flag.
 - Visual Testing (done 2026-06-15): `page.screenshot()` + `pixelmatch`/`pngjs` (`core/utils/visualCompare.js`) feeding the custom **timeline report** (`core/utils/visual-report-utility`), via `--visual=novus`; Applitools ported to lazy `eyes-playwright` via `--visual=applitools`
 - CI Runners: local Playwright Chromium/Chrome; cloud on **LambdaTest's Playwright grid** (done 2026-06-15, `--browserCapability=lambdatest-*`). BrowserStack/Appium not yet ported
 
@@ -198,7 +199,7 @@ Product knowledge is likewise split per application: an index at
 | `headers` | Object | env.conf.js | Cloudflare access headers (qa/rel) → context `extraHTTPHeaders` |
 | `selectorDir` | String | env.conf.js / testrunner | Path to selector JSON file |
 | `testExecDir` | String | env.conf.js | Path to execution files directory |
-| `argv` | Object | yargs (env.conf.js) | CLI arguments (appType, testEnv, testExecFile, trace, report, headless …) |
+| `argv` | Object | yargs (env.conf.js) | CLI arguments (appType, testEnv, testExecFile, trace, report, headless, assertReport …) |
 | `logger` | Object | testrunner.js (loggerFunction) | Winston-based logger |
 | `stackTrace` | Object | env.conf.js | Stack trace utility |
 | `assertion` | Object | env.conf.js | Assertion library (Playwright `expect`; noop if `skipAssertion=true`) |

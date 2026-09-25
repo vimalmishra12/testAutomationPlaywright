@@ -2,6 +2,9 @@
 
 A presentable report built **after** a run, alongside the normal mochawesome report.
 
+> For ✔ / ✘ marks on the elements each assertion checked, see the assertion evidence report
+> (`--assertReport=true`, ADR-025, `core/utils/assertion-report/README.md`).
+
 ```bash
 node tooling/report/buildReport.js
 ```

@@ -52,9 +52,13 @@ const MEASURE_TIMEOUT_MS = 1000;
 
 const THIS_FILE = __filename;
 const ACTION_LIB_RE = /[\\/]core[\\/]actionLibrary[\\/]base(Action|Assertion)Library\.js$/;
-// Test files live under test/<App>/…; page objects under pages/. The Manual folder is also
-// under test/ but holds no executed code, so it never appears on a stack.
-const TEST_FILE_RE = /[\\/]test[\\/]/;
+// Test files live under test/<App>/… of the framework root (the run's cwd); page objects under
+// pages/. Matched on the path RELATIVE to cwd, so a checkout that itself sits in a folder named
+// "test" does not make every frame look like a test file. (test/Manual holds no executed code.)
+function isTestFile(file) {
+    const rel = nodePath.relative(process.cwd(), file);
+    return /^test[\\/]/.test(rel) && !/node_modules/.test(rel);
+}
 
 let reads = [];
 let checks = [];
@@ -269,7 +273,7 @@ function recordRead(action, selector, locator, value, multi) {
     try {
         const frames = stackFrames().filter(function (f) { return !ACTION_LIB_RE.test(f.file); });
         const site = frames[0] || null;
-        const testFrame = frames.find(function (f) { return TEST_FILE_RE.test(f.file) && !/node_modules/.test(f.file); }) || null;
+        const testFrame = frames.find(function (f) { return isTestFile(f.file); }) || null;
         const k = site ? readKey(site.file, site.line) : { key: null, isReturn: false };
         const originKey = testFrame ? testFrame.file + ":" + testFrame.line : null;
         if (originKey !== lastOriginKey) { originSeq++; lastOriginKey = originKey; }
@@ -445,11 +449,10 @@ async function geometry(loc) {
     // inner scroll panel) — the full-page screenshot only shows such a panel's visible part.
     const info = await loc.evaluate(function (node) {
         const r = node.getBoundingClientRect();
-        let x1 = r.left, y1 = r.top, x2 = r.right, y2 = r.bottom, fixed = false;
-        for (let a = node; a && a !== document.documentElement; a = a.parentElement) {
+        let x1 = r.left, y1 = r.top, x2 = r.right, y2 = r.bottom;
+        for (let a = node.parentElement; a && a !== document.documentElement; a = a.parentElement) {
+            if (a === document.body) continue;
             const s = getComputedStyle(a);
-            if (s.position === "fixed") fixed = true;
-            if (a === node || a === document.body) continue;
             if (/(auto|scroll|hidden|clip)/.test(s.overflowX + " " + s.overflowY)) {
                 const ar = a.getBoundingClientRect();
                 x1 = Math.max(x1, ar.left); y1 = Math.max(y1, ar.top);
@@ -458,9 +461,9 @@ async function geometry(loc) {
         }
         const area = Math.max(0, r.width) * Math.max(0, r.height);
         const vis = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
-        return { visibleFraction: area > 0 ? vis / area : 0, fixed: fixed };
-    }, null, { timeout: MEASURE_TIMEOUT_MS }).catch(function () { return { visibleFraction: 1, fixed: false }; });
-    return { bb: bb, visibleFraction: info.visibleFraction, fixed: info.fixed };
+        return { visibleFraction: area > 0 ? vis / area : 0 };
+    }, null, { timeout: MEASURE_TIMEOUT_MS }).catch(function () { return { visibleFraction: 1 }; });
+    return { bb: bb, visibleFraction: info.visibleFraction };
 }
 
 /**
@@ -508,11 +511,11 @@ async function measureRead(r, scroll) {
         }
         let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity, frac = 0;
         geos.forEach(function (g) {
-            // Fixed elements are drawn where they sit on screen; everything else is placed in
-            // document space (the full-page screenshot starts at the top of the document).
-            const dx = g.fixed ? 0 : scroll.x, dy = g.fixed ? 0 : scroll.y;
-            x1 = Math.min(x1, g.bb.x + dx); y1 = Math.min(y1, g.bb.y + dy);
-            x2 = Math.max(x2, g.bb.x + dx + g.bb.width); y2 = Math.max(y2, g.bb.y + dy + g.bb.height);
+            // Viewport box + scroll = position in the full-page screenshot. This holds for FIXED
+            // elements too: Chromium's full-page capture keeps the scroll position and paints a
+            // fixed header where the viewport was, not at the top (verified on the ADR-025 fixture).
+            x1 = Math.min(x1, g.bb.x + scroll.x); y1 = Math.min(y1, g.bb.y + scroll.y);
+            x2 = Math.max(x2, g.bb.x + scroll.x + g.bb.width); y2 = Math.max(y2, g.bb.y + scroll.y + g.bb.height);
             frac = Math.max(frac, g.visibleFraction);
         });
         const box = { x: Math.round(x1), y: Math.round(y1), w: Math.round(x2 - x1), h: Math.round(y2 - y1) };
@@ -571,11 +574,15 @@ function finishTest(test, shotBuffer, measured) {
         }
         const byId = {};
         reads.forEach(function (r) { byId[r.id] = r; });
+        // Mocha leaves `state` unset in afterEach when an attempt failed and WILL be retried
+        // (runner.js: the clone is queued before the hook runs), so an unset state is a retry.
+        const attempt = typeof test.currentRetry === "function" ? test.currentRetry() : 0;
         const record = {
             index: testCounter,
             title: test.title,
             suite: test.parent ? test.parent.title : "",
-            state: test.state || "unknown",
+            state: test.state || "retried",
+            attempt: attempt,
             durationMs: typeof test.duration === "number" ? test.duration : null,
             error: test.err ? String(test.err.message || test.err).slice(0, 2000) : null,
             shot: shot,
@@ -603,11 +610,13 @@ function finishTest(test, shotBuffer, measured) {
             }),
             readCount: reads.length
         };
-        // A failure outside any assertion (timeout, a thrown page-object error) still gets its
-        // message, from the mocha test when it carries one.
-        if (!record.error && record.state === "failed") {
+        // Mocha does not put the error on the test object, so the message comes from the failed
+        // check. A failure outside any assertion (timeout, a thrown page-object error) has no
+        // failed check — say so plainly instead of leaving the reader to guess.
+        if (!record.error && (record.state === "failed" || record.state === "retried")) {
             const f = record.checks.find(function (c) { return c.status === "failed"; });
-            if (f) record.error = f.error;
+            record.error = f ? f.error
+                : "Failed outside an assertion (for example a timeout or an error thrown by a page object) — see the console output or the mochawesome report for the error.";
         }
         fs.appendFileSync(nodePath.join(dir, "evidence.jsonl"), JSON.stringify(record) + "\n");
         testsWritten++;
