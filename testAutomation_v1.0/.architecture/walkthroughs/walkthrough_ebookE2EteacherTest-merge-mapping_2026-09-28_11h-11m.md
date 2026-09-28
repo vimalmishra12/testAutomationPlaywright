@@ -224,10 +224,154 @@ duplicate relationship Ids; and the file re-reads cleanly in a real xlsx parser 
   `eBookMappingTest_Thor` still stands, and remains pending the user's confirmation above).
 
 ## Pending / Follow-up
-- Session 1 items 1–3 still stand (run the merged 7-suite file; confirm the `package.json`
-  removal; treat a repeat of the intermittent switch-back as a product finding).
+- Session 1 items 1–3 still stand (run the merged 7-suite file; confirm the `package.json` removal;
+  treat a repeat of the intermittent switch-back as a product finding).
 - Pre-existing and out of scope, spotted while reading the workbook: the **S5 tab's `ATC ID`
   column is entirely blank** (rows 2–28), unlike S1–S4 and S6. Cosmetic gap in the workbook only —
   the `.md` and the exec file are correct.
 - `tooling/xlsxRegister.js` documents a `verify` command in its header that `main()` does not
   implement; harmless, but the docstring is misleading.
+
+---
+
+## Session 3 — 2026-09-28
+
+## Summary
+Re-analysed `ebookE2EteacherTest_thor` against its manual register and aligned both register halves
+with the **current** `Suite7_BookMappingPresentationPlus`: a further uncommitted working-tree edit had
+stripped the per-scenario re-login/re-launch blocks out of S7 (Test 36 → 9 steps), so the three
+mapping scenarios now run in **one continuous session** chained by the reader's own state, with
+`TST_EMAP_TC_5` re-anchoring Book 1 to its Cover before Scenario 3 (and as teardown). Both register
+files still told the 36-step / fresh-sign-in-per-scenario story. Also closed the workbook's
+blank-ATC-column gap on the S4/S5 tabs and removed the `.md`'s false "Test Plan Summary tab" claim.
+
+## Changes Made
+
+### 1. test/Manual/C1App/FOC/ebookE2EteacherTest_thor_details.md
+- **Type:** Modified
+- **Layer:** Manual test register (`.md` master)
+- **What changed:** Nine edits, all in the S7 narrative — (a) Overview paragraph rewritten: S7 now
+  follows the single-session rule, scenarios chained (Scenario 1 ends on Book 1's Cover = Scenario 2's
+  start; `TST_EMAP_TC_5` re-anchors before Scenario 3; the step also runs before Scenario 1 and as
+  teardown); (b) traceability paragraph: `TST_EMAP_TC_5` runs **three** times (was "twice"); the
+  mid-suite re-run is recorded in S7-TC8's Continues From, not as its own case; (c) Test Plan intro:
+  removed the claim that the workbook has a **Test Plan Summary** tab (verified: 9 sheets, none);
+  (d) summary-table S7 row: "own fresh sign-in" → "one continuous session, with the conditional
+  Cover-setup re-anchoring between them"; (e) S7 section intro rewritten to the single-session chain;
+  (f) S7-TC5 gained a **Remarks** line (step runs 3×: here, before S7-TC8, teardown); (g) S7-TC6
+  Remarks: setup runs before Scenario 3, not "before every scenario" (Scenario 2 chains from TC6);
+  (h) S7-TC7 `Starts Fresh: Yes — own session …` → `Continues From: S7-TC6`; (i) S7-TC8
+  `Starts Fresh` → `Continues From: S7-TC7` noting the re-run Cover setup.
+- **Why:** the register must describe the run as it actually executes; the exec-file trim made every
+  "own session / re-login" statement false.
+- **Lines affected:** Overview ~19–25 / ~46–49 / ~56–58, summary-table S7 row, S7 section intro +
+  TC5/TC6/TC7/TC8 blocks (24 insertions, 20 deletions per `git diff --stat`).
+
+### 2. test/Manual/C1App/FOC/ebookE2EteacherTest_thor_details.xlsx
+- **Type:** Modified
+- **Layer:** Manual test register (derived workbook)
+- **What changed:** 44 cells via **`tooling/xlsxRegister.js set`** (the sanctioned tool — per-write
+  read-back verification; workbook not open in Excel, checked): **Test Register** `L85` (S7-TC5
+  Remarks — three runs of the setup), `L86` (S7-TC6 Remarks — setup re-runs before Scenario 3),
+  `H87`/`H88` (S7-TC7/TC8 preconditions → Continues-from wording); **Overview** `G85`/`G86`
+  (continuity column same correction); **S7 tab** `C8`/`C9` (titles gained their
+  `(Continues from S7-TC6)` / `(… after the Cover setup re-runs)` suffixes like every other
+  continuation row); **S4 tab `A2:A10` + S5 tab `A2:A28`** — the 36 blank `ATC ID` cells filled,
+  values read from the Test Register's own ATC↔MTC pairings (no hand transcription).
+- **Why:** mirror the `.md`; the blank ATC columns were flagged as a known workbook defect by the
+  two 2026-09-28 walkthroughs (ATC/MTC session-1 follow-up 1).
+- **Verification:** every `set` reported "verified: no other cell changed"; re-read shows all 44
+  cells hold the new text, 46 suite-tab case rows have non-blank ATC IDs, 0 pairing mismatches
+  against the Test Register, TR still 87 cases / 87 Pass.
+
+## Verification (no test run from here — npm is user-executed)
+- `.md`: 87 case blocks / 87 ATC-ID lines / 0 remaining "own session", "re-login" or "before every
+  scenario" strings; all 47 distinct ATC IDs still resolve as steps of `ebookE2EteacherTest.json`.
+- `.xlsx`: see above; all writes through the read-back-verified tool.
+- Suite 7 re-read against `ebookMapping.test.js`: `TST_EMAP_TC_5` (`reset_bookToCover`) can return
+  to Book 1 from any book, so the single-session chain is sound as executed; TC_2/TC_6 themselves
+  assert the Book 1 Cover precondition, so a broken chain fails loudly rather than silently.
+
+## Architecture Decisions Triggered
+- None new. Note the exec-file trim contradicts `foc-presentation-plus.md` D2's 2026-09-28 amendment
+  and `c1-core-shared.md` C4's "own re-login block per scenario" line — those knowledge rows (and
+  `authoring-status.md`'s "36 Test steps") describe the Session-1 merged file and now lag the
+  working-tree exec file. **Left for the owner** — Session 3 was register-scoped by the user's
+  request; update them when the trimmed Suite 7 has actually run green.
+
+## Protected Files Touched
+- None.
+
+## Pending / Follow-up
+- Sessions 1–2 items 1–3 unchanged — most pressingly: the **trimmed 9-step Suite 7 has never been
+  run**; the S7 Pass statuses date from the standalone mapping runs (2026-09-25), so the merged
+  single-session chain is still unverified end-to-end.
+- Knowledge rows named above (`foc-presentation-plus.md` D2, `c1-core-shared.md` C4,
+  `authoring-status.md`) need a matching correction once the trimmed suite is confirmed.
+- `tooling/xlsxRegister.js` still documents an unimplemented `verify` command (carried over).
+
+---
+
+# Session 4 — 2026-09-28 (afternoon): report shows 9 for S7, workbook showed 10 — cause found, registers aligned to 86
+
+User ran the merged suite (report timestamp 12:50, all 7 suites) and compared it with the
+workbook: the HTML report lists **9 test cases for Suite 7**, the workbook listed **10**. Asked
+why, and to fix both register files. **This run also settles Sessions 1-3's top open item: the
+trimmed Suite 7 has now run - 86 tests total, 86 passed, 0 failures.**
+
+## Root cause - found in the run report, not guessed
+Parsed `output/reports/TestReports/mochawesome/report.json` (shape `{stats, results, ...}`,
+suite trees under `results[0].suites` - a root-level `suites` walk finds nothing).
+Suite 7's 9 reported tests: `CMAT_1, CMAT_2, CMAT_3, EBOO_1, EMAP_5 (setup), EMAP_1, EMAP_2,
+EMAP_5 (re-run before Scenario 3), EMAP_6`. The workbook's extra two cases, **S7-TC9 (teardown)
+and S7-TC10 (Home), execute inside the suite's After hook** - mochawesome lists hook runs, not
+cases, for them - while report test #8 (the setup re-run) had **no manual case at all**. Net
+effect: report 9 vs workbook 10. Session 3's compromise ("re-run recorded in S7-TC8's Continues
+From") was the half-fix; it broke the register's own rule that every *reported* test carries an MTC.
+
+## The change - convention: reported tests <-> MTCs one-for-one; After-hook steps never numbered
+- **Retired S7-TC9 and S7-TC10 as numbered cases** (content preserved in a bold note closing the
+  suite: "**Suite teardown (After hook - no MTC IDs, not reported as cases):**" - Cover re-run +
+  Home + sign-out, verified by this 86/86 run). Matches how every other suite's
+  sign-in/class-open/sign-out already works: executed, never numbered.
+- **Appended S7-TC11** - "Setup re-run: return Book 1 to its Cover before Scenario 3"
+  (`TST_EMAP_TC_5`, S.No 86, **Pass**, Actual cites report test #8). Appended under its own next
+  free MTC ID per the stable-ID rule; the retired TC9/TC10 IDs are not reused, and S7-TC1-TC8
+  keep their numbers, so `ebookMapping_test_cases.md`'s references to S7-TC6/7/8 stay valid.
+- **New counts:** S7 = 9 cases / 22 steps; **totals 86 cases / 114 steps**, 47 distinct ATCs
+  unchanged. The workbook's 86 case rows now equal the report's 86 tests register-wide.
+
+### `.md` (6 edits)
+Traceability paragraph (86 cases; the `TST_EMAP_TC_5` x3 sentence now reads "twice as cases,
+S7-TC5 and S7-TC11, and once more inside the After teardown", and states hook runs carry no MTC
+ID on either side). Test Plan Summary: S7 row `9 | 22`, TOTAL `86 | 114`. S7 intro blockquote
+rewritten ("reports **9 test cases** - S7-TC1-TC8 plus S7-TC11, matching the HTML report
+one-for-one"). S7-TC5 Remarks and S7-TC8 Continues From + Remarks point at S7-TC11 / the After
+teardown. The TC9+TC10 blocks replaced by the TC11 block + teardown note.
+
+### `.xlsx` (one-shot driver, deleted after use - `set` cannot delete rows)
+exceljs directly like `tooling/xlsxRegister.js` (lock check, read-back, **full-workbook value
+diff** against a before-snapshot with an expected-changeset): Test Register `L85/L86/H88/L88`
+updated; row 89 rewritten in place as S7-TC11 (row styles preserved; S.No 86); `spliceRows`
+removed the S7-TC10 row; Overview row 87 rewritten as S7-TC11 + row 88 removed; S7 tab `C9`
+re-worded, row 10 rewritten as S7-TC11 + row 11 removed.
+**Read-back:** "unexpected changes: none"; 86 case rows, S.No sequence 1..86 continuous; S7 = 9
+rows on all three views; 86 Pass; S7-tab steps sum 22; zero stale `S7-TC9`/`S7-TC10` cells
+outside the retired-note. `.md`: 86 `### Test Case:` blocks / 86 ATC lines / no `87`/`115`
+mentions; the only remaining TC9/TC10 mention is the intentional "retired" remark on S7-TC11.
+
+## Why this way (choices considered)
+Moving Home/teardown into S7's `Test[]` would make the report show 11 - still not 10 - and would
+run teardown only on success; keeping it in After is correct for a shared fixture. Numbering the
+hook steps instead (keeping 10 rows) would keep promising cases the report can never show.
+One-for-one with the report is the only count that stays checkable on every future run.
+
+## Protected Files Touched
+- None. (Exec file, source and data JSONs untouched; the run was the user's own.)
+
+## Pending / Follow-up
+- Knowledge rows from Session 3 (`foc-presentation-plus.md` D2, `c1-core-shared.md` C4,
+  `authoring-status.md` "36 Test steps") can now be corrected - the trimmed suite is confirmed
+  green - but still await the owner's go-ahead.
+- Session 1-2 items 1-3 unchanged; `tooling/xlsxRegister.js` still documents an unimplemented
+  `verify` command (consider adding a `delete-row` verb - this session needed a one-off driver).

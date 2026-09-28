@@ -16,11 +16,12 @@ continuous teacher session — a fresh sign-in, one component opened, a chain of
 without leaving the app, then sign-out. Within a suite the test cases are **not** individually
 reset: each case continues from the exact screen the previous case ended on.
 
-**S7 is the one exception to the single-session rule.** It is the dedicated book-mapping suite,
-and it re-runs the shared setup (sign-out → sign-in → reopen the class → reopen Presentation Plus
-→ return Book 1 to its Cover) once per mapping scenario, so each scenario starts from a freshly
-opened Presentation Plus — the exact condition each scenario ran green under before the mapping
-suites were merged into S7 (2026-09-28).
+**S7 follows the same single-session rule.** Its three book-mapping scenarios run in one
+continuous Presentation Plus session, chained by the reader's own state: Scenario 1 ends on Book 1's
+Cover, which is exactly where Scenario 2 starts, and the conditional Cover-setup (`TST_EMAP_TC_5`)
+re-anchors the reader to Book 1's Cover before Scenario 3. The same setup step also runs once before
+Scenario 1 and once more as the suite's teardown — the reader saves Book 1's last-visited page, so
+the suite must leave it on the Cover.
 
 **Shared setup (performed at the start of every suite, before S&lt;n&gt;-TC1):** open the application,
 sign in as the teacher (`CQA_AUTO_TEA_101@mailsac.com`), and open the suite's active class card
@@ -41,22 +42,23 @@ suite.
 here and as columns 2–3 of the workbook: the **MTC ID** (`S1-TC4`) is the manual case number, and the
 **ATC ID** (`TST_EBOO_TC_1`) is the automated test case in
 `testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EteacherTest.json` that executes it. The two are
-deliberately **not** sequential: the 87 cases run over only **47 distinct ATCs**, because one ATC serves every
+deliberately **not** sequential: the 86 cases run over only **47 distinct ATCs**, because one ATC serves every
 suite that performs the action (`TST_CMAT_TC_1` and `TST_CMAT_TC_2` are the opening case of all seven suites,
-and `TST_EBOO_TC_5` is every "Home button returns to the class"), and S7 uses `TST_EMAP_TC_5` twice — as its
-conditional setup (S7-TC5) and again as its teardown (S7-TC9). Six modules are in play: `CMAT` (Class
+and `TST_EBOO_TC_5` is every "Home button returns to the class"), and S7 runs `TST_EMAP_TC_5` three times —
+twice as cases, the conditional setup (S7-TC5) and its mid-suite re-run before Scenario 3 (S7-TC11), and
+once more inside the suite's After teardown. Six modules are in play: `CMAT` (Class
 Materials — all suites), `EBOO` (reader — S1/S2/S5/S6/S7), `RBNK` (Resource Bank — S3/S4), `NOTE` (S5),
 `C1AS` (assignment — S6) and `EMAP` (book-to-book mapping — S7). The pairing below is therefore copied from
 the workbook rather than derived from the numbering, and every ATC ID named here was checked to exist as a
 step of that execution file. The sign-in, class-open (`TST_DASH_TC_11`) and sign-out steps are shared setup,
-not checks, so they carry no MTC ID on either side.
+not checks, so they carry no MTC ID on either side — the same holds for S7's After-hook teardown steps (the
+third `TST_EMAP_TC_5` run and the Home click), which the HTML report lists as hook runs, not cases.
 
 ## Test Plan — Suites at a Glance (Parent Summary)
 
-One row per suite. Each suite is a single continuous session. In the Excel workbook this table is its own
-tab, **Test Plan Summary** (positioned between the **Test Register** and the **Overview**), which also
-shows the class and bundle each suite runs against and its High / Medium / Low priority mix. The full step
-detail for a suite sits on that suite's own tab, named in the last column below.
+One row per suite. Each suite is a single continuous session. The Excel workbook keeps its detail in
+the per-suite tabs named in the last column below (it carries no separate summary tab); this table
+is the roll-up. The full step detail for a suite sits on that suite's own tab.
 
 | Suite ID | Test Suite | Purpose of Test Execution | No. of Test Cases | Total No. of Steps Performed | What It Covers | Suite Tab |
 |---|---|---|---|---|---|---|
@@ -66,8 +68,8 @@ detail for a suite sits on that suite's own tab, named in the last column below.
 | S4 | Validation of Teacher Class Materials 2RB and Resource Banks | Open the Resources folder in the Class 2RB bundle, open each of the two Resource Banks it contains in turn, and return to the folder after each. | 9 | 9 | Resource Banks inside a folder (Class 2RB) | S4 – Resource Banks in Folder |
 | S5 | Validation of Teacher Presentation Plus in Class 1RB with eBook Features and Teacher Resources | Exercise the full Presentation Plus reader for Class 1RB: launch, Table of Contents, switch course material, Teacher's Resources, layout / fit / zoom controls, and adding, saving, reading and deleting a note. | 27 | 31 | Presentation Plus reader + notes (Class 1RB) | S5 – Presentation Plus & Notes |
 | S6 | Validation of Creating Assignments from Presentation Plus in Class 1RB | Start an assignment from the Presentation Plus Table of Contents, walk the creation wizard (pick unit/lesson, name it, set date and students, review, assign) and return to the reader. | 18 | 20 | Assignment from Presentation Plus (Class 1RB) | S6 – Create Assignment |
-| S7 | Validation of Presentation Plus book-to-book page mapping in Class 1RB | Launch Presentation Plus and verify the Builder-defined book-to-book page mapping when the teacher switches course material, across three scenarios each run in its own fresh sign-in: Book 1 page ii → Book 2 page ii and back to the Book 1 Cover; Book 2 → Book 3 page ii and back to the Book 2 Cover; Book 3 page ii → Book 1 page ii. | 10 | 23 | Book-to-book page mapping (Class 1RB) | S7 – Book Mapping |
-| **TOTAL** | All suites | Complete ebookE2EteacherTest_thor coverage. | **87** | **115** | — | — |
+| S7 | Validation of Presentation Plus book-to-book page mapping in Class 1RB | Launch Presentation Plus and verify the Builder-defined book-to-book page mapping when the teacher switches course material, across three scenarios run in one continuous session, with the conditional Cover-setup re-anchoring Book 1 between them: Book 1 page ii → Book 2 page ii and back to the Book 1 Cover; Book 2 → Book 3 page ii and back to the Book 2 Cover; Book 3 page ii → Book 1 page ii. | 9 | 22 | Book-to-book page mapping (Class 1RB) | S7 – Book Mapping |
+| **TOTAL** | All suites | Complete ebookE2EteacherTest_thor coverage. | **86** | **114** | — | — |
 
 ---
 
@@ -1037,11 +1039,13 @@ _Note: after this case the session signs out (shared teardown)._
 ## Test Suite: S7 – Validation of Presentation Plus book-to-book page mapping in Class 1RB
 
 _The book-mapping suite, merged into this register on 2026-09-28 from `ebookMappingTest.json`
-(the former `eBookMappingTest_Thor` run). TC1–TC5 describe the first session; TC7 and TC8 each
-run in their **own fresh session** — the teacher signs out, signs back in, reopens the class and
-Presentation Plus, and returns Book 1 to its Cover before the scenario is checked. That
-re-login/re-launch cycle is the suite's internal setup and is recorded in each case's
-**Starts Fresh** note rather than as separate cases. Source of the scenario steps:
+(the former `eBookMappingTest_Thor` run). All three scenarios run in **one continuous session**:
+Scenario 1 ends on Book 1's Cover — Scenario 2's exact starting state — and the conditional Cover
+setup (`TST_EMAP_TC_5`) re-anchors the reader before Scenario 3 (case S7-TC11). The suite runs 11
+steps but reports **9 test cases** — S7-TC1–TC8 plus S7-TC11, matching the HTML report one-for-one;
+the third `TST_EMAP_TC_5` run (teardown), the Home click and the sign-out execute inside the suite's
+After hook, which the report lists as hook runs, not cases — so they carry no MTC ID, exactly like
+every other suite's sign-in/sign-out steps. Source of the scenario steps:
 [`ebookMapping_test_cases.md`](ebookMapping_test_cases.md) (requirements #1, #2, #4)._
 
 ### Test Case: S7-TC1 – Navigate to Class Materials tab
@@ -1102,6 +1106,7 @@ re-login/re-launch cycle is the suite's internal setup and is recorded in each c
 2. If it is not on the Cover, click **Previous page** until the Cover shows.
 **Expected Result:** The reader is on Book 1, on its Cover (page label `- / 160`, address bar `?page=cover`).
 **Priority:** Medium
+**Remarks:** The automation executes this same step (`TST_EMAP_TC_5`) three times in the suite: here, again before Scenario 3 (as case S7-TC11), and once more inside the After teardown (no MTC ID — hook runs are not reported as cases); Scenario 2 needs no setup because Scenario 1 leaves Book 1 on its Cover.
 **Actual Result:** The setup ran against whatever state the reader reopened in: when Book 1 came back on a later page, Previous was clicked until the Cover returned; the run ended on `?page=cover`, the agreed scenario start line.
 
 ---
@@ -1119,14 +1124,14 @@ re-login/re-launch cycle is the suite's internal setup and is recorded in each c
 6. Note the book shown and the page the reader opens on.
 **Expected Result:** After step 3 the toolbar shows Book 2 and the reader opens on page ii (page label `ii-iii / 160`, address bar `?page=ii`). After step 5 the toolbar shows Book 1 and the reader opens on its Cover (page label `- / 160`, address bar `?page=cover`).
 **Priority:** High
-**Remarks:** Sheet row TC_FOCMap_web1 (P1 Positive). Book 1 opens on its Cover by default; the reader saves Book 1's last visited page, hence S7-TC5 before every scenario.
+**Remarks:** Sheet row TC_FOCMap_web1 (P1 Positive). Book 1 opens on its Cover by default; the reader saves Book 1's last visited page, hence the S7-TC5 setup re-runs before Scenario 3 (S7-TC8) — Scenario 2 chains straight from this case.
 **Actual Result:** Book 2 opened on page ii (label `ii-iii / 160`); switching back opened Book 1 on its Cover (`?page=cover`) — the mapped pages matched the Builder definition.
 
 ---
 ### Test Case: S7-TC7 – Scenario 2 (TC_FOCMap_web2): Book 2 opens Book 3 page ii, and switching back opens the Book 2 Cover
 **ATC ID:** `TST_EMAP_TC_2`  |  **MTC ID:** S7-TC7
 **Description:** Verify Book 3 opens on page ii and switching back from Book 3 page ii opens the Book 2 Cover when the mapping is defined between Book 2, Book 3 and the Book 2 Cover.
-**Starts Fresh:** Yes — own session: the teacher signs out, signs back in, reopens class `CQA_AUTO_TEST_DND_1RB` → Class Materials → Presentation Plus, and Book 1 is returned to its Cover (S7-TC1–TC5 repeated) before this case runs.
+**Continues From:** S7-TC6 — Scenario 1 left the reader on Book 1's Cover, which is this scenario's starting state; the suite stays in one continuous session.
 **Test Data:** Books `vm_automation_first_ebook_pplus_1rb` → `vm_automation_second_ebook_pplus_1rb` → `vm_automation_Third_ebook_pplus_1rb dt` (URL id lower case) → `vm_automation_second_ebook_pplus_1rb`
 **Steps:**
 1. With Book 1 on its Cover, open the **Change course material** dropdown and select **vm_automation_second_ebook_pplus_1rb** — it opens on its Cover.
@@ -1142,7 +1147,7 @@ re-login/re-launch cycle is the suite's internal setup and is recorded in each c
 ### Test Case: S7-TC8 – Scenario 3: Book 3 page ii opens Book 1 page ii
 **ATC ID:** `TST_EMAP_TC_6`  |  **MTC ID:** S7-TC8
 **Description:** Verify Book 1 opens on page ii when Book 3 page ii is mapped to Book 1 page ii.
-**Starts Fresh:** Yes — own session, same re-login/re-launch cycle as S7-TC7.
+**Continues From:** S7-TC7 — Scenario 2 ended on Book 2's Cover; the conditional Cover setup (`TST_EMAP_TC_5`, re-run as case S7-TC11) returns the reader to Book 1's Cover before this case.
 **Test Data:** Books `vm_automation_first_ebook_pplus_1rb` → `vm_automation_second_ebook_pplus_1rb` → `vm_automation_Third_ebook_pplus_1rb dt` → `vm_automation_first_ebook_pplus_1rb`
 **Steps:**
 1. With Book 1 on its Cover, open the dropdown and select **vm_automation_second_ebook_pplus_1rb** (opens on its Cover).
@@ -1151,35 +1156,24 @@ re-login/re-launch cycle is the suite's internal setup and is recorded in each c
 4. Open the dropdown and select **vm_automation_first_ebook_pplus_1rb**; note the page.
 **Expected Result:** The toolbar shows Book 1 and the reader opens on page ii (page label `ii-iii / 160`, address bar `?page=ii`).
 **Priority:** High
-**Remarks:** Mapping stated by the product owner 2026-09-25 (Book 3 page ii → Book 1 page ii); automated as `TST_EMAP_TC_6`. This case ends on Book 1 page ii — the teardown case (S7-TC9) puts Book 1 back on its Cover.
+**Remarks:** Mapping stated by the product owner 2026-09-25 (Book 3 page ii → Book 1 page ii); automated as `TST_EMAP_TC_6`. This case ends on Book 1 page ii — the suite's After teardown puts Book 1 back on its Cover before Home.
 **Actual Result:** Book 3 opened on page ii; selecting Book 1 from Book 3 page ii opened Book 1 on page ii (label `ii-iii / 160`) — the owner-stated mapping held.
 
 ---
-### Test Case: S7-TC9 – Teardown: return Book 1 to its Cover
-**ATC ID:** `TST_EMAP_TC_5`  |  **MTC ID:** S7-TC9
-**Description:** Confirm Book 1 is put back on its Cover after the last scenario, so the mapping state the reader saves is the clean one.
-**Continues From:** S7-TC8 — reader on Book 1, page ii.
+### Test Case: S7-TC11 – Setup re-run: return Book 1 to its Cover before Scenario 3
+**ATC ID:** `TST_EMAP_TC_5`  |  **MTC ID:** S7-TC11
+**Description:** Confirm the mid-suite re-anchor leaves the reader on Book 1's Cover before Scenario 3 runs.
+**Continues From:** S7-TC7 — Scenario 2 ended on Book 2's Cover; this step returns to Book 1 and walks it to the Cover.
 **Test Data:** Book `vm_automation_first_ebook_pplus_1rb`; Previous clicks bounded by the test data maximum
 **Steps:**
-1. Check the current page.
-2. Click **Previous page** until the Cover shows.
-**Expected Result:** Book 1 is on its Cover (page label `- / 160`, address bar `?page=cover`).
+1. Check the current book and page; if the reader is not on Book 1, open the **Change course material** dropdown and select it.
+2. Click **Previous page** until the Cover shows (bounded attempts).
+**Expected Result:** The reader is on Book 1, on its Cover (page label `- / 160`, address bar `?page=cover`).
 **Priority:** Medium
-**Remarks:** Executed as part of the suite teardown, before Home — the reader saves Book 1's last visited page, so leaving it on page ii would move the next session's start line.
-**Actual Result:** Book 1 was walked back to its Cover with Previous page (`?page=cover`) before the suite exited the reader.
+**Remarks:** Appended 2026-09-28 so every reported test of the merged suite carries a manual case — this is the **8th test of Suite 7** in the HTML report (the same `TST_EMAP_TC_5` as S7-TC5, re-run before Scenario 3). The former S7-TC9 (teardown) and S7-TC10 (Home) rows retired to the note below: both execute inside the suite's After hook, which the report lists as hook runs, not cases.
+**Actual Result:** Reported and passed as Suite 7's 8th test (2026-09-28 run, 86/86 green) — Book 1 was back on its Cover before Scenario 3 started.
 
----
-### Test Case: S7-TC10 – Home button returns to the class
-**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S7-TC10
-**Description:** Confirm the reader's Home control leaves Presentation Plus and returns to class materials.
-**Continues From:** S7-TC9 — Book 1 on its Cover.
-**Test Data:** —
-**Steps:**
-1. Select **Home** in the reader toolbar.
-**Expected Result:** Presentation Plus closes and the teacher is returned to the class / class materials.
-**Priority:** Low
-**Actual Result:** Home closed Presentation Plus and returned the teacher to the class / Class Materials view.
-_Note: after this case the session signs out (shared teardown)._
+**Suite teardown (After hook — no MTC IDs, not reported as cases):** the same `TST_EMAP_TC_5` runs once more to leave Book 1 on its Cover (`?page=cover`) — the reader saves Book 1's last-visited page, so leaving it on page ii would move the next session's start line — then **Home** closes Presentation Plus back to the class / Class Materials view, and the session signs out. Both verified in the merged 7-suite run of 2026-09-28 (86/86 green).
 
 ---
 
