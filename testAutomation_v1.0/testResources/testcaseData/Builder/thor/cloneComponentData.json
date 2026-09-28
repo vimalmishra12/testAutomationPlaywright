@@ -4,7 +4,7 @@
       "login": {
         "org": "Cambridge One",
         "username": "harishthoradmin",
-        "password": "C0>pr0!899"
+        "password": "{{env.BLDR_THOR_LOGIN_PASSWORD}}"
       },
       "TC1": {
         "sourceCode": "cqaclone1_15junepe1",

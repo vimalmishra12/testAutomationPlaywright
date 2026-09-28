@@ -2,20 +2,15 @@
   "C1": {
     "ebook": {
       "user": {
-
-        "pageNumber14":"14-15 / 160",
-        "pageNumber12":"12-13 / 160",
-
+        "pageNumber14": "14-15 / 160",
+        "pageNumber12": "12-13 / 160",
         "player": {
-           "exitActivity" : "Exit activity",
-           "activityGoodEffort" : "Good effort!"
-        }
-        ,
-        
-        
+          "exitActivity": "Exit activity",
+          "activityGoodEffort": "Good effort!"
+        },
         "validStudent1": {
           "email": "comprotestuser+prodvmstd1@gmail.com",
-          "password": "Compro11",
+          "password": "{{env.C1_QA_VALIDSTUDENT1_PASSWORD}}",
           "role": "student",
           "name": "hutudibrulli-3717 auto",
           "class": [
@@ -37,7 +32,7 @@
         },
         "validStudent2": {
           "email": "jijetoullozo-4043@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDSTUDENT2_PASSWORD}}",
           "role": "student",
           "name": "etirrase-9139",
           "class": [],
@@ -45,7 +40,7 @@
         },
         "validStudent3": {
           "email": "dev1_studentAutomation@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDSTUDENT3_PASSWORD}}",
           "role": "student",
           "name": "student automation",
           "class": [],
@@ -53,7 +48,7 @@
         },
         "validStudent4": {
           "email": "gudacivoto-4427@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDSTUDENT4_PASSWORD}}",
           "role": "student",
           "name": "QAStudent4",
           "class": [],
@@ -62,7 +57,7 @@
         },
         "acceptanceteacher": {
           "email": "acceptanceTeacher@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_ACCEPTANCETEACHER_PASSWORD}}",
           "role": "teacher",
           "name": "acceptance Teacher",
           "class": [
@@ -75,7 +70,7 @@
         },
         "acceptanceStudent": {
           "email": "acceptanceStudent1@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_ACCEPTANCESTUDENT_PASSWORD}}",
           "role": "student",
           "name": "acceptance student",
           "class": [
@@ -88,7 +83,7 @@
         },
         "successfulStudentUser": {
           "email": "difusionqa.stud6@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_SUCCESSFULSTUDENTUSER_PASSWORD}}",
           "role": "student",
           "name": "difusionqa.stud6",
           "class": [],
@@ -96,7 +91,7 @@
         },
         "successfulInstructorUser": {
           "email": "difusionqa.teach46@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_EBOOK_SUCCESSFULINSTRUCTORUSER_PASSWORD}}",
           "role": "teacher",
           "name": "difusionqa teach46",
           "class": [],
@@ -104,7 +99,7 @@
         },
         "validStudent5": {
           "email": "difusionqa.stud44@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDSTUDENT5_PASSWORD}}",
           "role": "student",
           "name": "difusionqa stud44",
           "class": [],
@@ -113,7 +108,7 @@
         },
         "validStudent6": {
           "email": "difusionqa.stud43@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDSTUDENT6_PASSWORD}}",
           "role": "student",
           "name": "difusionqa stud43",
           "class": [],
@@ -122,31 +117,37 @@
         },
         "invalidUser1": {
           "email": "etirrase@yopmail",
-          "password": "hfcghgufyhW#2",
+          "password": "{{env.C1_QA_INVALIDUSER1_PASSWORD}}",
           "role": "student",
           "name": "etirrase-9139",
-          "courses": ["course1"],
+          "courses": [
+            "course1"
+          ],
           "info": {}
         },
         "invalidUser2": {
           "email": "etirrase@yopm.in",
-          "password": "Compro1234",
+          "password": "{{env.C1_QA_INVALIDUSER2_PASSWORD}}",
           "role": "student",
           "name": "etirrase-9139",
-          "courses": ["course1"],
+          "courses": [
+            "course1"
+          ],
           "info": {}
         },
         "invalidUser3": {
           "email": "etirrase-9139@yopmail.com",
-          "password": "h@@hW#2",
+          "password": "{{env.C1_QA_INVALIDUSER3_PASSWORD}}",
           "role": "student",
           "name": "etirrase-9139",
-          "courses": ["course1"],
+          "courses": [
+            "course1"
+          ],
           "info": {}
         },
         "validInstructorUser1": {
           "email": "comprotestuser+prodvmtea1@gmail.com",
-          "password": "Compro11",
+          "password": "{{env.C1_QA_VALIDINSTRUCTORUSER1_PASSWORD}}",
           "role": "instructor",
           "name": "culineziffa-4105 teacher",
           "courses": [
@@ -159,7 +160,7 @@
         },
         "validInstructorUser2": {
           "email": "teacher3@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDINSTRUCTORUSER2_PASSWORD}}",
           "role": "instructor",
           "name": "teacher 3",
           "courses": [],
@@ -168,7 +169,7 @@
         },
         "validInstructorUser3": {
           "email": "teacher5@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDINSTRUCTORUSER3_PASSWORD}}",
           "role": "instructor",
           "name": "teacher 5",
           "courses": [],
@@ -177,7 +178,7 @@
         },
         "validInstructorUser4": {
           "email": "durazoroma-2856@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_VALIDINSTRUCTORUSER4_PASSWORD}}",
           "role": "instructor",
           "name": "QATeacher4",
           "courses": [],
@@ -186,7 +187,7 @@
         },
         "NoClassInstructor": {
           "email": "noclassinstructornew@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_NOCLASSINSTRUCTOR_PASSWORD}}",
           "name": "noclassinstructornew",
           "role": "instructor",
           "class": [],
@@ -194,7 +195,7 @@
         },
         "noClassStudent": {
           "email": "noClassStudent@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_NOCLASSSTUDENT_PASSWORD}}",
           "name": "No Class",
           "role": "student",
           "class": [],
@@ -202,7 +203,7 @@
         },
         "classInstructorUser1": {
           "email": "classinstructor1@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_CLASSINSTRUCTORUSER1_PASSWORD}}",
           "role": "instructor",
           "name": "classinstructor1",
           "class": [
@@ -223,7 +224,7 @@
         },
         "classInstructorUser3": {
           "email": "dev1_teacher002@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_CLASSINSTRUCTORUSER3_PASSWORD}}",
           "role": "instructor",
           "name": "qa teacher9",
           "class": [
@@ -244,7 +245,7 @@
         },
         "classInstructorUser5": {
           "email": "qa_teacher1@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_CLASSINSTRUCTORUSER5_PASSWORD}}",
           "role": "instructor",
           "name": "qa teacher9",
           "class": [
@@ -265,7 +266,7 @@
         },
         "classInstructorUser4": {
           "email": "4-teacher@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_CLASSINSTRUCTORUSER4_PASSWORD}}",
           "role": "instructor",
           "name": "4 Teacher dev1",
           "class": [],
@@ -273,7 +274,7 @@
         },
         "flipbookUser": {
           "email": "flipbook_automation@yopmail.com",
-          "password": "Compro@1234",
+          "password": "{{env.C1_QA_FLIPBOOKUSER_PASSWORD}}",
           "role": "instructor",
           "name": "flipbook automation",
           "class": [],
@@ -294,13 +295,21 @@
     },
     "codesAndKeys": {
       "schoolName": "Mount Allison School",
-      "invalid_OTP": ["12046", "000000"],
+      "invalid_OTP": [
+        "12046",
+        "000000"
+      ],
       "validSchoolKey": "NGL-FUW-GQL",
       "invalidSchoolKey": "NGL-FUW-123",
-      "invalidClassKey": ["HJ2y-1234"],
+      "invalidClassKey": [
+        "HJ2y-1234"
+      ],
       "bookName1": "INTRODUCTION TO BIOLOGY",
       "validAccessCodes1": [],
-      "invalidAccessCodes": ["PT12-1111-7777-0000", "PTH3-R79A-76DE-Y9RE"]
+      "invalidAccessCodes": [
+        "PT12-1111-7777-0000",
+        "PTH3-R79A-76DE-Y9RE"
+      ]
     }
   }
 }
