@@ -45,8 +45,9 @@ left nav, "Dashboard" + "Recent Activity".
   for each page transition before acting (otherwise it re-clicks the previous page's button).
 - No MFA challenge is shown for the QA admin account (the `#login-mfa-btn` id notwithstanding).
 
-**Test account (Thor):** org *Cambridge One*, user `harishthoradmin` (password in
-`testResources/testcaseData/Builder/thor/builderLoginData.json`, plaintext for now).
+**Test account (Thor):** org *Cambridge One*, user `harishthoradmin` (password: the
+`{{env.BLDR_THOR_VALIDADMIN_PASSWORD}}` token in
+`testResources/testcaseData/Builder/thor/builderLoginData.json` — real value in `.env` / CI, ADR-025).
 
 ### Performance & sync characteristics (confirmed [2026-06-23])
 
