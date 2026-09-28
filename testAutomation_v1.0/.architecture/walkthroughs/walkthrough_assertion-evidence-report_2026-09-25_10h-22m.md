@@ -198,3 +198,23 @@ None — no protected files were modified in this session.
 - Checks read through helpers that transform values (sort-state tests TC_15–19) show no mark — expected; could be
   improved later by naming reads in those helpers.
 
+---
+
+## Session 4 — 2026-09-28
+
+## Summary
+Renamed the report's visible title to "Test Verification Report" / "Test Verification Report: Debug" (user picked
+option A of five offered).
+
+## Changes Made
+- `core/utils/assertion-report/template.html` — `<title>` and `<h1 id="reportTitle">`; title set per view in JS.
+- `core/utils/assertionEvidence.js`, `buildAssertionReport.js` — console lines use the new name.
+- `core/utils/assertion-report/README.md`, `.architecture/decisions.md` (ADR-025 amendment 3).
+
+## Verification
+Rebuilt both views from the pilot run: tab + heading read "Test Verification Report" (results) and
+"Test Verification Report: Debug" (debug); badges RESULTS / DEBUG.
+
+## Protected Files Touched
+None — no protected files were modified in this session.
+

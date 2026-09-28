@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Assertion Evidence Report</title>
+<title>Test Verification Report</title>
 <!-- ADR-025. Layout approved as the 2026-09-25 mockup. Data is injected by buildAssertionReport.js. -->
 <style>
   :root {
@@ -113,7 +113,7 @@
 <body>
 <div class="nav">
   <div>
-    <h1>Assertion Evidence Report</h1>
+    <h1 id="reportTitle">Test Verification Report</h1>
     <div class="sub" id="sub"></div>
   </div>
   <div class="spacer"></div>
@@ -147,6 +147,10 @@ var DATA = /*__DATA__*/null;
   var DEBUG = DATA.view !== "results";
   var badge = document.getElementById("viewBadge");
   badge.textContent = DEBUG ? "Debug" : "Results";
+  // Title agreed with the user 2026-09-28 (was "Assertion Evidence Report").
+  var TITLE = "Test Verification Report" + (DEBUG ? ": Debug" : "");
+  document.getElementById("reportTitle").textContent = TITLE;
+  document.title = TITLE;
   if (DEBUG) badge.classList.add("debug");
   document.querySelectorAll("[data-view]").forEach(function (e) {
     if (e.getAttribute("data-view") !== (DEBUG ? "debug" : "results")) e.remove();

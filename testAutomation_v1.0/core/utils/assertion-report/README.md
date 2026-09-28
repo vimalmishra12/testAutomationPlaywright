@@ -1,4 +1,6 @@
-# Assertion evidence report (ADR-025)
+# Test Verification Report (ADR-025 — assertion evidence report)
+
+Shown in the page as **Test Verification Report** (results view) / **Test Verification Report: Debug**.
 
 A mochawesome-style HTML report where every element an assertion checked is marked on the
 end-of-test screenshot: **✔ green** for a passed check, **✘ red** for the failed one.
@@ -19,8 +21,8 @@ npm run adminStudentsTabTest_thor -- --assertReport=debug
 At the end of the run the console prints the report path(s):
 
 ```
-[assert-report] Assertion evidence report (results): output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/index.html
-[assert-report] Assertion evidence report (debug):   output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/debug.html
+[assert-report] Test Verification Report (results): output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/index.html
+[assert-report] Test Verification Report (debug):   output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/debug.html
 ```
 
 Each file is self-contained (screenshots embedded) — open it or send it as is. The header badge says

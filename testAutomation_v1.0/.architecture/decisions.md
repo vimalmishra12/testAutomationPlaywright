@@ -1044,3 +1044,6 @@ test's one-line error, and nothing else; its embedded data holds only each check
 every drawn mark checked against its screenshot landed on the checked element; unmarked checks were the expected
 kinds (click results, row counts / lengths, values read through sort-state helpers).
 
+**Amendment 3 (2026-09-28, user choice):** the report is titled **"Test Verification Report"** (results view) and
+**"Test Verification Report: Debug"** (debug view) in the page, the browser tab and the console line; ADR / code
+names ("assertion evidence") are unchanged.

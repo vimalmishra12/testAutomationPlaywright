@@ -113,7 +113,7 @@ if (require.main === module) {
         try { mode = JSON.parse(fs.readFileSync(nodePath.join(dir, "run.json"), "utf8")).mode; } catch (_) { mode = null; }
         views = mode === "debug" ? ["results", "debug"] : ["results"];
     }
-    views.forEach(function (v) { console.log("Assertion evidence report (" + v + "): " + build(dir, v)); });
+    views.forEach(function (v) { console.log("Test Verification Report (" + v + "): " + build(dir, v)); });
 }
 
 module.exports = { build: build };

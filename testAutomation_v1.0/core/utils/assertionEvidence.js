@@ -660,9 +660,9 @@ function finishRun() {
         const builder = require("./assertion-report/buildAssertionReport.js");
         // The results report is always built (the shareable one); debug adds the full report.
         const out = builder.build(runDir, "results");
-        console.log("[assert-report] Assertion evidence report (results): " + out);
+        console.log("[assert-report] Test Verification Report (results): " + out);
         if (MODE === "debug") {
-            console.log("[assert-report] Assertion evidence report (debug):   " + builder.build(runDir, "debug"));
+            console.log("[assert-report] Test Verification Report (debug):   " + builder.build(runDir, "debug"));
         }
         return out;
     } catch (e) {
