@@ -2001,7 +2001,20 @@
         "regEmailInput": "#gigya-loginID-109656003259475650",
         "regPasswordInput": "#gigya-password-56383998600152700",
         "regSignUpSubmitBtn": "[value=\"Sign up\"]",
-        "regLoginLink": "a[title=\"Login\"]"
+        "regLoginLink": "a[title=\"Login\"]",
+        "forgotPasswordEmailInput": "#gigya-textbox-loginID, input[placeholder=\"Enter your email address *\"]",
+        "forgotPasswordSubmitBtn": "input[value=\"Reset password\"]",
+        "forgotPasswordConfirmHeading": "h2:has-text(\"Reset password email sent\")",
+        "forgotPasswordConfirmBody": "label:has-text(\"linked to a Cambridge account\")",
+        "loginDontHaveAccountLink": "a[title=\"Don't have an account yet?\"]",
+        "forgotPasswordBackToLogin": ".password-success-btn, a[title=\"Back to login\"]",
+        "primaryLoginContainer": "#nemo-login-primary",
+        "secondaryLoginContainer": "#nemo-login-secondary",
+        "childLoginHeader": "h1.child-login-header",
+        "childLoginSubmitBtn": "input[type=\"submit\"][value=\"Go!\"]",
+        "childCantLoginLink": ".child-tooltip span#tooltipLabel, span:has-text(\"Can't log in?\")",
+        "childBrandLogo": "img.brand-img, img[alt=\"Cambridge One home\"]",
+        "loginFormErrorAlert": ".gigya-error-display-active .gigya-form-error-msg, div[role=\"alert\"] .gigya-form-error-msg, .gigya-form-error-msg.gigya-error-msg-active"
       },
       "ebookMapping": {
         "_comment": "[2026-09-25, thor] Presentation Plus reader toolbar — book-to-book page mapping (EMAP). Semantic title/id anchors are used instead of the numeric qids (90/toc-6/76); the book list is matched by TITLE because its qids (toolbar-ebook-list-item-N) are positional.",

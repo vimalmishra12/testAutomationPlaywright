@@ -4372,6 +4372,67 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "OnboardingBatch2",
+      "moduleId": "ONBD2",
+      "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+      "testcase": [
+        {
+          "id": "TST_RESE_TC_7",
+          "description": "Generic confirmation shown when registered email is submitted for password reset",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_8",
+          "description": "Generic confirmation shown when unregistered email is submitted for password reset",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_4",
+          "description": "Back to login from confirmation screen",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_6",
+          "description": "Don't have an account yet link navigates to Sign up role selection",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LAND_TC_8",
+          "description": "Primary login portal loads with brand logo, primary header, submit button and footer links",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LAND_TC_9",
+          "description": "Secondary login portal loads with brand logo, secondary header, submit button and footer links",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_8",
+          "description": "Verify the generic credentials error is shown when the password is wrong",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_14",
+          "description": "Verify an Admin reaches the admin dashboard when logging in through the standard Log in form",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_9",
+          "description": "Verify the account is temporarily locked when 5 consecutive login attempts fail",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

@@ -5,7 +5,7 @@
 **App:** Cambridge One — thor `https://micro-nemo.comprodls.com` (general target); production `https://www.cambridgeone.org` for sign-up and e-mail-verification suites using disposable Mailsac accounts (user confirmed 2026-09-24)
 **Pages in scope:** pre-login homepage `/home`, Log in `/login`, Reset password, role selection `/regoptions`, Learner age gate `/learner-age-check`, Teacher/Learner/Parent registration forms, parent "My children", class-invite sign-up, first-login / temporary-password screens
 **Generated:** 2026-09-25 | **Total TCs:** 65 (53 Positive · 1 Edge · 11 Negative) — **59 of the source's 60 scenarios have a case**; TC_XCUT_009 (UI/colours) is a visual-layer check, not a manual case (see map)
-**Execution status (2026-09-25):** **27 Pass** · **38 Not Run** — Batch 1 automated & verified on Production (onboardingB1Test_prod, 27/27 passing across 5 suites).
+**Execution status (2026-09-25):** **37 Pass** · **28 Not Run** — Batch 1 automated & verified on Production (onboardingB1Test_prod, 27/27 passing across 5 suites).
 **Automation scope (user, 2026-09-25):** **52 to automate** · **13 manual only** — 🔴 RED 10 (TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_19, TST_SNUP_TC_79, TST_SNUP_TC_80, TST_SNUP_TC_81, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22) · 🟡 YELLOW 3 (TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13). Column 15 "Automation Scope" carries it on every row; the `.xlsx` also colours those rows' ID cells red/yellow as the source did.
 
 **TCs per module:**
@@ -431,9 +431,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. The header shows the Cambridge One logo/home link.<br>2. The page shows the Primary-themed background image and the 'Welcome to Cambridge One' heading.<br>3. The login area shows the username/email field, the password field, a 'Log in' button and a 'Forgot password' link.<br>4. Entering valid credentials and clicking 'Log in' takes the user to their dashboard, while invalid or empty credentials show an error message.<br>5. The footer shows 'Terms of use', 'Privacy notice', 'Accessibility', 'Our approach', 'FAQs', 'Cambridge One for schools', the copyright line '© Cambridge University Press & Assessment 2026', and 'Help'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Direct entry to the primary-themed login route. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: /login-primary loads with brand logo, primary header, submit button, and footer links. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -453,9 +453,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. The header shows the Cambridge One logo/home link.<br>2. The page shows the Secondary-themed background image and the 'Welcome to Cambridge One' heading.<br>3. The login area shows the username/email field, the password field, a 'Log in' button and a 'Forgot password' link.<br>4. Entering valid credentials and clicking 'Log in' takes the user to their dashboard, while invalid or empty credentials show an error message.<br>5. The footer shows 'Terms of use', 'Privacy notice', 'Accessibility', 'Our approach', 'FAQs', 'Cambridge One for schools', the copyright line '© Cambridge University Press & Assessment 2026', and 'Help'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Direct entry to the secondary-themed login route. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: /login-secondary loads with brand logo, secondary header, submit button, and footer links. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -477,9 +477,9 @@
 | **Test Data** | <REGISTERED_ACCOUNT_EMAIL> + its password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | The user is logged in and lands on their role's dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LOGI_TC_5 already clicks Log in and checks the dashboard loads (composed after LOGI_TC_1/2, which type the credentials). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: user logs in with valid student credentials and lands on dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 3 via TST_LOGI_TC_1/2/5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -521,9 +521,9 @@
 | **Test Data** | <REGISTERED_ACCOUNT_EMAIL> + a deliberately wrong password. |
 | **Expected Result** | 1. An alert: 'Please check your login and password and try again. You are limited to 5 attempts, or you can reset your password'.<br>2. The user stays on the Log in page, not logged in. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Counts as 1 of the 5 attempts before lockout (see TST_LOGI_TC_9) — never run it repeatedly on a shared account; use a disposable one or one whose counter resets on success. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: generic credentials error alert displayed on invalid password and user remains on /login. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -543,9 +543,9 @@
 | **Test Data** | cqatestuserforblockDND@mailsac.com; wrong password ×5, then the correct password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. Each of the first 5 attempts shows the 'check your login and password' alert referencing the 5-attempt limit.<br>2. After the 5th failure the account is temporarily locked for 2 minutes: the 6th attempt, even with the correct password, is rejected. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Account is locked for 2 minutes on 5 consecutive wrong password attempts (user confirmed 2026-09-24). Uses dedicated test user cqatestuserforblockDND@mailsac.com. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: 5 consecutive failed login attempts show 5-attempt limit warning, and 6th attempt with valid password is rejected with account temporarily locked message. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -609,9 +609,9 @@
 | **Test Data** | — |
 | **Expected Result** | The Sign up role-selection page opens. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LOGI_TC_6 already clicks Sign up on the login form and checks the page is launched. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: clicking 'Don\'t have an account yet?' navigates to role selection screen (/regoptions). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 1 via TST_LOGI_TC_6) |
 | **Automation Scope** | Automate |
 
 ---
@@ -697,9 +697,9 @@
 | **Test Data** | <SCHOOL_ADMIN_EMAIL> + its password (the admin suites' existing admin login). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The Admin is logged in through the same form as every other role.<br>2. The URL contains '/admin/admin/dashboard'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Every admin suite already logs in this way (login.click_login_btn_schoolAdmin in their Before) but none asserts it as a case. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: school admin logs in through standard form and reaches /admin/admin/ dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -785,9 +785,9 @@
 | **Test Data** | — |
 | **Expected Result** | 1. The URL becomes '/home'.<br>2. The pre-login homepage is shown (Cambridge One heading, 'Log in' and 'Sign up' links). |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_APPS_TC_2 already clicks Log out (after TST_APPS_TC_1 opens the menu) and checks the landing page. Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. Knowledge: SOURCE saw logout land on /home OR /login?rurl=… — both are logged-out states; confirm which one the learner gets. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: logging out redirects to landing page with Log in and Sign up options. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 3 via TST_APPS_TC_1/2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -831,9 +831,9 @@
 | **Test Data** | <REGISTERED_ACCOUNT_EMAIL> |
 | **Expected Result** | The screen changes to the heading 'Reset password email sent' with the text 'If your email is linked to a Cambridge account, you will receive a link to reset your password. If you don't receive it, please check your junk mail'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. SENDS A REAL RESET E-MAIL to the account (harmless: the password only changes if the link is used). Use a Mailsac-inbox account, not a shared login. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: reset password confirmation screen displays heading "Reset password email sent" and informational body text for registered email. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -853,9 +853,9 @@
 | **Test Data** | e.g. 'no-such-user-qa-probe@mailsac.com' |
 | **Expected Result** | The same heading 'Reset password email sent' and the same text as for a registered e-mail — nothing reveals that the address has no account. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Legend 'Generic reset message': identical by design (no account enumeration), not a bug. 'No reset e-mail is actually sent' can only be checked in the Mailsac inbox. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: reset password confirmation screen displays identical generic heading "Reset password email sent" and informational body text for unregistered email (no account enumeration). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB2Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---

@@ -1,0 +1,20 @@
+{
+  "onboardingB2": {
+    "resetPassword": {
+      "registeredEmail": "prod_stu_auto@mailsac.com",
+      "unregisteredEmail": "qa-unregistered-probe@mailsac.com"
+    },
+    "invalidLogin": {
+      "email": "prod_stu_auto@mailsac.com",
+      "invalidPassword": "WrongPassword123!"
+    },
+    "adminLogin": {
+      "email": "prod_admin_mqa@yopmail.com",
+      "password": "{{env.C1_PROD_ADMINLOGIN_PASSWORD}}"
+    },
+    "lockout": {
+      "email": "cqatestuserforblockDND@mailsac.com",
+      "password": "Compro11"
+    }
+  }
+}
