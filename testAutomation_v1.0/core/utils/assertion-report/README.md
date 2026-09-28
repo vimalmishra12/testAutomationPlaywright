@@ -1,4 +1,4 @@
-# Test Verification Report (ADR-025 — assertion evidence report)
+# Test Verification Report (ADR-026 — assertion evidence report)
 
 Shown in the page as **Test Verification Report** (results view) / **Test Verification Report: Debug**.
 
@@ -60,6 +60,6 @@ node core/utils/assertion-report/buildAssertionReport.js --from=<runDir> --view=
 
 ## How a check is linked to its element
 
-See ADR-025 in `.architecture/decisions.md`. In short: the page-object line that read the value
+See ADR-026 in `.architecture/decisions.md`. In short: the page-object line that read the value
 (`searchBtnDisplayed: await action.isDisplayed(this.searchBtn)`) is matched by name to the test's
 assertion (`assertion.assertEqual(sts.searchBtnDisplayed, …)`), never by value alone.

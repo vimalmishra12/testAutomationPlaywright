@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Builds the assertion evidence report (ADR-025) from a run folder written by
+ * Builds the assertion evidence report (ADR-026) from a run folder written by
  * core/utils/assertionEvidence.js:
  *   <runDir>/run.json          run metadata (exec file, env, appType, start / end)
  *   <runDir>/evidence.jsonl    one JSON record per test (checks, linked elements, boxes)

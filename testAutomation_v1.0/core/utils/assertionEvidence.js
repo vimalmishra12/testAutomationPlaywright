@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Assertion evidence recorder — ADR-025 (pilot, 2026-09-25, user request).
+ * Assertion evidence recorder — ADR-026 (pilot, 2026-09-25, user request).
  *
  * Records, per test, WHICH ELEMENT each assertion checked, so the assertion evidence report
  * (core/utils/assertion-report/) can draw a ✔ / ✘ mark on that element in the end-of-test
@@ -42,7 +42,7 @@ function flagOn(v) { return v === true || String(v).toLowerCase() === "true"; }
 const _argv = global.argv || {};
 
 /**
- * Report mode from --assertReport (ADR-025 amendment, 2026-09-28, user request):
+ * Report mode from --assertReport (ADR-026 amendment, 2026-09-28, user request):
  *   true  → "results": pass / fail, marks and check messages — no selectors, values or raw data
  *   debug → "debug"  : the full report (and the results report next to it)
  *   false / absent → off
@@ -535,7 +535,7 @@ async function measureRead(r, scroll) {
         geos.forEach(function (g) {
             // Viewport box + scroll = position in the full-page screenshot. This holds for FIXED
             // elements too: Chromium's full-page capture keeps the scroll position and paints a
-            // fixed header where the viewport was, not at the top (verified on the ADR-025 fixture).
+            // fixed header where the viewport was, not at the top (verified on the ADR-026 fixture).
             x1 = Math.min(x1, g.bb.x + scroll.x); y1 = Math.min(y1, g.bb.y + scroll.y);
             x2 = Math.max(x2, g.bb.x + scroll.x + g.bb.width); y2 = Math.max(y2, g.bb.y + scroll.y + g.bb.height);
             frac = Math.max(frac, g.visibleFraction);

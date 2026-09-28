@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Test Verification Report</title>
-<!-- ADR-025. Layout approved as the 2026-09-25 mockup. Data is injected by buildAssertionReport.js. -->
+<!-- ADR-026. Layout approved as the 2026-09-25 mockup. Data is injected by buildAssertionReport.js. -->
 <style>
   :root {
     --bg: #f3f5f7; --card: #ffffff; --text: #2b303b; --muted: #6b7380; --line: #e2e6ea;
@@ -142,7 +142,7 @@ var DATA = /*__DATA__*/null;
   if (!DATA) { document.getElementById("main").textContent = "No data."; return; }
   var meta = DATA.meta || {};
   var marksOn = true; // declared before any test renders (failed tests render open)
-  // ADR-025 amendment: "results" (shareable — the builder already removed selectors, values and
+  // ADR-026 amendment: "results" (shareable — the builder already removed selectors, values and
   // raw data from DATA) or "debug" (everything recorded). Missing = debug, for older builds.
   var DEBUG = DATA.view !== "results";
   var badge = document.getElementById("viewBadge");

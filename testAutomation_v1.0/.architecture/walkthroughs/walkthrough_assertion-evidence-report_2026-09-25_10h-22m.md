@@ -3,7 +3,7 @@
 ## Session 1 — 2026-09-25
 
 ## Summary
-Built the assertion evidence report (ADR-025): with `--assertReport=true`, a mochawesome-style HTML
+Built the assertion evidence report (ADR-026): with `--assertReport=true`, a mochawesome-style HTML
 report marks every element an assertion checked on the end-of-test screenshot (✔ passed / ✘ failed).
 Agreed with the user in steps: understanding → hardcoded HTML mockup (approved) → plan (approved,
 pilot suite `adminStudentsTab`, flag-gated, end-of-test screenshot only, off-screen elements recorded
@@ -63,7 +63,7 @@ but not drawn) → protected-file changes (confirmed) → fixture verification.
 ### 6. .architecture/decisions.md
 - **Type:** Modified
 - **Layer:** Docs
-- **What changed:** new ADR-025; ADR-024's "Not decided yet (Step 2)" now points to it.
+- **What changed:** new ADR-026; ADR-024's "Not decided yet (Step 2)" now points to it.
 
 ### 7. .architecture/system.md, tooling/report/README.md
 - **Type:** Modified
@@ -93,7 +93,7 @@ but not drawn) → protected-file changes (confirmed) → fixture verification.
   container has 1194 → `PLAYWRIGHT_BROWSERS_PATH` pointed at a scratch folder mapping the names.
 
 ## Architecture Decisions Triggered
-- ADR-025 added (implements ADR-024 Step 2). ADR-019 unchanged (evidence is still the end-of-test frame).
+- ADR-026 added (implements ADR-024 Step 2). ADR-019 unchanged (evidence is still the end-of-test frame).
 - AGENTS.md §9 respected: the auto-run builder is under `core/utils/`, nothing under `tooling/` is required.
 
 ## Protected Files Touched
@@ -141,7 +141,7 @@ file rather than hide them; results view shows only confident marks; debug run w
   ✔ / ✘, a single "not shown on screenshot" note and the failure reason only; "Recorded check data" debug-only.
 
 ### 4. Docs
-- ADR-025 amendment (decisions.md), system.md bullet, `core/utils/assertion-report/README.md` (flag table,
+- ADR-026 amendment (decisions.md), system.md bullet, `core/utils/assertion-report/README.md` (flag table,
   commands, rebuild with `--view`).
 
 ## Verification
@@ -152,7 +152,7 @@ folder. grep of the results file: 0 selectors (`#searchBtn`, `#row-1`), 0 action
 render with no console errors. `--view=debug` rebuild of a `true` run produces `debug.html`.
 
 ## Architecture Decisions Triggered
-- ADR-025 amended (two views). No new pattern.
+- ADR-026 amended (two views). No new pattern.
 
 ## Protected Files Touched
 None — no protected files were modified in this session.
@@ -183,7 +183,7 @@ numbering, no list. Fixed, and verified by rebuilding both views from the user's
   badges, no check list, no hover text, no "not shown" legend; caption explains ✔ / ✘. Debug unchanged.
 
 ### 3. Docs
-- ADR-025 amendment 2 (incl. first live pilot result), README flag table and reading notes.
+- ADR-026 amendment 2 (incl. first live pilot result), README flag table and reading notes.
 
 ## Verification
 - Rebuilt both views from the user's uploaded pilot run (`debug.html` data + embedded screenshots extracted to a
@@ -209,7 +209,7 @@ option A of five offered).
 ## Changes Made
 - `core/utils/assertion-report/template.html` — `<title>` and `<h1 id="reportTitle">`; title set per view in JS.
 - `core/utils/assertionEvidence.js`, `buildAssertionReport.js` — console lines use the new name.
-- `core/utils/assertion-report/README.md`, `.architecture/decisions.md` (ADR-025 amendment 3).
+- `core/utils/assertion-report/README.md`, `.architecture/decisions.md` (ADR-026 amendment 3).
 
 ## Verification
 Rebuilt both views from the pilot run: tab + heading read "Test Verification Report" (results) and
@@ -217,4 +217,25 @@ Rebuilt both views from the pilot run: tab + heading read "Test Verification Rep
 
 ## Protected Files Touched
 None — no protected files were modified in this session.
+
+---
+
+## Session 5 — 2026-09-28
+
+## Summary
+Brought `main` into this branch before merging PR #77. `main` (#68, Secrets Hardening) had meanwhile taken ADR-025,
+so this feature's ADR was renumbered **ADR-025 → ADR-026** everywhere it refers to the assertion evidence report
+(earlier sessions above were updated in place to the new number). The secrets ADR keeps ADR-025.
+
+## Changes Made
+- Merge of `origin/main`: only `.architecture/decisions.md` conflicted (both sides appended an ADR-025) — resolved as
+  ADR-025 Secrets Hardening (main, unchanged) followed by ADR-026 Assertion Evidence Report (this branch); ADR-024's
+  "Step 2" pointer now says ADR-026.
+- ADR number updated in `system.md`, `tooling/report/README.md`, `core/utils/assertionEvidence.js`,
+  `core/utils/assertion-report/*`, this walkthrough.
+
+## Protected Files Touched
+None in this commit. Pending user confirmation: comment-only renumbering (ADR-025 → ADR-026) of the hook comments in
+`baseActionLibrary.js`, `baseAssertionLibrary.js` and `playwright.setup.js` — until then those comments still say
+ADR-025 and mean this feature's ADR (now ADR-026).
 

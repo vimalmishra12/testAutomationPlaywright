@@ -128,6 +128,21 @@ module.exports = {
     await assertion.assertEqual(sts.playerShown, true, "The Learning Path player did not open");
   },
 
+  // [2026-09-25] TC-NLP-001/002/018: the SLE-granted NEW Learning Path component (Projects) of the named class shows
+  // no expiry date; launched, a learner's FIRST launch shows the "setting up the learning materials" screen with its
+  // progress bar, which clears into the NLP table of contents. `firstLaunch: false` data skips the provisioning checks.
+  TST_DASH_TC_17: async function (testdata) {
+    sts = await dashboard.launch_classNlpComponent(testdata.className, testdata.componentName, testdata.timeoutMs);
+    await assertion.assertEqual(sts.tileShown, true, "'" + testdata.componentName + "' is not shown in class '" + testdata.className + "'");
+    await assertion.assertEqual(sts.expiryText, null, "An expiry date is shown for the SLE component: " + sts.expiryText);
+    await assertion.assertEqual(sts.clicked, true, "'" + testdata.componentName + "' could not be clicked");
+    if (testdata.firstLaunch) {
+      await assertion.assertEqual(sts.provisioningSeen, true, "The first launch did not show the materials-provisioning screen");
+      await assertion.assertEqual(sts.progressBarSeen, true, "The provisioning screen showed no progress bar");
+    }
+    await assertion.assertEqual(sts.tocShown, true, "The NLP table of contents did not render after the launch (" + sts.waitedMs + " ms, at " + sts.route + ")");
+  },
+
   TST_DASH_TC_12: async function (testdata) {
     sts = await dashboard.close_introTourIfShown();
     await assertion.assertEqual(sts.tourClosed, true, 'Guided tour is still covering the dashboard');
