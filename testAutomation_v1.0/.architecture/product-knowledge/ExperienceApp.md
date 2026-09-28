@@ -107,10 +107,14 @@ one intentional de-indent, and the single dropped line (the Thor URL) already st
 this file’s environment table above. Original file sha256
 `5241740AC8A859DC21885E2C3547F57B3EFCF5A362EFA9554AB42B9383AF80CB` (13,811 bytes); git history holds it.
 
-> **Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
+> ~~**Not yet documented anywhere:** the rest of the non-admin C1 surface — eBook, player, homework, progress,
 > notes, drawing tool and the teacher/student roles — which accounts for **16 of 51** C1 page
 > objects. When that work starts, it gets its own area shared file and per-screen files under
-> `ExperienceApp/`, following the same pattern (ADR-020).
+> `ExperienceApp/`, following the same pattern (ADR-020).~~
+> **Superseded `[2026-09-28]`:** the area shared file exists (`c1-core-shared.md`); eBook, notes and
+> drawing are documented (`foc-ebook-reader.md`, `foc-notes.md`); Learning Path progress views are in
+> `learning-path-player.md` §A11. **Still undocumented:** homework, and any progress views outside
+> Learning Path.
 
 ### Migration note [2026-08-21]
 
