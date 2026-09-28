@@ -89,7 +89,7 @@ Both Presentation Plus suites were verified passing 100% green within `ebookE2Et
 ## Part D — Book-to-book page mapping (module `EMAP`) `[2026-09-25, thor]`
 
 > Manual register: [`test/Manual/C1App/FOC/ebookMapping_test_cases.md`](../../../test/Manual/C1App/FOC/ebookMapping_test_cases.md) (source sheet `FOC-_Web_Mapping Cases.xlsx`).
-> Page object [`pages/ExperienceApp/ebookMapping.page.js`](../../../pages/ExperienceApp/ebookMapping.page.js) · suite `npm run eBookMappingTest_Thor` (`ebookMappingTest.json`, 2 suites).
+> Page object [`pages/ExperienceApp/ebookMapping.page.js`](../../../pages/ExperienceApp/ebookMapping.page.js) · suite `npm run eBookMappingTest_Thor` (`ebookMappingTest.json`, 3 suites — one per scenario: `TST_EMAP_TC_1`, `TC_2`, `TC_6`).
 
 ### D1. Product behaviour
 * The Presentation Plus toolbar's **Change course material** dropdown (`button[title="Change course material"]`) lists the class bundle's books plus *Teacher's Resources* (a new tab). On thor (class `CQA_AUTO_TEST_DND_1RB`): `vm_automation_first_ebook_pplus_1rb`, `vm_automation_second_ebook_pplus_1rb`, `vm_automation_Third_ebook_pplus_1rb dt` (URL id is lower case).
