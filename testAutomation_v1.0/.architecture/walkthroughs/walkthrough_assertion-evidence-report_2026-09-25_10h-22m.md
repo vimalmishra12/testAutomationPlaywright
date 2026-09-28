@@ -160,3 +160,41 @@ None — no protected files were modified in this session.
 ## Pending / Follow-up
 - Live pilot on thor (`npm run adminStudentsTabTest_thor -- --assertReport=debug`) still to run — host blocked here.
 
+---
+
+## Session 3 — 2026-09-28
+
+## Summary
+The user ran the pilot live on thor (`adminStudentsTab`, 24 tests, `--assertReport=debug`) and reported that
+`index.html` and `debug.html` looked the same. Cause: the results view still rendered the numbered check list —
+only the embedded data differed. Requirement clarified: results view = ✔ / ✘ marks on the screenshot only, no
+numbering, no list. Fixed, and verified by rebuilding both views from the user's own run data.
+
+## Changes Made
+
+### 1. core/utils/assertion-report/buildAssertionReport.js
+- **Type:** Modified — **Layer:** Core (utility, not protected)
+- **What changed:** `resultsView()` now keeps per check only `status` + confident boxes; drops messages, numbers,
+  expected / actual and per-check errors. Test-level one-line error kept for failed tests.
+
+### 2. core/utils/assertion-report/template.html
+- **Type:** Modified — **Layer:** Core (utility, not protected)
+- **What changed:** results view renders the screenshot full width (`.evidence.marks-only`) with plain ✔ / ✘
+  badges, no check list, no hover text, no "not shown" legend; caption explains ✔ / ✘. Debug unchanged.
+
+### 3. Docs
+- ADR-025 amendment 2 (incl. first live pilot result), README flag table and reading notes.
+
+## Verification
+- Rebuilt both views from the user's uploaded pilot run (`debug.html` data + embedded screenshots extracted to a
+  scratch run folder): results file contains 0 check messages, 0 `"n":`, 0 selectors (`aLearner`), 0 test emails
+  (`mailsac`); debug keeps them (197 messages). Results view renders marks-only with no console errors.
+- Pilot audit from `evidence.jsonl`: 0 inferred links; drawn marks sit on the checked elements.
+
+## Protected Files Touched
+None — no protected files were modified in this session.
+
+## Pending / Follow-up
+- Checks read through helpers that transform values (sort-state tests TC_15–19) show no mark — expected; could be
+  improved later by naming reads in those helpers.
+

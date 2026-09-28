@@ -1033,3 +1033,14 @@ blocked the host; the pilot run is the next step.
 - Verified on the fixture for `true`, `debug`, `Debug`, `yes`, `false`: the right files each time; the results
   file contains no selector / action / read value (grep); the `--view=debug` rebuild of a `true` run works.
 
+**Amendment 2 (2026-09-28, user review of the first live pilot run) — the results view is MARKS ONLY.**
+The first amendment kept the numbered check list in the results view, so on screen both reports looked the same
+(only the embedded data differed). The user's requirement: `--assertReport=true` shows **just the ✔ / ✘ marks on
+the screenshot — no numbering, no check list**; `debug` shows the complete report. Now: the results view renders
+the screenshot full width with plain ✔ / ✘ badges (merged per element, ✘ if any check on it failed), a failed
+test's one-line error, and nothing else; its embedded data holds only each check's pass / fail and confident box
+(no messages, numbers, selectors, values). Debug is unchanged.
+**First live pilot (thor, `adminStudentsTab`, 24 tests, 2026-09-28, run by the user):** 0 "inferred" links;
+every drawn mark checked against its screenshot landed on the checked element; unmarked checks were the expected
+kinds (click results, row counts / lengths, values read through sort-state helpers).
+

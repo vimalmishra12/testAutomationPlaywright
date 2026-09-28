@@ -7,7 +7,7 @@ end-of-test screenshot: **✔ green** for a passed check, **✘ red** for the fa
 
 | Flag | Builds | For |
 |---|---|---|
-| `--assertReport=true` | `index.html` — **results view** | sharing: pass / fail, marks, check messages; no selectors, values or raw data in the file |
+| `--assertReport=true` | `index.html` — **results view** | sharing: pass / fail per test and plain ✔ / ✘ marks on the screenshot — no numbers, no check list, no selectors or values in the file |
 | `--assertReport=debug` | `index.html` **and** `debug.html` — **full view** | engineers: selectors, values read, why a check has no mark, raw record |
 | no flag / `false` | nothing | normal runs — no change at all |
 
@@ -29,9 +29,10 @@ Values are case-insensitive; an unknown value warns and builds the results view.
 
 ## Reading it
 
-- Each test shows its end-of-test screenshot with numbered marks and, beside it, the numbered list of checks.
-  Hover a mark or a check to link them. Checks on the same element share one mark (`2·3·4 ✔`).
-- The **results view** draws only confident links and marks any other check "not shown on screenshot".
+- **Debug view:** each test shows its end-of-test screenshot with numbered marks and, beside it, the numbered list
+  of checks. Hover a mark or a check to link them. Checks on the same element share one mark (`2·3·4 ✔`).
+- The **results view** is the marked screenshot only: a plain ✔ / ✘ on each element with a confident link (✘ if any
+  check on that element failed) and, for a failed test, its one-line error. No numbers or check list.
 - In the **debug view**, a dashed outline + "inferred" means more than one element could be the one checked (the
   most likely is drawn), and a check listed **without a mark** says why:
 

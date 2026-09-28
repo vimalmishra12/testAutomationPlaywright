@@ -5,7 +5,7 @@
  *   <runDir>/run.json          run metadata (exec file, env, appType, start / end)
  *   <runDir>/evidence.jsonl    one JSON record per test (checks, linked elements, boxes)
  *   <runDir>/shots/NNNN.png    end-of-test screenshot per test
- * → <runDir>/index.html        RESULTS view: pass / fail, marks, check messages (shareable)
+ * → <runDir>/index.html        RESULTS view: pass / fail + ✔ / ✘ marks on the screenshot only (shareable)
  * → <runDir>/debug.html        DEBUG view: everything recorded (selectors, values, raw data)
  * Both are self-contained (screenshots embedded).
  *
@@ -39,11 +39,12 @@ function readRecords(runDir) {
 }
 
 /**
- * RESULTS view data. Fields are REMOVED here, not hidden in the page: the report is meant to be
- * forwarded, and anything embedded would still be readable in the page source — selectors, the
- * values read from the page (test emails, usernames) and the raw record stay out of the file.
- * Kept: what a reader needs to judge the run — check messages, pass / fail, the expected vs
- * actual of a FAILED check, and the confident (non-"inferred") marks.
+ * RESULTS view data — the marked screenshot only (user decision 2026-09-28: "just tick marks, no
+ * numbering"). Fields are REMOVED here, not hidden in the page: the report is meant to be
+ * forwarded, and anything embedded would still be readable in its source. Kept per check: its
+ * pass / fail and the box of a CONFIDENT ("exact") mark. Dropped: messages, numbers, selectors,
+ * values read, expected / actual, technical states and the raw record. A failed test keeps the
+ * first line of its error so the reader knows what went wrong.
  */
 function resultsView(tests) {
     return tests.map(function (t) {
@@ -51,20 +52,15 @@ function resultsView(tests) {
         return {
             index: t.index, title: t.title, suite: t.suite, state: t.state, attempt: t.attempt,
             durationMs: t.durationMs,
-            // First line only — the full error (stack, expect() dump) is debug material.
             error: failed && t.error ? String(t.error).split("\n")[0] : null,
             shot: t.shot,
             checks: (t.checks || []).map(function (c) {
                 const drawable = c.link === "exact";
                 return {
-                    n: c.n, status: c.status, message: c.message, kind: c.kind, link: c.link,
-                    expected: c.status === "failed" ? c.expected : null,
-                    actual: c.status === "failed" ? c.actual : null,
-                    error: c.status === "failed" && c.error ? String(c.error).split("\n")[0] : null,
-                    targets: (c.targets || []).map(function (x) {
-                        const shown = drawable && x.state === "shown";
-                        return { state: shown ? "shown" : "notShown", box: shown ? x.box : null };
-                    })
+                    status: c.status,
+                    targets: (c.targets || [])
+                        .filter(function (x) { return drawable && x.state === "shown" && x.box; })
+                        .map(function (x) { return { state: "shown", box: x.box }; })
                 };
             })
         };

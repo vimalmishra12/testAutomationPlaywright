@@ -73,6 +73,7 @@
 
   .evidence { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 14px; align-items: start; }
   @media (max-width: 820px) { .evidence { grid-template-columns: 1fr; } }
+  .evidence.marks-only { grid-template-columns: minmax(0, 1fr); }
   .shot { position: relative; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: #fff; line-height: 0; }
   .shot img { width: 100%; height: auto; display: block; }
   .shot.hide-marks .mark { display: none; }
@@ -129,7 +130,6 @@
     <span><b class="f">✘</b> check failed</span>
     <span data-view="debug"><span class="tag warn">inferred</span> dashed: element link is a best guess</span>
     <span data-view="debug"><span class="tag none">no element</span> check not tied to an element</span>
-    <span data-view="results"><span class="tag none">not shown on screenshot</span> checked, but not marked on the picture</span>
   </div>
 </div>
 <main id="main"></main>
@@ -299,16 +299,27 @@ var DATA = /*__DATA__*/null;
           m.style.top = (100 * g.box.y / t.shot.h) + "%";
           m.style.width = (100 * g.box.w / t.shot.w) + "%";
           m.style.height = (100 * g.box.h / t.shot.h) + "%";
+          // Results view: a plain ✔ / ✘ — no check numbers, no text (user decision 2026-09-28).
+          if (!DEBUG) { m.appendChild(el("span", "badge", anyFail ? "✘" : "✔")); shot.appendChild(m); return; }
           m.appendChild(el("span", "badge", g.checks.map(function (c) { return c.n; }).join("·") + (anyFail ? " ✘" : " ✔")));
           m.title = g.checks.map(function (c) { return c.n + ". " + (c.status === "passed" ? "✔ " : "✘ ") + c.message; }).join("\n");
           shot.appendChild(m);
         });
         left.appendChild(shot);
-        left.appendChild(el("div", "caption", "Screen at the end of the test. Hover a mark or a check to link them."));
+        left.appendChild(el("div", "caption", DEBUG
+          ? "Screen at the end of the test. Hover a mark or a check to link them."
+          : "Screen at the end of the test. ✔ marks an element whose check passed, ✘ one whose check failed."));
       } else {
         left.appendChild(el("div", "noshot", "No screenshot was captured for this test."));
       }
       ev.appendChild(left);
+
+      // Results view = the marked screenshot only: no check list, no numbers, no raw data.
+      if (!DEBUG) {
+        ev.classList.add("marks-only");
+        body.appendChild(ev);
+        return;
+      }
 
       var ul = el("ul", "checks");
       ul.appendChild(el("h4", null, "Checks (" + checks.length + ")"));
