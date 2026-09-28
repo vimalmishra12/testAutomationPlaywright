@@ -1016,3 +1016,20 @@ blocked the host; the pilot run is the next step.
 - A per-assertion snapshot (a picture at the moment of each check) would need a new capture point, not a redesign:
   the per-check data is already recorded.
 
+**Amendment (2026-09-28, user request) — two report views: `--assertReport=true` and `--assertReport=debug`.**
+- `true` → **results view** `index.html`: summary, pass / fail, ✔ / ✘ marks, numbered check messages, and for a
+  failed check the expected vs actual. No selectors, action names, values read, technical "no mark" reasons or raw
+  record. Only confident (`exact`) links are drawn — a dashed "inferred" guess is not shown to non-technical
+  readers; any check without a mark carries one plain note, "not shown on screenshot".
+- `debug` → the **full view** `debug.html` (everything above in this ADR) **and** `index.html`, so a debug run
+  always also has a shareable copy.
+- **Both modes record the same data**; the mode only picks which files are built. A `true` run can be rebuilt as
+  debug later: `node core/utils/assertion-report/buildAssertionReport.js --from=<dir> --view=debug`.
+- The results view **removes** the technical fields from the embedded data at build time (not CSS-hidden): the file
+  is meant to be forwarded, and anything embedded — including test-account values read from the page — would
+  otherwise be readable in its source.
+- Values are case-insensitive; `false` / absent = off; an unknown value (typo) warns and builds the results view.
+- No protected-file change: the mode is resolved in `assertionEvidence.js` and applied in the builder / template.
+- Verified on the fixture for `true`, `debug`, `Debug`, `yes`, `false`: the right files each time; the results
+  file contains no selector / action / read value (grep); the `--view=debug` rebuild of a `true` run works.
+

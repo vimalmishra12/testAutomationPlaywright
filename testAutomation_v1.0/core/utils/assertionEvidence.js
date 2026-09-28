@@ -40,7 +40,29 @@ function flagOn(v) { return v === true || String(v).toLowerCase() === "true"; }
 // baseAssertionLibrary's skipAssertion read). skipAssertion turns assertions into noops,
 // so there would be nothing to evidence — stay off in that mode (ADR-008).
 const _argv = global.argv || {};
-const ENABLED = flagOn(_argv.assertReport) && !flagOn(_argv.skipAssertion);
+
+/**
+ * Report mode from --assertReport (ADR-025 amendment, 2026-09-28, user request):
+ *   true  → "results": pass / fail, marks and check messages — no selectors, values or raw data
+ *   debug → "debug"  : the full report (and the results report next to it)
+ *   false / absent → off
+ * Both modes RECORD the same data; the mode only decides which report files are built, so a
+ * results run can be rebuilt as debug later from its evidence.jsonl without re-running.
+ * An unrecognised value (a typo) warns and falls back to "results" rather than silently
+ * dropping a report the user asked for.
+ */
+function resolveMode(v) {
+    if (v === undefined || v === null || v === false || v === "") return null;
+    const s = String(v).trim().toLowerCase();
+    if (s === "false" || s === "off" || s === "0") return null;
+    if (s === "debug") return "debug";
+    if (s !== "true" && s !== "results") {
+        console.log("[assert-report] Unknown --assertReport value \"" + v + "\" — use true or debug. Building the results report.");
+    }
+    return "results";
+}
+const MODE = flagOn(_argv.skipAssertion) ? null : resolveMode(_argv.assertReport);
+const ENABLED = MODE !== null;
 
 // Bounds so a loop that reads thousands of rows cannot grow memory or slow the end-of-test
 // measurement: reads beyond the cap drop the OLDEST (checks refer to recent reads).
@@ -548,6 +570,7 @@ function ensureRunDir() {
         execFile: _argv.testExecFile || null,
         env: _argv.testEnv || null,
         appType: _argv.appType || null,
+        mode: MODE,
         startedAt: d.toISOString(),
         endedAt: null
     };
@@ -634,8 +657,13 @@ function finishRun() {
     try {
         runMeta.endedAt = new Date().toISOString();
         fs.writeFileSync(nodePath.join(runDir, "run.json"), JSON.stringify(runMeta, null, 2));
-        const out = require("./assertion-report/buildAssertionReport.js").build(runDir);
-        console.log("[assert-report] Assertion evidence report: " + out);
+        const builder = require("./assertion-report/buildAssertionReport.js");
+        // The results report is always built (the shareable one); debug adds the full report.
+        const out = builder.build(runDir, "results");
+        console.log("[assert-report] Assertion evidence report (results): " + out);
+        if (MODE === "debug") {
+            console.log("[assert-report] Assertion evidence report (debug):   " + builder.build(runDir, "debug"));
+        }
         return out;
     } catch (e) {
         console.log("[assert-report] report build failed (" + e.message + "). Rebuild with: node core/utils/assertion-report/buildAssertionReport.js --from=\"" + runDir + "\"");
@@ -645,6 +673,7 @@ function finishRun() {
 
 module.exports = {
     enabled: ENABLED,
+    mode: MODE,
     recordRead: recordRead,
     wrapAssertions: wrapAssertions,
     beginTest: beginTest,

@@ -107,3 +107,56 @@ but not drawn) → protected-file changes (confirmed) → fixture verification.
   mark against its screenshot (pass bar from the plan: zero wrong solid marks; count exact / inferred / none).
 - Measure flag-on vs flag-off run time on the pilot (target < 5 % extra).
 - Rollout beyond the pilot, per-assertion snapshots (would relax ADR-019), JPEG screenshots if report size grows.
+
+---
+
+## Session 2 — 2026-09-28
+
+## Summary
+Split the report into two views at the user's request: `--assertReport=true` → shareable **results** view
+(`index.html`) without assertion details; `--assertReport=debug` → **full** view (`debug.html`) plus the results
+view. Reviewed architecturally first and agreed with the user (record once / render twice; strip details from the
+file rather than hide them; results view shows only confident marks; debug run writes both files).
+
+## Changes Made
+
+### 1. core/utils/assertionEvidence.js
+- **Type:** Modified — **Layer:** Core (utility, not protected)
+- **What changed:** `resolveMode()` replaces the boolean flag: `true`/`results` → "results", `debug` → "debug",
+  `false`/absent → off, unknown → warning + "results" (case-insensitive; off under skipAssertion). `mode` stored
+  in `run.json` and exported. `finishRun()` always builds the results view and also the debug view in debug mode.
+- **Why:** one recording path for both modes; the mode only selects outputs.
+
+### 2. core/utils/assertion-report/buildAssertionReport.js
+- **Type:** Modified — **Layer:** Core (utility, not protected)
+- **What changed:** `build(runDir, view)`; `resultsView()` strips selectors, actions, keys, values, technical
+  target states, inferred marks and the raw record, keeping messages, pass / fail, boxes of confident marks and
+  expected / actual / first error line of FAILED checks. Output `index.html` (results) / `debug.html` (debug).
+  CLI `--view=results|debug`; without it, builds what the run's mode built.
+- **Why:** the results report is meant to be forwarded — fields are removed from the file, not CSS-hidden.
+
+### 3. core/utils/assertion-report/template.html
+- **Type:** Modified — **Layer:** Core (utility, not protected)
+- **What changed:** Results / Debug header badge; view-specific legend; results view renders check message,
+  ✔ / ✘, a single "not shown on screenshot" note and the failure reason only; "Recorded check data" debug-only.
+
+### 4. Docs
+- ADR-025 amendment (decisions.md), system.md bullet, `core/utils/assertion-report/README.md` (flag table,
+  commands, rebuild with `--view`).
+
+## Verification
+Fixture app (scratch, not committed), real `run.js`, for `true`, `debug`, `Debug`, `yes`, `false`:
+`true`/`yes` → `index.html` only (`yes` warns); `debug`/`Debug` → `index.html` + `debug.html`; `false` → no
+folder. grep of the results file: 0 selectors (`#searchBtn`, `#row-1`), 0 action names, 0 `"selector"` /
+`"value"` fields; the only test value present is the failed check's expected / actual (by design). Both views
+render with no console errors. `--view=debug` rebuild of a `true` run produces `debug.html`.
+
+## Architecture Decisions Triggered
+- ADR-025 amended (two views). No new pattern.
+
+## Protected Files Touched
+None — no protected files were modified in this session.
+
+## Pending / Follow-up
+- Live pilot on thor (`npm run adminStudentsTabTest_thor -- --assertReport=debug`) still to run — host blocked here.
+
