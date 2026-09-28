@@ -19,3 +19,9 @@ logs_*.txt
 /tooling/
 .cora/
 .cora-cli/
+
+# Secrets (ADR-025) — a root-level .env must never be committable either; the only rule so far
+# lived in testAutomation_v1.0/.gitignore, which does not cover this directory.
+.env
+.env.*
+!.env.example
