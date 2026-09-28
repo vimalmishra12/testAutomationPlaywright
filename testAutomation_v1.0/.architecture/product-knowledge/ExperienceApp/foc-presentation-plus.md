@@ -83,3 +83,27 @@ Both Presentation Plus suites were verified passing 100% green within `ebookE2Et
 * **Suite 5 (`Suite5_TeacherPresentationPlus1RB`):** 27 test steps covering interactive presentation lesson traversal.
 * **Suite 6 (`Suite6_CreateAssignmentPresentationPlus`):** 18 test steps covering the full assignment flow from Presentation Plus and return.
 * **Total Run Evidence:** **77/77 passing across all 6 suites on Thor (5m runtime, 0 failures)**.
+
+---
+
+## Part D — Book-to-book page mapping (module `EMAP`) `[2026-09-25, thor]`
+
+> Manual register: [`test/Manual/C1App/FOC/ebookMapping_test_cases.md`](../../../test/Manual/C1App/FOC/ebookMapping_test_cases.md) (source sheet `FOC-_Web_Mapping Cases.xlsx`).
+> Page object [`pages/ExperienceApp/ebookMapping.page.js`](../../../pages/ExperienceApp/ebookMapping.page.js) · suite `npm run eBookMappingTest_Thor` (`ebookMappingTest.json`, 2 suites).
+
+### D1. Product behaviour
+* The Presentation Plus toolbar's **Change course material** dropdown (`button[title="Change course material"]`) lists the class bundle's books plus *Teacher's Resources* (a new tab). On thor (class `CQA_AUTO_TEST_DND_1RB`): `vm_automation_first_ebook_pplus_1rb`, `vm_automation_second_ebook_pplus_1rb`, `vm_automation_Third_ebook_pplus_1rb dt` (URL id is lower case).
+* Choosing a book opens it **on the page the mapping (defined in Builder) points to**, otherwise on a default page. The reader keeps book and page in the address bar: `.../studentbook/<bookId>/view?page=<page>`. The page label (`button#pageNavigateButton`) reads `ii-iii / 160` for a spread and `- / 160` on the Cover (`?page=cover`).
+* **Book 1 opens on its Cover by default; Next page then reaches page ii** (owner, 2026-09-25). The reader **saves the last page visited in Book 1** and can reopen it there (seen: page ii on thor) — reproduced only inside the suite, not by manual probes. Automation runs a conditional setup/teardown (`TST_EMAP_TC_5`, Previous page until the Cover).
+* Observed on thor: Book 1 page ii → Book 2 **page ii**; Book 2 page ii → Book 1 **Cover**; Book 1 Cover → Book 2 **Cover**; Book 2 page iv → Book 3 **page ii**; Book 3 page ii → Book 2 **Cover**; Book 1 page iv → Book 2 **page iv** (once, on the very first probe, **Cover**). `[ASSUMED]` the last two are intended — open items 2–3 in the manual register.
+* Timing: a book switch completes in under ~3 s. **Intermittent** `[2026-09-25]`: in one run the switch Book 3 → Book 2 was accepted (item clicked) but the address bar stayed on Book 3 for 60 s; not reproduced in 4 probes and 2 reruns.
+
+### D2. Automation traps
+| Trap | Handling |
+|---|---|
+| The dropdown list is positional (`toolbar-ebook-list-item-N`) and `[qid^="ebook-list-item-"]` (the TOC list) matches nothing here | book picked by **title** via `bookItemByTitle` (XPath template) |
+| The address bar changes before the page label re-renders (label lagged ≈ 3 s; 1.5 s was not enough after Next page) | `getData_readerState(expectedLabelStart)` polls the label (bounded 20 s); `click_nextPage` waits for the `?page=` value to change |
+| Book id in the URL is lower case while the title has "Third" | `waitForUrl` uses a case-insensitive regex built from the id |
+| A book switch is not instant | `waitForUrl` budget `switchTimeoutMs` (60 s) per book in test data; a timeout there is a finding, not a reason to lengthen the wait (Invariant 14) |
+| Book 1 may reopen on its saved last page, not the Cover | `TST_EMAP_TC_5` in Test (setup) and After (teardown) — clicks Previous only while not on the Cover |
+| A fresh Presentation Plus is needed per scenario (the reader remembers nothing between sessions, but scenario 2 must start from Book 1 page ii) | one suite (own login) per scenario |

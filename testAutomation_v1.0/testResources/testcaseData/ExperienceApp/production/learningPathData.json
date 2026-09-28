@@ -10,7 +10,7 @@
         "firstName": "Teacher",
         "lastName": "User",
         "email": "{{run.lpTeacherEmail}}",
-        "password": "Compro11",
+        "password": "{{env.C1_PROD_TEACHERFORM_PASSWORD}}",
         "country": "India"
       },
       "learnerRole": {
@@ -25,18 +25,18 @@
         "firstName": "Learner",
         "lastName": "User",
         "email": "{{run.lpLearnerEmail}}",
-        "password": "Compro11"
+        "password": "{{env.C1_PROD_LEARNERFORM_PASSWORD}}"
       },
       "learnerFormB": {
         "firstName": "LearnerB",
         "lastName": "User",
         "email": "{{run.lpLearner2Email}}",
-        "password": "Compro11"
+        "password": "{{env.C1_PROD_LEARNERFORMB_PASSWORD}}"
       }
     },
     "teacherLogin": {
       "email": "{{run.lpTeacherEmail}}",
-      "password": "Compro11"
+      "password": "{{env.C1_PROD_TEACHERLOGIN_PASSWORD}}"
     },
     "teacherSchool": {
       "schoolKey": "MQA-ABC-DEF",
@@ -55,7 +55,7 @@
     },
     "learnerLogin": {
       "email": "{{run.lpLearnerEmail}}",
-      "password": "Compro11"
+      "password": "{{env.C1_PROD_LEARNERLOGIN_PASSWORD}}"
     },
     "invite": {
       "className": "{{run.lpClassName}}",
@@ -144,7 +144,7 @@
     "adminLogin": {
       "_comment": "Production single-school admin of MQA Sierra School (MQA-ABC-DEF) — given by the user 2026-09-23 for LP-033.",
       "email": "prod_admin_mqa@yopmail.com",
-      "password": "Compro11"
+      "password": "{{env.C1_PROD_ADMINLOGIN_PASSWORD}}"
     },
     "adminLibrary": {
       "schoolKey": "MQA-ABC-DEF",
@@ -180,26 +180,26 @@
     "mailsac": {
       "teacherVerify": {
         "mailsacUser": "comproqatest21@gmail.com",
-        "mailsacPassword": "Compro11",
+        "mailsacPassword": "{{env.C1_PROD_TEACHERVERIFY_PASSWORD}}",
         "email": "{{run.lpTeacherEmail}}",
         "mailTimeoutMs": 300000
       },
       "learnerVerify": {
         "mailsacUser": "comproqatest21@gmail.com",
-        "mailsacPassword": "Compro11",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
         "email": "{{run.lpLearnerEmail}}",
         "mailTimeoutMs": 300000
       },
       "learnerVerifyB": {
         "mailsacUser": "comproqatest21@gmail.com",
-        "mailsacPassword": "Compro11",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFYB_PASSWORD}}",
         "email": "{{run.lpLearner2Email}}",
         "mailTimeoutMs": 300000
       }
     },
     "learnerLoginB": {
       "email": "{{run.lpLearner2Email}}",
-      "password": "Compro11"
+      "password": "{{env.C1_PROD_LEARNERLOGINB_PASSWORD}}"
     },
     "inviteB": {
       "_comment": "Learner B (LP-023/024 only) — invited to the same class.",

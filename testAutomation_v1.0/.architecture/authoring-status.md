@@ -305,3 +305,11 @@ Modules `LAND` · `FOOT` · `LOGI` · `APPS` · `RESE` · `SNUP` · `CREA` · `S
 The Batch 1 side-effect free set is complete. Next in line:
 - **B2 — fixture accounts:** `TST_LOGI_TC_8, 14`, `TST_RESE_TC_7, 8`, `TST_LAND_TC_8, 9`.
 - **B3 — creates data, ASK FIRST (ADR-021):** `TST_SNUP_TC_72..75`, `TST_LOGI_TC_9` (lockout — disposable account only), `TST_RESE_TC_9, 10`, `TST_CREA_TC_31`, `TST_SPRF_TC_24`, `TST_LOGI_TC_18`, `TST_INVI_TC_14, 15`, `TST_PCHD_TC_1..3`.
+
+## ebookMappingTest (ExperienceApp, thor) — `eBookMappingTest_Thor`
+Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-presentation-plus.md` Part D · manual: `test/Manual/C1App/FOC/ebookMapping_test_cases.md`
+- Phase 1 ✅ 2026-09-25 — `TST_EMAP_TC_1..2, 5, 6`; first run 9 passing / 1 failing (TC_2: the Book 3 → Book 2 switch-back did not take effect once); visual candidates: none (live reader state, no fixed baseline)
+- Phase 2 ✅ 2026-09-25 — 18/18 passing, 2 consecutive clean runs (Book 1 Cover setup `TST_EMAP_TC_5` + teardown); one earlier intermittent switch-back failure recorded in the manual Open items
+- Phase 3 ⬜ pending
+- **Not built:** `TST_EMAP_TC_3..4` (manual only — the expected result for an unmapped page is unconfirmed)
+- Follow-up: none — npm script `eBookMappingTest_Thor` added (user-confirmed 2026-09-25)
