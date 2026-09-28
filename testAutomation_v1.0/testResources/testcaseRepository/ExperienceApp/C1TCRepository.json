@@ -6793,6 +6793,37 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Presentation Plus book-to-book page mapping",
+      "moduleId": "EMAP",
+      "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+      "testcase": [
+        {
+          "id": "TST_EMAP_TC_1",
+          "description": "Verify Book 1 page ii opens Book 2 page ii and switching back opens the Book 1 Cover",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_EMAP_TC_2",
+          "description": "Verify Book 2 opens Book 3 page ii and switching back from Book 3 page ii opens the Book 2 Cover",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_EMAP_TC_5",
+          "description": "Setup/teardown — make sure Book 1 is on its Cover (clicks Previous only when it is not), because the reader reopens Book 1 on its last visited page",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_EMAP_TC_6",
+          "description": "Verify Book 3 page ii opens Book 1 page ii when Book 3 page ii is mapped to Book 1 page ii",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

@@ -1974,6 +1974,15 @@
         "closeMessageBtn": "button[title='Close message view'], button.btn-secondary:has-text('Close')",
         "emailHtmlFrame": "iframe[title='Email HTML preview']",
         "verifyLink": "td > a"
+      },
+      "ebookMapping": {
+        "_comment": "[2026-09-25, thor] Presentation Plus reader toolbar — book-to-book page mapping (EMAP). Semantic title/id anchors are used instead of the numeric qids (90/toc-6/76); the book list is matched by TITLE because its qids (toolbar-ebook-list-item-N) are positional.",
+        "bookDropdownBtn": "button[title=\"Change course material\"]",
+        "selectedBookTitle": "button[title=\"Change course material\"] .eboook-selected",
+        "bookItemByTitle": "//a[starts-with(@qid,'toolbar-ebook-list-item-') and normalize-space()='{{bookTitle}}']",
+        "pageLabel": "button#pageNavigateButton",
+        "nextPageBtn": "button#nextButton",
+        "previousPageBtn": "button#previousButton"
       }
     }
   }

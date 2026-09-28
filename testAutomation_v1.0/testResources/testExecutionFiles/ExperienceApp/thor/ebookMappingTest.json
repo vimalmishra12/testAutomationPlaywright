@@ -1,0 +1,464 @@
+{
+  "Suite1": {
+    "Name": "Validation of Presentation Plus book mapping — Book 1 page ii to Book 2 page ii and back (TC_FOCMap_web1)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Role": "Teacher",
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Application URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Verify Landing Page Loaded",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter Instructor Username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter Instructor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Verify Instructor Login Successful",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open Active Class Card 1RB",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.class.name"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Navigate to Class Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_2",
+        "description": "Verify product bundle is displayed in Class Materials",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.bundle"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_3",
+        "description": "Click Presentation Plus component within product bundle",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.presentationPlus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Setup — if Book 1 did not open on its Cover, click Previous until it is on the Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_1",
+        "description": "Verify Book 1 page ii opens Book 2 page ii and switching back opens the Book 1 Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario1"
+          }
+        ],
+        "timeout": 180000
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Teardown — return Book 1 to its Cover with the Previous button (the reader saves Book 1's last visited page)",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click user profile dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button and verify landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
+  },
+  "Suite2": {
+    "Name": "Validation of Presentation Plus book mapping — Book 2 to Book 3 page ii and back to the Book 2 Cover (TC_FOCMap_web2)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Role": "Teacher",
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Application URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Verify Landing Page Loaded",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter Instructor Username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter Instructor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Verify Instructor Login Successful",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open Active Class Card 1RB",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.class.name"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Navigate to Class Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_2",
+        "description": "Verify product bundle is displayed in Class Materials",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.bundle"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_3",
+        "description": "Click Presentation Plus component within product bundle",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.presentationPlus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Setup — if Book 1 did not open on its Cover, click Previous until it is on the Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_2",
+        "description": "Verify Book 2 opens Book 3 page ii and switching back from Book 3 page ii opens the Book 2 Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario2"
+          }
+        ],
+        "timeout": 180000
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Teardown — return Book 1 to its Cover with the Previous button (the reader saves Book 1's last visited page)",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click user profile dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button and verify landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
+  },
+  "Suite3": {
+    "Name": "Validation of Presentation Plus book mapping — Book 3 page ii to Book 1 page ii (owner-stated mapping)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Role": "Teacher",
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "Launch Application URL",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Verify Landing Page Loaded",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter Instructor Username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter Instructor Password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/assignmentLoginData.json",
+            "jsonPath": "C1.login.user.validTeacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Verify Instructor Login Successful",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open Active Class Card 1RB",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.class.name"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Navigate to Class Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CMAT_TC_2",
+        "description": "Verify product bundle is displayed in Class Materials",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.bundle"
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_3",
+        "description": "Click Presentation Plus component within product bundle",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.presentationPlus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Setup — if Book 1 did not open on its Cover, click Previous until it is on the Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_6",
+        "description": "Verify Book 3 page ii opens Book 1 page ii when Book 3 page ii is mapped to Book 1 page ii",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario2"
+          }
+        ],
+        "timeout": 180000
+      }
+    ],
+    "AfterEach": [],
+    "After": [
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Teardown — return Book 1 to its Cover with the Previous button (the reader saves Book 1's last visited page)",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Click user profile dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Click Log out button and verify landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      }
+    ]
+  }
+}
