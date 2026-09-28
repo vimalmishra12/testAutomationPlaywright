@@ -4,7 +4,7 @@
       "validAdmin": {
         "org": "Cambridge One",
         "username": "harishthoradmin",
-        "password": "C0>pr0!899"
+        "password": "{{env.BLDR_THOR_VALIDADMIN_PASSWORD}}"
       }
     }
   }
