@@ -9,7 +9,7 @@
 var res, res2;
 var message;
 
-// [2026-09-25] ADR-025 assertion evidence report — confirmed by user. The read methods below
+// [2026-09-25] ADR-026 assertion evidence report — confirmed by user. The read methods below
 // record which element they touched (recordRead) so a later assertion on that value can be
 // marked on the element in the end-of-test screenshot. recordRead returns on its first line
 // unless --assertReport=true, so normal runs are unaffected. Clicks / typing are not recorded.
@@ -97,7 +97,7 @@ module.exports = {
         try {
             let result = await el(selector).isEnabled();
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("isEnabled", selector, el(selector), result); // ADR-025
+            evidence.recordRead("isEnabled", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -112,7 +112,7 @@ module.exports = {
             // closest equivalent to WDIO's isClickable.
             let result = (await el(selector).isVisible()) && (await el(selector).isEnabled());
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("isClickable", selector, el(selector), result); // ADR-025
+            evidence.recordRead("isClickable", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -126,7 +126,7 @@ module.exports = {
             // isVisible() returns false (does not throw) when the element is absent.
             let result = await el(selector).isVisible();
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("isDisplayed", selector, el(selector), result); // ADR-025
+            evidence.recordRead("isDisplayed", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -139,7 +139,7 @@ module.exports = {
         try {
             let result = await el(selector).isChecked();
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("isSelected", selector, el(selector), result); // ADR-025
+            evidence.recordRead("isSelected", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -177,7 +177,7 @@ module.exports = {
         message = "element:" + selector;
         try {
             let result = await el(selector).inputValue();
-            evidence.recordRead("getValue", selector, el(selector), result); // ADR-025
+            evidence.recordRead("getValue", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -327,7 +327,7 @@ module.exports = {
             // innerText matches WDIO getText (visible text) better than textContent.
             res = await el(selector).innerText();
             await logger.logInto(await stackTrace.get(), message + ":" + res);
-            evidence.recordRead("getText", selector, el(selector), res); // ADR-025
+            evidence.recordRead("getText", selector, el(selector), res); // ADR-026
             return res;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -358,12 +358,12 @@ module.exports = {
         try {
             res = await el(selector).innerText({ timeout: timeoutMs || 1000 });
             await logger.logInto(await stackTrace.get(), message + ":" + res);
-            evidence.recordRead("getTextIfPresent", selector, el(selector), res); // ADR-025
+            evidence.recordRead("getTextIfPresent", selector, el(selector), res); // ADR-026
             return res;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), message + ": absent within " + (timeoutMs || 1000) + "ms");
             // Absence is this method's RESULT (see above), so it is recorded like any other read.
-            evidence.recordRead("getTextIfPresent", selector, el(selector), null); // ADR-025
+            evidence.recordRead("getTextIfPresent", selector, el(selector), null); // ADR-026
             return null;
         }
     },
@@ -373,7 +373,7 @@ module.exports = {
             res = await el(selector).getAttribute(attributeValue);
             message = "element:" + selector + " attributeValue:" + attributeValue + " value:" + res;
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("getAttribute", selector, el(selector), res); // ADR-025
+            evidence.recordRead("getAttribute", selector, el(selector), res); // ADR-026
             return res;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -387,7 +387,7 @@ module.exports = {
             await logger.logInto(await stackTrace.get(), message);
             res = await els(selector).count();
             // multi=true: a count is about ALL matches, so the report outlines every one of them.
-            evidence.recordRead("getElementCount", selector, els(selector), res, true); // ADR-025
+            evidence.recordRead("getElementCount", selector, els(selector), res, true); // ADR-026
             return res;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -415,7 +415,7 @@ module.exports = {
             const normalisedValue = parsed.type === "color" ? parsed.rgba : value;
             message = "element:" + selector + " propertyname:" + propertyname + " value:" + normalisedValue;
             await logger.logInto(await stackTrace.get(), message);
-            evidence.recordRead("getCSSProperty", selector, el(selector), normalisedValue); // ADR-025
+            evidence.recordRead("getCSSProperty", selector, el(selector), normalisedValue); // ADR-026
             return { property: propertyname, value: normalisedValue, parsed: parsed };
         } catch (err) {
             await logger.logInto(await stackTrace.get(), err.message, "error");
@@ -863,7 +863,7 @@ module.exports = {
         try {
             const result = (await els(selector).count()) > 0;
             await logger.logInto(await stackTrace.get(), `${message}: ${result}`);
-            evidence.recordRead("isExisting", selector, el(selector), result); // ADR-025
+            evidence.recordRead("isExisting", selector, el(selector), result); // ADR-026
             return result;
         } catch (err) {
             await logger.logInto(await stackTrace.get(), `Error in isExisting: ${err.message}`, "error");

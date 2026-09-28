@@ -235,7 +235,7 @@ so this feature's ADR was renumbered **ADR-025 → ADR-026** everywhere it refer
   `core/utils/assertion-report/*`, this walkthrough.
 
 ## Protected Files Touched
-None in this commit. Pending user confirmation: comment-only renumbering (ADR-025 → ADR-026) of the hook comments in
-`baseActionLibrary.js`, `baseAssertionLibrary.js` and `playwright.setup.js` — until then those comments still say
-ADR-025 and mean this feature's ADR (now ADR-026).
+Comment-only renumbering ADR-025 → ADR-026 of the hook comments — confirmed by user 2026-09-28, done in a
+follow-up commit: `baseActionLibrary.js` (13), `baseAssertionLibrary.js` (1), `playwright.setup.js` (6). No code change
+(diff contains only the ADR number; `node --check` passes on all three).
 
