@@ -8,8 +8,8 @@
 
 Before making ANY code change, you MUST:
 
-1. **Read `.architecture/system.md`** — understand layers, boundaries, and data flow
-2. **Read `.architecture/decisions.md`** — understand WHY things are built this way
+1. **Read `.architecture/ARCHITECTURE-INVARIANTS.md`** — the layers, boundaries and rules that apply to almost every change
+2. **Open the ADR / `system.md` section each relevant invariant points to** (*Depth →*) — understand WHY things are built this way. Read them in full before changing a core or protected file
 3. **Identify which layer your change belongs to** — Page Object? Test Case? Execution File? Selector? Core?
 4. **Verify your change does NOT violate any boundary rule** listed below
 5. **Check for existing patterns** — search the codebase for similar implementations before creating new ones
