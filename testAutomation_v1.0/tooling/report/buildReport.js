@@ -154,11 +154,13 @@ function execConfig(execName) {
 
 // The report leaves out the requirement prefix of suite and test titles (user request 2026-09-24):
 // "LP-001, LP-005 - Learner opens…" / "LP-034/035: My progress…" / "LP-035 (runs after …) - Teacher marks…".
+// [2026-09-28] Also strips New Learning Path prefixes — "TC-NLP-001…007, 016 - …" and "TC-NLP-021/022 setup - …".
+// The earlier pattern only knew "LP-001"-style IDs, so these suite titles kept their raw prefix in the report.
 function stripReq(title) {
-  return String(title || "").replace(/^[A-Z]+-\d+(?:[\d…,\/\s]|[A-Z]+-\d+)*?(?:\s*\([^)]*\))?\s*[-–:]\s+/, "");
+  return String(title || "").replace(/^(?:TC-)?[A-Z]+-\d+(?:[\d…,\/\s]|(?:TC-)?[A-Z]+-\d+)*?(?:\s+setup)?(?:\s*\([^)]*\))?\s*[-–:]\s+/, "");
 }
 
-// Manual register (.md) → { id: { title, req, status, comments } }.
+// Manual register (.md) → { id: [ { title, req, reqText, status, comments }, … ] } (one entry per requirement the TC is listed under).
 function parseRegister(file) {
   const out = {};
   if (!file || !fs.existsSync(file)) return out;
@@ -171,10 +173,26 @@ function parseRegister(file) {
     });
     const id = f["Test Case ID"];
     if (!id || !/^TST_/.test(id)) return;
-    const req = /#?(LP-\d+|[A-Z]+-\d+)/.exec(f["Linked Requirement"] || "");
-    out[id] = { title: f["Title"] || "", req: req ? req[1] : "", reqText: f["Linked Requirement"] || "", status: f["Status"] || "", comments: f["Comments / Defect ID"] || "" };
+    // [2026-09-28] Keep the "TC-" of New Learning Path IDs ("TC-NLP-001"); the earlier pattern skipped it and
+    // reported "NLP-001", an ID that exists nowhere. "LP-001" still matches as before.
+    const req = /#?((?:TC-)?[A-Z]+-\d+)/.exec(f["Linked Requirement"] || "");
+    // [2026-09-28] A TC can be registered under more than one requirement (TST_MRKQ_TC_1/2: TC-NLP-008 for the
+    // PS mark, TC-NLP-022 for the Group PS mark). Keep every entry — pickReg() chooses the one for each suite.
+    (out[id] = out[id] || []).push({ title: f["Title"] || "", req: req ? req[1] : "", reqText: f["Linked Requirement"] || "", status: f["Status"] || "", comments: f["Comments / Defect ID"] || "" });
   });
   return out;
+}
+
+/**
+ * The register entry for a TC in a given suite. One entry → that one. Several → the one whose requirement
+ * number appears in the suite's own ID prefix ("TC-NLP-008 (after …) - …" → TC-NLP-008); none → the first.
+ */
+function pickReg(entries, suiteName) {
+  if (!entries || !entries.length) return {};
+  if (entries.length === 1) return entries[0];
+  const name = String(suiteName || "");
+  const nums = (name.slice(0, name.length - stripReq(name).length).match(/\d+/g) || []).map(Number);
+  return entries.find((e) => nums.indexOf(Number((e.req.match(/(\d+)$/) || [])[1])) !== -1) || entries[0];
 }
 
 function loadRunData(appType, env) {
@@ -246,7 +264,7 @@ function buildModel() {
       const errMsg = (t.err && (t.err.message || t.err.estack)) || "";
       const last = lt && lt.asserts[lt.asserts.length - 1];
       const failedAssert = state === "failed" && last && errMsg.indexOf(last.slice(0, 60)) !== -1 ? last : null;
-      const reg = register[m[1]] || {};
+      const reg = pickReg(register[m[1]], def.Name);
       return {
         id: m[1], title: stripReq(m[2]), priority: m[3], state, duration: t.duration || 0,
         err: errMsg, stack: (t.err && t.err.estack) || "", failedAssert,
