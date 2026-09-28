@@ -286,7 +286,7 @@ knowledge: `new-learning-path.md` · register: `test/Manual/C1App/NewLearningPat
   HTML activity, dwell, never download) → debug on run 3's users (teacher `_m3rm`, Class rsgb) **11/11**. Register: **34 Pass**.
 - **Supersedes** the classic LP register's ON-HOLD LP-023/024 (`PEXT_TC_22/23`): the group flows now run in this suite; the parked
   `learningPathGroups.json` stays on disk (r4).
-- **2026-09-25 — full run 5 135/135 (clean)** (teacher `_5srg`, Class brvp, learners `_3jsj` / B `_6bu5`). Two user fixes since run 3:
+- **2026-09-25 — full run 5 135/135 (clean)** (teacher `_5srg`, Class brvp, learners `_3jsj` / B `_6bu5`). Two user fixes since run 3:
   (1) learner B launches Practice Extra + Projects in setup (Suite 9) before group work → B is credited with the group mark, the class and B
   figures are asserted again (27% · 4 /6 · 88%; B 1/11 · 1/1 · 90%) — the "known behaviour" is withdrawn; (2) the Group PS marking step waits
   for the unmarked counter to settle (run 4: "Unmarked (2)" with an empty list, 0 within ~15 min; run 5: settled in 22 s). Register: 34 Pass.
@@ -347,6 +347,14 @@ mapped in `test/Manual/C1App/Onboarding/Onboarding_test_cases.md` (+ `.xlsx`). K
    Also in the register's Open items: `[ASSUMED]` copy to capture live, and whether TC_XCUT_009 (UI/colours)
    is fine as a Phase 3 `visualTest` concern rather than a case.
 4. **Constraints:** new exec files need an npm script → `package.json` is protected (AGENTS.md
-   confirmation); passwords only via `{{env.*}}` (ADR-023); run-generated users via `{{run.*}}` (ADR-022).
+   confirmation); passwords only via `{{env.*}}` (ADR-025); run-generated users via `{{run.*}}` (ADR-022).
 5. **Close the loop:** back-port into `_tcdata.js`, run `node test/Manual/C1App/Onboarding/_generate.js`
    (rewrites `.md` + `.xlsx`), set Status/Comments, update this block. Remove this "NEXT BATCH" section when done.
+
+## ebookMappingTest (ExperienceApp, thor) — `eBookMappingTest_Thor`
+Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-presentation-plus.md` Part D · manual: `test/Manual/C1App/FOC/ebookMapping_test_cases.md`
+- Phase 1 ✅ 2026-09-25 — `TST_EMAP_TC_1..2, 5, 6`; first run 9 passing / 1 failing (TC_2: the Book 3 → Book 2 switch-back did not take effect once); visual candidates: none (live reader state, no fixed baseline)
+- Phase 2 ✅ 2026-09-25 — 18/18 passing, 2 consecutive clean runs (Book 1 Cover setup `TST_EMAP_TC_5` + teardown); one earlier intermittent switch-back failure recorded in the manual Open items
+- Phase 3 ⬜ pending
+- **Not built:** `TST_EMAP_TC_3..4` (manual only — the expected result for an unmapped page is unconfirmed)
+- Follow-up: none — npm script `eBookMappingTest_Thor` added (user-confirmed 2026-09-25)

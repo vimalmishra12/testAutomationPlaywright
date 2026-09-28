@@ -13,13 +13,18 @@
  *                     unchanged by every later TC in the same process (one exec file = one run).
  *   "{{last.<key>}}"  value the PREVIOUS run generated, read from lastRun.json — lets a suite
  *                     reuse users created earlier instead of creating new ones.
+ *   "{{env.<VAR>}}"   [secrets hardening] value read from process.env.<VAR> (populated from
+ *                     .env locally or CI secrets) — confirmed by user. Lets test-account
+ *                     passwords live in testcaseData JSON as tokens instead of plaintext.
+ *                     Never logged (unlike run/last) — only the var NAME may be logged.
  *
  * Pattern placeholders: {rand4} = 4 random [a-z0-9] chars (SOURCE's generator shape),
- * {ts} = Date.now(). An unknown key throws — silently passing a literal "{{run.x}}" into a
- * form would turn a data mistake into a misleading product failure (Invariant 13).
+ * {ts} = Date.now(). An unknown run/last key throws — silently passing a literal "{{run.x}}"
+ * into a form would turn a data mistake into a misleading product failure (Invariant 13). A
+ * missing {{env.*}} var throws for the same reason — never resolves to an empty password.
  */
 
-var TOKEN = /\{\{(run|last)\.([A-Za-z0-9_]+)\}\}/g;
+var TOKEN = /\{\{(run|last|env)\.([A-Za-z0-9_]+)\}\}/g;
 
 // Values generated in this process. Module state survives across suites because Node caches
 // the module for the whole Mocha run.
@@ -123,9 +128,21 @@ function getLast(key) {
   return last[key];
 }
 
+// [secrets hardening] resolves {{env.<VAR>}} from process.env — confirmed by user.
+// Throws rather than returning "" so a missing var fails loudly instead of logging in blank.
+function resolveEnv(key) {
+  var val = process.env[key];
+  if (val === undefined || val === "") {
+    throw new Error("runContext: environment variable '" + key + "' is not set — copy .env.example to .env and fill it in (or set it in CI secrets)");
+  }
+  return val;
+}
+
 function resolveString(str) {
   return str.replace(TOKEN, function (whole, scope, key) {
-    return scope === "run" ? get(key) : getLast(key);
+    if (scope === "run") return get(key);
+    if (scope === "last") return getLast(key);
+    return resolveEnv(key);
   });
 }
 
