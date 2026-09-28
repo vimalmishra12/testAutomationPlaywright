@@ -46,6 +46,7 @@
 > `schoolAdminAddClassData.json` read `FCN-CHZ-PDA` `[verified 2026-08-21]`. This corrects
 > `authoring-status.md`, which still claims `adminAddClassBulk`'s key "points here now (not
 > FCN-CHZ-PDA)". It was moved back; the status file is stale.
+> **Resolved `[2026-09-28]`:** `authoring-status.md` was compacted on 2026-09-18 and no longer makes that claim.
 
 > ⚠️ **Always select a school by KEY, never by name or card position.** Two schools share a display
 > name, and card `qid`s (`aDashboard-N`) are positional. `[2026-08-14, re-confirmed 2026-08-18]`
@@ -301,10 +302,13 @@ on the shared school and under which name**.
 |---|---|---|
 | `Fixture_GradeSettings_DO_NOT_DELETE` | `62k3-AXm6` | The only class on the school with course material **and** a category + scale applied, so the populated details-page DOM can be re-captured without re-deriving the state. **Used by no test.** Start Aug 20 2026, end Dec 31 2036. `[2026-08-20]` |
 
-> ⚠️ **Also documented in `ExperienceApp.md` §"Data notes — the permanent fixture class"** (material
+> ~~⚠️ **Also documented in `ExperienceApp.md` §"Data notes — the permanent fixture class"** (material
 > `dev_test_ebook_bundle_104_bundle`, grade settings 70/30, and why the `AutoClass_CGST` sweep does
 > not collide with it). **Two places, so they can drift** — if this fixture ever changes, update
-> both, or collapse them into one when the per-screen split happens. `[noted 2026-08-21]`
+> both, or collapse them into one when the per-screen split happens. `[noted 2026-08-21]`~~
+> **Moved `[2026-09-28]`:** that section now lives in [`admin-grading-details-pages.md`](admin-grading-details-pages.md)
+> §"Data notes — the permanent fixture class" (ADR-020 migration). Still two places — if the fixture
+> changes, update both.
 
 Two constraints found while creating it: **2036 is the product's ceiling** for the end-date year
 picker, and **the start date must stay in the past** — a future start makes the class `Not started`,
@@ -663,6 +667,10 @@ modal with no live list in frame**. Everything else is a ❌ row, which per Inva
     > *Correction to the source walkthrough `[verified 2026-08-21]`:* it recorded `.mcp.json` as
     > "tracked despite being listed in `.gitignore`". It is tracked, but **no `.gitignore` rule
     > matches it** (`git check-ignore` returns nothing). Only the "tracked" half was right.
+    > **Update `[2026-09-28]`:** in this repository `.mcp.json` and a `.mcp.json` line in the root
+    > `.gitignore` (line 11) arrived in the same commit (`05ba477`, 2026-09-02). The file is tracked,
+    > so that rule has never had any effect — edits still show in `git status` and get committed.
+    > The "tracked — leave it alone" advice above still holds.
   - A Chrome-vs-Playwright version mismatch was also guessed and was also wrong (both 151.x).
 - **An NPS survey (`<cg-survey>`) can render a full-viewport overlay inside a shadow root with no
   close control** — only score buttons and "Next". Answering it submits real feedback and must not
