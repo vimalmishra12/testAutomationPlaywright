@@ -87,9 +87,7 @@
         "webServicePath": "/wd/hub",
         "webDriverService": "appium",
         "browserstackLocal": false,
-        "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "updateJob": false
     },
     "bstack-safari-1920": {
         "capabilities": [
@@ -115,9 +113,7 @@
         "webServicePath": "/wd/hub",
         "webDriverService": "appium",
         "browserstackLocal": false,
-        "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "updateJob": false
     },
     "device": {
         "capabilities": [
@@ -158,9 +154,7 @@
         "webServicePath": "/wd/hub",
         "webDriverService": "appium",
         "browserstackLocal": false,
-        "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "updateJob": false
     },
     "bstack-ios-iphone12pro": {
         "capabilities": [
@@ -184,9 +178,7 @@
         "webServicePath": "/wd/hub",
         "webDriverService": "appium",
         "browserstackLocal": false,
-        "updateJob": false,
-        "user": "akhilaggarwal2",
-        "key": "68pvrJyFDPdqKSpBptpi"
+        "updateJob": false
     },
     "applitools-chrome-1920": {
         "capabilities": [
@@ -211,7 +203,7 @@
         "eyes": {
             "batch": "Acceptance",
             "matchLevel": "Layout",
-            "apiKey": "WCylilnK2R9V9X2vyMC1SVNXTgv9kgelAUtdD9pKqh0110",
+            "apiKey": "",
             "setForceFullPageScreenshot": true,
             "stitchMode": "CSS"
         }

@@ -40,7 +40,7 @@
 > **Data.** Cases marked CREATES REAL DATA (account signups, invite signup, child account) or that
 > change a real password (TST_RESE_TC_9, TST_CREA_TC_31, TST_SPRF_TC_24, TST_LOGI_TC_9 lockout) need a
 > disposable/run-generated account (ADR-022 `{{run.*}}`) and the user's OK on a shared environment
-> (ADR-021). Passwords come from `{{env.*}}` tokens only (ADR-023).
+> (ADR-021). Passwords come from `{{env.*}}` tokens only (ADR-025).
 
 ---
 
@@ -428,7 +428,7 @@
 | **Priority** | High |
 | **Preconditions** | A registered, active account exists. User is on the Log in page (homepage → "Log in"). |
 | **Test Steps** | 1. Enter a valid e-mail/username in the 'Login' field.<br>2. Enter the matching password.<br>3. Click 'Log in'. |
-| **Test Data** | <REGISTERED_ACCOUNT_EMAIL> + its password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | <REGISTERED_ACCOUNT_EMAIL> + its password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | The user is logged in and lands on their role's dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. EXISTING TC reused (ADR-011 — no duplicate function): TST_LOGI_TC_5 already clicks Log in and checks the dashboard loads (composed after LOGI_TC_1/2, which type the credentials). Phase 1: confirm it asserts this row's Expected Result; extend its assertion if it does not. |
 | **Actual Result** | *(blank in design)* |
@@ -494,7 +494,7 @@
 | **Priority** | High |
 | **Preconditions** | A registered, DISPOSABLE test account exists (not used by any other case). User is on the Log in page (homepage → "Log in"). |
 | **Test Steps** | 1. Enter the account's e-mail with an incorrect password and click 'Log in'.<br>2. Repeat 4 more times (5 failures in total); note the message on the 5th.<br>3. Try a 6th time with the CORRECT password. |
-| **Test Data** | <DISPOSABLE_ACCOUNT_EMAIL>; wrong password ×5, then the correct password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | <DISPOSABLE_ACCOUNT_EMAIL>; wrong password ×5, then the correct password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. Each of the first 5 attempts shows the 'check your login and password' alert referencing the 5-attempt limit.<br>2. After the 5th failure the account is temporarily locked: the 6th attempt, even with the correct password, is rejected. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. LOCKS AN ACCOUNT — never a shared/pool account (migration plan Q10). Needs a disposable account per run (e.g. one created by the signup suite). Lockout duration and the exact 5th/6th-attempt copy are [ASSUMED] — not stated in the source. |
 | **Actual Result** | *(blank in design)* |
@@ -648,7 +648,7 @@
 | **Priority** | High |
 | **Preconditions** | An Admin account exists. User is on the Log in page (homepage → "Log in"). |
 | **Test Steps** | 1. Enter the Admin's e-mail in the 'Login' field.<br>2. Enter the matching password.<br>3. Click 'Log in'. |
-| **Test Data** | <SCHOOL_ADMIN_EMAIL> + its password (the admin suites' existing admin login). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | <SCHOOL_ADMIN_EMAIL> + its password (the admin suites' existing admin login). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The Admin is logged in through the same form as every other role.<br>2. The URL contains '/admin/admin/dashboard'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Every admin suite already logs in this way (login.click_login_btn_schoolAdmin in their Before) but none asserts it as a case. |
 | **Actual Result** | *(blank in design)* |
@@ -848,7 +848,7 @@
 | **Priority** | High |
 | **Preconditions** | A password reset was requested for an account with a Mailsac inbox (Log in → 'Forgotten your password?' → its e-mail → 'Reset password'). |
 | **Test Steps** | 1. Open the reset e-mail in the Mailsac inbox.<br>2. Open its reset link.<br>3. Enter a new password.<br>4. Click 'Save and log in' and confirm.<br>5. Click 'Back to login'.<br>6. Log in with the e-mail and the NEW password. |
-| **Test Data** | <MAILSAC_ACCOUNT_EMAIL>; a new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | <MAILSAC_ACCOUNT_EMAIL>; a new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | The user is logged in and lands on their role's dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CHANGES A REAL ACCOUNT'S PASSWORD — use a disposable account (e.g. one created by the signup suite in the same run), never a shared fixture. Mail handling as mailsacUI.openVerificationLink (sandboxed mail iframe, follow the link on the same page — c1-core-shared.md §A5/§B3). The reset link host may be the same login.comprodls.com host whose thor certificate is expired [ASSUMED — check]. |
 | **Actual Result** | *(blank in design)* |
@@ -894,7 +894,7 @@
 | **Priority** | High |
 | **Preconditions** | Teacher logged in, on a class with at least one enrolled student (Class data tab). |
 | **Test Steps** | 1. Open the 'Options' menu of a student in the roster (Class data tab).<br>2. Click 'Change password'.<br>3. Enter a temporary password and submit. |
-| **Test Data** | A temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | A temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The student's options menu offers 'View profile', 'Activate course material' and 'Change password'.<br>2. 'Change password' opens a 'Change password' page naming the student (name and username), where the temporary password is set.<br>3. Submitting sets it. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. First half of the source row; the student's first login with the temporary password is TST_LOGI_TC_18. CHANGES A REAL STUDENT'S PASSWORD — disposable student only. Module CREA = the teacher class page object (createNewClass.page.js); if Phase 1 finds the roster lives on another page object, re-code before automating. Confirmation copy after submit is [ASSUMED] (not in the source). |
 | **Actual Result** | *(blank in design)* |
@@ -914,7 +914,7 @@
 | **Priority** | High |
 | **Preconditions** | A staff member (Teacher: TST_CREA_TC_31, or Admin: TST_SPRF_TC_24) has just set a temporary password for the student. |
 | **Test Steps** | 1. Log in as the student with the temporary password.<br>2. On the temporary-password screen enter the temporary password, then a new password and its confirmation.<br>3. Submit.<br>4. Log out and log in again with the new password. |
-| **Test Data** | The temporary password; a different new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | The temporary password; a different new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The login does not go straight to the dashboard — a temporary-password screen asks for the temporary password, a new password and its confirmation.<br>2. Submitting a valid new password completes the change and reaches the student's dashboard.<br>3. The student can log in again with the new, self-set password. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Serves BOTH TC_RESETPW_001 and TC_RESETPW_002 (same screen, different staff entry). Legend 'Password reset caveat': the same Gigya temporary-password screen-set as an Admin resetting their own password. |
 | **Actual Result** | *(blank in design)* |
@@ -936,7 +936,7 @@
 | **Priority** | High |
 | **Preconditions** | School admin on the Students tab with at least one student in the results. |
 | **Test Steps** | 1. Find a student in the results table.<br>2. Open the row's 'Action Menu'.<br>3. Click the option to change/reset the student's password.<br>4. Enter a temporary password and submit. |
-| **Test Data** | A disposable student; a temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | A disposable student; a temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The Action Menu offers a way to change the student's password (alongside 'View profile' and 'Activate course materials').<br>2. Submitting sets the temporary password; the student's next login shows the temporary-password screen (TST_LOGI_TC_18). |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. [ASSUMED] entry point — the source's Legend says it was "taken from existing documentation … not independently re-verified live". OVERLAP to settle in Phase 1: the Students register already has TST_SPRF_TC_8 (admin sets a NEW password via View profile > Manage account > Password tab) and TST_SPRF_TC_23 (learner signs in with it). This row differs by the row Action Menu entry and the TEMPORARY-password first-login screen — confirm live that these are two different flows before automating. CHANGES A REAL STUDENT'S PASSWORD — disposable student only. |
 | **Actual Result** | *(blank in design)* |
@@ -1160,7 +1160,7 @@
 | **Priority** | High |
 | **Preconditions** | Learner registration form reached: role "Learner" → "Yes, continue" → age 16+ with location "India" → "Next". |
 | **Test Steps** | 1. Check the Location field.<br>2. Enter First name, Last name, a School email and a password meeting the complexity rules.<br>3. Check the Privacy notice / Terms of use checkbox.<br>4. Click 'Sign up'.<br>5. Verify the account from the Mailsac e-mail. |
-| **Test Data** | Unique <RUN_LEARNER_EMAIL>@mailsac.com ({{run.*}} token, ADR-022); a complexity-compliant password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | Unique <RUN_LEARNER_EMAIL>@mailsac.com ({{run.*}} token, ADR-022); a complexity-compliant password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. Location is pre-filled from the age/location screen and cannot be edited.<br>2. The account is created and, once verified, the user reaches the learner dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. New assertion = the locked, pre-filled Location. Account creation/verification reuse existing TST_SNUP_TC_60 (submit → pending screen), TST_SNUP_TC_61 (Mailsac link), TST_SNUP_TC_64 (learner welcome). |
 | **Actual Result** | *(blank in design)* |
@@ -1206,7 +1206,7 @@
 | **Priority** | High |
 | **Preconditions** | User is on the role-selection page (homepage → "Sign up", URL /regoptions). |
 | **Test Steps** | 1. Select 'Teacher', click 'Next', click 'Yes, continue'.<br>2. Enter First name, Last name, a Work email and a complexity-compliant password.<br>3. Enter a Location and pick it from the suggestions.<br>4. Check the Privacy notice / Terms of use checkbox.<br>5. Click 'Sign up'.<br>6. Verify the account from the Mailsac e-mail. |
-| **Test Data** | Unique <RUN_TEACHER_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | Unique <RUN_TEACHER_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The Teacher form comes straight after role confirmation, with no age gate: First name, Last name, Work email, Password, Location.<br>2. The account is created and, once verified, the user reaches the teacher dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. New assertion = the Teacher form's fields / no age gate. Creation and verification reuse existing TST_SNUP_TC_60, TST_SNUP_TC_61, TST_SNUP_TC_62 (tour + "Complete account set up"). |
 | **Actual Result** | *(blank in design)* |
@@ -1252,7 +1252,7 @@
 | **Priority** | High |
 | **Preconditions** | User is on the role-selection page (homepage → "Sign up", URL /regoptions). |
 | **Test Steps** | 1. Select 'Parent', click 'Next', click 'Yes, continue'.<br>2. Enter First name, Last name, an Email and a complexity-compliant password.<br>3. Enter a Location and pick it from the suggestions.<br>4. Check the Privacy notice / Terms of use checkbox.<br>5. Check 'I am 18 years of age or older and I am the parent or guardian of any child whose account I set up'.<br>6. Click 'Sign up'.<br>7. Verify the account from the Mailsac e-mail. |
-| **Test Data** | Unique <RUN_PARENT_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | Unique <RUN_PARENT_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. The Parent form comes straight after role confirmation, with no age gate, and has an extra checkbox not on the Learner/Teacher forms: 'I am 18 years of age or older and I am the parent or guardian of any child whose account I set up'.<br>2. The account is created and, once verified, the user reaches the parent dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. Resolves onboarding.md §A2's [ASSUMED] Parent row. Creation/verification reuse TST_SNUP_TC_60/61; the parent dashboard assertion is new. |
 | **Actual Result** | *(blank in design)* |
@@ -1298,7 +1298,7 @@
 | **Priority** | High |
 | **Preconditions** | Parent logged in, on the Dashboard (My children). |
 | **Test Steps** | 1. Click 'Add child'.<br>2. On 'Create my child's account' enter the child's first name, last name, month and year of birth.<br>3. Check 'I accept the Privacy notice and Terms of use on behalf of my child'.<br>4. Click 'Next'.<br>5. On 'Child's login details' enter a username and password.<br>6. Click 'Create account'. |
-| **Test Data** | Child first/last name, month and year of birth; child username + password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | Child first/last name, month and year of birth; child username + password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. 'Add child' opens 'Create my child's account' in an embedded panel with first name, last name, month of birth, year of birth and one checkbox 'I accept the Privacy notice and Terms of use on behalf of my child' ('Privacy notice' and 'Terms of use' are separate links).<br>2. 'Next' with everything filled proceeds to 'Child's login details' (username + password).<br>3. 'Create account' shows a confirmation with the new username and password, and the child appears in 'My children'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. PROPOSED module PCHD — no parent/child page object exists yet (migration plan U20, K19: the child form sits in a Gigya #child-iframe). CREATES A CHILD ACCOUNT. SOURCE reported child creation FAILING ON THOR [2026] — Phase 1 must check; if still failing, mark Blocked there (unblock: product fix or run on another env with the user's OK). |
 | **Actual Result** | *(blank in design)* |
@@ -1366,7 +1366,7 @@
 | **Priority** | High |
 | **Preconditions** | A Teacher has invited a NOT-yet-registered e-mail to their class (Class data tab → 'Add students' → the e-mail → 'Invite N student(s)'). |
 | **Test Steps** | 1. Open the invite e-mail (its subject mentions the class invitation).<br>2. Open its 'View invite' link in a browser that is not logged in.<br>3. Enter First name, Last name and a complexity-compliant password.<br>4. Enter a Location.<br>5. Check 'I accept the Terms of use'.<br>6. Click 'Sign up'. |
-| **Test Data** | A fresh <RUN_INVITEE_EMAIL>@mailsac.com ({{run.*}}). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
+| **Test Data** | A fresh <RUN_INVITEE_EMAIL>@mailsac.com ({{run.*}}). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025). |
 | **Expected Result** | 1. 'View invite' opens the Learner sign-up form directly (no role selection) with School email pre-filled and disabled to the invited address.<br>2. There is no age-check step and Location is a normal, empty, editable field.<br>3. The Privacy notice section has the same informational text as self-signup, with a single Terms-of-use checkbox.<br>4. Submitting creates the account. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Needs a teacher + class and an invite (reuse TST_CREA_TC_19–24 for the invite). Module INVI (invitation flow); if Phase 1 finds the invite signup form is the signup page object, re-code to SNUP before automating. Legend: invite signup has NO age gate. |
 | **Actual Result** | *(blank in design)* |

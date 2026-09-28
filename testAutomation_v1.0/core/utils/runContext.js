@@ -17,9 +17,20 @@
  * Pattern placeholders: {rand4} = 4 random [a-z0-9] chars (SOURCE's generator shape),
  * {ts} = Date.now(). An unknown key throws — silently passing a literal "{{run.x}}" into a
  * form would turn a data mistake into a misleading product failure (Invariant 13).
+ *
+ * [2026-09-28] ADR-025 added a third scope, `{{env.<NAME>}}`, for SECRETS held outside the repo
+ * (see core/utils/envConfig.js). It rides this same resolver on purpose: ADR-022 decision 2 fixes
+ * token resolution at exactly one call site so page objects and TCs never see a token, and hook
+ * data reaches it too (jsonHookObjParser → identifyTest passes hookFuncData as `testdata`), which
+ * is why setup/teardown logins are covered without touching the protected runner. env values are
+ * static configuration, NOT run state: they resolve straight from envConfig and are never written
+ * into runValues / lastRun.json.
  */
 
-var TOKEN = /\{\{(run|last)\.([A-Za-z0-9_]+)\}\}/g;
+var envConfig = require("./envConfig.js");
+
+// [2026-09-28] ADR-025 — `env` scope added alongside run/last.
+var TOKEN = /\{\{(env|run|last)\.([A-Za-z0-9_]+)\}\}/g;
 
 // Values generated in this process. Module state survives across suites because Node caches
 // the module for the whole Mocha run.
@@ -125,6 +136,10 @@ function getLast(key) {
 
 function resolveString(str) {
   return str.replace(TOKEN, function (whole, scope, key) {
+    // ADR-025: env tokens are secrets from .env / CI vars, resolved on use and never cached in
+    // runValues. envConfig.get() throws on an unset or empty var rather than returning "" —
+    // an empty password would surface as a misleading "invalid credentials" product failure.
+    if (scope === "env") return envConfig.get(key);
     return scope === "run" ? get(key) : getLast(key);
   });
 }

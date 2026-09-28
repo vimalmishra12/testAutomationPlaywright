@@ -123,7 +123,7 @@ const ON_RESET = 'User is on the "Reset password" screen (Log in → "Forgotten 
 const ON_ROLES = 'User is on the role-selection page (homepage → "Sign up", URL /regoptions).';
 const TO_LEARNER_FORM = 'Learner registration form reached: role "Learner" → "Yes, continue" → age 16+ with location "India" → "Next".';
 const SRC = 'Source: OnboardingApp_Test_Plan.xlsx. ';
-const PW = 'Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023).';
+const PW = 'Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-025).';
 const EXISTING = (id, what) => 'EXISTING TC reused (ADR-011 — no duplicate function): ' + id + ' already ' + what + ' Phase 1: confirm it asserts this row\'s Expected Result; extend its assertion if it does not.';
 const CREATES = 'CREATES REAL DATA (a platform account) — ADR-021: needs the user\'s OK on a shared environment; place in a data-creating suite. ';
 const THOR_VERIFY = 'Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. ';

@@ -1,5 +1,52 @@
 "use strict";
 const { chromium } = require("playwright");
+const fs = require("fs");
+const path = require("path");
+
+/**
+ * [2026-09-28] ADR-025 — Builder IdP credentials, read from the environment.
+ * tooling/ is design-time only and must stay independent of the framework (AGENTS.md §9), so this
+ * reads ../.env directly instead of requiring core/utils/envConfig.js. Fails loudly and early:
+ * a missing credential here would otherwise surface as an opaque login timeout in a browser window.
+ */
+function readEnvFile() {
+  // The script is run from tooling/ or from the app root — look for .env in both.
+  const candidates = [
+    path.join(__dirname, "..", ".env"),
+    path.join(process.cwd(), ".env"),
+  ];
+  const out = {};
+  candidates.forEach(file => {
+    if (!fs.existsSync(file)) return;
+    fs.readFileSync(file, "utf8").split(/\r?\n/).forEach(line => {
+      const t = line.trim();
+      if (!t || t.charAt(0) === "#") return;
+      const eq = t.indexOf("=");
+      if (eq < 1) return;
+      const k = t.slice(0, eq).trim();
+      let v = t.slice(eq + 1).trim();
+      if (v.length > 1 && ((v[0] === '"' && v.slice(-1) === '"') || (v[0] === "'" && v.slice(-1) === "'"))) {
+        v = v.slice(1, -1);
+      }
+      if (out[k] === undefined || out[k] === "") out[k] = v;
+    });
+  });
+  return out;
+}
+function requireCred(name) {
+  const value = process.env[name] || readEnvFile()[name];
+  if (!value) {
+    throw new Error(
+      "discoverComponentTitle.js: " + name + " is not set — put it in testAutomation_v1.0/.env " +
+      "(see .env.example). Refusing to run with a blank credential."
+    );
+  }
+  return value;
+}
+// The IdP username is a non-secret SSO identifier and stays literal per ADR-025 scope rules
+// (only passwords and third-party keys are externalised); only the password comes from the env.
+const BUILDER_IDP_USER = "harishthoradmin";
+const BUILDER_IDP_PASSWORD = requireCred("BLDR_THOR_VALIDADMIN_PASSWORD");
 
 (async function run() {
   const browser = await chromium.launch({ headless: false, channel: "chrome" });
@@ -19,11 +66,14 @@ const { chromium } = require("playwright");
     await page.click("button[type='submit']");
 
     // Step 3: IdP login (pressSequentially fires keystroke events the form needs)
+    // [2026-09-28] ADR-025 — credentials come from the environment, not from this file. This is
+    // design-time tooling (AGENTS.md §9), so it reads .env itself rather than requiring the
+    // framework's core/utils/envConfig.js.
     await page.waitForSelector("#login-user", { timeout: 45000 });
     await page.click("#login-user");
-    await page.locator("#login-user").pressSequentially("harishthoradmin", { delay: 40 });
+    await page.locator("#login-user").pressSequentially(BUILDER_IDP_USER, { delay: 40 });
     await page.click("#login-pass");
-    await page.locator("#login-pass").pressSequentially("C0>pr0!899", { delay: 40 });
+    await page.locator("#login-pass").pressSequentially(BUILDER_IDP_PASSWORD, { delay: 40 });
     await page.waitForTimeout(500);
     await page.click("#login-mfa-btn");
 

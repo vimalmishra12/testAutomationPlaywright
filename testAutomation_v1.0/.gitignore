@@ -30,8 +30,11 @@ screenshots/baseline/
 screenshots/screen/
 screenshots/diff/
 
-# Credential-bearing env backups must never be committed (env.json itself is tracked
-# with placeholders; real creds belong in env vars LT_USERNAME / LT_ACCESS_KEY)
+# Credential-bearing env backups must never be committed.
+# [2026-09-28 ADR-025] This comment used to claim "env.json itself is tracked with placeholders" — it
+# was wrong and dangerous: env.json was tracked AND carried the live Cloudflare Access secrets until
+# this change. env.json is still tracked, but it now holds only {{env.*}} tokens, so anything written
+# here is a stray copy of real credentials.
 env copy.json
 env.local.json
 env.*.local.json

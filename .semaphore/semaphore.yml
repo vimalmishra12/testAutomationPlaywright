@@ -36,6 +36,19 @@ blocks:
             - cache restore
             - echo "Installing npm dependencies"
             - npm install
+            # ADR-025: test data, env.json and capabilities.json carry {{env.NAME}} tokens instead of
+            # passwords. The values arrive as ONE secret (C1_ENV_BUNDLE = the whole untracked .env) and
+            # are written back to .env so CI resolves credentials through the same core/utils/envConfig.js
+            # path as a local run. The scan gates the run before any browser is launched.
+            - |
+              echo "Materialising credentials from the C1_ENV_BUNDLE secret (ADR-025)"
+              if [ -z "$C1_ENV_BUNDLE" ]; then
+                echo "C1_ENV_BUNDLE secret is not set - every env token in the test data would resolve"
+                echo "to nothing and each suite would fail at login with a misleading auth error."
+                exit 1
+              fi
+              printf '%s\n' "$C1_ENV_BUNDLE" > .env
+              npm run secrets:scan
             - echo "Storing npm cache"
             - cache store
             - echo "Running test script"
@@ -122,6 +135,9 @@ blocks:
         - name: Cred
         - name: LambdaTest
         - name: loginFeatureTest
+        # ADR-025 — holds every credential variable the {{env.*}} tokens resolve against, as the
+        # contents of the untracked .env. One secret, so rotating a password is not a YAML change.
+        - name: C1_ENV_BUNDLE
       env_vars:
         - name: TEST_ENV
           value: production

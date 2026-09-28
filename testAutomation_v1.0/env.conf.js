@@ -9,6 +9,15 @@ global.fs = require('fs');
 global.argv = require('yargs').argv;
 global.path = require('path');
 global.jsonParserUtil = require('./core/utils/jsonParser.js');
+// [2026-09-28] ADR-025 — resolves {{env.*}} secret tokens. Required here because the Cloudflare
+// header values below are the one secret read that does NOT go through the test data
+// resolver (runContext.resolve in testrunner.identifyTest).
+// load() is called explicitly rather than left lazy: some consumers read process.env directly
+// (core/runner/visualTest.js:333 for APPLITOOLS_API_KEY, and the LambdaTest reads just below), and
+// on an env with no headers block nothing else would ever trigger the first read of .env — so those
+// consumers would silently see nothing locally while CI, which injects real env vars, kept working.
+global.envConfig = require('./core/utils/envConfig.js');
+global.envConfig.load();
 global.assertion = require('./core/actionLibrary/baseAssertionLibrary.js');
 global.loadashget = require('lodash.get');
 global.stackTrace = require('stack-trace');
@@ -100,9 +109,15 @@ else {
     global.moduleOff = envData[argv.appType].environments[argv.testEnv].moduleOff;
 
     global.headers = envData?.[argv.appType]?.environments?.[argv.testEnv]?.headers || {};
-    // Normalize header names to lowercase and ensure values are strings
+    // Normalize header names to lowercase and ensure values are strings.
+    // [2026-09-28] ADR-025 — values may be {{env.*}} tokens; the three CF-Access-Client-Secret
+    // values are no longer committed in env.json. Resolution is lazy because line above selects
+    // only the current app/env, so a thor/production run (no headers block in env.json) never
+    // resolves a qa/rel token and never needs those variables set. A token that IS needed but
+    // unset throws here at startup rather than sending an empty credential and surfacing as a
+    // confusing 403 (Invariant 13).
     global.headers = Object.fromEntries(
-      Object.entries(global.headers || {}).map(([k, v]) => [String(k).toLowerCase(), String(v)])
+      Object.entries(global.headers || {}).map(([k, v]) => [String(k).toLowerCase(), global.envConfig.resolveValue(String(v))])
     );
 
     if (Object.keys(global.headers).length) {

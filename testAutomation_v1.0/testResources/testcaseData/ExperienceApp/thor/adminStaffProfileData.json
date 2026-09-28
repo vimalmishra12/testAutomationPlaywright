@@ -35,11 +35,11 @@
       "removalCancelBtn": "No, cancel",
       "removalConfirmBtn": "Yes, remove",
 
-      "_promotionComment": "TST_STFP_TC_19. Dedicated promotion fixture cqatesttea18sept@mailsac.com with known password Compro11. Mutating test with mandatory teardown revocation.",
+      "_promotionComment": "TST_STFP_TC_19. Dedicated promotion fixture cqatesttea18sept@mailsac.com; password via {{env.C1_THOR_ADMINSTAFFPROFILE_PROMOTIONTEACHER_PASSWORD}} (ADR-025). Mutating test with mandatory teardown revocation.",
       "promotionTeacherEmail": "cqatesttea18sept@mailsac.com",
-      "promotionTeacherPassword": "Compro11",
+      "promotionTeacherPassword": "{{env.C1_THOR_ADMINSTAFFPROFILE_PROMOTIONTEACHER_PASSWORD}}",
       "adminUser": "testt1@mailsac.com",
-      "adminPassword": "Compro11"
+      "adminPassword": "{{env.C1_THOR_ADMINSTAFFPROFILE_ADMIN_PASSWORD}}"
     }
   }
 }

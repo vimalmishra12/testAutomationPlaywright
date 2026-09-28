@@ -3,7 +3,7 @@
 ## Session 1 — 2026-09-21
 
 ## Summary
-Transitioned Mailsac email verification from REST API calls to full browser **UI Automation** using the captured live DOM selectors and credentials for `comproqatest21@gmail.com` / `Compro11`. Built all Phase 1 test artifacts (selectors, page object, test cases, test data, execution file, and repository registration) across 4 suites.
+Transitioned Mailsac email verification from REST API calls to full browser **UI Automation** using the captured live DOM selectors and the Mailsac mailbox credentials (`comproqatest21@gmail.com`; password [redacted 2026-09-28 — ADR-025: now `{{env.C1_THOR_BULKCLASSEMAILVERIFICATION_PASSWORD}}`). Built all Phase 1 test artifacts (selectors, page object, test cases, test data, execution file, and repository registration) across 4 suites.
 
 ## Applicable-Traps Table (Phase 1 Step 0b)
 

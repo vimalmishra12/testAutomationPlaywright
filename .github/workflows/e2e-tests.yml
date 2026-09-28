@@ -58,6 +58,28 @@ jobs:
         run: npm install nodemailer
         working-directory: ${{ env.WORKING_DIR }}  
 
+      # ── 3b. Secrets + credential scan (ADR-025) ──────────────────────────────
+      #    Test data, env.json and capabilities.json carry env-tokens ({{env.NAME}}) instead of
+      #    passwords. Those values live in an untracked .env locally, and reach CI as ONE repository
+      #    secret: C1_ENV_BUNDLE holds the whole .env file. Writing it back to .env here means CI and
+      #    a local run resolve credentials through the identical code path (core/utils/envConfig.js),
+      #    and a rotated password stays a one-secret change instead of a workflow edit.
+      #    Placed BEFORE the Playwright browser download so a leaked credential fails in seconds,
+      #    and the scan itself is what the pre-commit hook and Semaphore run too.
+      - name: Materialise secrets and scan tracked files (ADR-025)
+        run: |
+          if [ -z "$C1_ENV_BUNDLE" ]; then
+            echo "::error::C1_ENV_BUNDLE secret is not set. Without it every env-token in the test"
+            echo "::error::data resolves to nothing and each suite fails at login with a misleading"
+            echo "::error::auth error instead of a configuration error. Create the secret first."
+            exit 1
+          fi
+          printf '%s\n' "$C1_ENV_BUNDLE" > .env   # untracked: .env is in .gitignore
+          npm run secrets:scan
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          C1_ENV_BUNDLE: ${{ secrets.C1_ENV_BUNDLE }}
+
       # Install Playwright browser binaries and system libraries for local execution profiles (e.g. desktop-chrome-1920)
       - name: Install Playwright Browsers & OS Dependencies
         run: npx playwright install --with-deps chromium

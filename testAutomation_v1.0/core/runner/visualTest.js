@@ -322,15 +322,21 @@ module.exports = {
   },
 
   //setting params to initiate Applitools. Config comes from global.eyesConfig
-  //(optional) and APPLITOOLS_API_KEY; the eyes-playwright SDK reads the env var
-  //automatically, so an explicit apiKey is only set when provided.
+  //and APPLITOOLS_API_KEY. The key must be passed explicitly: ADR-025 keeps
+  //credential-named variables out of process.env, so neither this process nor
+  //the eyes SDK can see it on the environment — envConfig is the only reader.
   initiateApplitools: async function () {
     console.log("applitools Initiated..");
     const e = lazyEyes();
     const cfg = global.eyesConfig || {};
     if (cfg.matchLevel) e.setMatchLevel(cfg.matchLevel);
     if (cfg.batch) e.setBatch(cfg.batch);
-    const apiKey = process.env.APPLITOOLS_API_KEY || cfg.apiKey;
+    const fromEnvConfig =
+      global.envConfig && global.envConfig.isSet("APPLITOOLS_API_KEY")
+        ? global.envConfig.get("APPLITOOLS_API_KEY")
+        : undefined;
+    // real env var first so a CI-injected secret always wins over the local .env
+    const apiKey = process.env.APPLITOOLS_API_KEY || fromEnvConfig || cfg.apiKey;
     if (apiKey) e.setApiKey(apiKey);
   },
 

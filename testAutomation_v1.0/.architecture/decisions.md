@@ -946,3 +946,73 @@ opt-in step someone has to ask for; it is run **immediately after every test exe
 exec file, any environment), as a standard part of reporting results — same footing as showing the mochawesome
 output. If a run accidentally executes more than once in one command (e.g. a shell fallback re-triggering it),
 say so when handing over the report, since only the last run's mochawesome JSON survives to feed it.
+
+---
+
+## ADR-025: Credentials Live in `.env`; Tracked Files Carry `{{env.*}}` Tokens
+
+**Status:** Accepted (2026-09-28) — 254 tokens across 24 tracked files resolve from `.env`; every migrated value
+proved byte-identical to the literal that stood in its place at git HEAD; `npm run secrets:scan` green, and proven
+RED against a fixture repo seeded with each of its four leak classes.
+
+**Context:** An audit found three shared test passwords (one reused across most thor accounts, two more across
+prod and the Builder IdP — their values are deliberately not written into this ADR) appearing as literals in 23
+`testcaseData` JSON files, the Cloudflare Access headers in `env.json`, `capabilities.json` (BrowserStack
+`user`/`key`, Applitools `apiKey`), five manual registers, six walkthroughs and a tooling comment — i.e. in the
+working tree of every clone. A first attempt at this migration had already been **abandoned**, and its wreckage
+explained why: 11 of its variables were blank and 12 values were silently truncated (`Compromint#2` stored as
+`Compromint`), and nothing complained because every reader had a `||` fallback. Two further facts shaped the
+design: `.env` was gitignored under `testAutomation_v1.0` but **not** at the repo root, and `.gitignore` carried a
+comment asserting `env.json` was "tracked with placeholders" when it held live Cloudflare secrets.
+
+**Decision:**
+1. Credential **values live only in `.env`** (untracked) or in CI variables. Tracked files — test data, `env.json`,
+   `capabilities.json` — carry `{{env.<NAME>}}` tokens and nothing else.
+2. Tokens resolve **lazily**, riding ADR-022's single call site (`testrunner.identifyTest` → `runContext.resolve`),
+   **not** at parse time inside `jsonParser.js`. `env.json` is parsed whole for *every* run (`env.conf.js:37` and
+   `:93`), so parse-time substitution would make a thor run throw on the qa Cloudflare token sitting in a headers
+   block that run never reads. Hook data is covered by the same site (`jsonHookObjParser` hands `hookFuncData` to
+   `identifyTest` as `testdata`), which is why setup/teardown logins work without touching the protected runner.
+   Page objects and TCs never see a token (ADR-022 decision 2 holds unchanged).
+3. **Credential-named variables are never hydrated into `process.env`.** A variable whose *name* matches
+   `PASSWORD|SECRET|TOKEN|APIKEY|API_KEY|ACCESS_KEY|PRIVATE` is parsed out of the file and read only through
+   `envConfig.get()`; non-credential names (URLs, account names, CI-supplied values) *are* hydrated, because code
+   outside the framework reads those off the environment directly (`visualTest.js`, the LambdaTest block of
+   `env.conf.js`). Reason: a password is data, not config, and pushing one through the environment hands it to the
+   shell and to every `.env` parser, which is exactly how `#2` was lost. Consequence paid here: `visualTest.js`
+   now passes the Applitools key explicitly instead of relying on the SDK finding it in the environment.
+4. A token that is unset **or empty** THROWS, naming the variable. An empty password submitted to a login form
+   surfaces as a misleading product auth failure rather than a missing configuration value (Invariant 13) — this
+   is the precise defect class that killed the abandoned attempt.
+5. The `.env` parser strips **whole-line** comments only, and strips quotes only when the value is genuinely
+   quoted. A value containing `#`, quotes or `$` therefore survives verbatim and **never needs escaping** —
+   verified as a test, not assumed.
+6. CI receives the values as **one** secret (`C1_ENV_BUNDLE`, the whole `.env`) written to `.env` before the run, in
+   both `.github/workflows/e2e-tests.yml` and `.semaphore/semaphore.yml`. One secret per rotation, and CI resolves
+   credentials through the identical code path as a local run.
+7. Enforcement is `tooling/secretScan.js` (`npm run secrets:scan`, run by both pipelines): NOT-TRACKED (no `.env` in
+   git), VALUE-LEAK (any real value from a credential-named var appears in a tracked file), PATTERN (a credential
+   field in a credential-bearing file holds a non-token literal — the only check that can work in CI, where `.env`
+   is absent by design), DECLARED (every token used exists in `.env.example`). It scans **bytes** and unpacks zip
+   containers, because the text-grep sweep used during this migration reported a clean repo while **40 cells in two
+   Builder registers still held a live password** — a `.xlsx` is a zip of XML, so a text scanner walks straight
+   past it. The scanner never prints the offending value.
+
+**Not secrets (user ruling, recorded rather than inferred):** account e-mails and usernames stay literal — they are
+identifiers the test names in its own data (`mailsacUI.page.js:7` names the Mailsac account for the same reason).
+Likewise a deliberately weak value a negative test submits to be rejected, a UI tab's label, `schoolKey`,
+`invalid_OTP` and class codes. Each is an entry with a reason in `tooling/secretScan.allowlist.json`; none is
+handled by loosening a check globally, because a scanner that cries wolf gets switched off.
+
+**Alternatives rejected:** parse-time substitution in `jsonParser.js` (breaks every run on another environment's
+token); adding `dotenv` (`package.json` is protected for a ~20-line parser); hydrating all values into
+`process.env` (see 3); mapping ~40 secrets individually in each pipeline YAML (a YAML edit per new account).
+
+**Consequences:** a fresh clone must `cp .env.example .env` and fill it, or nothing runs — by design, an
+unconfigured run must not look like a product failure. Both pipelines need `C1_ENV_BUNDLE` created before their
+next run. **Rotating every credential that was ever committed is still outstanding** — the old values remain live
+in `.env` so no suite broke during the migration, which means history still discloses them. Registers with a
+generator (`_generate.js`) are fixed by editing the source and regenerating, never by hand-editing the `.md`/`.xlsx`;
+where none exists, a `.xlsx` is patched at `xl/sharedStrings.xml` so every other zip member stays byte-identical.
+Finally: `ADR-023` is *Role-Separated E2E Suite Consolidation* — the Onboarding register's twelve "passwords come
+from tokens (ADR-023)" citations cited the wrong ADR and now point here.

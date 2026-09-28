@@ -6,6 +6,15 @@
 > updates it. **Remove a block when Phase 3 completes** — an empty file means nothing is pending.
 > History lives in the session walkthroughs, never here.
 
+> **Applies to every block below (ADR-025, 2026-09-28).** No suite runs until `testAutomation_v1.0/.env`
+> exists — copy `.env.example` and fill it. Test data now holds `{{env.*}}` tokens, so an unset variable
+> **throws at login by design** rather than submitting a blank password; that error is a missing local
+> configuration, not a product defect, so do not "fix" it by restoring a literal or adding a fallback.
+> **Outstanding action for the owner, not for a session:** rotate every credential that was ever
+> committed (the three shared test passwords, the 3 Cloudflare Access tokens, the Applitools key — their
+> values are deliberately not written here). They are still
+> live in `.env` so nothing broke mid-migration, which also means git history still discloses them.
+
 ## Status markers
 
 | Marker | Meaning |

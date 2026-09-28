@@ -320,6 +320,13 @@ Anything that was discussed but not completed, or that requires a future decisio
 - ❌ **NEVER** skip the `isInitialized()` pattern when navigating to a new page after a click
 - ❌ **NEVER** modify a protected JS/config file without explicit user confirmation
 - ❌ **NEVER** make a code change in any JS file without adding a precise inline comment
+- ❌ **NEVER** write a credential into a tracked file — not into test data, `env.json`, `capabilities.json`, a
+  manual register, a walkthrough or a comment. Those files carry `{{env.<NAME>}}` tokens and the values live in the
+  untracked `.env` (ADR-025). A password committed once is disclosed forever, so the fix is rotation, not deletion.
+  Add the name to `.env.example`, and run `npm run secrets:scan` before committing — it unpacks `.xlsx` registers,
+  which a text search cannot read. Never add a `|| "fallbackPassword"` to make a missing secret survivable: an
+  empty password fails as a misleading product auth error (Invariant 13), and `envConfig.get()` throws for exactly
+  that reason
 
 ---
 

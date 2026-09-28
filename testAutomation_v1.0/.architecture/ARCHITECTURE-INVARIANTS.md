@@ -176,6 +176,24 @@ panel, and the DEFAULT grading scale's menu, which genuinely omits Set-as-defaul
 count of 0 is a correct assertion there and a false green one page over. Verify per element.
 *Depth:* `product-knowledge/ExperienceApp/admin-shared.md` §B2; Invariants 1 and 13.
 
+### 16. A credential in git is a credential to rotate
+Test data, `env.json` and `capabilities.json` hold `{{env.<NAME>}}` tokens; the values live in the untracked
+`.env` (ADR-025). Writing a password into a tracked file does not become undoable by deleting it later — it is
+disclosed to every clone and to history, so the only fix is rotation.
+  - ❌ `"password": "Passw0rd-EXAMPLE"` in a data file — even "temporarily, to debug" (and never the real one either)
+  - ❌ `process.env.C1_THOR_X_PASSWORD || "Passw0rd-EXAMPLE"` — a fallback that keeps a run green while the config is broken
+  - ✅ `"password": "{{env.C1_THOR_SCHOOLADMIN_PASSWORD}}"`, declared in `.env.example`
+  - ✅ `npm run secrets:scan` before committing (it unpacks `.xlsx` too — grep cannot read those, and 40 live
+    password cells survived a "clean" text sweep exactly that way)
+
+**Never make a missing secret survivable.** An empty password reaches the login form and fails as a misleading
+*product* auth error, which is Invariant 13 in a new costume: a check that cannot fail. `envConfig.get()` throws
+on unset-or-empty for that reason, and credential-named variables are deliberately kept out of `process.env` so
+no shell or parser can reinterpret a value (`Compromint#2` → `Compromint`). Account e-mails and usernames are **not**
+secrets and stay literal; genuinely-not-secret values are listed with a reason in
+`tooling/secretScan.allowlist.json` rather than by loosening a check.
+*Depth:* ADR-025; `core/utils/envConfig.js`; `tooling/secretScan.js`.
+
 ---
 
 **How to use this sheet (the instruction the skill should adopt):**

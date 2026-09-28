@@ -54,3 +54,26 @@ always the latest:
 These SUPERSEDE the generic bundled `qa-test-automation` plugin skill. If both
 could apply, always use the `.agent/skills/` version. Treat the plugin skill as
 a fallback only when no repo skill covers the task.
+
+## Credentials — never write one into a tracked file
+
+Per ADR-025 (`decisions.md`) and Invariant 16 (`ARCHITECTURE-INVARIANTS.md`):
+test data, `env.json`, `capabilities.json` and the manual registers carry
+`{{env.<NAME>}}` tokens; the values live in `testAutomation_v1.0/.env`, which is
+gitignored (as is any root-level `.env`), and CI supplies them as one
+`C1_ENV_BUNDLE` secret.
+
+- A new clone cannot run until `.env` exists: `cp .env.example .env`, then fill it.
+  An unset or empty variable **throws by design** rather than submitting a blank
+  password — do not "fix" that by adding a `||` fallback, which is how the first
+  migration attempt was silently lost.
+- Add the name to `.env.example` whenever a token is introduced.
+- Run `npm run secrets:scan` before committing. It reads bytes and unpacks
+  containers, because `.xlsx` registers are zip files: a text search reported this
+  repo clean while 40 register cells still held a live password.
+- Account e-mails and usernames are identifiers, not secrets, and stay literal.
+  A value that is genuinely not a credential (a UI tab label, a deliberately weak
+  value a negative test submits) goes in `tooling/secretScan.allowlist.json` with a
+  reason — never by loosening a check.
+- Registers are edited through their generator (`_generate.js`) where one exists;
+  it rewrites the `.md` and `.xlsx` together, so never hand-edit either.

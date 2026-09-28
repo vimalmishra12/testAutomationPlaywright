@@ -127,7 +127,7 @@ ${modules.map(moduleLine).join("\n")}
 > **Data.** Cases marked CREATES REAL DATA (account signups, invite signup, child account) or that
 > change a real password (TST_RESE_TC_9, TST_CREA_TC_31, TST_SPRF_TC_24, TST_LOGI_TC_9 lockout) need a
 > disposable/run-generated account (ADR-022 \`{{run.*}}\`) and the user's OK on a shared environment
-> (ADR-021). Passwords come from \`{{env.*}}\` tokens only (ADR-023).
+> (ADR-021). Passwords come from \`{{env.*}}\` tokens only (ADR-025).
 
 ---
 

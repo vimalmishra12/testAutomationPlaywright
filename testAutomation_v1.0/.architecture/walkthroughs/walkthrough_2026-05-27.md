@@ -28,7 +28,7 @@ Replicated the `manageReportsTest` suite from the `thor` environment to `rel` (r
   ```json
   "manageReportsInstructor": {
     "email": "comprotestuser+relteacontext@gmail.com",
-    "password": "Compro11",
+    "password": "[redacted 2026-09-28 — ADR-025: now {{env.C1_REL_MANAGEREPORTSINSTRUCTOR_PASSWORD}}]",
     "role": "teacher",
     "name": "relteacontext",
     "class": [],
