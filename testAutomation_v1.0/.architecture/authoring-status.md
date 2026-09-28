@@ -289,9 +289,10 @@ Modules `EBOO` · `NOTE` · `DRAW` · `TIME` · `SHOW` · `PLAY` · `PAGE` · `C
 - Phase 3 ⬜ pending
 
 ## ebookE2EteacherTest (ExperienceApp, thor) — `ebookE2EteacherTest_thor`
-Modules `CMAT` · `RBNK` · `EBOO` · `C1AS` · `APPS` (teacher materials, eBook, resource banks, Presentation Plus, and assignment creation) · knowledge: `foc-class-materials.md` + `foc-resource-bank.md` + `foc-ebook-reader.md` + `foc-presentation-plus.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md` (r5 Approach A)
+Modules `CMAT` · `RBNK` · `EBOO` · `C1AS` · `EMAP` · `APPS` (teacher materials, eBook, resource banks, Presentation Plus, assignment creation, and book-to-book page mapping) · knowledge: `foc-class-materials.md` + `foc-resource-bank.md` + `foc-ebook-reader.md` + `foc-presentation-plus.md` · plan: `PLAN_ebook-foc-suite-merge_2026-09-22.md` (r5 Approach A)
 - Phase 1 ✅ 2026-09-23 — 6 suites consolidated (Suites 1–5: Class 1RB/2RB materials & eBooks, RBNK 1 & 2, Presentation Plus launch; Suite 6: Assignment Creation from Presentation Plus TOC); `TST_APPS_TC_1/2` teardown per suite
 - Phase 2 ✅ 2026-09-23 — **77/77 passing (5m)** on Thor across all 6 suites, including Suite 6's assignment-creation round trip (`TST_C1AS_TC_24` return-to-Presentation-Plus verified).
+- **Merged 2026-09-28** — `Suite7_BookMappingPresentationPlus` added (36 `Test` steps: 3 mapping scenarios, each in its own re-login/re-launch block, Cover setup/teardown `TST_EMAP_TC_5`); former `eBookMappingTest_Thor` standalone retired — `ebookMappingTest.json` archived, script moved to `package_copyDND.json`; manual register `ebookE2EteacherTest_thor_details.*` extended with S7 (87 cases / 115 steps)
 - Phase 3 ⬜ pending
 
 ## onboarding (ExperienceApp, thor; e-mail verification cases need prod) — no npm script yet
@@ -328,10 +329,10 @@ mapped in `test/Manual/C1App/Onboarding/Onboarding_test_cases.md` (+ `.xlsx`). K
 5. **Close the loop:** back-port into `_tcdata.js`, run `node test/Manual/C1App/Onboarding/_generate.js`
    (rewrites `.md` + `.xlsx`), set Status/Comments, update this block. Remove this "NEXT BATCH" section when done.
 
-## ebookMappingTest (ExperienceApp, thor) — `eBookMappingTest_Thor`
-Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-presentation-plus.md` Part D · manual: `test/Manual/C1App/FOC/ebookMapping_test_cases.md`
+## ebookMappingTest (ExperienceApp, thor) — `eBookMappingTest_Thor` → **merged 2026-09-28**
+Module `EMAP` (Presentation Plus book-to-book page mapping) · knowledge: `foc-presentation-plus.md` Part D · manual: `test/Manual/C1App/FOC/ebookMapping_test_cases.md` · **now runs as `Suite7_BookMappingPresentationPlus` of `ebookE2EteacherTest_thor`** (manual cases S7-TC1..10 in `ebookE2EteacherTest_thor_details.*`); `ebookMappingTest.json` kept on disk as a frozen archive, script in `package_copyDND.json`
 - Phase 1 ✅ 2026-09-25 — `TST_EMAP_TC_1..2, 5, 6`; first run 9 passing / 1 failing (TC_2: the Book 3 → Book 2 switch-back did not take effect once); visual candidates: none (live reader state, no fixed baseline)
 - Phase 2 ✅ 2026-09-25 — 18/18 passing, 2 consecutive clean runs (Book 1 Cover setup `TST_EMAP_TC_5` + teardown); one earlier intermittent switch-back failure recorded in the manual Open items
 - Phase 3 ⬜ pending
 - **Not built:** `TST_EMAP_TC_3..4` (manual only — the expected result for an unmapped page is unconfirmed)
-- Follow-up: none — npm script `eBookMappingTest_Thor` added (user-confirmed 2026-09-25)
+- Follow-up: none — merged into the teacher E2E suite (user decision 2026-09-28); the standalone run remains reproducible from the archived exec file via the `package_copyDND.json` script

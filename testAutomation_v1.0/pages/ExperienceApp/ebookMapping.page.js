@@ -128,16 +128,36 @@ module.exports = {
     await logger.logInto(await stackTrace.get(), "book:" + book.title);
     var out = { dropdownOpened: false, itemClicked: false, switched: false };
     var item = this.bookItemByTitle.replace("{{bookTitle}}", book.title);
-    var res = await action.click(this.bookDropdownBtn);
-    if (true != res) return out;
-    out.dropdownOpened = true == (await action.waitForDisplayed(item, 10000));
-    if (!out.dropdownOpened) return out;
-    res = await action.click(item);
-    out.itemClicked = true == res;
-    if (!out.itemClicked) return out;
     // Book ids are matched case-insensitively — the title carries "Third" but the id in the URL is lower case
     var idPattern = new RegExp("/studentbook/" + book.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "/", "i");
-    out.switched = true == (await action.waitForUrl(idPattern, book.switchTimeoutMs || 60000));
+
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      // Deliberate pause before interacting with toolbar — reader SPA is still settling after book/page load
+      await browser.pause(this.PRE_CLICK_PAUSE);
+      var res = await action.click(this.bookDropdownBtn);
+      if (true != res) return out;
+      out.dropdownOpened = true == (await action.waitForDisplayed(item, 10000));
+      if (!out.dropdownOpened) return out;
+      // Allow dropdown popover animation to complete before clicking the item
+      await browser.pause(this.POLL_MS);
+      res = await action.click(item);
+      out.itemClicked = true == res;
+      if (!out.itemClicked) return out;
+
+      // Poll for URL change up to 10s on first attempt, or full switchTimeoutMs on second attempt
+      var waitMs = attempt === 1 ? 10000 : (book.switchTimeoutMs || 60000);
+      var waited = 0;
+      while (waited < waitMs) {
+        var currentUrl = await browser.getUrl();
+        if (idPattern.test(currentUrl)) {
+          out.switched = true;
+          return out;
+        }
+        await browser.pause(this.POLL_MS);
+        waited += this.POLL_MS;
+      }
+      await logger.logInto(await stackTrace.get(), "switch_book attempt " + attempt + " did not switch URL to " + book.id + "; retrying...", "warn");
+    }
     return out;
   },
 };
