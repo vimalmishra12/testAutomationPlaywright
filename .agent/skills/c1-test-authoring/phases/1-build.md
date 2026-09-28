@@ -1,8 +1,10 @@
 # Phase 1 — Build (author the test, capture selectors)
 
-**Goal:** all test artifacts exist and are internally consistent. No test execution in this phase
-(beyond selector capture against the live page); running/fixing is Phase 2; visual assessment is
-Phase 3.
+**Goal:** all test artifacts exist, are internally consistent, and the suite has been **executed
+once** against the target environment (failures are expected — see the exit checklist). Making it
+pass is Phase 2; visual assessment is Phase 3. Phase 1 has no npm script yet (added in Phase 2 —
+`package.json` is protected), so run it directly:
+`node core/runner/run.js --appType=<App> --testEnv=<env> --testExecFile=<name>.json --browserCapability=desktop-chrome-1920`
 
 **Inputs:** the feature/ticket (manual test cases if they exist — check
 `test/Manual/` and the ticket), the target `<App>` and `<env>`, and the per-app product-knowledge
@@ -144,7 +146,8 @@ re-checks this table against the code that actually shipped.
   > proves the test is real.
   >
   > **A blocked browser is NOT a blocked framework.** If interactive capture (Playwright MCP)
-  > fails, `npm run <script>` almost certainly still works — the framework has its own proven
+  > fails, a framework run (`node core/runner/run.js …` above, or an existing `npm run` script
+  > for the login chain) almost certainly still works — the framework has its own proven
   > login chain. Add `--trace=true` to capture full DOM snapshots through it. Exhaust that
   > before concluding you cannot verify.
   >
