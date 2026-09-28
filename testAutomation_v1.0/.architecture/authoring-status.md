@@ -56,14 +56,14 @@ Built but not yet executed:
 Module `CCLS` (bulk class-creation form, validation) · knowledge: `admin-create-classes-form.md`
 - Phase 1 ✅ 2026-08-14 — `TST_CCLS_TC_9..12`; visual candidates: none
 - Phase 2 ✅ 2026-08-14 — 6/6 passing, 2 consecutive clean runs
-- Phase 3 ⬜ pending
+- Phase 3 ⏭️ **DEFERRED by user decision** (2026-09-28) — not assessed; expected "no candidates" (`admin-shared.md` §B10)
 
 ## schoolAdminAddClassBulk (ExperienceApp, thor) — `P1AdminclassBulk_Thor`
 Module `CCLS` (bulk form: load, multi-row, toolbar, duplicate, copy, CSV) · **creates no class** ·
 knowledge: `admin-create-classes-form.md`
 - Phase 1 ✅ 2026-08-18 — `TST_CCLS_TC_13..19, 21, 22`; visual candidates: none
 - Phase 2 ✅ 2026-08-18 — 11/11 passing, 2 consecutive clean runs
-- Phase 3 ⬜ pending
+- Phase 3 ⏭️ **DEFERRED by user decision** (2026-09-28) — not assessed; expected "no candidates" (`admin-shared.md` §B10)
 - Data dependency: `TC_21` needs source class "cqa test class 17aug2026 1" (≥1 teacher, ≥1 material)
   on the school — swap `copySourceClass` in `schoolAdminAddClassData.json` if it disappears.
 
@@ -73,7 +73,7 @@ per run** (`AutoClass_CreateOnly`, `AutoClass_CreateMore`) on `FCN-CHZ-PDA`
 - Phase 1 ✅ 2026-08-18 — `TST_CCLS_TC_1..8, 15, 16, 20`; visual candidates: none
 - Phase 2 ✅ 2026-08-18 — 13/13 passing (only ONE run carries the final assertion — accepted, since
   each run creates 2 real classes)
-- Phase 3 ⬜ pending
+- Phase 3 ⏭️ **DEFERRED by user decision** (2026-09-28) — not assessed; expected "no candidates" (`admin-shared.md` §B10)
 - `TC_16` (label) REQUIRES a preceding `TST_CCLS_TC_23` in the suite — a restored draft can already
   carry the label, and re-selecting it toggles it OFF.
 
