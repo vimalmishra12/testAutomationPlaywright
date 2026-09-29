@@ -1,18 +1,16 @@
 ---
 name: c1-manual-test-authoring
 description: >
-  Designing MANUAL functional test cases for Cambridge One / Builder from product scenarios, before
-  any automation exists. Use whenever the user supplies scenarios, a requirements list, a
-  scenario spreadsheet (e.g. AdminApp.xlsx), a Jira ticket with acceptance criteria, or points at a
-  screen/tab and asks for test cases to be written or extended. Also use when updating an existing
-  manual register — statuses, actual results, corrected steps, resolved [ASSUMED] items, or the
-  rolled-up summary. Produces BOTH a Markdown document and an .xlsx register under test/Manual/.
-  Trigger on any mention of: manual test cases, write test cases, create test cases from scenarios,
-  test case design, test scenarios, scenario to test case, requirement coverage map, traceability
-  matrix, manual register, test case document, xlsx register, npm run register, mark test case
-  Pass/Fail/Blocked, [ASSUMED] expected result, boundary/edge case design, AdminApp.xlsx, batch of
-  test cases, TST_ id, module code. If the request is to AUTOMATE test cases that already exist,
-  use c1-test-authoring instead — this skill hands off to it.
+  Designing MANUAL functional test cases for Cambridge One / Builder and keeping their registers
+  (.md + .xlsx under test/Manual/). Use whenever the user gives scenarios, requirements, a scenario
+  spreadsheet (e.g. AdminApp.xlsx), a Jira ticket with acceptance criteria, or ready-written test
+  cases (pasted or in a sheet) to put into a register; asks for test cases to be written or extended
+  for a screen/tab; or wants a register updated — Pass/Fail/Blocked statuses, actual results,
+  corrected steps, resolved [ASSUMED] items, the summary, npm run register. Also triggers on: test
+  case design, scenario to test case, coverage map, traceability matrix, boundary/edge cases, batch
+  of test cases, TST_ id, module code. If the request is to AUTOMATE cases already in a register, use
+  c1-test-authoring. If it is to automate cases NOT yet in a register, this skill runs FIRST (build
+  the register), then hands off to c1-test-authoring.
 ---
 
 # C1 Manual Test Case Authoring Skill

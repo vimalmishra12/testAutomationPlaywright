@@ -1,19 +1,15 @@
 ---
 name: c1-test-authoring
 description: >
-  Authoring and maintaining tests in this C1 / Builder Playwright-as-library + Mocha automation
-  framework. Use whenever the user is writing or editing a test case, creating or changing a page
-  object, adding/updating selectors, building an execution file, adding a new application (appType),
-  running/verifying a test, or assessing/promoting visual tests. This is the AUTHORING skill — use it
-  when the test does not yet exist and needs to be built (to "automate" a NEW flow/feature/scenario),
-  or an in-flight authoring effort continues (run/fix phase, visual phase). If instead an existing
-  test must be copied/ported to another environment, use c1-environment-test-replicator. Trigger on
-  any mention of: add a test, write a test, fix a test, automate a flow, automate a new test,
-  automate this scenario, automate in qa/thor (new test), page object, selector, selectorFile,
-  isInitialized, execution file, TC repository, appType, css.ComproC1, css.Builder, css.Blackboard,
-  css.LTI, blackboard, lti, deeplink, integrations, protected files, walkthrough, run the test,
-  visual test, visual assessment, visualTest flag, visual promotion, novus/visual, lambdatest,
-  continue phase, phase status.
+  Authoring and maintaining tests in this C1 / Builder / Blackboard-LTI Playwright-as-library + Mocha
+  framework: test cases, page objects, selectors (css.ComproC1, css.Builder, css.Blackboard, css.LTI,
+  selectorFile), execution files, the TC repository, isInitialized, protected files, walkthroughs, a
+  new appType, running/fixing a test, and the visual assessment (visualTest flag, novus, lambdatest).
+  Use when a test does not exist yet and must be built ("automate this flow / scenario / these test
+  cases", "write / add / fix a test", automate in thor/qa) or an authoring effort continues (run &
+  fix, visual phase, phase status). If the test cases are not yet in a manual register under
+  test/Manual/, run c1-manual-test-authoring first to build it, then continue here. If an existing
+  test must be copied or ported to another environment, use c1-environment-test-replicator.
 ---
 
 # C1 / Builder Test Authoring Skill — Router
@@ -62,6 +58,13 @@ Authoring is split into three phases with explicit handoffs. **Recommended: one 
 for anything non-trivial (keeps context focused); a single session MAY flow through multiple phases
 for small features — load each phase file only when you reach it.
 
+### Step 0 — Is there a manual register?
+
+If the request brings test cases or scenarios that are **not yet** in a register under
+`testAutomation_v1.0/test/Manual/`, run **`c1-manual-test-authoring`** first — it builds the `.md` +
+`.xlsx` register and hands back to this skill. People here do not name skills; decide this yourself
+and say which skill you are using.
+
 ### Step 1 — Read the status file
 
 Read `.architecture/authoring-status.md` (tiny, fixed path). It holds one PHASE STATUS block per
@@ -85,7 +88,7 @@ or the test name is ambiguous, **ask**.
 - Phase 2 → `.agent/skills/c1-test-authoring/phases/2-run-fix.md`
 - Phase 3 → `.agent/skills/c1-test-authoring/phases/3-visual.md`
 
-(Paths are relative to the repo root `D:\testAutomation\QATestAutomation\`.)
+(Paths are relative to the repository root — the folder that holds `.agent/` and `testAutomation_v1.0/`.)
 Do NOT read the other phase files. Every phase file ends with an **exit checklist** that updates
 `.architecture/authoring-status.md` — completing it is part of the phase, not optional.
 **A feature is NOT done until Phase 3 is complete** (even if the outcome is "no visual candidates").

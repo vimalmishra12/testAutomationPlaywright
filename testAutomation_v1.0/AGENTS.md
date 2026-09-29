@@ -478,3 +478,20 @@ the Playwright MCP server for live page exploration and selector capture).
 - Browser/session artifacts under `tooling/playwright-mcp/.profile/` are gitignored
   and must never be committed
 - See `tooling/playwright-mcp/README.md` for usage instructions
+
+---
+
+### 10. Skills — `.agent/skills/` is the source; `.claude/skills/` is generated
+
+The test-authoring skills (`c1-manual-test-authoring`, `c1-test-authoring`,
+`c1-environment-test-replicator`) live in `.agent/skills/` at the repository root and are read
+there by every AI tool the team uses. `.claude/skills/` holds **generated pointers** so Claude Code
+discovers them without anyone naming a skill or a path.
+
+**Rules:**
+- Edit skills only in `.agent/skills/`. Never hand-edit a file under `.claude/skills/`.
+- After adding a skill, or changing a skill's `name` or `description`, run
+  `node testAutomation_v1.0/tooling/syncClaudeSkills.js` and commit the regenerated pointers.
+  `--check` reports drift without writing (exit 1).
+- Keep each `description` within **1024 characters** (the Agent Skills limit — the script refuses a
+  longer one). The description is how a tool decides, on its own, which skill fits a request.
