@@ -273,7 +273,19 @@ function buildModel() {
       };
     });
     const setupState = hookFail ? "failed" : "passed";
+    // [2026-09-29] ADR-024 amendment 2: a failed setup hook now carries the screenshot + page taken at the
+    // moment it failed (core/utils/failureCapture.js); before that, setup failures had no screenshot.
+    let setupShot = null, setupPage = "";
+    try {
+      const hc = hookFail && (typeof hookFail.context === "string" && hookFail.context ? JSON.parse(hookFail.context) : hookFail.context);
+      (Array.isArray(hc) ? hc : [hc]).forEach((c) => {
+        if (!c || typeof c.value !== "string") return;
+        if (c.value.indexOf("data:image/png;base64,") === 0) setupShot = c.value;
+        else if (c.title === "Page at failure") setupPage = c.value;
+      });
+    } catch (_) { /* no setup screenshot */ }
     return {
+      setupShot, setupPage,
       key, title: stripReq(def.Name || s.title.slice(key.length + 3)), role: def.Role || "Unassigned", setup: !!def.Setup,
       tests, duration: s.duration || tests.reduce((a, t) => a + t.duration, 0),
       setupSteps: lg.setup.steps, setupChecks: lg.setup.asserts.length, setupWaits: lg.setup.waits,
@@ -414,6 +426,7 @@ ${t.shot ? `<figure><a href="#${t.shotId}" class="idlink" data-shot="${t.shotId}
 <summary><span class="skey">${esc(s.key)}</span><span class="stitle">${esc(s.title)}</span>${s.setup ? '<span class="tag setup">Setup</span>' : ""}<span class="meta">${passed}/${s.tests.length} passed · ${fmtMs(s.duration)}</span></summary>
 <div class="suite-body">
 <p class="steps">Setup steps: ${s.setupSteps.length ? s.setupSteps.map((x) => `<code>${esc(x)}</code>`).join(" → ") : "—"} ${s.setupState === "failed" ? `<span class="ko">✖ failed at ${esc(s.setupFailedStep)}: ${esc(s.setupErr)}</span>` : `<span class="ok">✔</span> (${s.setupChecks} checks)`}</p>
+${s.setupShot ? `<figure><a href="#${s.setupShotId}" class="idlink" data-shot="${s.setupShotId}"><img id="${s.setupShotId}" loading="lazy" src="${s.setupShot}" alt="Screen when the setup failed at ${esc(s.setupFailedStep)}"></a><figcaption>Screen at the moment the setup failed${s.setupPage ? ` · <code>${esc(s.setupPage)}</code>` : ""}</figcaption></figure>` : ""}
 ${s.tests.map((t) => testRow(s, t)).join("\n")}
 </div></details>`;
   };
@@ -425,7 +438,7 @@ ${r.suites.map(suiteBlock).join("\n")}
 
   const failures = failedItems.length
     ? failedItems.map((f) => f.setup
-      ? `<div class="fail"><div class="fhead"><span class="pill role-${esc(f.s.role.toLowerCase())}">${esc(f.s.role.toUpperCase())}</span><b>${esc(f.s.key)} setup failed</b> at <code>${esc(f.s.setupFailedStep)}</code></div><div class="err">${esc(f.s.setupErr)}</div><p class="muted">The suite's tests did not run. ${esc(f.s.title)}</p></div>`
+      ? `<div class="fail"><div class="fhead"><span class="pill role-${esc(f.s.role.toLowerCase())}">${esc(f.s.role.toUpperCase())}</span><b>${esc(f.s.key)} setup failed</b> at <code>${esc(f.s.setupFailedStep)}</code></div><div class="err">${esc(f.s.setupErr)}</div><p class="muted">The suite's tests did not run. ${esc(f.s.title)}${f.s.setupPage ? ` · Page: <code>${esc(f.s.setupPage)}</code>` : ""}</p>${f.s.setupShot ? `<a href="#${f.s.setupShotId}" class="idlink" data-shot="${f.s.setupShotId}"><img loading="lazy" src="${f.s.setupShot}" alt="Screen when ${esc(f.s.key)} setup failed"></a>` : ""}</div>`
       : `<div class="fail"><div class="fhead"><span class="pill role-${esc(f.s.role.toLowerCase())}">${esc(f.s.role.toUpperCase())}</span><code>${esc(f.t.id)}</code> ${esc(f.t.title)} <span class="muted">(${esc(f.s.key)})</span></div>
 <div class="err"><b>Failed check:</b> ${esc(f.t.failedAssert || "(not an assertion — see the error)")}${extraErr(f.t) ? `<pre>${esc(extraErr(f.t))}</pre>` : ""}</div>
 ${f.t.shot ? `<a href="#${f.t.shotId}" class="idlink" data-shot="${f.t.shotId}"><img loading="lazy" src="${f.t.shot}" alt="Screen when ${esc(f.t.id)} failed"></a>` : ""}
@@ -566,7 +579,7 @@ ${roleSections}
 <h2>Waits and slow tests</h2>
 ${waitsHtml}
 
-<footer>Built ${esc(fmtDate(new Date()))} by <code>tooling/report/buildReport.js</code> from ${[model.sources.mochawesome, model.sources.log, model.sources.runData].filter(Boolean).map((f) => `<code>${esc(shortPath(f))}</code>`).join(", ")}. Screenshots are taken at the end of each test and embedded in this page; click a test ID to open its screenshot.</footer>
+<footer>Built ${esc(fmtDate(new Date()))} by <code>tooling/report/buildReport.js</code> from ${[model.sources.mochawesome, model.sources.log, model.sources.runData].filter(Boolean).map((f) => `<code>${esc(shortPath(f))}</code>`).join(", ")}. Screenshots are taken at the end of each test and at the moment a setup step fails, and are embedded in this page; click a test ID to open its screenshot.</footer>
 </div>
 <dialog id="viewer"><div class="vhead"><b id="vtitle"></b><span class="muted" id="vsize"></span><button class="chip" id="vfit">Fit to window</button><button class="chip" id="vclose">Close</button></div><img id="vimg" alt=""></dialog>
 <script>
@@ -621,7 +634,10 @@ async function main() {
 
   // Screenshots stay embedded as data URIs (user request 2026-09-24: one self-contained page to share).
   let n = 0;
-  model.suites.forEach((s) => s.tests.forEach((t) => { if (t.shot) t.shotId = "shot-" + ++n; }));
+  model.suites.forEach((s) => {
+    if (s.setupShot) s.setupShotId = "shot-" + ++n;
+    s.tests.forEach((t) => { if (t.shot) t.shotId = "shot-" + ++n; });
+  });
 
   const htmlFile = path.join(outDir, "index.html");
   fs.writeFileSync(htmlFile, render(model, cmp));
