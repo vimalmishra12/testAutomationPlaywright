@@ -112,3 +112,37 @@ page-object delegation (practiceExtra.page.js) instead of duplicating it.
 - `progress.teacherStudentMetrics` xpath returned learner A's card for learner B on run 2 — verify on a 2-learner class.
 TC-NLP-019/020 blocked (no HTML/PDF activity in Projects).
 - The classic LP register's LP-023/024 (ON HOLD) are now covered by this suite — reconcile that register when it is next regenerated.
+
+---
+
+## Session 2 — 2026-09-29
+
+## Summary
+Closed Phase 2 of `newLearningPathTest_prod` by user decision on one clean full run instead of the
+usual two consecutive clean runs. No code or data change; status only.
+
+## Changes Made
+
+### 1. testAutomation_v1.0/.architecture/status/newLearningPath.md
+- **Type:** Modified
+- **Layer:** Config (authoring status)
+- **What changed:** Phase 2 line → "✅ 2026-09-29 **by user decision** — ONE clean full run, not the
+  usual two: run 5 135/135 (2026-09-25; teacher `_5srg`, Class brvp, learners `_3jsj` / B `_6bu5`)";
+  records why (every full run creates production data: a teacher + affiliation, a class, two learners,
+  a group, submissions, marks, comments) and that the run-4 fix — waiting for the "Unmarked" counter to
+  settle before group marking — is proven once only, so it is the first suspect if group marking fails
+  again. `▶ Now` → "Phase 2 closed 2026-09-29 · Next: Phase 3".
+- **Why:** the Phase 2 exit rule wants 2 consecutive clean runs; only run 5 was clean (runs 2–4 had
+  failures that were fixed). The user weighed a second full run against more production data and chose
+  to close on one (option 2 of: another full run / close as is / partial `--runData=last` debug run).
+- **Lines affected:** Phase 2 line and `▶ Now` line.
+
+## Architecture Decisions Triggered
+None — a recorded exception to the Phase 2 exit checklist's "2 consecutive clean runs", by user decision.
+
+## Protected Files Touched
+None — no protected files were modified.
+
+## Pending / Follow-up
+- Phase 3 (visual assessment) is still owed; expected "no candidates" (all data run-generated).
+- If a later full run fails in group marking, re-check the "Unmarked" counter settle wait first.
