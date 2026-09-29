@@ -458,3 +458,64 @@ None.
   Class htbu, learner `_wf0y`). Both include the marking (Suite8b) and every progress check; the marking-queue wait,
   the summary re-reads and the 90 s library wait held. Reports kept in the scratchpad (report_run10/11.json).
 - Register: 41 Pass · 0 Fail · 2 Not Run (TC_22/23 on hold) · 1 Blocked (TC_14).
+
+---
+
+## Session 8 — 2026-09-29 — Progress totals after the Projects product update
+
+## Summary
+The production LP run on 2026-09-29 failed 3 progress checks (110/113): the expected summary totals
+predated the 2026-09-25 Projects update (HTML + PDF activities added), which grew the learner's overall
+denominator from /10 to /11 and Projects from /5 to /6. Expected data, knowledge and register were updated
+on branch `lp-progress-fix`; two further full production runs passed 113/113.
+
+## Changes Made
+
+### 1. testResources/testcaseData/ExperienceApp/production/learningPathData.json
+- **Type:** Modified
+- **Layer:** Test Resources
+- **What changed:** `C1.progressMarked` — `learnerSummary` and `teacherStudent` "Completed activities: 4/10" → "4/11";
+  `teacherClass` "Average completed activities: 40%" → "36%"; `learnerComponents.Projects` and `teacherDetails.Projects`
+  "Completed activities: 0/5" → "0/6"; a dated note appended to the node's `_comment`.
+- **Why:** Production showed 36% · 4/11 · Projects 0/6 for the same learner work (run 2026-09-29, Class data and My
+  progress); `TST_PROG_TC_3`, `TST_PROG_TC_7` and `TST_PROG_TC_1` failed only on these values.
+- **Lines affected:** 259 (comment), 265, 277, 320, 325, 337
+
+### 2. .architecture/product-knowledge/ExperienceApp/learning-path-player.md
+- **Type:** Modified
+- **Layer:** Documentation (product knowledge)
+- **What changed:** §A11 pre-mark totals 3/10 · 30% → 3/11 · 27% plus a new dated bullet explaining the denominator
+  change (and that a content change to any bundle component moves these totals); §A12 post-mark totals 4/10 · 40% →
+  4/11 · 36%; "Show progress details" Projects 0/5 → 0/6.
+- **Why:** Keep the knowledge file in step with production.
+
+### 3. test/Manual/C1App/LearningPath/_tcdata_batch2.js + regenerated LearningPath_test_cases.md / .xlsx
+- **Type:** Modified
+- **Layer:** Manual test register
+- **What changed:** Expected Results of the learner "My progress", teacher "Class data" and "Show progress details"
+  TCs updated to 4/11 · 36% · 3/11 · 27% · Projects 0/6 (with a dated note). Regenerated with `_generate.js`; the
+  register diff is exactly these three rows.
+- **Why:** The register's expected results must match the automated expectations.
+
+### 4. .architecture/authoring-status.md
+- **Type:** Modified
+- **Layer:** Documentation (status index)
+- **What changed:** The `learningPath` Deferred-Phase-3 line records the 2026-09-29 re-verification.
+
+## Run evidence (production, 2026-09-29)
+- Before the fix (branch `class`): 110/113 — `TST_PROG_TC_3` (class 36% vs 40%), `TST_PROG_TC_7` (Projects 0/6 vs 0/5),
+  `TST_PROG_TC_1` (learner 4/11 vs 4/10).
+- After the fix (branch `lp-progress-fix`): 113/113 (407 checks) twice — once alone, once followed by NLP (135/135).
+- Unrelated, recorded for the record: three one-off setup login hangs in 7 full runs over 2026-09-28/29 (C1 login →
+  dashboard ×2, Mailsac login ×1), each passing at once on replay. A temporary screenshot-on-failure check was added
+  to `login.test.js` / `signup.test.js` for two debug runs and REVERTED (no hang reproduced, no screenshot taken).
+
+## Architecture Decisions Triggered
+None — data/knowledge maintenance only.
+
+## Protected Files Touched
+None — no protected files were modified.
+
+## Pending / Follow-up
+- If setup login hangs recur, consider (with user confirmation — protected `testrunner.js`) a permanent
+  screenshot on setup-step failure; today no screenshot exists for a failed setup step.
