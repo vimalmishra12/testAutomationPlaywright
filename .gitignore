@@ -22,4 +22,7 @@ logs_*.txt
 # Secrets hardening — real values for {{env.*}} tokens live here, never commit
 .env
 .env.*.local
-*.env
+*.env
+
+
+scratch/

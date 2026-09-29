@@ -2064,6 +2064,18 @@
         "pageLabel": "button#pageNavigateButton",
         "nextPageBtn": "button#nextButton",
         "previousPageBtn": "button#previousButton"
+      },
+      "electronLogin": {
+        "welcome": ".welcome",
+        "loginBtn": "button.btn-purple.login-btn, button:has-text('Log in with web browser')",
+        "userName_tbox": "#gigya-loginID-56269462240752180, input[name='username'], input[id^='gigya-loginID']",
+        "password_tbox": "#gigya-password-56383998600152700, input[name='password'], input[id^='gigya-password']",
+        "login_btn": "input[value=\"Log in\"], button:has-text(\"Log in\")",
+        "deepLinkBtn": "a[qid=\"home-2\"]",
+        "walkthroughSkipBtn": "a.introjs-skipbutton, .introjs-skipbutton",
+        "profileDropdown": "[qid='desk-Header-3'], [qid='aHeader-3'], [qid='cHeader-2'], #dropdownMenuLinkHeader",
+        "logoutBtn": "[qid='desk-Header-7'], [qid='aHeader-7'], [qid='cHeader-7'], a:has-text('Log out'), button:has-text('Log out')",
+        "confirmLogoutBtn": "button#logout-modal-btn, #logout-modal-btn, button:has-text('Yes, log out')"
       }
     }
   }

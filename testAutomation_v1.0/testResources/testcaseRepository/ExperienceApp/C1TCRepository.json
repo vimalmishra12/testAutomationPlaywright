@@ -4415,6 +4415,40 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Electron Login Prototype",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/electronLoginPrototype.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json",
+      "testcase": [
+        {
+          "id": "PROTO_ELEC_LOGIN",
+          "description": "Prototype: Click Log in with web browser in Electron",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Electron Dashboard",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/electronDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json",
+      "testcase": [
+        {
+          "id": "PROTO_CLOSE_WALKTHROUGH",
+          "description": "Close Walkthrough popup in Electron",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "PROTO_ELECTRON_LOGOUT",
+          "description": "Logout user in Electron",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

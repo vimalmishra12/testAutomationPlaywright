@@ -5,6 +5,14 @@
 module.exports = {
 
 	launchUrl: async function () {
+		// [2026-09-29] Electron app migration — confirmed by user.
+		// Electron desktop app opens its own local page on launch, so skip page.goto().
+		const isElectron = global.argv && (global.argv.electronApp === true || global.argv.electronApp === "true");
+		if (isElectron) {
+			await logger.logInto(stackTrace.get(), "Electron app mode active — skipping page.goto");
+			return;
+		}
+
 		// global.page is published by playwright.setup.js (decision D3).
 		await global.page.goto(appUrl, { waitUntil: "load" });
 		await logger.logInto(stackTrace.get(), "appURL:" + appUrl);

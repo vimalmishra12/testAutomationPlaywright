@@ -48,6 +48,12 @@
           "launchEbook": "2",
           "info": {}
         },
+        "electronProtoUser": {
+          "email": "CQA_AUTO_STU_101@mailsac.com",
+          "password": "{{env.C1_THOR_VALIDSTUDENT1_PASSWORD}}",
+          "role": "student",
+          "name": "CQA_AUTO_STU_101 AUTO"
+        },
         "validStudent2": {
           "email": "jijetoullozo-4043@yopmail.com",
           "password": "{{env.C1_THOR_VALIDSTUDENT2_PASSWORD}}",

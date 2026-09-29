@@ -1,0 +1,39 @@
+{
+    "Suite1": {
+        "Name": "Electron Ebook Test",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "PROTO_ELEC_LOGIN",
+                "description": "Prototype: Click Log in with web browser in Electron",
+                "testFile": "./test/ExperienceApp/electronLoginPrototype.test.js",
+                "timeout": 240000,
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+                        "jsonPath": "C1.login.user.electronProtoUser"
+                    }
+                ]
+            },
+            {
+                "id": "PROTO_CLOSE_WALKTHROUGH",
+                "description": "Close Walkthrough popup in Electron",
+                "testFile": "./test/ExperienceApp/electronDashboard.test.js",
+                "testData": []
+            },
+            {
+                "id": "PROTO_ELECTRON_LOGOUT",
+                "description": "Logout the user in Electron",
+                "testFile": "./test/ExperienceApp/electronDashboard.test.js",
+                "timeout": 240000,
+                "testData": []
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    }
+}
