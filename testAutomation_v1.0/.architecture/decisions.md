@@ -305,6 +305,7 @@ so a new app can never collide with C1 and core files stay app-agnostic. Proven 
 - Each app owns its selector file + `css.<App>` namespace; never mix two apps in one file.
 - New-app credentials follow the existing plaintext-in-data-file convention for now (e.g.
   `builderLoginData.json`) — to be hardened to env vars later, same as LambdaTest.
+  *(Done `[2026-09-23]` — ADR-025: credentials are `{{env.*}}` tokens.)*
 - App login flows can differ wildly: Builder uses a **3-step cross-domain SSO** (pre-login org
   select → confirm → comproDLS Identity username/password → `/2024/dashboard`). Two reusable
   lessons from it: type credentials with `addValue`/`pressSequentially` (React/Angular IdP forms
@@ -1028,6 +1029,9 @@ new token type). `testrunner.js` — untouched, despite being flagged as an expe
 change before Step 0 — the existing ADR-022 call site already covers this. 12 test-account fields
 + 7 infra fields migrated (pilot); 231 fields across 22 files remain (Step 5, tracked in
 `.env.example`).
+**Update `[2026-09-28]`:** the figures above are from the pilot. Step 5 finished the same day — all
+243 fields across 24 files are `{{env.*}}` tokens, `.env.example` has no ⬜ pending entry, and
+`tooling/secretScan.js` exits 0.
 
 ---
 

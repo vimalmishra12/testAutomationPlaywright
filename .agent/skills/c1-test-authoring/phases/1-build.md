@@ -155,9 +155,11 @@ re-checks this table against the code that actually shipped.
   > raise it with the user** — do not bank unverified code as complete. Record Phase 1 as ⚠️
   > (see below), never ✅.
 
-- [ ] Update `.architecture/authoring-status.md` — create/update the block using that file's
-      **Block format** section (the single source). Use ✅ **only if the suite was actually
-      executed**; otherwise ⚠️. Status + open items only — the debugging story goes in the walkthrough.
+- [ ] Create/update `.architecture/status/<feature>.md` using the **Status file format** in
+      `.architecture/authoring-status.md` (the single source), and add its row to that index if it
+      is new. Use ✅ **only if the suite was actually executed**; otherwise ⚠️. Set `▶ Now` to
+      "Phase 1 done · Next: Phase 2". Status + open items only — the debugging story goes in the
+      walkthrough.
 
 - [ ] Session walkthrough written/appended (AGENTS.md §Walkthrough).
 - [ ] Tell the user: Phase 1 complete → next is Phase 2 (run & fix), recommended in a fresh session.

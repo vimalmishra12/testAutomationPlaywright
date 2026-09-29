@@ -10,6 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
+// [2026-09-29] The register's "Read first" pointers now name the per-feature status files in .architecture/status/ (authoring-status.md is an index since then) — see walkthrough_status-per-feature_2026-09-29_05h-52m.md.
 // Resolved from the repo's node_modules (a worktree has none of its own; Node walks up).
 const ExcelJS = require("exceljs");
 const B1 = require("./_tcdata.js");
@@ -135,7 +136,7 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 > Where SOURCE was wrong it is corrected and noted in Remarks (TOC close control, TOC on entry).
 >
 > **Data.** The learner, class and invite are created by the setup suites of \`learningPath.json\`
-> (ADR-022 run-generated users) — see \`authoring-status.md\`. **The scorable activity can be attempted
+> (ADR-022 run-generated users) — see \`learning-path-player.md\` Part C. **The scorable activity can be attempted
 > once per learner**: a finished or half-finished activity is not offered fresh again, so a failed run of
 > TC_4…TC_8 needs a new learner.
 
@@ -146,8 +147,8 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
 1. **Do not redesign.** Every scenario of the source sheet is already mapped here — pick a row with
    Status \`Not Run\` and keep its **Test Case ID**; that ID is what goes into the test file, the TC
    repository and the execution file. Never renumber existing rows; a genuinely new case is appended.
-2. **Read first:** \`.architecture/authoring-status.md\` → the \`learningPath\` block (what exists, the
-   commands, the constraints), \`product-knowledge/ExperienceApp/learning-path-player.md\` (Part C =
+2. **Read first:** \`.architecture/authoring-status.md\` → "Deferred Phase 3" (the \`learningPath\` line;
+   full history in \`archive/authoring-status_2026-09-29.md\`), \`product-knowledge/ExperienceApp/learning-path-player.md\` (Part C =
    how to run and debug, what a run creates, what is once-per-learner) and \`c1-core-shared.md\`; then
    follow the \`c1-test-authoring\` skill (\`.agent/skills/\`).
 3. **\`[ASSUMED]\` is a question, not a fact.** Any expected result marked \`[ASSUMED]\` comes from the
@@ -161,8 +162,8 @@ const md = `# Manual Functional Test Cases — Cambridge One: Learning Path / Pr
    Nothing new may be created on a shared environment without asking (ADR-021).
 6. **Close the loop:** back-port into \`_tcdata*.js\`, run
    \`node test/Manual/C1App/LearningPath/_generate.js\` (it rewrites both the \`.md\` and the \`.xlsx\` —
-   never hand-edit them), set Status/Comments, and update the \`learningPath\` block in
-   \`authoring-status.md\`.
+   never hand-edit them), set Status/Comments, and create or update \`.architecture/status/learningPath.md\`
+   (format and rules: \`authoring-status.md\`).
 
 ---
 

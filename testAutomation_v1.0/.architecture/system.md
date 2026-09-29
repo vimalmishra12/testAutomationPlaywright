@@ -1,6 +1,6 @@
 # System Architecture — Living Blueprint
 
-> Last updated: 2026-05-19
+> Last updated: 2026-09-28 (assertion evidence report — ADR-026)
 
 ---
 

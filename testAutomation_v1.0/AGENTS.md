@@ -86,9 +86,12 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 | TC ID prefix | `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the **page object**, not the Jira ticket | `TST_MRPT_TC_1`, `TST_BLOGI_TC_1` |
 | Selector section | `css.<App>.<camelCase>` | `css.ComproC1.manageReports`, `css.Builder.components` |
 | Execution file | `<descriptiveName>.json` | `manageReportsTest.json` |
-| NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
-| Functional NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
+| NPM script (functional) | `<feature>Test_<env>` — `<feature>` in camelCase; `<env>` lower-case: `thor`, `qa`, `rel`, `prod` (LambdaTest runs: `LT`) | `manageReportsTest_thor` |
 | Visual NPM script | `visualAcceptance_<feature>_<env>` | `visualAcceptance_manageReports_thor` |
+
+> Scripts that pre-date this rule keep their names (`P1Admin*_Thor`, `eBookMappingTest_Thor`,
+> `umbrellaImageTest_NEMO-24627_thor`, `CreateEbook_*`, …) — renaming them breaks the commands
+> people and CI already use. New scripts follow the rule.
 
 > **`<MODULE>` is derived from the page object / feature, not the Jira ticket — this is the single
 > canonical TC-ID rule** (`system.md` and `manual-test-standard.md` defer to it). Agree the code
@@ -118,7 +121,7 @@ and **`Blackboard`** (LTI integration, added 2026-06-26 — see ADR-015 for its 
 | Execution files | `testResources/testExecutionFiles/<App>/<env>/` |
 | TC repository | `testResources/testcaseRepository/<App>/<App>TCRepository.json` (its `selectorFile` points at the app's selector file) |
 | `env.json` | a top-level `"<App>": { "testExecDir": …, "environments": { <env>: { "url": … } } }` block |
-| NPM script | `<Feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
+| NPM script | `<feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
 
 **Blackboard — path and namespace convention (ADR-015):**
 The `Blackboard` appType uses an `Integrations/` sub-path and **two** selector files / TC
@@ -458,7 +461,7 @@ Visual test NPM scripts MUST follow this naming pattern:
 
 | Artifact | Convention | Example |
 |---|---|---|
-| Functional NPM script | <feature>_<env> | manageReportsTest_thor |
+| Functional NPM script | <feature>Test_<env> | manageReportsTest_thor |
 | Visual NPM script | visualAcceptance_<feature>_<env> | visualAcceptance_manageReports_thor |
 
 ---
@@ -475,3 +478,20 @@ the Playwright MCP server for live page exploration and selector capture).
 - Browser/session artifacts under `tooling/playwright-mcp/.profile/` are gitignored
   and must never be committed
 - See `tooling/playwright-mcp/README.md` for usage instructions
+
+---
+
+### 10. Skills — `.agent/skills/` is the source; `.claude/skills/` is generated
+
+The test-authoring skills (`c1-manual-test-authoring`, `c1-test-authoring`,
+`c1-environment-test-replicator`) live in `.agent/skills/` at the repository root and are read
+there by every AI tool the team uses. `.claude/skills/` holds **generated pointers** so Claude Code
+discovers them without anyone naming a skill or a path.
+
+**Rules:**
+- Edit skills only in `.agent/skills/`. Never hand-edit a file under `.claude/skills/`.
+- After adding a skill, or changing a skill's `name` or `description`, run
+  `node testAutomation_v1.0/tooling/syncClaudeSkills.js` and commit the regenerated pointers.
+  `--check` reports drift without writing (exit 1).
+- Keep each `description` within **1024 characters** (the Agent Skills limit — the script refuses a
+  longer one). The description is how a tool decides, on its own, which skill fits a request.

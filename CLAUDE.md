@@ -56,8 +56,12 @@ All code and test design must conform to them.
 ## Skills — canonical source of truth
 
 For ALL test-automation work in this repo, the authoritative skills are the
-repo-tracked ones under `.agent/skills/` — they version with the code and are
-always the latest:
+repo-tracked ones under `.agent/skills/` — they version with the code, are
+always the latest, and the team's other AI tools read them there too.
+`.claude/skills/` holds only generated pointers to them, so Claude Code discovers
+the skills automatically. Never edit a pointer: edit `.agent/skills/`, then run
+`node testAutomation_v1.0/tooling/syncClaudeSkills.js` (needed after adding a skill
+or changing a skill's name or description).
 
 - `c1-manual-test-authoring` — designing MANUAL functional test cases from
   scenarios/requirements, and maintaining the `.md` + `.xlsx` registers under
@@ -66,8 +70,25 @@ always the latest:
 - `c1-test-authoring` — writing/editing tests, page objects, selectors,
   execution files, running/verifying tests, adding an appType.
 - `c1-environment-test-replicator` — porting/replicating a test to another
-  environment (thor → qa/stage/prod) and fixing environment-specific failures.
+  environment (thor → qa / rel / production; "stage" means rel) and fixing environment-specific failures.
 
-These SUPERSEDE the generic bundled `qa-test-automation` plugin skill. If both
-could apply, always use the `.agent/skills/` version. Treat the plugin skill as
-a fallback only when no repo skill covers the task.
+### Pick the skill yourself — people here never name one
+
+The people who use this repo (many newly onboarded) hand over test cases,
+scenarios, a spreadsheet or a ticket and say "automate this" or "write the test
+cases". They do not name a skill or give a path. Choose from the request:
+
+| The request | Skill(s) |
+|---|---|
+| Scenarios, requirements, a Jira ticket, a spreadsheet, or ready-written test cases; "write / create test cases", "make the register", update statuses or results | `c1-manual-test-authoring` |
+| "Automate" test cases that are **not yet** in a register under `testAutomation_v1.0/test/Manual/` | `c1-manual-test-authoring` first (build the register), then `c1-test-authoring` |
+| "Automate" cases already in a register; write / fix / run / debug a test, page object, selector or execution file; visual assessment | `c1-test-authoring` |
+| Run an **existing** test in another environment (thor → qa / rel / prod), or fix it there | `c1-environment-test-replicator` |
+
+Say which skill you are using in your first reply. Ask only when a request
+genuinely fits two rows.
+
+These SUPERSEDE the generic bundled `qa-test-automation` plugin skill, and any
+plugin copy of a repo skill (e.g. `anthropic-skills:c1-environment-test-replicator`)
+— those may be stale. If both could apply, always use the `.agent/skills/` version.
+Treat a plugin skill as a fallback only when no repo skill covers the task.

@@ -50,8 +50,13 @@ Bold key–value lines, then the notes. Reproduce these fields:
 
 The remaining **<n> TCs are Not Run** (<modules>).
 
+**▶ Now:** <step in progress> · **Next:** <next step>
+
 **Batches:** Batch 1 — <name> (`TST_<MOD>_*`, module <MOD>, <n> TCs) · Batch 2 — …
 ```
+
+The **`▶ Now`** line is the design checkpoint: replaced after every step, never appended (SKILL
+golden rule 12). It reads `Done <date> — handed off to c1-test-authoring` once the batch is emitted.
 
 Then the ordering / scope / convention note as a blockquote:
 

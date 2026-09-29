@@ -22,7 +22,7 @@
 ## How to automate / re-run a case from this register
 
 1. Keep the **Test Case ID**; never renumber — a new case is appended.
-2. Read `.architecture/authoring-status.md` (`newLearningPath` block) and
+2. Read `.architecture/status/newLearningPath.md` and
    `product-knowledge/ExperienceApp/new-learning-path.md`; follow the `c1-test-authoring` skill.
 3. `[ASSUMED]` is a question, not a fact — confirm live and replace the text with what was seen.
 4. Close the loop: edit `_tcdata*.js` / `_run.js`, run `node test/Manual/C1App/NewLearningPath/_generate.js`.
