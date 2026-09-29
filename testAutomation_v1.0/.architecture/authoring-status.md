@@ -29,7 +29,7 @@ One line per feature whose Phases 1–2 are done and whose Phase 3 the user defe
 else in flight (rule 4). Open items live in the register / knowledge file named on the line.
 
 - `learningPath` (`learningPathTest_prod`) — Phases 1–2 ✅ (two consecutive clean full runs 113/113,
-  2026-09-24); Phase 3 deferred 2026-09-22 (all TCs `visualTest: false`, run-generated data). Open items:
+  2026-09-24; re-verified 113/113 twice on 2026-09-29 after the Projects-totals fix); Phase 3 deferred 2026-09-22 (all TCs `visualTest: false`, run-generated data). Open items:
   register `test/Manual/C1App/LearningPath/` (Blocked rows with reasons); thor Blocked at `SNUP_TC_61`
   (expired certificate, `c1-core-shared.md` §A4); commands and debug mode in `learning-path-player.md` Part C.
 
