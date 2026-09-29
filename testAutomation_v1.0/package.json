@@ -43,6 +43,7 @@
     "FooterFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=footerTest.json --browserCapability=desktop-chrome-1920",
     "loginFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=loginTest.json --browserCapability=desktop-chrome-1920",
     "learningPathTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=learningPath.json --browserCapability=desktop-chrome-1920",
+    "newLearningPathTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=newLearningPath.json --browserCapability=desktop-chrome-1920",
     "completeAssignmentFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=c1completeAssignment.json --browserCapability=desktop-chrome-1920",
     "createAssignmentFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=c1createAssignment.json --browserCapability=desktop-chrome-1920",
     "deleteAssignmentFeatureTest_prod": "node core/runner/run.js --appType=ExperienceApp --testEnv=production --testExecFile=c1deleteAssignment.json --browserCapability=desktop-chrome-1920",

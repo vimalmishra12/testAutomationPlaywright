@@ -125,7 +125,7 @@ Fixed data used as-is from SOURCE: prod school **MQA Sierra School** `MQA-ABC-DE
 
 ### C2. r4 create-only archive invariant
 
-* **Rule:** Never delete, rename, or edit existing test execution files under `testResources/testExecutionFiles/ExperienceApp/thor/`.
+* **Rule:** Never delete, rename, or edit a **superseded** execution file under `testResources/testExecutionFiles/ExperienceApp/thor/` — it is a frozen archive. Live execution files (run by an npm script) are edited as normal work. `[scope clarified 2026-09-28 — ADR-023 decision 3]`
 * When consolidating test suites (such as the 17 individual eBook/FOC suites into the 3 consolidated suites), the consolidated suites are created as **new files** (`ebookE2EstudentTest.json`, `ebookE2EteacherTest.json`, `ebookFocusA11yMergedTest.json`). The superseded original files are retained permanently on disk as frozen archives so that historical execution paths remain reproducible.
 
 ### C3. Login nodes shared by the C1 suites

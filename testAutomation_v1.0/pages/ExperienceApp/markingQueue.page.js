@@ -22,10 +22,13 @@ module.exports = {
 
   /**
    * Class page: the "<n> Marking" link. The count can lag the learner's submission, so the page is re-read (reload)
-   * until the count is ≥ 1 or `timeoutMs` passes (SOURCE polled the dashboard badge the same way).
+   * until the count is ≥ `minCount` (default 1) or `timeoutMs` passes (SOURCE polled the dashboard badge the same way).
+   * [2026-09-25] minCount added for the NLP suite, whose learners make TWO submissions (PS + Group PS): waiting for
+   * both before marking the first guarantees the second is listed when its turn comes.
    */
-  getData_classMarkingCount: async function (timeoutMs, reloadEveryMs) {
-    await logger.logInto(await stackTrace.get(), "timeout:" + timeoutMs);
+  getData_classMarkingCount: async function (timeoutMs, reloadEveryMs, minCount) {
+    await logger.logInto(await stackTrace.get(), "timeout:" + timeoutMs + " minCount:" + (minCount || 1));
+    var need = minCount || 1;
     var mq = selectorFile.css.ComproC1.markingQueue;
     var url = await browser.getUrl();
     var start = Date.now();
@@ -35,7 +38,7 @@ module.exports = {
         var m = String(await action.getText(mq.classMarkingLink)).match(/(\d+)/);
         count = m ? Number(m[1]) : 0;
       }
-      if (count >= 1 || Date.now() - start >= timeoutMs) break;
+      if (count >= need || Date.now() - start >= timeoutMs) break;
       await browser.pause(reloadEveryMs); // sanctioned: nothing on the page signals the count update (Invariant 1)
       await browser.url(url);
       await action.waitForDocumentLoad();
@@ -91,5 +94,31 @@ module.exports = {
     }
     out.unmarkedTab = String(await action.getText(mq.unmarkedTab)).replace(/\s+/g, " ").trim();
     return out;
+  },
+
+  /**
+   * [2026-09-25, NLP run 4] Re-reads the "Unmarked (n)" tab (reloading the marking screen every `reloadEveryMs`) until it
+   * reads `expected` or `timeoutMs` passes. After the Group PS of a group whose members have all launched the product
+   * was marked, the counters read "Unmarked (2)" with "There are no student submissions to view" and reached 0 only
+   * minutes later (≤ ~15 min seen) — the count lags the list. The mark itself is asserted separately and immediately.
+   */
+  getData_unmarkedTabSettled: async function (expected, timeoutMs, reloadEveryMs) {
+    await logger.logInto(await stackTrace.get(), "expected:" + expected + " timeout:" + timeoutMs);
+    var mq = selectorFile.css.ComproC1.markingQueue;
+    var url = await browser.getUrl();
+    var start = Date.now();
+    var text = null;
+    var attempts = 0;
+    while (true) {
+      if (true == (await action.waitForDisplayed(mq.unmarkedTab, 30000))) {
+        text = String(await action.getText(mq.unmarkedTab)).replace(/\s+/g, " ").trim();
+      }
+      attempts++;
+      if (text === expected || Date.now() - start >= timeoutMs) break;
+      await browser.pause(reloadEveryMs); // sanctioned: nothing on the page signals the counter update (Invariant 1)
+      await browser.url(url);
+      await action.waitForDocumentLoad();
+    }
+    return { unmarkedTab: text, attempts: attempts, waitedMs: Date.now() - start };
   },
 };

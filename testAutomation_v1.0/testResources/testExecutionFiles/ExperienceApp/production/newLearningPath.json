@@ -1,0 +1,2445 @@
+{
+  "Suite1": {
+    "Name": "NLP setup 1 - Teacher signs up and verifies the e-mail",
+    "Role": "Teacher",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_2",
+        "description": "Open the signup page from the landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_59",
+        "description": "Select Teacher and confirm the role",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.teacherRole"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_60",
+        "description": "Submit the teacher signup form (creates the account)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.teacherForm"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_61",
+        "description": "Open the verification link from Mailsac",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.mailsac.teacherVerify"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_62",
+        "description": "Close the welcome tour; Complete your account is offered",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 360000,
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite2": {
+    "Name": "NLP setup 2 - Teacher logs in and joins the school",
+    "Role": "Teacher",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page from the landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_62",
+        "description": "Close the welcome tour; Complete your account is offered",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 360000,
+        "testData": []
+      },
+      {
+        "id": "TST_TSET_TC_1",
+        "description": "Open the setup wizard",
+        "testFile": "./test/ExperienceApp/teacherAccountSetup.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_TSET_TC_2",
+        "description": "Choose I teach in a school, then Join a school",
+        "testFile": "./test/ExperienceApp/teacherAccountSetup.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_TSET_TC_3",
+        "description": "Join the school with its key (durable affiliation)",
+        "testFile": "./test/ExperienceApp/teacherAccountSetup.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherSchool"
+          }
+        ]
+      },
+      {
+        "id": "TST_TSET_TC_4",
+        "description": "Dashboard header shows the joined school",
+        "testFile": "./test/ExperienceApp/teacherAccountSetup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherSchool"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite3": {
+    "Name": "NLP setup 3 - Teacher creates the class with the product",
+    "Role": "Teacher",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page from the landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_10",
+        "description": "Open Create class",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_ENTE_TC_3",
+        "description": "Type the run's class name",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.lpClass.name"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_ENTE_TC_9",
+        "description": "Next",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_ENTE_TC_22",
+        "description": "Open Add materials",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_ENTE_TC_21",
+        "description": "Search the product",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.lpClass.material"
+          }
+        ]
+      },
+      {
+        "id": "TST_ENTE_TC_24",
+        "description": "Pick the product by exact name",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.lpClass.material"
+          }
+        ]
+      },
+      {
+        "id": "TST_ENTE_TC_19",
+        "description": "Add to class",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_ENTE_TC_26",
+        "description": "Close the 'This material is collaborative' dialog",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.lpClass.collaborativeInfo"
+          }
+        ]
+      },
+      {
+        "id": "TST_ENTE_TC_18",
+        "description": "Finish",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_ENTE_TC_25",
+        "description": "Class created, listed on the dashboard, class key read",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.lpClass.created"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite4": {
+    "Name": "NLP setup 4 - Learner signs up and verifies the e-mail",
+    "Role": "Student",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_2",
+        "description": "Open the signup page from the landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_59",
+        "description": "Select Learner and confirm the role",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerRole"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_63",
+        "description": "Pass the learner age gate (India, 18+)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerAgeGate"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_60",
+        "description": "Submit the learner signup form (creates the account)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerForm"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_61",
+        "description": "Open the learner's verification link from Mailsac",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.mailsac.learnerVerify"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_64",
+        "description": "Learner welcome screen offers Continue",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 360000,
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite5": {
+    "Name": "NLP setup 5 - Teacher invites the run's learner to the class",
+    "Role": "Teacher",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_CREA_TC_19",
+        "description": "Open the class's students area",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_20",
+        "description": "Add students",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_21",
+        "description": "Students are adults",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_22",
+        "description": "Next",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_23",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.invite.learnerEmail"
+          }
+        ]
+      },
+      {
+        "id": "TST_CREA_TC_24",
+        "description": "Invite",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_30",
+        "description": "The learner's e-mail is pending",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.invite.learnerEmail"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite6": {
+    "Name": "NLP setup 6 - Learner accepts the invite; TC-NLP-011: Projects granted by the school licence (no activation code)",
+    "Role": "Student",
+    "Setup": true,
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_101",
+        "description": "Housekeeping: wait for the invite in the bell",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.invite.notificationWait"
+          }
+        ]
+      },
+      {
+        "id": "TST_INVI_TC_1",
+        "description": "Open the bell",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_2",
+        "description": "Open the invitation",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_13",
+        "description": "Tick this run's invitation by class name",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_INVI_TC_4",
+        "description": "Accept",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_5",
+        "description": "Go to dashboard",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_13",
+        "description": "TC-NLP-011: Projects is on the class card with no activation-code prompt",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpAccess"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite7": {
+    "Name": "NLP setup 7 - Learner B signs up and verifies (group cases TC-NLP-021/022)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_2",
+        "description": "Open the signup page from the landing page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_59",
+        "description": "Select Learner and confirm the role",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerRole"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_63",
+        "description": "Pass the learner age gate (India, 18+)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerAgeGate"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_60",
+        "description": "Submit the learner signup form (creates the account)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.signup.learnerFormB"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_61",
+        "description": "Open the learner's verification link from Mailsac",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.mailsac.learnerVerifyB"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_64",
+        "description": "Learner welcome screen offers Continue",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "timeout": 360000,
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": [],
+    "Role": "Student",
+    "Setup": true
+  },
+  "Suite8": {
+    "Name": "NLP setup 8 - Teacher invites learner B to the class",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_CREA_TC_19",
+        "description": "Open the class's students area",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_20",
+        "description": "Add students",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_21",
+        "description": "Students are adults",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_22",
+        "description": "Next",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_23",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.inviteB.learnerEmail"
+          }
+        ]
+      },
+      {
+        "id": "TST_CREA_TC_24",
+        "description": "Invite",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_CREA_TC_30",
+        "description": "The learner's e-mail is pending",
+        "testFile": "./test/ExperienceApp/createNewClass.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.inviteB.learnerEmail"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": [],
+    "Role": "Teacher",
+    "Setup": true
+  },
+  "Suite9": {
+    "Name": "NLP setup 9 - Learner B accepts the invite; launches Practice Extra and Projects once (component access before group work)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_101",
+        "description": "Housekeeping: wait for the invite in the bell",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.inviteB.notificationWait"
+          }
+        ]
+      },
+      {
+        "id": "TST_INVI_TC_1",
+        "description": "Open the bell",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_2",
+        "description": "Open the invitation",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_13",
+        "description": "Tick this run's invitation by class name",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_INVI_TC_4",
+        "description": "Accept",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_INVI_TC_5",
+        "description": "Go to dashboard",
+        "testFile": "./test/ExperienceApp/invitationNotification.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_13",
+        "description": "Projects is on learner B's class card with no activation-code prompt",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpAccess"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASH_TC_14",
+        "description": "Learner B opens Practice Extra (first launch)",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerAccess"
+          }
+        ]
+      },
+      {
+        "id": "TST_PEXT_TC_100",
+        "description": "Housekeeping: TOC closed (it self-opens on a first entry)",
+        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_PEXT_TC_26",
+        "description": "Back to the dashboard",
+        "testFile": "./test/ExperienceApp/practiceExtra.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "Learner B opens Projects (first launch - provisioning + progress bar)",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpLaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_1",
+        "description": "Learner B's Projects TOC",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpToc"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": [],
+    "Role": "Student",
+    "Setup": true
+  },
+  "Suite10": {
+    "Name": "TC-NLP-001…007, 016, 017, 018 - Learner: first launch of Projects, NLP TOC, scorable (exit + relaunch), flashcards, PS submit, exit (one PS submission per learner)",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "TC-NLP-001/002/018: no expiry date; first launch shows provisioning + progress bar, then the NLP TOC",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpLaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_1",
+        "description": "TC-NLP-001: the NLP TOC names the product and component and lists the activities",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpToc"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_2",
+        "description": "TC-NLP-016: vertical TOC - numbered unit, lesson, numbered activities; collapse / expand; open + close an activity",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpToc"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_3",
+        "description": "TC-NLP-003: Exercise 1 - choose 'is doing', Check",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.frame1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_4",
+        "description": "TC-NLP-017: exit without finishing - in progress in the TOC; relaunch restores Exercise 1",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.relaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_5",
+        "description": "TC-NLP-003/004: Next - Exercise 2",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.frame2"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_5",
+        "description": "TC-NLP-004: Next - Exercise 3 (four dropdowns)",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.frame3"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_5",
+        "description": "TC-NLP-004: Next - Exercise 4 (four dropdowns)",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.frame4"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_6",
+        "description": "TC-NLP-004: result - 'You scored 4 out of 4'",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpScorable.result"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_7",
+        "description": "TC-NLP-005: Next activity - flashcards paged to the NEXT ACTIVITY bridge",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpFlashcards"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_8",
+        "description": "TC-NLP-006: PS submitted - 'Submitted' badge",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpPS"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_9",
+        "description": "TC-NLP-007: Close Activity, then the Cambridge One Home logo - dashboard with profile menu",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpExit"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite11": {
+    "Name": "TC-NLP-021/022 setup - Teacher groups the run's two learners (mutates the run's own class)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_CGRP_TC_1",
+        "description": "Create the run's group with learners A and B",
+        "testFile": "./test/ExperienceApp/classGroups.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroup"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite12": {
+    "Name": "TC-NLP-019, 020, 021, 022 - Learner A: HTML and PDF activities; comments on the Collaborative Task and submits the Group PS for the group",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "Open Projects",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpRelaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_13",
+        "description": "TC-NLP-019: HTML activity - renders, completes after a short dwell, no submit",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpHtml"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_14",
+        "description": "TC-NLP-020: PDF activity - download page (never downloaded), marked completed",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpPdf"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_15",
+        "description": "TC-NLP-021: the group's Collaborative Task - post a comment",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpCollab.learnerA"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_18",
+        "description": "TC-NLP-022: submit the Group PS on behalf of the group",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupPs"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite13": {
+    "Name": "TC-NLP-021/022 - Learner B sees A's comment and adds one; sees the group's submitted Group PS",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "Open Projects",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpRelaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_16",
+        "description": "TC-NLP-021: A's comment is visible; B posts",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpCollab.learnerB"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_19",
+        "description": "TC-NLP-022: the group's submission, read-only",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupPs"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite14": {
+    "Name": "TC-NLP-012, 021 - Teacher previews Projects from the class Materials tab; comments on the group's Collaborative Task",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Open the Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NLPP_TC_10",
+        "description": "TC-NLP-012: Materials - Projects opens the NLP preview; an activity opens and closes",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.teacherNlp"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_17",
+        "description": "TC-NLP-021: Select group - both learners' comments visible; the teacher comments",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpCollab.teacher"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite15": {
+    "Name": "TC-NLP-013 - Teacher opens Projects inside Manage student access > Create access rule (NO rule is created)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_CMAT_TC_1",
+        "description": "Open the Materials tab",
+        "testFile": "./test/ExperienceApp/classMaterials.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_MSAC_TC_1",
+        "description": "TC-NLP-013: rule-creation mode opens Projects with its TOC; Continue is never clicked",
+        "testFile": "./test/ExperienceApp/manageStudentAccess.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.teacherNlp"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite16": {
+    "Name": "TC-NLP-014 - Teacher previews Projects from My library (read-only)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NLPP_TC_11",
+        "description": "TC-NLP-014: My library - product - View details - Projects opens the NLP preview",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 240000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.teacherNlp"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite17": {
+    "Name": "TC-NLP-015 - School admin (prod, MQA Sierra School) previews Projects from Library > See materials (read-only)",
+    "Role": "Admin",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the school-admin e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.adminLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the school-admin password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.adminLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_MRPT_TC_201",
+        "description": "Log in as the single-school admin and confirm the school key (MQA-ABC-DEF)",
+        "testFile": "./test/ExperienceApp/schoolReportsCreate.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.adminLibrary"
+          }
+        ]
+      },
+      {
+        "id": "TST_LIBR_TC_101",
+        "description": "Open the Library tab",
+        "testFile": "./test/ExperienceApp/schoolLibrary.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.adminLibrary"
+          }
+        ]
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_NLPP_TC_12",
+        "description": "TC-NLP-015: Library - School licence shown - search - See materials - Projects opens the NLP preview",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.adminNlp"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite18": {
+    "Name": "TC-NLP-008 (after the preview suites: submissions reach the queue after ~4-7 min) - Teacher marks the learner's Projects PS (70, Good) - mutates the run's own data",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_MRKQ_TC_1",
+        "description": "TC-NLP-008: both submissions are in the queue; open the learner's Projects PS",
+        "testFile": "./test/ExperienceApp/markingQueue.test.js",
+        "timeout": 900000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpMarking"
+          }
+        ]
+      },
+      {
+        "id": "TST_MRKQ_TC_2",
+        "description": "TC-NLP-008: mark 70 + Good - one submission left",
+        "testFile": "./test/ExperienceApp/markingQueue.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpMarking"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite19": {
+    "Name": "TC-NLP-022 - Teacher marks the Group PS once for the whole group (90, Well Done) - mutates the run's own data",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_MRKQ_TC_1",
+        "description": "TC-NLP-022: open the GROUP's Group PS submission",
+        "testFile": "./test/ExperienceApp/markingQueue.test.js",
+        "timeout": 900000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupMarking"
+          }
+        ]
+      },
+      {
+        "id": "TST_MRKQ_TC_2",
+        "description": "TC-NLP-022: mark 90 + Well Done once for the group - queue empty (the counter can lag: re-read up to 20 min)",
+        "testFile": "./test/ExperienceApp/markingQueue.test.js",
+        "timeout": 1500000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupMarking"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite20": {
+    "Name": "TC-NLP-010, 022 - Teacher sees class, learner A and learner B analytics for Projects (read-only)",
+    "Role": "Teacher",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's teacher e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the run's teacher password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.teacherLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_11",
+        "description": "Open the run's class by name",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": [
+              "C1.invite.className"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_3",
+        "description": "TC-NLP-010: Class data - class and learner A figures (waits for the summary)",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 720000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_3",
+        "description": "TC-NLP-022: Class data - learner B's figures carry the group's mark",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 720000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgressTeacherB"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_7",
+        "description": "TC-NLP-010: Show progress details - learner A's Projects figures",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_7",
+        "description": "TC-NLP-022: Show progress details - learner B's Projects figures (the group mark)",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgressTeacherB"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_4",
+        "description": "TC-NLP-010: teacher per-activity view of learner A's Projects",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite21": {
+    "Name": "TC-NLP-022 - Learner B sees the group's mark and the feedback notification",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLoginB"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "Open Projects",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpRelaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_20",
+        "description": "TC-NLP-022: the Group PS shows the group's mark 90 and 'Well Done'",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupPsMarked"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_9",
+        "description": "Back to the dashboard",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpExit"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_5",
+        "description": "TC-NLP-022: bell - New feedback on the Group PS shows 90 and Well Done",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgressB"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite22": {
+    "Name": "TC-NLP-009, 021, 022 - Learner A: everyone's comments, the group's mark, own analytics and feedback (runs last: summaries lag)",
+    "Role": "Student",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Open the login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Type the run's learner e-mail",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Type the learner password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/learningPathData.json",
+            "jsonPath": "C1.learnerLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Log in",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASH_TC_12",
+        "description": "Close the guided tour if shown",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_DASH_TC_17",
+        "description": "Open Projects",
+        "testFile": "./test/ExperienceApp/dashboard.test.js",
+        "timeout": 360000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpRelaunch"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_16",
+        "description": "TC-NLP-021: B's and the teacher's comments are visible to A",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpCollab.learnerAback"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_20",
+        "description": "TC-NLP-022: the Group PS shows the group's mark to A as well",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpGroupPsMarked"
+          }
+        ]
+      },
+      {
+        "id": "TST_NLPP_TC_9",
+        "description": "Back to the dashboard",
+        "testFile": "./test/ExperienceApp/newLearningPath.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpExit"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_1",
+        "description": "TC-NLP-009: My progress - summary and Projects figures (waits for the summary)",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 720000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_6",
+        "description": "TC-NLP-009: per-activity Projects rows after marking",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      },
+      {
+        "id": "TST_PROG_TC_5",
+        "description": "TC-NLP-009: bell - New feedback on the PS shows 70 and Good",
+        "testFile": "./test/ExperienceApp/progress.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/newLearningPathData.json",
+            "jsonPath": "C1.nlpProgress"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

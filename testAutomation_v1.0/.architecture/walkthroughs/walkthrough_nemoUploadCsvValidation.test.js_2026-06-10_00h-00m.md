@@ -68,7 +68,7 @@ Full automation of 10 manual test cases from NEMO-24306 into the WebDriverIO fra
 
 ### 9. `testResources/testcaseData/ExperienceApp/thor/logindata.json`
 - **Type:** Modified
-- **What:** Added `schoolAdmin` user entry (`testt1@mailsac.com` / `Compro11`, role: school-admin, school: MQA Sierra School).
+- **What:** Added `schoolAdmin` user entry (`testt1@mailsac.com` / `<redacted — `{{env.C1_THOR_SCHOOLADMIN_PASSWORD}}`, ADR-025>`, role: school-admin, school: MQA Sierra School).
 - **Why:** School admin credentials needed for NEMO-24306 execution file login flow.
 
 ### 10. `pages/ExperienceApp/login.page.js`

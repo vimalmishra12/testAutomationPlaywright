@@ -99,8 +99,9 @@ Adding a test = test-file change **and** TC-repo entry.
 
 ### 8. Protected files need explicit confirmation
 `.mocharc.js`, `playwright.setup.js`, `run.js`, `env.conf.js`, `baseActionLibrary.js`,
-`baseAssertionLibrary.js`, `testrunner.js`, `specGenerator.js`, `launchUrl.js`.
-JSON (selectors / data / execution / TC repo) is NOT protected. **AGENTS.md holds the
+`baseAssertionLibrary.js`, `testrunner.js`, `specGenerator.js`, `launchUrl.js`, `package.json`
+(every npm script and dependency change — Phase 2/3 scripts included).
+Other JSON (selectors / data / execution / TC repo) is NOT protected. **AGENTS.md holds the
 authoritative list + the exact confirmation format.**
 *Depth:* system.md "Protected Files"; AGENTS.md.
 

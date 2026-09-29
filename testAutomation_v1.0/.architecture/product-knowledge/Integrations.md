@@ -31,11 +31,11 @@ and the Cambridge One teacher dashboard.
 
 ### Credentials & test data (Thor)
 
-- Login user (LTI tests): `BB.login.ltiTeacher` → `thornodeepltiteacher / Compro11`
+- Login user (LTI tests): `BB.login.ltiTeacher` → `thornodeepltiteacher` (password: `{{env.BB_THOR_LTITEACHER_PASSWORD}}` — real value in `.env` / CI, ADR-025)
   - **Always use `ltiTeacher` for IP1 and IP2.** Using a different account causes a timeout at
     `TST_BBIP1_TC_1` because the account lacks LTI entitlements to see the Content Market / LTI tool.
-- Deeplink login users (IP3/IP4): `BB.login.ltiDeeplinkTeacher` → `thortestltiteacher / Compro11`
-  (teacher), `BB.login.ltiStudent` → `thortestltistudent / Compro11` (student).
+- Deeplink login users (IP3/IP4): `BB.login.ltiDeeplinkTeacher` → `thortestltiteacher` (password `{{env.BB_THOR_LTIDEEPLINKTEACHER_PASSWORD}}`)
+  (teacher), `BB.login.ltiStudent` → `thortestltistudent` (password `{{env.BB_THOR_LTISTUDENT_PASSWORD}}`) (student).
 - Course: `testcourse_2` → data key `BB.course.testautocourse`; deeplink course key
   `BB.course.deeplinkCourse`.
 - Deeplink activities: `BB.deeplink.pe` / `BB.deeplink.ebook` (deeplink item names, e.g.
