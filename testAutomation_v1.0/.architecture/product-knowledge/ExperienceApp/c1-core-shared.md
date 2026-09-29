@@ -140,9 +140,9 @@ Fixed data used as-is from SOURCE: prod school **MQA Sierra School** `MQA-ABC-DE
 | NPM Script | Execution File | Suites / Focus |
 |---|---|---|
 | `npm run ebookE2EstudentTest_thor` | `ebookE2EstudentTest.json` | 8 student suites / 127 steps: TOC, the full notes battery (42 steps, 32 of them `TST_NOTE_*`), highlighter & drawing, timer, next/previous with the pagination teardown, show/hide selection, hotlinks |
-| `npm run ebookE2EteacherTest_thor` | `ebookE2EteacherTest.json` | 6 teacher suites: Class 1RB materials & eBook, Class 2RB materials & eBook, Resource Banks 1 & 2, Presentation Plus launch, and Suite 6 Create Assignment |
+| `npm run ebookE2EteacherTest_thor` | `ebookE2EteacherTest.json` | 7 teacher suites: Class 1RB materials & eBook, Class 2RB materials & eBook, Resource Banks 1 & 2, Presentation Plus launch, Suite 6 Create Assignment, and Suite 7 PPlus book-to-book page mapping (`TST_EMAP_TC_1/2/6`, setup/teardown `TC_5`, own re-login block per scenario) |
 | `npm run ebookAccessibilityTest_thor` | `ebookAccessibilityTest.json` | Single-login 35-step accessibility run: keyboard focus traversal pages 22/24/26/28 (`TST_KBOA_TC_1..19`), then continuous toolbar traversal page 26 (`TST_EBTF_TC_1..16`) |
 | `npm run visualAcceptance_ebookAccessibility_thor` | `ebookAccessibilityTest.json` | Same file in the visual lane (`--visual=novus --skipAssertion=true`). Baselines only the 16 `TST_EBTF_TC_*` steps; the 19 keyboard steps stay `visualTest: false` and are skipped by the engine |
 | `npm run eBookHotLinkTest_thor` | `player.json` | Media player hot-link playback |
-| `npm run eBookMappingTest_Thor` | `ebookMappingTest.json` | 3 teacher suites (own login each) — Presentation Plus book-to-book page mapping: Book 1 ii → Book 2 ii and back to the Cover; Book 2 → Book 3 ii and back to the Book 2 Cover; Book 3 ii → Book 1 ii (`TST_EMAP_TC_1..2, 6`, setup/teardown `TC_5`) |
+| ~~`npm run eBookMappingTest_Thor`~~ — retired 2026-09-28 | `ebookMappingTest.json` (frozen archive on disk; script kept in `package_copyDND.json`) | 3 teacher suites — Presentation Plus book-to-book page mapping. **Merged into `ebookE2EteacherTest_thor` Suite7** (`TST_EMAP_TC_1..2, 6`, setup/teardown `TC_5`) |
 
