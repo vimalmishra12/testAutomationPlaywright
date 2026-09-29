@@ -70,7 +70,7 @@ or changing a skill's name or description).
 - `c1-test-authoring` — writing/editing tests, page objects, selectors,
   execution files, running/verifying tests, adding an appType.
 - `c1-environment-test-replicator` — porting/replicating a test to another
-  environment (thor → qa/stage/prod) and fixing environment-specific failures.
+  environment (thor → qa / rel / production; "stage" means rel) and fixing environment-specific failures.
 
 ### Pick the skill yourself — people here never name one
 

@@ -3,13 +3,13 @@ name: c1-environment-test-replicator
 description: >
   Replicates a test suite from one environment to another (or multiple environments) in the C1 test automation framework.
   Use this skill whenever the user wants to copy or replicate a test to another environment, port a test from thor to qa,
-  stage, or production, run tests after replication, fix environment-specific failures, update selectors or test data
-  for a new environment. This is the REPLICATION skill — use it when the test ALREADY EXISTS and must be
-  brought up in another environment (to "automate"/"run" an existing test in qa, stage, or prod). If instead
+  rel, or production ("stage" means rel), run tests after replication, fix environment-specific failures, update
+  selectors or test data for a new environment. This is the REPLICATION skill — use it when the test ALREADY EXISTS and
+  must be brought up in another environment (to "automate"/"run" an existing test in qa, rel, or prod). If instead
   a brand-new test must be written from scratch, use c1-test-authoring. Trigger on any mention of:
   replicate test, port test, copy test to environment, automate existing test in another env,
-  automate in qa/stage/prod (existing test), run an existing test in qa, test not working in qa,
-  test not working in stage, run test in new environment, fix test for environment.
+  automate in qa/rel/stage/prod (existing test), run an existing test in qa, test not working in qa,
+  test not working in rel or stage, run test in new environment, fix test for environment.
 ---
 
 # C1 / Builder Environment Test Replicator Skill
@@ -51,15 +51,20 @@ The skill is appType-aware. Decide `<App>` before touching any path:
    `testResources/testExecutionFiles/<App>/<sourceEnv>/<testName>.json` (appTypes today: `ExperienceApp`,
    `Builder`, `Blackboard` — the latter's exec files live under `testExecutionFiles/Integrations/Blackboard/`).
    The folder that contains it is `<App>`. If it's ambiguous or not found, **ask the user**.
-2. **Read `env.json` → the `<App>` block** for its valid environments + `testExecDir`:
-   - `ExperienceApp` → `thor`, `qa`, `rel`, `production`  (namespace `css.ComproC1`)
-   - `Builder` → `thor` only today                        (namespace `css.Builder`; 3-step cross-domain SSO login)
-   - `Blackboard` → `thor` only today (shared BB sandbox; QA/Rel/Prod TBD)  (namespaces `css.Blackboard` + `css.LTI`;
-     TWO selector files / TC repos under `Integrations/` — ADR-015; check per-app product knowledge in
-     `.architecture/product-knowledge/Integrations.md` before touching its data)
-3. **Validate the requested target env(s)** exist for `<App>` in `env.json`. If the app has no other
-   environment to replicate to (e.g. Builder = `thor` only), **STOP** and tell the user — there is
-   nothing to replicate until another env is added to that app's `env.json` block.
+2. **Read `env.json` → the `<App>` block** for its environments + `testExecDir`. **Always read the
+   live file** — do not rely on a list written here. Environment names are `thor`, `qa`, `rel` and
+   `production`; **"stage" means `rel`** (the team's name for it), so a request for "stage" targets
+   `rel`. Per-app notes:
+   - `ExperienceApp` — namespace `css.ComproC1`
+   - `Builder` — namespace `css.Builder`; 3-step cross-domain SSO login
+   - `Blackboard` — namespaces `css.Blackboard` + `css.LTI`; TWO selector files / TC repos under
+     `Integrations/` (ADR-015); check `.architecture/product-knowledge/Integrations.md` before touching
+     its data
+3. **Validate the requested target env(s)** for `<App>` in `env.json`: the environment must exist
+   **and** its `url` must be a real address. A placeholder such as `"<TBD …>"` means the environment is
+   not provisioned yet (this is the case for Blackboard `qa` / `rel` / `production` at the time of
+   writing). If the target is missing or a placeholder, **STOP** and tell the user — there is nothing
+   to replicate to until that app's `env.json` block has a real URL for it.
 
 Use `<App>` and `css.<App>` in every path/namespace below.
 
@@ -97,8 +102,9 @@ C1 varies). Read the execution file's `dataFile` references and copy **each** on
 `testcaseData/<App>/<sourceEnv>/` to `testcaseData/<App>/<targetEnv>/`.
 
 Then replace all environment-specific URLs in the copied data:
-- Read `env.json` to get the `<App>` `appUrl` for source and target environments
-- Replace every occurrence of the source `appUrl` with the target `appUrl`
+- Read `env.json` → `<App>.environments.<env>.url` for the source and target environments (the key
+  is `url`; the runner exposes it as the global `appUrl`)
+- Replace every occurrence of the source URL with the target URL
 - Example: `https://thor.cambridge.edu` → `https://qa.cambridge.edu`
 
 ### 2c. Add NPM Script to package.json
@@ -170,7 +176,9 @@ this env, skip the TC for that environment instead.
 ### Failure Type 4: Navigation Error
 **Symptoms:** `404 Not Found`, `Could not navigate to URL`
 **Root cause:** Wrong URL in `env.json` or feature path changed
-**Fix:** Update `appUrl` in `env.json` for the target environment
+**Fix:** Update the target environment's `url` in `env.json` (`<App>.environments.<targetEnv>.url`) —
+`env.json` is not protected, but it is shared by every suite of that app, so confirm the new URL with
+the user first
 
 ---
 
@@ -211,7 +219,10 @@ Ask: **"Apply these fixes? (yes / no / review each)"**
 
 After user approves:
 1. Apply all approved fixes to the relevant files
-2. Add a comment next to each fix: `// Updated for <targetEnv> environment — <reason>`
+2. Record each fix (file, JSON path, before → after, reason) for the STEP 7 walkthrough. **Do NOT
+   write a comment into the file:** these fixes are in JSON (selectors, test data, `env.json`), JSON
+   has no comments, and the framework reads it with `JSON.parse` — a `// …` line breaks the file and
+   the whole suite fails to load.
 3. Re-run: `npm run <testName>_<targetEnv>`
 4. Confirm all previously failing TCs now pass
 
@@ -246,7 +257,7 @@ feature):
 
 - **NEVER** modify protected files without explicit confirmation. The **authoritative list lives in
   AGENTS.md** (§"Protected Files") — read it there; it is not copied here, because the copy
-  went stale (it missed `.mocharc.js` and `package.json`). Note that adding an npm script in STEP 3
+  went stale (it missed `.mocharc.js` and `package.json`). Note that adding an npm script in STEP 2c
   means editing `package.json`, which is protected.
 - **NEVER** modify test case files (`.test.js`) or page object files (`.page.js`) to fix environment issues — fix selectors and data instead
 - **ALWAYS** show a preview before creating or modifying files
