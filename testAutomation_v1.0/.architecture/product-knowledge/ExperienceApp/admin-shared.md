@@ -643,7 +643,7 @@ whether a banner from `BeforeEach`'s sweep can linger onto that form.
 > `TC_20`, `TC_23` — post-date its 2026-08-14 assessment). The expected outcome is the same
 > "no candidates", but the assessment is still formally owed and those features are not closed.
 > **Update `[2026-09-28]`:** all three are now marked ⏭️ **DEFERRED by user decision** in
-> `authoring-status.md` — still not assessed.
+> `authoring-status.md` — still not assessed. (Since 2026-09-29: `status/schoolAdminAddClass.md`.)
 
 **So for a new admin screen:** cite this precedent, and argue only those TCs that end on a **form or
 modal with no live list in frame**. Everything else is a ❌ row, which per Invariant 12 means

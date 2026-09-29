@@ -9,7 +9,7 @@
 >
 > **Planning / automating onboarding? `[2026-09-24]`** The test cases are ALREADY DESIGNED — 63 TCs in
 > `test/Manual/C1App/Onboarding/` (from the team's `OnboardingApp_Test_Plan.xlsx`). **Do not redesign
-> them.** Start at `.architecture/authoring-status.md` → block `onboarding` → "NEXT BATCH" (batch order,
+> them.** Start at `.architecture/status/onboarding.md` → "Start here" (batch order,
 > the open questions to ask the user, constraints), then the `c1-test-authoring` skill. Rows marked
 > 🔴/🟡 "Manual only" in the register's "Automation Scope" column are never automated.
 

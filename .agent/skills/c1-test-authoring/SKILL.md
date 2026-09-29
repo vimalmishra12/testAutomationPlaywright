@@ -49,6 +49,11 @@ file, they win.
 7. **Per session, keep a walkthrough** under `.architecture/walkthroughs/` (see AGENTS.md §Walkthrough).
 8. **Every new TC starts `visualTest: false`.** Promotion to `true` happens ONLY in Phase 3 via the
    AGENTS.md §8 assessment + user confirmation — never during build or run/fix.
+9. **Checkpoint as you go.** The feature's status lives in `.architecture/status/<feature>.md`
+   (created when Phase 1 starts). After every major step — a Phase 1 step, a fix applied, a run
+   finished — **replace** its one `▶ Now: … · Next: …` line; never append. A session that breaks
+   mid-phase (closed, crashed, context full) then resumes from that line. Format and rules:
+   `.architecture/authoring-status.md` (the index).
 
 ---
 
@@ -67,9 +72,12 @@ and say which skill you are using.
 
 ### Step 1 — Read the status file
 
-Read `.architecture/authoring-status.md` (tiny, fixed path). It holds one PHASE STATUS block per
-in-flight test. If the request names a test that has a block, resume from its first ⬜ phase.
-Cross-check against the repo — never trust the block blindly (e.g. verify the files it claims exist).
+Each in-flight feature has its own small file, `.architecture/status/<feature>.md`; the index
+`.architecture/authoring-status.md` lists them (and the features whose Phase 3 is deferred). Read
+the file for the test the request names — look it up in the index if the name is unclear. If it
+exists, resume from its `▶ Now` line and first ⬜ phase. Cross-check against the repo — never trust
+the file blindly (e.g. verify the files it claims exist). No file = not started (Phase 1) or already
+closed (check the index and the walkthrough).
 
 ### Step 2 — Detect the phase
 
@@ -77,7 +85,7 @@ Cross-check against the repo — never trust the block blindly (e.g. verify the 
 |---|---|
 | Test files / TC-repo entries / exec file do not exist yet; user says "automate/write/add a test" | **1 — Build** |
 | Artifacts exist but no npm script or no evidence of a passing run; user says "run/fix/debug" | **2 — Run & fix** |
-| All TCs passing; status block shows Phase 3 ⬜; user says "visual" / "assess visual" | **3 — Visual** |
+| All TCs passing; status file shows Phase 3 ⬜; user says "visual" / "assess visual" | **3 — Visual** |
 
 An explicit user instruction ("do phase 2 for X") always wins over inference. If signals conflict
 or the test name is ambiguous, **ask**.
@@ -90,7 +98,7 @@ or the test name is ambiguous, **ask**.
 
 (Paths are relative to the repository root — the folder that holds `.agent/` and `testAutomation_v1.0/`.)
 Do NOT read the other phase files. Every phase file ends with an **exit checklist** that updates
-`.architecture/authoring-status.md` — completing it is part of the phase, not optional.
+the feature's `.architecture/status/<feature>.md` — completing it is part of the phase, not optional.
 **A feature is NOT done until Phase 3 is complete** (even if the outcome is "no visual candidates").
 
 ### Special case — adding a NEW application (appType)
@@ -110,4 +118,5 @@ app's first test goes through Phases 1–3 as normal.
   as an interim, to be secured) — never paste secrets into committed config.
 - ❌ Claim a test passes without showing the real run output.
 - ❌ Set `visualTest: true` outside Phase 3, or skip Phase 3 because the run is green.
-- ❌ Close a feature with its authoring-status entry still showing a ⬜ phase.
+- ❌ Close a feature with its status file still showing a ⬜ phase.
+- ❌ Append history to a status file — replace the `▶ Now` line; the story goes in the walkthrough.
