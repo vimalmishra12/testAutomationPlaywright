@@ -86,9 +86,12 @@ TC Repository (testResources/testcaseRepository/**/C1TCRepository.json)
 | TC ID prefix | `TST_<MODULE>_TC_<N>` — `<MODULE>` = short UPPERCASE code from the **page object**, not the Jira ticket | `TST_MRPT_TC_1`, `TST_BLOGI_TC_1` |
 | Selector section | `css.<App>.<camelCase>` | `css.ComproC1.manageReports`, `css.Builder.components` |
 | Execution file | `<descriptiveName>.json` | `manageReportsTest.json` |
-| NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
-| Functional NPM script | `<feature>_<env>` | `manageReportsTest_thor` |
+| NPM script (functional) | `<feature>Test_<env>` — `<feature>` in camelCase; `<env>` lower-case: `thor`, `qa`, `rel`, `prod` (LambdaTest runs: `LT`) | `manageReportsTest_thor` |
 | Visual NPM script | `visualAcceptance_<feature>_<env>` | `visualAcceptance_manageReports_thor` |
+
+> Scripts that pre-date this rule keep their names (`P1Admin*_Thor`, `eBookMappingTest_Thor`,
+> `umbrellaImageTest_NEMO-24627_thor`, `CreateEbook_*`, …) — renaming them breaks the commands
+> people and CI already use. New scripts follow the rule.
 
 > **`<MODULE>` is derived from the page object / feature, not the Jira ticket — this is the single
 > canonical TC-ID rule** (`system.md` and `manual-test-standard.md` defer to it). Agree the code
@@ -118,7 +121,7 @@ and **`Blackboard`** (LTI integration, added 2026-06-26 — see ADR-015 for its 
 | Execution files | `testResources/testExecutionFiles/<App>/<env>/` |
 | TC repository | `testResources/testcaseRepository/<App>/<App>TCRepository.json` (its `selectorFile` points at the app's selector file) |
 | `env.json` | a top-level `"<App>": { "testExecDir": …, "environments": { <env>: { "url": … } } }` block |
-| NPM script | `<Feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
+| NPM script | `<feature>Test_<env>` → `node core/runner/run.js --appType=<App> …` |
 
 **Blackboard — path and namespace convention (ADR-015):**
 The `Blackboard` appType uses an `Integrations/` sub-path and **two** selector files / TC
@@ -458,7 +461,7 @@ Visual test NPM scripts MUST follow this naming pattern:
 
 | Artifact | Convention | Example |
 |---|---|---|
-| Functional NPM script | <feature>_<env> | manageReportsTest_thor |
+| Functional NPM script | <feature>Test_<env> | manageReportsTest_thor |
 | Visual NPM script | visualAcceptance_<feature>_<env> | visualAcceptance_manageReports_thor |
 
 ---
