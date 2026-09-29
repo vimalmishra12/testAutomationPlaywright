@@ -6,9 +6,6 @@ var rootDir = process.cwd();
 // [2026-09-22] ADR-022 — run-generated test data ({{run.*}} / {{last.*}} tokens) — confirmed by user
 // Absolute from rootDir: specGenerator copies this file into test/tempRunner/, so a relative path breaks.
 var runContext = require(require("path").join(rootDir, "core", "utils", "runContext.js"));
-// [2026-09-29] ADR-024 amendment 2 — confirmed by user. Screenshot + URL at the moment ANY step fails
-// (setup hooks included), saved to disk at once and attached to a failed hook in the mochawesome report.
-var failureCapture = require(require("path").join(rootDir, "core", "utils", "failureCapture.js"));
 
 class specRunner {
   //instantiate class
@@ -471,9 +468,6 @@ class specRunner {
       console.log(
         " ERROR while executing " + testFunction + "() in " + testFile
       );
-      // [2026-09-29] ADR-024 amendment 2 — confirmed by user. Capture the page as it is at the failure,
-      // before anything moves on. Best-effort: never throws; the original error is re-thrown unchanged.
-      await failureCapture.onStepFailure({ testFile: testFile, tcId: testFunction, error: e });
       throw e;
     }
   }

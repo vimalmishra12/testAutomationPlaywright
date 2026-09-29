@@ -911,7 +911,7 @@ before any such run existed; the runs have now actually been performed.
 
 ---
 
-## ADR-024: Stakeholder Summary Report Built After the Run (built by `run.js` since amendment 2, 2026-09-29)
+## ADR-024: Stakeholder Summary Report Built After the Run (no core change)
 
 **Status:** Accepted (2026-09-24, user request — Step 1 of the report plan; core files deliberately untouched).
 
@@ -948,31 +948,6 @@ opt-in step someone has to ask for; it is run **immediately after every test exe
 exec file, any environment), as a standard part of reporting results — same footing as showing the mochawesome
 output. If a run accidentally executes more than once in one command (e.g. a shell fallback re-triggering it),
 say so when handing over the report, since only the last run's mochawesome JSON survives to feed it.
-
-**Amendment 2 (2026-09-29, user request; protected-file changes to `run.js` and `testrunner.js` confirmed by the
-user) — the runner builds the report, and every failure is captured at the moment it happens.**
-- *Why:* runs started by hand or in CI got no summary report (the "after every run" rule relied on whoever ran
-  the tests), and three one-off setup login hangs (2026-09-28/29) left no evidence — Mocha does not run
-  `afterEach` for a failed hook, so a failed setup step had no screenshot, and a stopped run loses every
-  screenshot because mochawesome writes only at the end.
-- *Report:* `run.js` runs `buildReport.js` as a child process at the end of every mochawesome run, passed or
-  failed, passing `--mochawesome`, `--env`, `--appType` and (for a single exec file) `--exec`. A report problem
-  only logs `Summary report NOT built`; it never changes the run's result or exit code. Opt out with
-  `--summaryReport=false`. CI gets it for free (GitHub Actions uploads `output/reports/`).
-- *Failure capture:* `testrunner.js` `identifyTest` (the single path every failing step takes — Before /
-  BeforeEach / Test / AfterEach / After) calls `core/utils/failureCapture.js` before re-throwing the original
-  error. It captures ONLY the moment of failure (no delayed second shot — user decision): full-page
-  screenshot + URL + title + start of the visible text, written at once to
-  `output/reports/TestReports/failures/<exec>_<env>_<start>/` (kept for the last `historyKeep` runs, 30), and,
-  for a failed hook, attached to that hook in mochawesome ("Screenshot (at failure)", "Page at failure"), which
-  `buildReport.js` shows in the suite's "setup failed" block and the failure digest. A failed TEST keeps its
-  existing end-of-test screenshot (taken straight after), so nothing is attached twice. The capture is
-  best-effort (never throws, each call capped at 15 s) and restarts the running step's Mocha time limit
-  (`runner.currentRunnable.timeout(45000)`, exposed as `global.__mochaRunner` by `run.js`) so it cannot turn the
-  real error into a Mocha timeout.
-- *Not covered:* a step that exceeds its own Mocha time limit fails outside `identifyTest` (Mocha abandons it),
-  so a hook TIMEOUT still has no screenshot; a failed `After` / `AfterEach` hook is captured to disk but not
-  yet shown in the summary report.
 
 ---
 

@@ -209,32 +209,6 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
                     }
                 }
 
-                // [2026-09-29] ADR-024 amendment 2 — confirmed by user. Build the stakeholder summary report
-                // after EVERY run, passed or failed (it used to be a manual step). A separate process, so a
-                // report problem can never change this run's result or exit code — it only logs.
-                // Opt out with --summaryReport=false. Needs the mochawesome JSON, its only test input.
-                if (wantMochawesome && String(global.argv && global.argv.summaryReport).toLowerCase() !== "false") {
-                    try {
-                        const { spawnSync } = require("child_process");
-                        const execArg = String((global.argv && global.argv.testExecFile) || "");
-                        const reportArgs = [
-                            path.join(process.cwd(), "tooling", "report", "buildReport.js"),
-                            "--mochawesome=" + path.join(process.cwd(), global.reportOutputDir, "mochawesome", "report.json"),
-                            "--env=" + global.argv.testEnv,
-                            "--appType=" + global.argv.appType
-                        ];
-                        // One exec file → name it; several (comma list) → buildReport names the report after the first.
-                        if (execArg && execArg.indexOf(",") === -1) reportArgs.push("--exec=" + path.basename(execArg));
-                        const built = spawnSync(process.execPath, reportArgs, { cwd: process.cwd(), stdio: "inherit", timeout: 180000 });
-                        if (built.error || built.status !== 0) {
-                            console.log("[run] Summary report NOT built (" + (built.error ? built.error.message : "exit " + built.status) +
-                                ") — build it by hand: node tooling/report/buildReport.js");
-                        }
-                    } catch (e) {
-                        console.log("[run] Summary report skipped: " + e.message);
-                    }
-                }
-
                 if (global.__isCloud) {
                     try {
                         const { getLatestBuildId } = require(path.join(process.cwd(), "core/utils/lambdatest/getBuildId.js"));
@@ -253,11 +227,6 @@ const { mochaHooks } = require(path.join(process.cwd(), "core/runner/playwright.
             })
             .finally(() => process.exit(failures ? 1 : 0));
     });
-
-    // [2026-09-29] ADR-024 amendment 2 — confirmed by user. core/utils/failureCapture.js reads the
-    // running step (runner.currentRunnable) to restart its time limit during the capture and to attach
-    // a failed setup hook's screenshot to that hook in the mochawesome report.
-    global.__mochaRunner = runner;
 
     // Compact end-of-run summary (handy when the allure reporter is active).
     runner.on("end", () => {
