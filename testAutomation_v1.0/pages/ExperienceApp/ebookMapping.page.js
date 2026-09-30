@@ -18,6 +18,7 @@ module.exports = {
   selectedBookTitle: selectorFile.css.ComproC1.ebookMapping.selectedBookTitle,
   bookItemByTitle: selectorFile.css.ComproC1.ebookMapping.bookItemByTitle,
   pageLabel: selectorFile.css.ComproC1.ebookMapping.pageLabel,
+  currentPage: selectorFile.css.ComproC1.ebookMapping.currentPage,
   nextPageBtn: selectorFile.css.ComproC1.ebookMapping.nextPageBtn,
   previousPageBtn: selectorFile.css.ComproC1.ebookMapping.previousPageBtn,
 
@@ -54,11 +55,47 @@ module.exports = {
     var url = await browser.getUrl();
     var bookMatch = /\/studentbook\/([^/?#]+)/.exec(url);
     var pageMatch = /[?&]page=([^&#]*)/.exec(url);
+    var urlPageParam = pageMatch ? decodeURIComponent(pageMatch[1]) : null;
+
+    // In Desktop Electron or when URL query parameter is not updated by the SPA page turner:
+    // Derives pageParam from the visible page label or current-page span
+    // Button markup: <button id="pageNavigateButton"><span class="current-page"> - </span><span class="total-page">/ 160</span></button>
+    // Cover label is "-" -> pageParam is "cover"
+    // Other labels (e.g. "ii-iii / 160", "ii", "xvi-1", "2-3") -> pageParam is the current page ("ii", "xvi-1", "2", etc.)
+    var curPageText = "";
+    try {
+      if (this.currentPage && (await action.isDisplayed(this.currentPage)) === true) {
+        curPageText = String(await action.getText(this.currentPage)).replace(/\s+/g, " ").trim();
+      }
+    } catch (_) {}
+    if (!curPageText && label) {
+      curPageText = label.split("/")[0].trim();
+    }
+
+    var pageParam = urlPageParam;
+    var isCover = (curPageText === "-" || curPageText.startsWith("-") || (label && label.startsWith("-")));
+    if (!isCover && urlPageParam === "cover" && (!curPageText || curPageText === "")) {
+      isCover = true;
+    }
+    if (isCover) {
+      pageParam = "cover";
+    } else if (curPageText) {
+      // If current-page is e.g. "ii-iii" or "2-3" or "xvi-1"
+      var firstPart = curPageText.split("-")[0].trim();
+      // If expectedLabelStart is provided and curPageText starts with it (e.g. "ii")
+      if (expectedLabelStart && curPageText.startsWith(expectedLabelStart)) {
+        pageParam = expectedLabelStart;
+      } else {
+        pageParam = firstPart || curPageText;
+      }
+    }
+
     return {
       bookTitle: String(await action.getText(this.selectedBookTitle)).trim(),
       bookId: bookMatch ? bookMatch[1] : null,
-      pageParam: pageMatch ? decodeURIComponent(pageMatch[1]) : null,
+      pageParam: pageParam,
       pageLabel: label,
+      currentPage: curPageText,
     };
   },
 
@@ -68,7 +105,11 @@ module.exports = {
    */
   _turnPage: async function (buttonSelector) {
     await logger.logInto(await stackTrace.get());
-    var before = (await this.getData_readerState()).pageParam;
+    var stateBefore = await this.getData_readerState();
+    var before = stateBefore.pageParam;
+    var labelBefore = stateBefore.pageLabel;
+    var curBefore = stateBefore.currentPage;
+
     // Deliberate pause before the click — the reader is still settling after a book/page change
     await browser.pause(this.PRE_CLICK_PAUSE);
     var res = await action.click(buttonSelector);
@@ -77,13 +118,19 @@ module.exports = {
       return { pageStatus: false, pageBefore: before, pageAfter: before };
     }
     var after = before;
+    var labelAfter = labelBefore;
+    var curAfter = curBefore;
     var waited = 0;
-    while (after === before && waited < this.READER_UPDATE_TIMEOUT) {
+    while ((after === before && labelAfter === labelBefore && curAfter === curBefore) && waited < this.READER_UPDATE_TIMEOUT) {
       await browser.pause(this.POLL_MS);
       waited += this.POLL_MS;
-      after = (await this.getData_readerState()).pageParam;
+      var stateAfter = await this.getData_readerState();
+      after = stateAfter.pageParam;
+      labelAfter = stateAfter.pageLabel;
+      curAfter = stateAfter.currentPage;
     }
-    return { pageStatus: after !== before, pageBefore: before, pageAfter: after };
+    var changed = (after !== before) || (labelAfter !== labelBefore) || (curAfter !== curBefore);
+    return { pageStatus: changed, pageBefore: before, pageAfter: after, labelBefore: labelBefore, labelAfter: labelAfter };
   },
 
   click_nextPage: async function () {

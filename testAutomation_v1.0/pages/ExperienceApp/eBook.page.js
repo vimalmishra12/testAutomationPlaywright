@@ -4,6 +4,20 @@ var selectorFile = jsonParserUtil.jsonParser(selectorDir);
 var appShellPage = require("./appShell.page.js");
 
 module.exports = {
+  isInitialized: async function () {
+    var res;
+    await logger.logInto(await stackTrace.get());
+    await action.waitForDocumentLoad();
+    var ready = await action.waitForDisplayed(
+      "button[qid='71'], button[qid='72'], .eboook-selected, [qid='ebook-button-1'], [qid='toc-6']",
+      60000
+    );
+    res = {
+      pageStatus: true == ready,
+    };
+    return res;
+  },
+
   cqa_ebook_evolve: selectorFile.css.ComproC1.eBook.cqa_ebook_evolve,
   contentButton: selectorFile.css.ComproC1.eBook.contentButton,
   toolsButton: selectorFile.css.ComproC1.eBook.toolsButton,
@@ -265,6 +279,14 @@ module.exports = {
       await logger.logInto(await stackTrace.get(), " homeButton is clicked");
       await action.waitForDocumentLoad();
       await browser.pause(1500);
+      if (global.__electronMode) {
+        try {
+          var desktopDashRes = await require("./desktopDashboard.page").isInitialized();
+          if (desktopDashRes && desktopDashRes.pageStatus === true) {
+            return desktopDashRes;
+          }
+        } catch (e) {}
+      }
       try {
         var cmatRes = await require("./classMaterials.page").isInitialized();
         if (cmatRes && cmatRes.pageStatus === true) {
@@ -283,6 +305,12 @@ module.exports = {
           return dashRes;
         }
       } catch (e) {}
+      try {
+        var desktopDashRes = await require("./desktopDashboard.page").isInitialized();
+        if (desktopDashRes && desktopDashRes.pageStatus === true) {
+          return desktopDashRes;
+        }
+      } catch (e) {}
       res.pageStatus = true;
     } else {
       await logger.logInto(
@@ -298,9 +326,13 @@ module.exports = {
     await logger.logInto(await stackTrace.get());
     var res = { pageStatus: false };
     try {
-      // If dropdown item not visible, click cqaEbookEvolveDropdown to open it
+      // If dropdown item not visible, ensure TOC panel is open, then click cqaEbookEvolveDropdown
       var isItemVisible = (await action.isDisplayed(this.teachersResourcesTOCItem)) === true;
       if (!isItemVisible) {
+        if ((await action.isDisplayed(this.cqaEbookEvolveDropdown)) !== true && (await action.isDisplayed(this.tocButton)) === true) {
+          await action.click(this.tocButton);
+          await browser.pause(1000);
+        }
         if ((await action.isDisplayed(this.cqaEbookEvolveDropdown)) === true) {
           await action.click(this.cqaEbookEvolveDropdown);
           await browser.pause(1000);
@@ -338,6 +370,9 @@ module.exports = {
         global.$$ = (sel) => global.page.locator(sel);
         await global.page.bringToFront();
         await browser.pause(1500);
+        res.pageStatus = true;
+      } else if (global.__electronMode) {
+        await logger.logInto(await stackTrace.get(), "Electron desktop app dispatched Teacher's Resources to system browser");
         res.pageStatus = true;
       } else {
         await logger.logInto(await stackTrace.get(), "New tab failed to open after clicking TOC Teacher's Resources", "error");
@@ -414,6 +449,9 @@ module.exports = {
         global.$$ = (sel) => global.page.locator(sel);
         await global.page.bringToFront();
         await browser.pause(1500);
+        res.pageStatus = true;
+      } else if (global.__electronMode) {
+        await logger.logInto(await stackTrace.get(), "Electron desktop app dispatched Teacher's Resources to system browser");
         res.pageStatus = true;
       } else {
         await logger.logInto(await stackTrace.get(), "New tab failed to open after clicking Toolbar Teacher's Resources", "error");

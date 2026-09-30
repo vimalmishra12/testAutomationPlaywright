@@ -4449,6 +4449,53 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "Electron Session",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/electronSession.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json",
+      "testcase": [
+        {
+          "id": "PROTO_SESSION_RETAINED",
+          "description": "Close and reopen the Electron desktop app and verify the login session is retained without re-authenticating",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "Desktop Dashboard",
+      "moduleId": "",
+      "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+      "testCaseRepo": "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json",
+      "_comment": "[2026-09-29] Desktop (Electron) learner dashboard. Not visual candidates: they assert class/product identity and navigation, and their data is account-specific (AGENTS.md Rule A - environment-variant / dynamic data).",
+      "testcase": [
+        {
+          "id": "TST_DASHD_TC_1",
+          "description": "Locate the required class by name on the desktop dashboard and open it if collapsed",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASHD_TC_2",
+          "description": "Verify the required product is listed under the located class",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASHD_TC_3",
+          "description": "Open the required product from that class and wait for the reader to initialise",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_DASHD_TC_4",
+          "description": "Verify the reader is open on exactly the expected class product (per-suite gate)",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }

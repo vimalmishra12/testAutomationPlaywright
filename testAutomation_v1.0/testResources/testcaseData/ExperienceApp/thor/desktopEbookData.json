@@ -1,0 +1,76 @@
+{
+  "C1": {
+    "_comment_desktopEbook": "[2026-09-29] Fixtures for the Cambridge One DESKTOP (Electron) student eBook suite. Same Thor test account as C1.login.user.validStudent1 / electronProtoUser. className + bundleName + productName were captured live from the desktop learner dashboard over CDP on 2026-09-29, and the same product is launched by every suite so one class and one product are used throughout the run. bundleName is the class's product bundle (p.bundle-title) and is the segment the reader URL asserts; productName is the material tile's visible title (span.product-title-text). The books are the same two titles the web suite drives from the reader's course-material dropdown (ebookData.json -> C1.ebook.dropdownBook).",
+    "desktopEbook": {
+      "user": {
+        "email": "CQA_AUTO_STU_101@mailsac.com",
+        "password": "{{env.C1_THOR_VALIDSTUDENT1_PASSWORD}}",
+        "role": "student",
+        "greetingName": "CQA_AUTO_STU_101",
+        "className": "CQA_AUTO_TEST_DND",
+        "bundleName": "vm_automation_testing_108",
+        "productName": "vm_automation_ebook_latest_01",
+        "secondProductInSameClass": "vm_automation_ebook_latest_02",
+        "notes": "Test Note1",
+        "info": {}
+      },
+      "teacher": {
+        "email": "CQA_AUTO_TEA_101@mailsac.com",
+        "password": "{{env.C1_THOR_VALIDTEACHER_PASSWORD}}",
+        "role": "teacher",
+        "greetingName": "CQA_AUTO_TEA_101",
+        "className": "CQA_AUTO_TEST_DND_1RB",
+        "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+        "productName": "vm_automation_second_ebook_1rb",
+        "selectedEbookTitle": "vm_automation_second_ebook_1rb",
+        "pplusDropdownBook": {
+          "ebookOneName": "vm_automation_first_ebook_pplus_1rb",
+          "ebookTwoName": "vm_automation_second_ebook_pplus_1rb"
+        },
+        "notes": "Test Note1",
+        "info": {}
+      },
+      "teacher_1rb": {
+        "email": "CQA_AUTO_TEA_101@mailsac.com",
+        "password": "{{env.C1_THOR_VALIDTEACHER_PASSWORD}}",
+        "role": "teacher",
+        "greetingName": "CQA_AUTO_TEA_101",
+        "className": "CQA_AUTO_TEST_DND_1RB",
+        "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+        "productName": "vm_automation_second_ebook_1rb",
+        "selectedEbookTitle": "vm_automation_second_ebook_1rb",
+        "notes": "Test Note1",
+        "info": {}
+      },
+      "teacher_2rb": {
+        "email": "CQA_AUTO_TEA_101@mailsac.com",
+        "password": "{{env.C1_THOR_VALIDTEACHER_PASSWORD}}",
+        "role": "teacher",
+        "greetingName": "CQA_AUTO_TEA_101",
+        "className": "CQA_AUTO_TEST_DND_2RB",
+        "bundleName": "EBOOK AUTOMATION 2RB TEST DATA",
+        "productName": "vm_automation_second_ebook_2rb",
+        "selectedEbookTitle": "vm_automation_second_ebook_2rb",
+        "notes": "Test Note1",
+        "info": {}
+      },
+      "teacher_pplus": {
+        "email": "CQA_AUTO_TEA_101@mailsac.com",
+        "password": "{{env.C1_THOR_VALIDTEACHER_PASSWORD}}",
+        "role": "teacher",
+        "greetingName": "CQA_AUTO_TEA_101",
+        "className": "CQA_AUTO_TEST_DND_1RB",
+        "bundleName": "EBOOK AUTOMATION 1RB TEST DATA",
+        "productName": "Presentation Plus",
+        "selectedEbookTitle": "Presentation Plus",
+        "pplusDropdownBook": {
+          "ebookOneName": "vm_automation_first_ebook_pplus_1rb",
+          "ebookTwoName": "vm_automation_second_ebook_pplus_1rb",
+          "ebookThreeName": "vm_automation_Third_ebook_pplus_1rb dt"
+        },
+        "notes": "Test Note1",
+        "info": {}
+      }
+    }
+  }
+}

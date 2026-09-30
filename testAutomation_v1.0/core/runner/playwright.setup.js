@@ -199,6 +199,9 @@ global.createFreshContext = async function createFreshContext() {
     if (global.__electronMode) {
         // [2026-09-29] Confirmed by user. In Electron CDP mode, browser context is owned
         // by the running Electron app. Re-bind global.page to the active, open window.
+        if (global.closeAllDevTools) {
+            await global.closeAllDevTools(global.__pwContext);
+        }
         const pages = (global.__pwContext && global.__pwContext.pages()) || [];
         const openPages = pages.filter(p => !p.isClosed() && !p.url().startsWith("devtools://"));
         global.page = openPages[openPages.length - 1] || pages[0];
@@ -329,8 +332,9 @@ global.stopAndSaveTrace = async function stopAndSaveTrace(name) {
  * so they stay correct across per-suite context swaps (D4). Real Playwright Browser
  * methods (newContext/close/version) are left untouched.
  */
-function attachBrowserCompat() {
-    const b = global.browser;
+function attachBrowserCompat(targetBrowser) {
+    const b = targetBrowser || global.browser;
+    if (!b) return;
     // Navigation timeout: slow / collaborative apps (e.g. Builder) can take well over Playwright's
     // 30s default to finish "load". Use a generous 90s so a slow page load doesn't fail navigation.
     const NAV_TIMEOUT = 90000;
@@ -360,6 +364,80 @@ function attachBrowserCompat() {
         }
     };
 }
+global.attachBrowserCompat = attachBrowserCompat;
+
+/**
+ * Closes any open DevTools pages in the given or active Electron context.
+ */
+async function closeAllDevTools(ctx) {
+    const context = ctx || global.__pwContext;
+    if (!context || !context.pages) return;
+    const pages = context.pages();
+    for (const p of pages) {
+        try {
+            if (!p.isClosed() && p.url().startsWith("devtools://")) {
+                console.log("[pw-setup] Automatically closing DevTools window...");
+                await p.close().catch(() => {});
+            }
+        } catch (_) {}
+    }
+}
+global.closeAllDevTools = closeAllDevTools;
+
+/**
+ * Configures an Electron context to automatically close DevTools and track active windows.
+ */
+function setupElectronContext(ctx) {
+    if (!ctx) return;
+    const pages = ctx.pages ? ctx.pages() : [];
+    for (const p of pages) {
+        try {
+            if (!p.isClosed() && p.url().startsWith("devtools://")) {
+                console.log("[pw-setup] Automatically closing DevTools window...");
+                p.close().catch(() => {});
+            }
+        } catch (_) {}
+    }
+
+    function rebindActivePage() {
+        const pages = (ctx.pages ? ctx.pages() : []).filter(p => !p.isClosed() && !p.url().startsWith("devtools://"));
+        if (pages.length > 0) {
+            global.page = pages[pages.length - 1];
+            global.$ = (sel) => global.page.locator(sel);
+            global.$$ = (sel) => global.page.locator(sel);
+        }
+    }
+
+    ctx.on("page", async (newPage) => {
+        if (newPage.url().startsWith("devtools://")) {
+            console.log("[pw-setup] Automatically closing newly spawned DevTools window...");
+            await newPage.close().catch(() => {});
+            rebindActivePage();
+            return;
+        }
+
+        newPage.on("framenavigated", async () => {
+            if (newPage.url().startsWith("devtools://") && !newPage.isClosed()) {
+                console.log("[pw-setup] Automatically closing navigated DevTools window...");
+                await newPage.close().catch(() => {});
+                rebindActivePage();
+            }
+        });
+
+        newPage.on("close", () => {
+            rebindActivePage();
+        });
+
+        // Only switch active global.page if it's not a devtools window
+        if (!newPage.url().startsWith("devtools://")) {
+            console.log(`[pw-setup] Electron opened new window: ${newPage.url()}`);
+            global.page = newPage;
+            global.$ = (sel) => global.page.locator(sel);
+            global.$$ = (sel) => global.page.locator(sel);
+        }
+    });
+}
+global.setupElectronContext = setupElectronContext;
 
 exports.mochaHooks = {
     /**
@@ -389,71 +467,69 @@ exports.mochaHooks = {
             );
             const electronAppPath = (appConfig.electronAppPath || defaultAppPath).replace("{USERNAME}", require("os").userInfo().username);
 
-            // Pre-flight cleanup
-            try { execSync('taskkill /IM "Cambridge One Desktop App.exe" /T /F', { stdio: "ignore" }); } catch (_) {}
-            await new Promise(r => setTimeout(r, 1000));
-
-            console.log(`[pw-setup] Spawning Electron app: "${electronAppPath}" on port ${debugPort}...`);
-            global.__electronProcess = spawn(electronAppPath, [
-                `--remote-debugging-port=${debugPort}`,
-                "--no-sandbox"
-            ], {
-                detached: false,
-                windowsHide: false
-            });
-
-            // Poll CDP endpoint
             const cdpUrl = `http://127.0.0.1:${debugPort}/json/version`;
-            const deadline = Date.now() + 30000;
-            let ready = false;
-            while (Date.now() < deadline) {
-                try {
-                    await new Promise((resolve, reject) => {
-                        const req = http.get(cdpUrl, (res) => {
-                            if (res.statusCode === 200) resolve();
-                            else reject(new Error("status " + res.statusCode));
-                        });
-                        req.on("error", reject);
-                        req.setTimeout(1000, () => req.destroy());
+            let alreadyRunning = false;
+            try {
+                await new Promise((resolve, reject) => {
+                    const req = http.get(cdpUrl, (res) => {
+                        if (res.statusCode === 200) resolve();
+                        else reject(new Error("status " + res.statusCode));
                     });
-                    ready = true;
-                    break;
-                } catch (_) {
-                    await new Promise(r => setTimeout(r, 500));
-                }
+                    req.on("error", reject);
+                    req.setTimeout(1000, () => req.destroy());
+                });
+                alreadyRunning = true;
+                console.log(`[pw-setup] Electron app is already running on debug port ${debugPort}. Attaching directly...`);
+            } catch (_) {
+                alreadyRunning = false;
             }
-            if (!ready) {
-                throw new Error(`[pw-setup] Electron CDP endpoint ${cdpUrl} not ready after 30s`);
+
+            if (!alreadyRunning) {
+                // Pre-flight cleanup
+                try { execSync('taskkill /IM "Cambridge One Desktop App.exe" /T /F', { stdio: "ignore" }); } catch (_) {}
+                await new Promise(r => setTimeout(r, 1000));
+
+                console.log(`[pw-setup] Spawning Electron app: "${electronAppPath}" on port ${debugPort}...`);
+                global.__electronProcess = spawn(electronAppPath, [
+                    `--remote-debugging-port=${debugPort}`,
+                    "--no-sandbox"
+                ], {
+                    detached: false,
+                    windowsHide: false
+                });
+
+                // Poll CDP endpoint
+                const deadline = Date.now() + 30000;
+                let ready = false;
+                while (Date.now() < deadline) {
+                    try {
+                        await new Promise((resolve, reject) => {
+                            const req = http.get(cdpUrl, (res) => {
+                                if (res.statusCode === 200) resolve();
+                                else reject(new Error("status " + res.statusCode));
+                            });
+                            req.on("error", reject);
+                            req.setTimeout(1000, () => req.destroy());
+                        });
+                        ready = true;
+                        break;
+                    } catch (_) {
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+                }
+                if (!ready) {
+                    throw new Error(`[pw-setup] Electron CDP endpoint ${cdpUrl} not ready after 30s`);
+                }
             }
 
             // Connect Playwright over CDP
             global.browser = await chromium.connectOverCDP(`http://127.0.0.1:${debugPort}`, { isLocal: true });
             global.__pwContext = global.browser.contexts()[0];
+            setupElectronContext(global.__pwContext);
             const pages = global.__pwContext.pages();
             global.page = pages.find(p => !p.url().startsWith("devtools://")) || pages[0];
             global.$ = (sel) => global.page.locator(sel);
             global.$$ = (sel) => global.page.locator(sel);
-
-            // Automatically close default DevTools window if opened by the executable
-            for (const p of pages) {
-                if (p.url().startsWith("devtools://")) {
-                    console.log("[pw-setup] Automatically closing DevTools window...");
-                    await p.close().catch(() => {});
-                }
-            }
-
-            // Listen for newly opened windows in Electron
-            global.__pwContext.on("page", async (newPage) => {
-                if (newPage.url().startsWith("devtools://")) {
-                    console.log("[pw-setup] Automatically closing newly spawned DevTools window...");
-                    await newPage.close().catch(() => {});
-                    return;
-                }
-                console.log(`[pw-setup] Electron opened new window: ${newPage.url()}`);
-                global.page = newPage;
-                global.$ = (sel) => global.page.locator(sel);
-                global.$$ = (sel) => global.page.locator(sel);
-            });
 
             attachBrowserCompat();
             console.log(`[pw-setup] Electron attached successfully via CDP! App page: ${global.page ? global.page.url() : "none"}`);
@@ -498,6 +574,9 @@ exports.mochaHooks = {
      */
     beforeEach: async function () {
         global.__activeFrame = null;
+        if (global.__electronMode && global.closeAllDevTools) {
+            await global.closeAllDevTools(global.__pwContext);
+        }
         // ADR-026: start this test's evidence record (reads + checks). Root hooks run before the
         // suite-level BeforeEach, so reads made by a BeforeEach TC belong to the test they prepare.
         evidence.beginTest();

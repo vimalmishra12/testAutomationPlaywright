@@ -1,0 +1,576 @@
+{
+  "Suite_S1_1RB_eBook": {
+    "Name": "S1 - Validation of Teacher Class Materials 1RB eBook and Teacher Resources",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASHD_TC_1",
+        "description": "Locate class by name and open it if collapsed",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_2",
+        "description": "Verify product bundle is displayed under that class",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_3",
+        "description": "Click eBook component within product bundle",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_4",
+        "description": "Gate: reader is open on the expected product",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook reader page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "Validate the Table of Contents is clickable and a page launches",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_6",
+        "description": "Validate the Change Course Material dropdown shows the selected book",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher.selectedEbookTitle"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_24",
+        "description": "Open Teacher's Resources from the TOC dropdown (new tab), verify and close it",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_25",
+        "description": "Open Teacher's Resources from the toolbar dropdown (new tab), verify and close it",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Home button leaves the reader and returns to the class",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite_S2_2RB_eBook": {
+    "Name": "S2 - Validation of Teacher Class Materials 2RB eBook and Teacher Resources (Same Class & Product)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASHD_TC_1",
+        "description": "Locate class by name and open it if collapsed",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_2rb"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_2",
+        "description": "Verify product bundle is displayed under that class",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_2rb"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_3",
+        "description": "Click eBook component within product bundle",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_2rb"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_4",
+        "description": "Gate: reader is open on the expected product",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_2rb"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook reader page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "Validate the Table of Contents is clickable and a page launches",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_6",
+        "description": "Validate the Change Course Material dropdown shows the selected book",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_2rb.selectedEbookTitle"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_24",
+        "description": "Open Teacher's Resources from the TOC dropdown (new tab), verify and close it",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_25",
+        "description": "Open Teacher's Resources from the toolbar dropdown (new tab), verify and close it",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Home button leaves the reader and returns to the class",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite_S5_PresentationPlus": {
+    "Name": "S5 - Validation of Teacher Presentation Plus with eBook Features and Teacher Resources",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASHD_TC_1",
+        "description": "Locate class by name and open it if collapsed",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_2",
+        "description": "Verify product bundle is displayed under that class",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_3",
+        "description": "Click component within product bundle",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_4",
+        "description": "Gate: reader is open on the expected product",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_2",
+        "description": "Validate that the Table of Content is clickable and the page is launched",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_6",
+        "description": "Validate that Change Course material Dropdown is launched correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus.pplusDropdownBook.ebookOneName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_7",
+        "description": "Validate second eBook in dropdown is clickable and selected",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus.pplusDropdownBook.ebookTwoName"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_24",
+        "description": "Click Teacher's Resources from TOC course material dropdown, verify new tab opens and close tab",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_4",
+        "description": "Validate close button on Table of Contents",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_25",
+        "description": "Click Teacher's Resources from toolbar course material dropdown, verify new tab opens and close tab",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_17",
+        "description": "Validate that the eBook Toggle Layout button is clickable & returns single page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusViewerControls"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_22",
+        "description": "Validate that the eBook Toggle Layout button is clickable & returns double page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/classMaterialsData.json",
+            "jsonPath": "C1.classMaterials.class1RB.pplusViewerControls"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_19",
+        "description": "Validate that the eBook Fit to Width button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_18",
+        "description": "Validate that the eBook Fit to Screen button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_20",
+        "description": "Validate that the eBook Zoom In button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_21",
+        "description": "Validate that the eBook Zoom Out button is clickable",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_3",
+        "description": "Validate that the Tools button is launched",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_8",
+        "description": "Validate that the Notes pane opens correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_13",
+        "description": "Validate that blank Tools Notes pane content is as expected",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.eBook"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_1",
+        "description": "Validate the 'Add Notes' button is working as expected",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_3",
+        "description": "Add note description",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_4",
+        "description": "Validate Added notes is saved after clicking Save note button",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_9",
+        "description": "Validate user Added Notes content matches expected data",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/appLangEN.json",
+            "jsonPath": "C1.appContent.notes.teacher"
+          }
+        ]
+      },
+      {
+        "id": "TST_NOTE_TC_6",
+        "description": "Validate clicking notes menu works correctly",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_7",
+        "description": "Validate clicking 'Delete Notes' button opens confirmation modal",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_NOTE_TC_8",
+        "description": "Validate clicking 'yes' button in confirmation dialog box deletes notes",
+        "testFile": "./test/ExperienceApp/notes.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite_S7_BookMappingPresentationPlus": {
+    "Name": "S7 - Validation of Presentation Plus book-to-book page mapping in Class 1RB",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_DASHD_TC_1",
+        "description": "Locate class by name and open it if collapsed",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_2",
+        "description": "Verify product bundle is displayed under that class",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_3",
+        "description": "Click component within product bundle",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_DASHD_TC_4",
+        "description": "Gate: reader is open on the expected product",
+        "testFile": "./test/ExperienceApp/desktopDashboard.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/desktopEbookData.json",
+            "jsonPath": "C1.desktopEbook.teacher_pplus"
+          }
+        ]
+      },
+      {
+        "id": "TST_EBOO_TC_1",
+        "description": "Validate eBook page is initialized correctly",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Setup — if Book 1 did not open on its Cover, click Previous until it is on the Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_1",
+        "description": "Verify Book 1 page ii opens Book 2 page ii and switching back opens the Book 1 Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario1"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_2",
+        "description": "Verify Book 2 opens Book 3 page ii and switching back from Book 3 page ii opens the Book 2 Cover",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario2"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Setup — return Book 1 to its Cover before Scenario 3",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_6",
+        "description": "Verify Book 3 page ii opens Book 1 page ii when Book 3 page ii is mapped to Book 1 page ii",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.scenario2"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EMAP_TC_5",
+        "description": "Teardown — return Book 1 to its Cover with the Previous button",
+        "testFile": "./test/ExperienceApp/ebookMapping.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/thor/ebookMappingData.json",
+            "jsonPath": "C1.ebookMapping.teardown"
+          }
+        ],
+        "timeout": 180000
+      },
+      {
+        "id": "TST_EBOO_TC_5",
+        "description": "Validate that the Home button is clickable and returns to the home page",
+        "testFile": "./test/ExperienceApp/eBook.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}
