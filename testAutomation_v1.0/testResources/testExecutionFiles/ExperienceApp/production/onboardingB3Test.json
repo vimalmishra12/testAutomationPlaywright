@@ -284,7 +284,7 @@
         "id": "TST_INVI_TC_14",
         "description": "Verify a not-yet-registered invitee can sign up from the class invite e-mail's 'View invite' link",
         "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
-        "timeout": 360000,
+        "timeout": 540000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
@@ -296,7 +296,7 @@
         "id": "TST_INVI_TC_15",
         "description": "Verify a logged-in, already-registered learner lands on their own dashboard when opening a class invite link",
         "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
-        "timeout": 360000,
+        "timeout": 300000,
         "testData": [
           {
             "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",

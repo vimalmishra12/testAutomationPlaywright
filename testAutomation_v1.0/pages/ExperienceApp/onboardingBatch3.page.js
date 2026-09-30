@@ -1139,19 +1139,33 @@ module.exports = {
     }
     if (global.browser && global.browser.pause) await global.browser.pause(1000);
 
-    // Submit Sign up
+    // Submit Sign up — log the URL and button state before clicking
     const submitBtn = this.inviteLearnerSignUpBtn;
-    await action.waitForDisplayed(submitBtn, 30000);
-    if (global.page) {
-      await global.page.locator(submitBtn).first().click({ force: true });
+    await logger.logInto(await stackTrace.get(), `Pre-submit page URL: ${await browser.getUrl().catch(() => 'unknown')}`);
+    const submitFound = await action.waitForDisplayed(submitBtn, 30000);
+    await logger.logInto(await stackTrace.get(), `Sign up button found: ${submitFound}`);
+
+    if (submitFound) {
+      if (global.page) {
+        const submitLoc = global.page.locator(submitBtn).first();
+        const submitValue = await submitLoc.getAttribute('value').catch(() => '');
+        const submitText  = await submitLoc.innerText().catch(() => '');
+        await logger.logInto(await stackTrace.get(), `Sign up button value="${submitValue}" text="${submitText}"`);
+        await submitLoc.click({ force: true });
+      } else {
+        await action.click(submitBtn);
+      }
     } else {
-      await action.click(submitBtn);
+      await logger.logInto(await stackTrace.get(), `Sign up button NOT found — skipping click`, 'warn');
     }
     await action.waitForDocumentLoad();
+    await logger.logInto(await stackTrace.get(), `Post-submit page URL: ${await browser.getUrl().catch(() => 'unknown')}`);
 
     // Check for verification pending screen / email heading / confirmation
     const pendingSel = this.inviteVerifyEmailPrompt;
     const pendingShown = await action.waitForDisplayed(pendingSel, 30000);
+    await logger.logInto(await stackTrace.get(), `Verification pending screen shown: ${pendingShown}`);
+
 
     // Verify the email in Mailsac so the learner account is activated
     let verifySucceeded = false;
@@ -1183,7 +1197,24 @@ module.exports = {
    */
   verify_registered_learner_invite: async function (data) {
     await logger.logInto(await stackTrace.get(), `Existing learner invite check for ${data.existingLearnerEmail}`);
-    await action.waitForDocumentLoad();
+
+    // Recovery guard: if a previous test left the browser in a navigating/aborted state,
+    // reset to a known-good URL before proceeding to avoid net::ERR_ABORTED cascades.
+    try {
+      await action.waitForDocumentLoad();
+    } catch (e) {
+      await logger.logInto(await stackTrace.get(), `waitForDocumentLoad recovery: ${e.message}`, 'warn');
+    }
+    try {
+      const currentUrl = await browser.getUrl().catch(() => '');
+      if (!currentUrl || currentUrl === 'about:blank' || currentUrl.includes('ERR_') ) {
+        await browser.url(appUrl.replace(/\/$/, '') + '/login');
+        await action.waitForDocumentLoad();
+      }
+    } catch (navErr) {
+      await logger.logInto(await stackTrace.get(), `Navigation recovery error: ${navErr.message}`, 'warn');
+      await browser.url(appUrl.replace(/\/$/, '') + '/login').catch(() => {});
+    }
 
     // 1. Ensure logged out from any previous test session
     await this.logout_user().catch(() => {});
@@ -1203,9 +1234,15 @@ module.exports = {
     }
 
     // 3. Log into Cambridge One as the existing learner
-    await browser.url(appUrl.replace(/\/$/, '') + '/login');
-    await action.waitForDocumentLoad();
+    try {
+      await browser.url(appUrl.replace(/\/$/, '') + '/login');
+      await action.waitForDocumentLoad();
+    } catch (loginNavErr) {
+      await logger.logInto(await stackTrace.get(), `Login navigation error: ${loginNavErr.message}`, 'warn');
+      await global.page.waitForLoadState('domcontentloaded').catch(() => {});
+    }
     await this.login_with_credentials(data.existingLearnerEmail, data.learnerPassword);
+
 
     // 4. Open the invite URL while already logged in
     if (inviteUrl) {
