@@ -1133,7 +1133,14 @@ module.exports = {
     const termsCb = this.inviteLearnerTermsCheckbox;
     await action.waitForDisplayed(termsCb, 10000);
     if (global.page) {
-      await global.page.locator(termsCb).first().click({ force: true });
+      const cbInput = global.page.locator('input#learner-checkbox-1, input.termsCheckbox:visible, input.consentCheck:visible').first();
+      if (await cbInput.count() > 0) {
+        await cbInput.setChecked(true, { force: true }).catch(() => {});
+      }
+      const checkmark = global.page.locator("label[for='learner-checkbox-1'] span.checkmark, label[for='learner-checkbox-1'] #nemo_checkbox, label[for='learner-checkbox-1']").first();
+      if (await checkmark.count() > 0 && !(await cbInput.isChecked().catch(() => false))) {
+        await checkmark.click({ position: { x: 5, y: 5 }, force: true }).catch(() => {});
+      }
     } else {
       await action.click(termsCb);
     }
@@ -1142,7 +1149,7 @@ module.exports = {
     // Submit Sign up — log the URL and button state before clicking
     const submitBtn = this.inviteLearnerSignUpBtn;
     await logger.logInto(await stackTrace.get(), `Pre-submit page URL: ${await browser.getUrl().catch(() => 'unknown')}`);
-    const submitFound = await action.waitForDisplayed(submitBtn, 30000);
+    const submitFound = (await action.waitForDisplayed(submitBtn, 30000)) === true;
     await logger.logInto(await stackTrace.get(), `Sign up button found: ${submitFound}`);
 
     if (submitFound) {
@@ -1163,7 +1170,7 @@ module.exports = {
 
     // Check for verification pending screen / email heading / confirmation
     const pendingSel = this.inviteVerifyEmailPrompt;
-    const pendingShown = await action.waitForDisplayed(pendingSel, 30000);
+    const pendingShown = (await action.waitForDisplayed(pendingSel, 30000)) === true;
     await logger.logInto(await stackTrace.get(), `Verification pending screen shown: ${pendingShown}`);
 
 
