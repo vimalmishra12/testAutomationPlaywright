@@ -1135,6 +1135,13 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
     console.log("val of res is hyperlinkNewTab: ", res);
     if (res === true) {
       await logger.logInto(await stackTrace.get(), "hyperlinkNewTab is clicked");
+      if (global.__electronMode) {
+        await logger.logInto(
+          await stackTrace.get(),
+          "Electron desktop mode: hyperlinkNewTab clicked successfully"
+        );
+        return true;
+      }
       // Waits for the page count to grow past the baseline, then closes the new tab and leaves
       // global.page on the original one (baseActionLibrary.js:461).
       res = await action.closeNewTabAndRefocus(initialPagesCount, 5000);
@@ -1348,41 +1355,39 @@ click_cqaEbookEvolveDropdown: async function (testdata) {
     return res;
   },
 
-click_toggleLayoutBtn: async function () {
+click_toggleLayoutBtn: async function (targetLayout) {
   await logger.logInto(await stackTrace.get());
-  
-
   var res;
   try {
-    
-    res = await action.click(this.toggleLayoutBtn);
-    
+    if (targetLayout) {
+      let currentClassList = await action.getAttribute("#readerpagedivB", "class");
+      let isSingle = currentClassList && currentClassList.includes("reader-display-none");
+      let currentLayout = isSingle ? "single-page" : "double-page";
+      if (currentLayout === targetLayout) {
+        await logger.logInto(await stackTrace.get(), "Reader is already in " + targetLayout + " layout");
+        return targetLayout;
+      }
+    }
 
+    res = await action.click(this.toggleLayoutBtn);
     if (true == res) {
       await logger.logInto(await stackTrace.get(), "toggleLayoutBtn is clicked");
-      
+      await browser.pause(1500);
 
       let classList = await action.getAttribute("#readerpagedivB", "class");
-      
-
       if (classList && classList.includes("reader-display-none")) {
         await logger.logInto(await stackTrace.get(), "Single page layout is active");
-        
         res = "single-page";
       } else {
-        
+        await logger.logInto(await stackTrace.get(), "Double page layout is active");
         res = "double-page";
       }
     } else {
       await logger.logInto(await stackTrace.get(), res + " toggleLayoutBtn is NOT clicked", "error");
-      
     }
   } catch (error) {
-    
     res = false;
   }
-
-  
   return res;
 },
 

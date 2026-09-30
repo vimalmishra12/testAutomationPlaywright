@@ -223,6 +223,13 @@ module.exports = {
     }
     var res = await action.click(targetSelector);
     if (true == res) {
+      if (global.__electronMode) {
+        await logger.logInto(
+          await stackTrace.get(),
+          "Electron desktop mode: note link clicked successfully (opened via OS default browser)"
+        );
+        return true;
+      }
       await logger.logInto(
         await stackTrace.get(),
         "note link clicked, awaiting tab transition"

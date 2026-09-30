@@ -189,6 +189,13 @@ module.exports = {
     console.log("val of res is hyperlinkNewTab: ", res);
     if (res === true) {
       await logger.logInto(await stackTrace.get(), "hyperlinkNewTab is clicked");
+      if (global.__electronMode) {
+        await logger.logInto(
+          await stackTrace.get(),
+          "Electron desktop mode: hyperlinkNewTab clicked successfully"
+        );
+        return true;
+      }
       res = await action.closeNewTabAndRefocus(initialPagesCount, 5000);
       await logger.logInto(
         await stackTrace.get(),

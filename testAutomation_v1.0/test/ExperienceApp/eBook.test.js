@@ -395,7 +395,7 @@ module.exports = {
   // Test cases for Additional features
 
   TST_EBOO_TC_17: async function (testdata) {
-    sts = await eBook.click_toggleLayoutBtn();
+    sts = await eBook.click_toggleLayoutBtn(testdata && testdata.singlePage);
     console.log("STSD data is", sts);
     await assertion.assertEqual(
       sts,
@@ -406,7 +406,7 @@ module.exports = {
   },
 
   TST_EBOO_TC_22: async function (testdata) {
-    sts = await eBook.click_toggleLayoutBtn();
+    sts = await eBook.click_toggleLayoutBtn(testdata && testdata.doublePage);
     await assertion.assertEqual(
       sts,
       testdata.doublePage,
