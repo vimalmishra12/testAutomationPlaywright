@@ -5,8 +5,8 @@
 **App:** Cambridge One — thor `https://micro-nemo.comprodls.com` (general target); production `https://www.cambridgeone.org` for sign-up and e-mail-verification suites using disposable Mailsac accounts (user confirmed 2026-09-24)
 **Pages in scope:** pre-login homepage `/home`, Log in `/login`, Reset password, role selection `/regoptions`, Learner age gate `/learner-age-check`, Teacher/Learner/Parent registration forms, parent "My children", class-invite sign-up, first-login / temporary-password screens
 **Generated:** 2026-09-25 | **Total TCs:** 65 (53 Positive · 1 Edge · 11 Negative) — **59 of the source's 60 scenarios have a case**; TC_XCUT_009 (UI/colours) is a visual-layer check, not a manual case (see map)
-**Execution status (2026-09-25):** **37 Pass** · **28 Not Run** — Batch 1 automated & verified on Production (onboardingB1Test_prod, 27/27 passing across 5 suites).
-**Automation scope (user, 2026-09-25):** **52 to automate** · **13 manual only** — 🔴 RED 10 (TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_19, TST_SNUP_TC_79, TST_SNUP_TC_80, TST_SNUP_TC_81, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22) · 🟡 YELLOW 3 (TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13). Column 15 "Automation Scope" carries it on every row; the `.xlsx` also colours those rows' ID cells red/yellow as the source did.
+**Execution status (2026-09-25):** **51 Pass** · **14 Not Run** — Batch 1 automated & verified on Production (onboardingB1Test_prod, 27/27 passing across 5 suites).
+**Automation scope (user, 2026-09-25):** **51 to automate** · **14 manual only** — 🔴 RED 10 (TST_LOGI_TC_15, TST_LOGI_TC_16, TST_LOGI_TC_17, TST_LOGI_TC_19, TST_SNUP_TC_79, TST_SNUP_TC_80, TST_SNUP_TC_81, TST_LOGI_TC_20, TST_LOGI_TC_21, TST_LOGI_TC_22) · 🟡 YELLOW 4 (TST_LOGI_TC_11, TST_LOGI_TC_12, TST_LOGI_TC_13, TST_LOGI_TC_18). Column 15 "Automation Scope" carries it on every row; the `.xlsx` also colours those rows' ID cells red/yellow as the source did.
 
 **TCs per module:**
 - **LAND** — 6 (TST_LAND_TC_6, TST_LAND_TC_3, TST_LAND_TC_2, TST_LAND_TC_7, TST_LAND_TC_8, TST_LAND_TC_9)
@@ -105,7 +105,7 @@
 | TC_FPWD_005 — Verify a user can set a new password via the emailed reset link and log in with the updated password | TST_RESE_TC_9 |
 | TC_FPWD_006 — Verify a user can log in with the newly reset password after resetting it via the emailed link | TST_RESE_TC_10 |
 | **Learner Password Reset (by Staff)** | |
-| TC_RESETPW_001 — Verify a Teacher can set a temporary password for an enrolled student, and the student sets their own new password on first login with it | TST_CREA_TC_31, TST_LOGI_TC_18 |
+| TC_RESETPW_001 — Verify a Teacher can set a temporary password for an enrolled student, and the student sets their own new password on first login with it | TST_CREA_TC_31, TST_LOGI_TC_18 🟡 |
 | TC_RESETPW_002 — Verify an Admin can set a temporary password for a student from the Students tab, and the student sets their own new password on first login with it | TST_SPRF_TC_24 |
 | **Sign Up - Role Selection** | |
 | TC_ROLE_001 — Verify the role-selection page shows Learner, Teacher, and Parent options with no role pre-selected | TST_SNUP_TC_65 |
@@ -897,9 +897,9 @@
 | **Test Data** | <MAILSAC_ACCOUNT_EMAIL>; a new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | The user is logged in and lands on their role's dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CHANGES A REAL ACCOUNT'S PASSWORD — use a disposable account (e.g. one created by the signup suite in the same run), never a shared fixture. Mail handling as mailsacUI.openVerificationLink (sandboxed mail iframe, follow the link on the same page — c1-core-shared.md §A5/§B3). The reset link host may be the same login.comprodls.com host whose thor certificate is expired [ASSUMED — check]. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: password reset requested, link extracted from Mailsac inbox, new password saved and confirmed via modal dialog, and user successfully logs in with new password. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -919,9 +919,9 @@
 | **Test Data** | Same account as TST_RESE_TC_9, with its new password. |
 | **Expected Result** | Login succeeds with the new password. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. OVERLAP: the source's TC_FPWD_005 already ends with this login (its steps 5–6). Kept as its own row because the source has it; see Open items — the automation may compose LOGI_TC_1/2/5 with the new password instead of a new function. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: user logs out from active session, enters credentials with newly reset password on /login, and reaches role dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 5) |
 | **Automation Scope** | Automate |
 
 ---
@@ -943,9 +943,9 @@
 | **Test Data** | A temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The student's options menu offers 'View profile', 'Activate course material' and 'Change password'.<br>2. 'Change password' opens a 'Change password' page naming the student (name and username), where the temporary password is set.<br>3. Submitting sets it. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. First half of the source row; the student's first login with the temporary password is TST_LOGI_TC_18. CHANGES A REAL STUDENT'S PASSWORD — disposable student only. Module CREA = the teacher class page object (createNewClass.page.js); if Phase 1 finds the roster lives on another page object, re-code before automating. Confirmation copy after submit is [ASSUMED] (not in the source). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Teacher opens class roster on Class data tab, locates student Actions menu, and verifies options to change password and manage student. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test (Suite 8 via TST_CREA_TC_31) |
 | **Automation Scope** | Automate |
 
 ---
@@ -962,11 +962,11 @@
 | **Test Steps** | 1. Log in as the student with the temporary password.<br>2. On the temporary-password screen enter the temporary password, then a new password and its confirmation.<br>3. Submit.<br>4. Log out and log in again with the new password. |
 | **Test Data** | The temporary password; a different new password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The login does not go straight to the dashboard — a temporary-password screen asks for the temporary password, a new password and its confirmation.<br>2. Submitting a valid new password completes the change and reaches the student's dashboard.<br>3. The student can log in again with the new, self-set password. |
-| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Serves BOTH TC_RESETPW_001 and TC_RESETPW_002 (same screen, different staff entry). Legend 'Password reset caveat': the same Gigya temporary-password screen-set as an Admin resetting their own password. |
+| **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Serves BOTH TC_RESETPW_001 and TC_RESETPW_002 (same screen, different staff entry). Out of automation scope per user instruction. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Not Run |
 | **Comments / Defect ID** | *(blank in design)* |
-| **Automation Scope** | Automate |
+| **Automation Scope** | Manual only — YELLOW in source (not for automation) 🟡 |
 
 ---
 
@@ -985,9 +985,9 @@
 | **Test Data** | A disposable student; a temporary password meeting the complexity rules. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The Action Menu offers a way to change the student's password (alongside 'View profile' and 'Activate course materials').<br>2. Submitting sets the temporary password; the student's next login shows the temporary-password screen (TST_LOGI_TC_18). |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. [ASSUMED] entry point — the source's Legend says it was "taken from existing documentation … not independently re-verified live". OVERLAP to settle in Phase 1: the Students register already has TST_SPRF_TC_8 (admin sets a NEW password via View profile > Manage account > Password tab) and TST_SPRF_TC_23 (learner signs in with it). This row differs by the row Action Menu entry and the TEMPORARY-password first-login screen — confirm live that these are two different flows before automating. CHANGES A REAL STUDENT'S PASSWORD — disposable student only. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: School admin navigates to Learners tab, accesses learner profile, opens Manage learner profile, sets temporary password, and submits update. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test (Suite 8 via TST_SPRF_TC_24) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1209,9 +1209,9 @@
 | **Test Data** | Unique <RUN_LEARNER_EMAIL>@mailsac.com ({{run.*}} token, ADR-022); a complexity-compliant password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. Location is pre-filled from the age/location screen and cannot be edited.<br>2. The account is created and, once verified, the user reaches the learner dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. New assertion = the locked, pre-filled Location. Account creation/verification reuse existing TST_SNUP_TC_60 (submit → pending screen), TST_SNUP_TC_61 (Mailsac link), TST_SNUP_TC_64 (learner welcome). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Location is locked to pre-filled value from age check, user completes registration form, verifies account via Mailsac link, and successfully accesses Learner dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 2) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1255,9 +1255,9 @@
 | **Test Data** | Unique <RUN_TEACHER_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The Teacher form comes straight after role confirmation, with no age gate: First name, Last name, Work email, Password, Location.<br>2. The account is created and, once verified, the user reaches the teacher dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. New assertion = the Teacher form's fields / no age gate. Creation and verification reuse existing TST_SNUP_TC_60, TST_SNUP_TC_61, TST_SNUP_TC_62 (tour + "Complete account set up"). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Teacher registration form opens directly with no age gate, user completes registration, verifies account via Mailsac link, and reaches Teacher dashboard / complete account setup prompt. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 3) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1277,9 +1277,9 @@
 | **Test Data** | Work email 'not-an-email'; password 'abc' |
 | **Expected Result** | 1. First name, Last name and Location each show 'This field is required'.<br>2. Work email shows 'E-mail address is invalid.'<br>3. Password shows 'Password does not meet complexity requirements'.<br>4. An alert: 'Please confirm that you have read and understood the Terms of use'.<br>5. No account is created; the user stays on the form. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Side-effect free. Terms checkbox id differs by env (thor #legal-checkbox-1, prod #teacher-checkbox-1 — onboarding.md §A3). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: required-field errors ('This field is required') shown for First name, Last name, Location; 'E-mail address is invalid.' for Work email; 'Password does not meet complexity requirements' for weak password; Terms alert displayed when unchecked. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1301,9 +1301,9 @@
 | **Test Data** | Unique <RUN_PARENT_EMAIL>@mailsac.com ({{run.*}}); Location 'India'. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. The Parent form comes straight after role confirmation, with no age gate, and has an extra checkbox not on the Learner/Teacher forms: 'I am 18 years of age or older and I am the parent or guardian of any child whose account I set up'.<br>2. The account is created and, once verified, the user reaches the parent dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Thor: the e-mail verification link host has an EXPIRED certificate (c1-core-shared.md §A4) — the verify step is blocked on thor until renewed; production works. Resolves onboarding.md §A2's [ASSUMED] Parent row. Creation/verification reuse TST_SNUP_TC_60/61; the parent dashboard assertion is new. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Parent registration form includes age 18+ / guardian consent checkbox, user completes registration, verifies account via Mailsac link, and reaches Parent dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 4) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1323,9 +1323,9 @@
 | **Test Data** | Valid values in every field; guardian checkbox unchecked. |
 | **Expected Result** | The form does not submit and no account is created — the user stays on the registration form. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Any message shown for the missing checkbox is not stated in the source — capture it verbatim in Phase 1 [ASSUMED]. Side-effect free if the form really does not submit; use a {{run.*}} e-mail anyway in case it does. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Parent form does not submit without guardian consent, user remains on /register-parent, and parental checkbox highlights with error state (.parent-error). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 1) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1347,9 +1347,9 @@
 | **Test Data** | Child first/last name, month and year of birth; child username + password. Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. 'Add child' opens 'Create my child's account' in an embedded panel with first name, last name, month of birth, year of birth and one checkbox 'I accept the Privacy notice and Terms of use on behalf of my child' ('Privacy notice' and 'Terms of use' are separate links).<br>2. 'Next' with everything filled proceeds to 'Child's login details' (username + password).<br>3. 'Create account' shows a confirmation with the new username and password, and the child appears in 'My children'. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. PROPOSED module PCHD — no parent/child page object exists yet (migration plan U20, K19: the child form sits in a Gigya #child-iframe). CREATES A CHILD ACCOUNT. SOURCE reported child creation FAILING ON THOR [2026] — Phase 1 must check; if still failing, mark Blocked there (unblock: product fix or run on another env with the user's OK). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Parent creates child account from 'My children', completes embedded panel details with consent checkbox, enters child username & password, and receives account created confirmation with username. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 6) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1369,9 +1369,9 @@
 | **Test Data** | — |
 | **Expected Result** | 'Next' does not proceed — an inline validation error is shown for the missing field or the checkbox. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Exact inline error copy is not in the source — capture verbatim in Phase 1 [ASSUMED]. Side-effect free. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: on 'Create my child's account' blank submission displays required-field errors ('This field is required', 'This field is required (Month and Year)'), and form stays blocked on Subscreen 1 without ticking the consent checkbox. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 6) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1391,9 +1391,9 @@
 | **Test Data** | The just-created child's username + password. |
 | **Expected Result** | The child logs in and reaches a learner dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Depends on TST_PCHD_TC_1 in the same run. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: newly created child account logs in with username and password on /login, and successfully reaches the Learner dashboard ('Learner dashboard \| Cambridge One'). |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test_prod (Suite 6) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1415,9 +1415,9 @@
 | **Test Data** | A fresh <RUN_INVITEE_EMAIL>@mailsac.com ({{run.*}}). Passwords come from `{{env.*}}` tokens, never plaintext test data (ADR-023). |
 | **Expected Result** | 1. 'View invite' opens the Learner sign-up form directly (no role selection) with School email pre-filled and disabled to the invited address.<br>2. There is no age-check step and Location is a normal, empty, editable field.<br>3. The Privacy notice section has the same informational text as self-signup, with a single Terms-of-use checkbox.<br>4. Submitting creates the account. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. CREATES REAL DATA (a platform account) — ADR-021: needs the user's OK on a shared environment; place in a data-creating suite. Needs a teacher + class and an invite (reuse TST_CREA_TC_19–24 for the invite). Module INVI (invitation flow); if Phase 1 finds the invite signup form is the signup page object, re-code to SNUP before automating. Legend: invite signup has NO age gate. |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Teacher invites unregistered student, invitee opens 'View invite' link from Mailsac email, completes registration with prefilled email, verifies account via Mailsac, and reaches dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test (Suite 7 via TST_INVI_TC_14) |
 | **Automation Scope** | Automate |
 
 ---
@@ -1437,9 +1437,9 @@
 | **Test Data** | An existing learner <EXISTING_LEARNER_EMAIL> with a Mailsac inbox. |
 | **Expected Result** | The learner is taken directly to their own existing dashboard. |
 | **Remarks** | Source: OnboardingApp_Test_Plan.xlsx. Existing INVI_TC_1–6 cover accepting the invite from the in-app bell; this is the e-mail link path. Each run leaves a pending invite in the class (migration plan Q4). |
-| **Actual Result** | *(blank in design)* |
-| **Status** | Not Run |
-| **Comments / Defect ID** | *(blank in design)* |
+| **Actual Result** | Verified on Production: Teacher invites registered learner, learner opens 'View invite' link while logged in, and lands directly on their learner dashboard. |
+| **Status** | Pass |
+| **Comments / Defect ID** | Automated in onboardingB3Test (Suite 7 via TST_INVI_TC_15) |
 | **Automation Scope** | Automate |
 
 ---

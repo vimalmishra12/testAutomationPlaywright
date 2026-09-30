@@ -4433,6 +4433,103 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "OnboardingBatch3",
+      "moduleId": "ONBD3",
+      "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+      "testcase": [
+        {
+          "id": "TST_SNUP_TC_77",
+          "description": "Verify validation errors and the Terms alert are shown when the Teacher form is submitted incomplete",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_75",
+          "description": "Verify the Parent form does not submit when the 'parent or guardian' checkbox is left unchecked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_72",
+          "description": "Verify a Learner (16+, India) account is created and reaches the learner dashboard when the form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_73",
+          "description": "Verify a Teacher account is created and reaches the teacher dashboard when the registration form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_74",
+          "description": "Verify a Parent account is created and reaches the parent dashboard when the registration form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_9",
+          "description": "Verify the user can log in with the new password when it is set through the e-mailed reset link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_10",
+          "description": "Verify a fresh login succeeds with the newly reset password after logging out",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_2",
+          "description": "Verify 'Next' on 'Create my child's account' stays blocked until every required field and the consent checkbox are complete",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_1",
+          "description": "Verify a Parent can create a child's account from 'My children'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_3",
+          "description": "Verify a newly created child's account reaches a learner dashboard when it logs in for the first time",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_14",
+          "description": "Verify a not-yet-registered invitee can sign up from the class invite e-mail's 'View invite' link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_15",
+          "description": "Verify a logged-in, already-registered learner lands on their own dashboard when opening a class invite link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_24",
+          "description": "Verify an Admin can set a temporary password for a student from the Students tab row's Action Menu",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CREA_TC_31",
+          "description": "Verify a Teacher can set a temporary password for an enrolled student from the class roster's 'Change password'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_18",
+          "description": "Verify a student who logs in with a temporary password must set a new password before reaching the dashboard",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }
