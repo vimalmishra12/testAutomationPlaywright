@@ -1,0 +1,157 @@
+# Walkthrough — foc-registers-atc-mtc-ids
+
+## Session 1 — 2026-09-28
+
+## Summary
+
+The two FOC eBook registers `ebookE2EstudentTest_thor_details.xlsx` and
+`ebookAccessibilityTest_thor_details.xlsx` had gained **ATC ID** and **MTC ID** columns (Excel edit,
+2026-09-28) with no counterpart in their companion `.md` registers. Both Markdown documents were brought
+in line: every one of the 134 + 35 `### Test Case:` blocks now carries an `**ATC ID:** … | **MTC ID:** …`
+line under its heading, and each document states the traceability rule in its own Overview. No framework
+code, no execution file and no workbook was changed.
+
+## Changes Made
+
+### 1. `test/Manual/C1App/FOC/ebookE2EstudentTest_thor_details.md`
+
+- **Type:** Modified
+- **Layer:** Documentation (manual register)
+- **What changed:** (a) 134 new lines — one `**ATC ID:** \`TST_xxx_TC_n\`  |  **MTC ID:** S<n>-TC<m>` line
+  inserted directly under each `### Test Case:` heading, in the file's existing tight field style;
+  (b) a new **Automation traceability (ATC ID / MTC ID)** paragraph in the Overview stating that the MTC ID
+  is the manual case number, the ATC ID is the step in
+  `testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EstudentTest.json` that executes it, that the
+  pairing is deliberately non-sequential (ATCs recur across suites; nine modules — `EBOO`, `NOTE`, `DRAW`,
+  `TIME`, `PAGE`, `SHOW`, `PLAY`, `COMM`, `DASH`), that it is copied from the workbook rather than derived,
+  and that the login/teardown steps carry no MTC ID; (c) *Companion workbook* now says fifteen-column
+  (was fourteen) and names ATC ID / MTC ID as the columns sitting after S.No.
+- **Why:** The workbook and the document are meant to say the same thing; the workbook had acquired two
+  traceability columns the document did not have.
+- **Lines affected:** the new paragraph at l.34-43 and the column count at l.51; one inserted line
+  per case block (134).
+
+### 2. `test/Manual/C1App/FOC/ebookAccessibilityTest_thor_details.md`
+
+- **Type:** Modified
+- **Layer:** Documentation (manual register)
+- **What changed:** (a) 35 new ID lines (plus the blank line each needs in this file's spaced style) under
+  each `### Test Case:` heading; (b) a new **IDs** bullet in *About this document* recording that the
+  mapping is 1:1 and in run order — S1 → `TST_KBOA_TC_1-19`, S2 → `TST_EBTF_TC_1-16` — that this is the
+  order both suites execute inside the single merged `Suite1` of
+  `testResources/testExecutionFiles/ExperienceApp/thor/ebookAccessibilityTest.json`, and that that file's
+  sign-in / launch / sign-out steps (`TST_LAND_*`, `TST_LOGI_*`, `TST_DASH_TC_5`, `TST_EBOO_TC_5`,
+  `TST_APPS_*`) carry no MTC ID.
+- **Why:** Same as above — mirror the workbook's new columns.
+- **Lines affected:** one bullet at ~l.10; one ID line + blank per case block (35).
+
+## How the IDs were sourced and checked
+
+The ATC ID was **read out of each workbook** (`Test Register` sheet, columns `ATC ID`/`ATCID` and `MTC ID`)
+rather than derived from the numbering, because the pairing is not sequential — e.g. `S1-TC3 → TST_EBOO_TC_6`,
+`S1-TC5 → TST_EBOO_TC_4`, `S3-TC5 → TST_NOTE_TC_1`. Checks run, all against freshly read data:
+
+- **Completeness:** 134 / 134 and 35 / 35 register rows carry a non-blank ATC ID; no duplicate MTC ID.
+- **1:1 mapping:** every `### Test Case:` heading matched exactly one workbook row and vice versa
+  (the inserter refuses to write otherwise).
+- **Ground truth:** every distinct ATC ID in each workbook exists as a step of the matching execution
+  file, and each register's ATC sequence follows the execution order (the only two apparent inversions in
+  the student register are `S3-TC28 TST_DASH_TC_5` and `S4-TC12 TST_EBOO_TC_51`, both legitimately mid-suite
+  reopen/reopen-tool steps).
+- **Post-edit re-verification:** after the narrative edits, both `.md` files were re-parsed and compared
+  cell-for-cell against the workbooks again — exact match, in order, nothing missing or extra.
+- **Encoding:** UTF-8, no BOM, no replacement characters, 100% CRLF preserved.
+
+## Architecture Decisions Triggered
+
+None. `manual-test-standard.md` defines the 14-column manual format; these two workbooks now run to 15
+columns because ATC ID and MTC ID were inserted after S.No. (the Test Case ID column became MTC ID). That
+is a deviation the standard does not yet describe — flag for the owner, not changed here.
+
+## Protected Files Touched
+
+None — no protected files were modified. No JS, JSON or workbook file was written.
+
+## Pending / Follow-up
+
+1. **`ebookE2EteacherTest_thor_details.md` not updated** (owner chose student + accessibility only). Its
+   workbook has the same two columns, and its S7 rows gained ATC IDs mid-session (`TST_CMAT_*`,
+   `TST_EMAP_*`); the per-suite tabs S4/S5/S7 still have blank ATC cells even though the Test Register has
+   none.
+2. **Stale generator reference** — `ebookE2EstudentTest_thor_details.md` l.46-47 still says the workbook
+   is generated by `tooling/build-ebook-e2e-student-xlsx.js`. No such file exists in the repo, and the
+   workbook has now been edited by hand in Excel, so that claim cannot hold. Left as-is; needs an owner
+   decision (restore the generator or drop the claim).
+3. **`ebookE2EstudentTest_thor_details.md` l.1 is `# Ebook Accessibility – THOR`** — the student register
+   carries the accessibility document's title. Pre-existing; not a traceability issue, so not touched.
+4. **Two stray `undefined` lines** in `ebookAccessibilityTest_thor_details.md` under the `## Test Suite:`
+   headings for S1 and S2 — generator residue. Pre-existing; not touched.
+5. **`TST_EBOO_TC_52`** (`ebookE2EstudentTest.json` → `Suite5.Before`, the Timer suite) is executed but
+   maps to no manual case in the register, so it has no MTC ID anywhere. Either it belongs as an S5 case or
+   it is pure setup — worth one look.
+6. **Header spelling** — the accessibility workbook names its register column `ATCID` (no space); the
+   student and teacher workbooks use `ATC ID`. The documents use `ATC ID` throughout.
+
+---
+
+## Session 2 — 2026-09-28
+
+## Summary
+
+Applied the same treatment to the third FOC register, `ebookE2EteacherTest_thor_details.md`, after the owner
+cleared it: 87 `**ATC ID:** … | **MTC ID:** …` lines plus a traceability paragraph in its Overview. Session 1
+follow-up item 1 is closed. Teacher workbook and execution file were not modified.
+
+## Changes Made
+
+### 1. `test/Manual/C1App/FOC/ebookE2EteacherTest_thor_details.md`
+
+- **Type:** Modified
+- **Layer:** Documentation (manual register)
+- **What changed:** (a) 87 new lines — one `**ATC ID:** \`TST_xxx_TC_n\`  |  **MTC ID:** S<n>-TC<m>` line under
+  each `### Test Case:` heading, in this file's tight field style (same as the student register); (b) a new
+  **Automation traceability (ATC ID / MTC ID)** paragraph at l.40-52, before *Test Plan — Suites at a Glance*,
+  recording that the MTC ID is the manual case number and the ATC ID the step in
+  `testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EteacherTest.json` that executes it; that the
+  87 cases sit on only **47 distinct ATCs**; the reuse pattern (`TST_CMAT_TC_1`/`_2` open all seven suites,
+  `TST_EBOO_TC_5` is every "Home button returns to the class", `TST_EMAP_TC_5` serves S7 both as conditional
+  setup at S7-TC5 and as teardown at S7-TC9); the six modules in play (`CMAT`, `EBOO`, `RBNK`, `NOTE`, `C1AS`,
+  `EMAP`) and which suites use each; and that the sign-in / `TST_DASH_TC_11` class-open / sign-out steps are
+  shared setup and carry no MTC ID.
+- **Why:** the teacher workbook already carries the ATC ID and MTC ID columns (its S7 rows were filled in on
+  2026-09-28) and the document had neither.
+- **Lines affected:** +101 total — paragraph at l.40-52 and one line per case block (87). Nothing else in the
+  file moved; verified by diffing against a pre-edit copy.
+
+## How the IDs were sourced and checked
+
+Same method as Session 1 — IDs read out of the workbook's `Test Register` sheet (87 rows), never derived from
+the numbering.
+
+- **Completeness:** 87 / 87 register rows carry a non-blank ATC ID; no duplicate MTC ID; the 87 rows matched
+  the document's 87 `### Test Case:` headings 1:1 (the inserter refuses to write otherwise).
+- **Ground truth:** every distinct ATC ID resolves to a step of `ebookE2EteacherTest.json`, in execution
+  order. The 7 unmapped steps (`TST_LAND_TC_3`, `TST_LOGI_TC_1/2/5`, `TST_DASH_TC_11`, `TST_APPS_TC_1/2`) are
+  login, class-open and sign-out — shared setup, consistent with the Overview's *Shared setup* paragraph.
+- **Post-edit re-verification:** the `.md` was re-parsed and compared cell-for-cell against the workbook —
+  exact match, in order, nothing missing or extra.
+- **Encoding:** UTF-8, no BOM, no replacement characters, 100% CRLF preserved.
+
+## Architecture Decisions Triggered
+
+None new. Note for the owner: this document's *Test Plan — Suites at a Glance* table still has no ATC column
+(the approved format was the per-case line only), and the workbook's **Test Plan Summary** tab likewise
+summarises by suite.
+
+## Protected Files Touched
+
+None — no protected files were modified. No JS, JSON or workbook file was written.
+
+## Pending / Follow-up
+
+1. **Workbook tab inconsistency (teacher):** the `Test Register` tab has an ATC ID for all 87 rows, but the
+   per-suite tabs **S4**, **S5** and **S7** have blank ATC ID cells. The `.md` now disagrees with those tabs
+   while agreeing with the register.
+2. Carried over from Session 1 and still open: stale `tooling/build-ebook-e2e-student-xlsx.js` reference, the
+   student document's wrong `# Ebook Accessibility – THOR` title, the two `undefined` lines in the
+   accessibility document, unmapped `TST_EBOO_TC_52`, and the `ATCID` vs `ATC ID` header spelling.

@@ -3,7 +3,7 @@
 > Screen file (ADR-020). Read `c1-core-shared.md` first.
 > Parent index: [`../ExperienceApp.md`](../ExperienceApp.md) · Top-level index: [`../../product-knowledge.md`](../../product-knowledge.md)
 > Module **`C1PL`** (Presentation Plus reader shell) + **`C1AS`** ([`pages/ExperienceApp/c1assignment.page.js`](../../../pages/ExperienceApp/c1assignment.page.js))
-> Related suite: [`ebookE2EteacherTest_thor`](../../../testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EteacherTest.json) (Suites 5 & 6)
+> Related suite: [`ebookE2EteacherTest_thor`](../../../testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EteacherTest.json) (Suites 5–7)
 > Living document — append, never overwrite; `[ASSUMED]` until seen live.
 
 ---
@@ -89,7 +89,7 @@ Both Presentation Plus suites were verified passing 100% green within `ebookE2Et
 ## Part D — Book-to-book page mapping (module `EMAP`) `[2026-09-25, thor]`
 
 > Manual register: [`test/Manual/C1App/FOC/ebookMapping_test_cases.md`](../../../test/Manual/C1App/FOC/ebookMapping_test_cases.md) (source sheet `FOC-_Web_Mapping Cases.xlsx`).
-> Page object [`pages/ExperienceApp/ebookMapping.page.js`](../../../pages/ExperienceApp/ebookMapping.page.js) · suite `npm run eBookMappingTest_Thor` (`ebookMappingTest.json`, 3 suites — one per scenario: `TST_EMAP_TC_1`, `TC_2`, `TC_6`).
+> Page object [`pages/ExperienceApp/ebookMapping.page.js`](../../../pages/ExperienceApp/ebookMapping.page.js) · suite `npm run ebookE2EteacherTest_thor` → `Suite7_BookMappingPresentationPlus` (merged 2026-09-28; the standalone `ebookMappingTest.json` is archived and its script kept in `package_copyDND.json`).
 
 ### D1. Product behaviour
 * The Presentation Plus toolbar's **Change course material** dropdown (`button[title="Change course material"]`) lists the class bundle's books plus *Teacher's Resources* (a new tab). On thor (class `CQA_AUTO_TEST_DND_1RB`): `vm_automation_first_ebook_pplus_1rb`, `vm_automation_second_ebook_pplus_1rb`, `vm_automation_Third_ebook_pplus_1rb dt` (URL id is lower case).
@@ -106,4 +106,4 @@ Both Presentation Plus suites were verified passing 100% green within `ebookE2Et
 | Book id in the URL is lower case while the title has "Third" | `waitForUrl` uses a case-insensitive regex built from the id |
 | A book switch is not instant | `waitForUrl` budget `switchTimeoutMs` (60 s) per book in test data; a timeout there is a finding, not a reason to lengthen the wait (Invariant 14) |
 | Book 1 may reopen on its saved last page, not the Cover | `TST_EMAP_TC_5` in Test (setup) and After (teardown) — clicks Previous only while not on the Cover |
-| A fresh Presentation Plus is needed per scenario (the reader remembers nothing between sessions, but scenario 2 must start from Book 1 page ii) | one suite (own login) per scenario |
+| A fresh Presentation Plus is needed per scenario (the reader remembers nothing between sessions, but scenario 2 must start from Book 1 page ii) | one fresh session per scenario — since 2026-09-28 a full re-login/re-launch block (Home → logout → launchUrl → login → dashboard → CMAT → PPlus → `TST_EMAP_TC_5` setup) inside the single merged suite `Suite7_BookMappingPresentationPlus`; formerly one suite (own login) per scenario |

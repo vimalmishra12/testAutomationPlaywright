@@ -7,6 +7,7 @@ Verify the Cambridge One **eBook reader can be used with a keyboard alone** (no 
 ## About this document
 
 - **Coverage:** 35 test cases across 2 suites — **S1** in-page keyboard focus (19) and **S2** toolbar keyboard focus (16).
+- **IDs:** every case carries its **MTC ID** (the manual case number, `S1-TC1`) and its **ATC ID** (the automated test case that executes it) on the line under its heading, matching columns 2–3 of the workbook. The mapping is 1:1 and in run order — S1 → `TST_KBOA_TC_1-19`, S2 → `TST_EBTF_TC_1-16` — which is the order both suites execute inside the single merged `Suite1` of `testResources/testExecutionFiles/ExperienceApp/thor/ebookAccessibilityTest.json`. That file's sign-in, eBook-launch and sign-out steps (`TST_LAND_*`, `TST_LOGI_*`, `TST_DASH_TC_5`, `TST_EBOO_TC_5`, `TST_APPS_*`) are shared setup and teardown, so they carry no MTC ID on either side.
 - **Type:** every case is a Positive (correct-behaviour) check.
 - **Status:** all cases are recorded as **Pass** as the documentation baseline. The **Actual Result** is the observed outcome in plain tester language — update it and the Status if a future run diverges.
 - **Priority weighting:**
@@ -27,6 +28,8 @@ A student signs in to the THOR environment and opens their assigned eBook from t
 undefined
 
 ### Test Case: S1-TC1 – Go to page 22 and confirm the Note item
+
+**ATC ID:** `TST_KBOA_TC_1`  |  **MTC ID:** S1-TC1
 
 **Description:** Opens a page with one Note marker and places focus in the reader.
 
@@ -57,6 +60,8 @@ undefined
 
 ### Test Case: S1-TC2 – Tab to the Note item on page 22
 
+**ATC ID:** `TST_KBOA_TC_2`  |  **MTC ID:** S1-TC2
+
 **Description:** First Tab press lands on the page Note item.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -79,6 +84,8 @@ undefined
 ---
 
 ### Test Case: S1-TC3 – Tab from the Note item to Home (page 22)
+
+**ATC ID:** `TST_KBOA_TC_3`  |  **MTC ID:** S1-TC3
 
 **Description:** Continuing forward leaves the page and reaches the toolbar Home button.
 
@@ -103,6 +110,8 @@ undefined
 
 ### Test Case: S1-TC4 – Shift+Tab back to the Note item (page 22)
 
+**ATC ID:** `TST_KBOA_TC_4`  |  **MTC ID:** S1-TC4
+
 **Description:** Reverse navigation returns focus to the Note item.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -125,6 +134,8 @@ undefined
 ---
 
 ### Test Case: S1-TC5 – Open the Notes panel with Enter (page 22)
+
+**ATC ID:** `TST_KBOA_TC_5`  |  **MTC ID:** S1-TC5
 
 **Description:** Activating the focused Note item opens My Notes.
 
@@ -149,6 +160,8 @@ undefined
 
 ### Test Case: S1-TC6 – Close the Notes panel with Enter (page 22)
 
+**ATC ID:** `TST_KBOA_TC_6`  |  **MTC ID:** S1-TC6
+
 **Description:** Activating the close control dismisses My Notes.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -171,6 +184,8 @@ undefined
 ---
 
 ### Test Case: S1-TC7 – Go to page 24 and confirm the Hotlink
+
+**ATC ID:** `TST_KBOA_TC_7`  |  **MTC ID:** S1-TC7
 
 **Description:** Opens a page with one Hotlink and places focus in the reader.
 
@@ -201,6 +216,8 @@ undefined
 
 ### Test Case: S1-TC8 – Tab to the Hotlink (page 24)
 
+**ATC ID:** `TST_KBOA_TC_8`  |  **MTC ID:** S1-TC8
+
 **Description:** First Tab press lands on the page Hotlink.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -223,6 +240,8 @@ undefined
 ---
 
 ### Test Case: S1-TC9 – Tab from the Hotlink to Home (page 24)
+
+**ATC ID:** `TST_KBOA_TC_9`  |  **MTC ID:** S1-TC9
 
 **Description:** Continuing forward reaches the toolbar Home button.
 
@@ -247,6 +266,8 @@ undefined
 
 ### Test Case: S1-TC10 – Shift+Tab back to the Hotlink (page 24)
 
+**ATC ID:** `TST_KBOA_TC_10`  |  **MTC ID:** S1-TC10
+
 **Description:** Reverse navigation returns focus to the Hotlink.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -269,6 +290,8 @@ undefined
 ---
 
 ### Test Case: S1-TC11 – Follow the Hotlink to page 28 with Enter
+
+**ATC ID:** `TST_KBOA_TC_11`  |  **MTC ID:** S1-TC11
 
 **Description:** Activating the Hotlink jumps the reader to its linked page.
 
@@ -293,6 +316,8 @@ undefined
 
 ### Test Case: S1-TC12 – Return to page 24
 
+**ATC ID:** `TST_KBOA_TC_12`  |  **MTC ID:** S1-TC12
+
 **Description:** Leaves the page in a clean state before the next flow.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -315,6 +340,8 @@ undefined
 ---
 
 ### Test Case: S1-TC13 – Go to page 26 (no interactive items)
+
+**ATC ID:** `TST_KBOA_TC_13`  |  **MTC ID:** S1-TC13
 
 **Description:** Opens a page with no Note and no Hotlink.
 
@@ -343,6 +370,8 @@ undefined
 
 ### Test Case: S1-TC14 – Tab goes straight to Home (page 26)
 
+**ATC ID:** `TST_KBOA_TC_14`  |  **MTC ID:** S1-TC14
+
 **Description:** With nothing interactive, Tab skips the page and reaches Home.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -365,6 +394,8 @@ undefined
 ---
 
 ### Test Case: S1-TC15 – Go to page 28 and confirm both items
+
+**ATC ID:** `TST_KBOA_TC_15`  |  **MTC ID:** S1-TC15
 
 **Description:** Opens a page containing both a Note and a Hotlink.
 
@@ -397,6 +428,8 @@ undefined
 
 ### Test Case: S1-TC16 – Tab to the Note first (page 28)
 
+**ATC ID:** `TST_KBOA_TC_16`  |  **MTC ID:** S1-TC16
+
 **Description:** First Tab reaches the Note when both items are present.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -419,6 +452,8 @@ undefined
 ---
 
 ### Test Case: S1-TC17 – Tab to the Hotlink second (page 28)
+
+**ATC ID:** `TST_KBOA_TC_17`  |  **MTC ID:** S1-TC17
 
 **Description:** Next Tab advances from Note to Hotlink.
 
@@ -443,6 +478,8 @@ undefined
 
 ### Test Case: S1-TC18 – Tab to Home last (page 28)
 
+**ATC ID:** `TST_KBOA_TC_18`  |  **MTC ID:** S1-TC18
+
 **Description:** Final Tab reaches Home, confirming Note -> Hotlink -> Home order.
 
 **Suite:** S1 — eBook in-page keyboard focus (Note & Hotlink hotspots)  
@@ -465,6 +502,8 @@ undefined
 ---
 
 ### Test Case: S1-TC19 – Return to page 20
+
+**ATC ID:** `TST_KBOA_TC_19`  |  **MTC ID:** S1-TC19
 
 **Description:** Leaves the reader on a neutral page before the toolbar flow.
 
@@ -495,6 +534,8 @@ undefined
 
 ### Test Case: S2-TC1 – Go to page 26 and place focus for toolbar traversal
 
+**ATC ID:** `TST_EBTF_TC_1`  |  **MTC ID:** S2-TC1
+
 **Description:** Repositions to page 26 and places focus to start tabbing the toolbar.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -522,6 +563,8 @@ undefined
 
 ### Test Case: S2-TC2 – Tab to Home
 
+**ATC ID:** `TST_EBTF_TC_2`  |  **MTC ID:** S2-TC2
+
 **Description:** Toolbar traversal reaches the Home button.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -544,6 +587,8 @@ undefined
 ---
 
 ### Test Case: S2-TC3 – Tab to Content
+
+**ATC ID:** `TST_EBTF_TC_3`  |  **MTC ID:** S2-TC3
 
 **Description:** Toolbar traversal reaches the Content button.
 
@@ -568,6 +613,8 @@ undefined
 
 ### Test Case: S2-TC4 – Tab to Tools
 
+**ATC ID:** `TST_EBTF_TC_4`  |  **MTC ID:** S2-TC4
+
 **Description:** Toolbar traversal reaches the Tools button.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -590,6 +637,8 @@ undefined
 ---
 
 ### Test Case: S2-TC5 – Tab to Zoom Out
+
+**ATC ID:** `TST_EBTF_TC_5`  |  **MTC ID:** S2-TC5
 
 **Description:** Toolbar traversal reaches Zoom Out.
 
@@ -614,6 +663,8 @@ undefined
 
 ### Test Case: S2-TC6 – Tab to Zoom In
 
+**ATC ID:** `TST_EBTF_TC_6`  |  **MTC ID:** S2-TC6
+
 **Description:** Toolbar traversal reaches Zoom In.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -636,6 +687,8 @@ undefined
 ---
 
 ### Test Case: S2-TC7 – Tab to Fit To Height
+
+**ATC ID:** `TST_EBTF_TC_7`  |  **MTC ID:** S2-TC7
 
 **Description:** Toolbar traversal reaches Fit To Height.
 
@@ -660,6 +713,8 @@ undefined
 
 ### Test Case: S2-TC8 – Tab to Jump to Page
 
+**ATC ID:** `TST_EBTF_TC_8`  |  **MTC ID:** S2-TC8
+
 **Description:** Toolbar traversal reaches the page-number control.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -682,6 +737,8 @@ undefined
 ---
 
 ### Test Case: S2-TC9 – Tab to Previous
+
+**ATC ID:** `TST_EBTF_TC_9`  |  **MTC ID:** S2-TC9
 
 **Description:** Dismisses the page-entry pop-up, then continues to Previous.
 
@@ -706,6 +763,8 @@ undefined
 
 ### Test Case: S2-TC10 – Tab to Table of Contents
 
+**ATC ID:** `TST_EBTF_TC_10`  |  **MTC ID:** S2-TC10
+
 **Description:** Toolbar traversal reaches Table of Contents.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -728,6 +787,8 @@ undefined
 ---
 
 ### Test Case: S2-TC11 – Tab to Next
+
+**ATC ID:** `TST_EBTF_TC_11`  |  **MTC ID:** S2-TC11
 
 **Description:** Toolbar traversal reaches Next.
 
@@ -752,6 +813,8 @@ undefined
 
 ### Test Case: S2-TC12 – Tab to Single Page View
 
+**ATC ID:** `TST_EBTF_TC_12`  |  **MTC ID:** S2-TC12
+
 **Description:** Toolbar traversal reaches Single Page View.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -774,6 +837,8 @@ undefined
 ---
 
 ### Test Case: S2-TC13 – Tab to Change Course Material
+
+**ATC ID:** `TST_EBTF_TC_13`  |  **MTC ID:** S2-TC13
 
 **Description:** Toolbar traversal reaches Change Course Material.
 
@@ -798,6 +863,8 @@ undefined
 
 ### Test Case: S2-TC14 – Tab to Move Toolbar
 
+**ATC ID:** `TST_EBTF_TC_14`  |  **MTC ID:** S2-TC14
+
 **Description:** Toolbar traversal reaches Move Toolbar.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -821,6 +888,8 @@ undefined
 
 ### Test Case: S2-TC15 – Tab to Toolbar Status
 
+**ATC ID:** `TST_EBTF_TC_15`  |  **MTC ID:** S2-TC15
+
 **Description:** Toolbar traversal reaches the Toolbar Status control.
 
 **Suite:** S2 — eBook toolbar keyboard focus traversal (page 26)  
@@ -843,6 +912,8 @@ undefined
 ---
 
 ### Test Case: S2-TC16 – Return to page 20
+
+**ATC ID:** `TST_EBTF_TC_16`  |  **MTC ID:** S2-TC16
 
 **Description:** Leaves the reader on a neutral page to finish the session.
 

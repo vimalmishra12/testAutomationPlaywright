@@ -31,12 +31,25 @@ as a restatement of the Expected Result. Where a check is only partly verified (
 a keypad value, the strength of a show/hide assertion, a note matched by label rather than by body)
 the Actual Result says so and points at **Needs Clarification** at the end of this document.
 
+**Automation traceability (ATC ID / MTC ID).** Every case carries two IDs, on the line under its heading
+here and as columns 2–3 of the workbook: the **MTC ID** (`S3-TC5`) is the manual case number, and the
+**ATC ID** (`TST_NOTE_TC_1`) is the automated test case in
+`testResources/testExecutionFiles/ExperienceApp/thor/ebookE2EstudentTest.json` that executes it. The two
+are deliberately **not** sequential — one ATC is reused wherever the same user action recurs (`TST_EBOO_TC_1`
+opens the reader in S1, S2, S3 and S8; `TST_EBOO_TC_5` is every "Return to the dashboard"), and the suites
+draw on nine modules (`EBOO`, `NOTE`, `DRAW`, `TIME`, `PAGE`, `SHOW`, `PLAY`, `COMM`, `DASH`). The pairing
+below is therefore copied from the workbook rather than derived from the numbering, and every ATC ID named
+here was checked to exist as a step of that execution file. The sign-in / dashboard-open steps and the
+sign-out teardown (`TST_LAND_*`, `TST_LOGI_*`, `TST_APPS_*`) are shared setup, not checks, so they carry no
+MTC ID on either side.
+
 **Companion workbook.** `ebookE2EstudentTest_thor_details.xlsx` is generated from this document by
 `tooling/build-ebook-e2e-student-xlsx.js`, which reads the cases, steps, data and both result columns straight
 out of the text below, so the workbook cannot say something this document does not. (The High / Medium / Low
 **Priority** is the one thing the generator supplies rather than reads: it comes from its own per-case list, by
 each case's role in its suite.) It holds **ten sheets**:
-the **Test Register** (all 134 cases in the fourteen-column manual format, the priority weighting, and the
+the **Test Register** (all 134 cases in the fifteen-column manual format — ATC ID and MTC ID sitting
+immediately after S.No. — the priority weighting, and the
 Needs Clarification notes summarised at its foot), an **Overview** (one row per case), and **one tab per suite**
 opening with that suite's one-line purpose and listing its steps. There is no cover sheet and no suite index:
 the purpose of the run, its shared setup and its caveats live here in this document, and the workbook carries
@@ -70,6 +83,7 @@ continuous sitting; the purpose of each is:
 **Suite purpose:** Prove a student can open an eBook and use its core content area — reading the Table of Contents, switching course material, and closing a panel.
 
 ### Test Case: S1-TC1 – eBook reader opens
+**ATC ID:** `TST_EBOO_TC_1`  |  **MTC ID:** S1-TC1
 **Description:** Confirm the student can launch the eBook and the reader opens.
 **Starts Fresh:** Yes
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -81,6 +95,7 @@ continuous sitting; the purpose of each is:
 
 ---
 ### Test Case: S1-TC2 – Open the Table of Contents
+**ATC ID:** `TST_EBOO_TC_2`  |  **MTC ID:** S1-TC2
 **Description:** Confirm the Table of Contents can be opened and jumps to a page.
 **Continues From:** S1-TC1 — the reader is already open.
 **Test Data:** —
@@ -92,6 +107,7 @@ continuous sitting; the purpose of each is:
 
 ---
 ### Test Case: S1-TC3 – Open the Change Course Material selector
+**ATC ID:** `TST_EBOO_TC_6`  |  **MTC ID:** S1-TC3
 **Description:** Confirm the course-material switcher opens and shows the expected book.
 **Continues From:** S1-TC2 — the contents panel is open.
 **Test Data:** Book `vm_automation_ebook_latest_01`
@@ -103,6 +119,7 @@ continuous sitting; the purpose of each is:
 
 ---
 ### Test Case: S1-TC4 – Switch to a different course material
+**ATC ID:** `TST_EBOO_TC_7`  |  **MTC ID:** S1-TC4
 **Description:** Confirm the student can select and open the other book from the switcher.
 **Continues From:** S1-TC3 — the course-material dropdown is open.
 **Test Data:** Book `vm_automation_ebook_latest_02`
@@ -114,6 +131,7 @@ continuous sitting; the purpose of each is:
 
 ---
 ### Test Case: S1-TC5 – Close the open panel
+**ATC ID:** `TST_EBOO_TC_4`  |  **MTC ID:** S1-TC5
 **Description:** Confirm the open reader panel can be closed without leaving the reader.
 **Continues From:** S1-TC4 — the reader is showing the second book.
 **Test Data:** —
@@ -124,6 +142,7 @@ continuous sitting; the purpose of each is:
 
 ---
 ### Test Case: S1-TC6 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S1-TC6
 **Description:** Confirm the reader's Home control leaves the eBook and returns to the dashboard.
 **Continues From:** S1-TC5 — still on the reader.
 **Test Data:** —
@@ -140,6 +159,7 @@ _Note: after this case the session signs out (shared teardown)._
 **Suite purpose:** Prove the reader view controls behave — switching page layout and using fit-to-width, fit-to-screen and zoom.
 
 ### Test Case: S2-TC1 – eBook reader opens
+**ATC ID:** `TST_EBOO_TC_1`  |  **MTC ID:** S2-TC1
 **Description:** Confirm the eBook reader opens after launch.
 **Starts Fresh:** Yes
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -150,6 +170,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC2 – Toggle layout
+**ATC ID:** `TST_EBOO_TC_17`  |  **MTC ID:** S2-TC2
 **Description:** Confirm the layout control switches the page spread.
 **Continues From:** S2-TC1 — reader is loaded.
 **Test Data:** Layout control (expected: `double-page`)
@@ -160,6 +181,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC3 – Toggle layout again
+**ATC ID:** `TST_EBOO_TC_22`  |  **MTC ID:** S2-TC3
 **Description:** Confirm the layout control toggles to the other spread.
 **Continues From:** S2-TC2 — reader at the prior layout.
 **Test Data:** Layout control
@@ -170,6 +192,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC4 – Fit to Width
+**ATC ID:** `TST_EBOO_TC_19`  |  **MTC ID:** S2-TC4
 **Description:** Confirm the Fit-to-Width view control works.
 **Continues From:** S2-TC3 — on the reader.
 **Test Data:** —
@@ -180,6 +203,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC5 – Fit to Screen
+**ATC ID:** `TST_EBOO_TC_18`  |  **MTC ID:** S2-TC5
 **Description:** Confirm the Fit-to-Screen view control works.
 **Continues From:** S2-TC4 — on the reader.
 **Test Data:** —
@@ -190,6 +214,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC6 – Zoom In
+**ATC ID:** `TST_EBOO_TC_20`  |  **MTC ID:** S2-TC6
 **Description:** Confirm the zoom-in control enlarges the page.
 **Continues From:** S2-TC5 — on the reader.
 **Test Data:** —
@@ -200,6 +225,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC7 – Zoom Out
+**ATC ID:** `TST_EBOO_TC_21`  |  **MTC ID:** S2-TC7
 **Description:** Confirm the zoom-out control shrinks the page.
 **Continues From:** S2-TC6 — on the reader, zoomed in.
 **Test Data:** —
@@ -210,6 +236,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S2-TC8 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S2-TC8
 **Description:** Confirm the reader's Home control returns to the dashboard.
 **Continues From:** S2-TC7 — on the reader.
 **Test Data:** —
@@ -226,6 +253,7 @@ _Note: after this case the session signs out (shared teardown)._
 **Suite purpose:** Prove the whole notes journey — add, edit, save, verify, delete, plus persistence across pages and after a close-and-reopen, including a note containing a hyperlink.
 
 ### Test Case: S3-TC1 – eBook reader opens
+**ATC ID:** `TST_EBOO_TC_1`  |  **MTC ID:** S3-TC1
 **Description:** Confirm the eBook reader opens after launch.
 **Starts Fresh:** Yes
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -236,6 +264,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC2 – Open the Tools pane
+**ATC ID:** `TST_EBOO_TC_3`  |  **MTC ID:** S3-TC2
 **Description:** Confirm the Tools pane opens from the reader toolbar.
 **Continues From:** S3-TC1 — reader is loaded.
 **Test Data:** —
@@ -246,6 +275,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC3 – Open the Notes pane
+**ATC ID:** `TST_EBOO_TC_8`  |  **MTC ID:** S3-TC3
 **Description:** Confirm Notes opens from Tools.
 **Continues From:** S3-TC2 — Tools pane is open.
 **Test Data:** —
@@ -256,6 +286,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC4 – Verify the blank Notes content
+**ATC ID:** `TST_EBOO_TC_13`  |  **MTC ID:** S3-TC4
 **Description:** Confirm an empty Notes area shows the expected heading.
 **Continues From:** S3-TC3 — Notes pane open with no notes yet.
 **Test Data:** Expected heading **My notes & links**
@@ -266,6 +297,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC5 – Add a note
+**ATC ID:** `TST_NOTE_TC_1`  |  **MTC ID:** S3-TC5
 **Description:** Confirm the Add Notes control opens a new note entry.
 **Continues From:** S3-TC4 — Notes pane open.
 **Test Data:** —
@@ -276,6 +308,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC6 – Enter note text
+**ATC ID:** `TST_NOTE_TC_3`  |  **MTC ID:** S3-TC6
 **Description:** Confirm a note can be typed into the note editor.
 **Continues From:** S3-TC5 — a new note is open.
 **Test Data:** Note text `Test Note1`
@@ -286,6 +319,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC7 – Save the note
+**ATC ID:** `TST_NOTE_TC_4`  |  **MTC ID:** S3-TC7
 **Description:** Confirm the note saves.
 **Continues From:** S3-TC6 — note text entered.
 **Test Data:** —
@@ -296,6 +330,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC8 – Verify the saved note content
+**ATC ID:** `TST_NOTE_TC_9`  |  **MTC ID:** S3-TC8
 **Description:** Confirm the saved note matches what was entered.
 **Continues From:** S3-TC7 — note is saved.
 **Test Data:** Heading **My notes & links**, text **Test Note1**
@@ -306,6 +341,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC9 – Open the note menu
+**ATC ID:** `TST_NOTE_TC_6`  |  **MTC ID:** S3-TC9
 **Description:** Confirm the per-note menu opens.
 **Continues From:** S3-TC8 — a saved note is present.
 **Test Data:** —
@@ -316,6 +352,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC10 – Delete note opens confirmation
+**ATC ID:** `TST_NOTE_TC_7`  |  **MTC ID:** S3-TC10
 **Description:** Confirm choosing Delete shows a confirmation dialog.
 **Continues From:** S3-TC9 — note menu is open.
 **Test Data:** —
@@ -326,6 +363,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC11 – Confirm deletion removes the note
+**ATC ID:** `TST_NOTE_TC_8`  |  **MTC ID:** S3-TC11
 **Description:** Confirm confirming deletion deletes the note.
 **Continues From:** S3-TC10 — confirmation dialog is open.
 **Test Data:** —
@@ -336,6 +374,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC12 – Add a hyperlink note
+**ATC ID:** `TST_NOTE_TC_1`  |  **MTC ID:** S3-TC12
 **Description:** Open a new note to hold a hyperlink.
 **Continues From:** S3-TC11 — back on the empty Notes list.
 **Test Data:** —
@@ -346,6 +385,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC13 – Enter a note containing a link
+**ATC ID:** `TST_NOTE_TC_3`  |  **MTC ID:** S3-TC13
 **Description:** Type a note whose text contains a hyperlink.
 **Continues From:** S3-TC12 — a new note is open.
 **Test Data:** Note text `https://google.com`
@@ -356,6 +396,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC14 – Save the hyperlink note
+**ATC ID:** `TST_NOTE_TC_4`  |  **MTC ID:** S3-TC14
 **Description:** Confirm the hyperlink note saves.
 **Continues From:** S3-TC13 — hyperlink text entered.
 **Test Data:** —
@@ -366,6 +407,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC15 – Open the note's hyperlink
+**ATC ID:** `TST_NOTE_TC_10`  |  **MTC ID:** S3-TC15
 **Description:** Confirm a hyperlink inside a note opens in a new tab and the reader is refocused.
 **Continues From:** S3-TC14 — the saved note shows the link.
 **Test Data:** Expected link target contains `google`
@@ -377,6 +419,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC16 – Open the note menu (hyperlink note)
+**ATC ID:** `TST_NOTE_TC_6`  |  **MTC ID:** S3-TC16
 **Description:** Open the saved hyperlink note's menu to remove it.
 **Continues From:** S3-TC15 — back on the reader with the saved note.
 **Test Data:** —
@@ -387,6 +430,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC17 – Delete the hyperlink note
+**ATC ID:** `TST_NOTE_TC_7`  |  **MTC ID:** S3-TC17
 **Description:** Selecting Delete shows the confirmation.
 **Continues From:** S3-TC16 — note menu open.
 **Test Data:** —
@@ -397,6 +441,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC18 – Confirm the hyperlink note deletion
+**ATC ID:** `TST_NOTE_TC_8`  |  **MTC ID:** S3-TC18
 **Description:** Confirm the deletion removes the hyperlink note.
 **Continues From:** S3-TC17 — confirmation dialog open.
 **Test Data:** —
@@ -407,6 +452,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC19 – Add a note for page-navigation persistence
+**ATC ID:** `TST_NOTE_TC_1`  |  **MTC ID:** S3-TC19
 **Description:** Open a new note that will be used to test persistence across pages.
 **Continues From:** S3-TC18 — back on the empty Notes list.
 **Test Data:** —
@@ -417,6 +463,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC20 – Enter the persistence note text
+**ATC ID:** `TST_NOTE_TC_3`  |  **MTC ID:** S3-TC20
 **Description:** Type a note to verify after navigating away and back.
 **Continues From:** S3-TC19 — a new note is open.
 **Test Data:** Note text `Page 20 Persistent Note`
@@ -427,6 +474,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC21 – Save the persistence note
+**ATC ID:** `TST_NOTE_TC_4`  |  **MTC ID:** S3-TC21
 **Description:** Save the note before navigating.
 **Continues From:** S3-TC20 — text entered.
 **Test Data:** —
@@ -437,6 +485,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC22 – Note persists after navigating pages
+**ATC ID:** `TST_NOTE_TC_11`  |  **MTC ID:** S3-TC22
 **Description:** Confirm the saved note is still present after leaving and returning to its page.
 **Continues From:** S3-TC21 — note saved on the current page.
 **Test Data:** —
@@ -448,6 +497,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC23 – Deleted note does not reappear
+**ATC ID:** `TST_NOTE_TC_12`  |  **MTC ID:** S3-TC23
 **Description:** Confirm a deleted note stays gone after navigating away and back.
 **Continues From:** S3-TC22 — back on the original page with the note.
 **Test Data:** —
@@ -459,6 +509,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC24 – Add the first note for the reopen test
+**ATC ID:** `TST_NOTE_TC_1`  |  **MTC ID:** S3-TC24
 **Description:** Open a new note that must survive closing and reopening the eBook.
 **Continues From:** S3-TC23 — empty Notes list on the page.
 **Test Data:** —
@@ -469,6 +520,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC25 – Enter the first reopen note
+**ATC ID:** `TST_NOTE_TC_3`  |  **MTC ID:** S3-TC25
 **Description:** Type the first reopen note.
 **Continues From:** S3-TC24 — a new note is open.
 **Test Data:** Note text `Reopen Persistent Note 1`
@@ -479,6 +531,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC26 – Save the first reopen note
+**ATC ID:** `TST_NOTE_TC_4`  |  **MTC ID:** S3-TC26
 **Description:** Save the first reopen note.
 **Continues From:** S3-TC25 — text entered.
 **Test Data:** —
@@ -489,6 +542,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC27 – Return to the dashboard (to test persistence)
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S3-TC27
 **Description:** Leave the eBook so it can be reopened to confirm the note persisted.
 **Continues From:** S3-TC26 — note saved in the reader.
 **Test Data:** —
@@ -499,6 +553,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC28 – Reopen the eBook from the dashboard
+**ATC ID:** `TST_DASH_TC_5`  |  **MTC ID:** S3-TC28
 **Description:** Reopen the same eBook from the dashboard.
 **Continues From:** S3-TC27 — student is on the dashboard.
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -509,6 +564,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC29 – Verify the reopened reader
+**ATC ID:** `TST_EBOO_TC_1`  |  **MTC ID:** S3-TC29
 **Description:** Confirm the reopened reader loads correctly.
 **Continues From:** S3-TC28 — reader just reopened.
 **Test Data:** —
@@ -519,6 +575,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC30 – Open the Tools pane after reopening
+**ATC ID:** `TST_EBOO_TC_3`  |  **MTC ID:** S3-TC30
 **Description:** Reopen Tools to reach Notes after the reload.
 **Continues From:** S3-TC29 — reader loaded.
 **Test Data:** —
@@ -529,6 +586,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC31 – Open the Notes pane after reopening
+**ATC ID:** `TST_EBOO_TC_8`  |  **MTC ID:** S3-TC31
 **Description:** Reopen Notes to inspect the persisted note.
 **Continues From:** S3-TC30 — Tools pane open.
 **Test Data:** —
@@ -539,6 +597,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC32 – First reopen note persisted
+**ATC ID:** `TST_NOTE_TC_13`  |  **MTC ID:** S3-TC32
 **Description:** Confirm the first reopen note is still present after closing and reopening.
 **Continues From:** S3-TC31 — Notes pane open after reopen.
 **Test Data:** Note text `Reopen Persistent Note 1`
@@ -549,6 +608,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC33 – Add a second note on the same page
+**ATC ID:** `TST_NOTE_TC_1`  |  **MTC ID:** S3-TC33
 **Description:** Add a second note to confirm multiple notes display together.
 **Continues From:** S3-TC32 — Notes pane open with the first note.
 **Test Data:** —
@@ -559,6 +619,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC34 – Enter the second note text
+**ATC ID:** `TST_NOTE_TC_3`  |  **MTC ID:** S3-TC34
 **Description:** Type the second note.
 **Continues From:** S3-TC33 — a new note is open.
 **Test Data:** Note text `Reopen Persistent Note 2`
@@ -569,6 +630,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC35 – Save the second note
+**ATC ID:** `TST_NOTE_TC_4`  |  **MTC ID:** S3-TC35
 **Description:** Save the second note.
 **Continues From:** S3-TC34 — text entered.
 **Test Data:** —
@@ -579,6 +641,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC36 – Both notes displayed together
+**ATC ID:** `TST_NOTE_TC_13`  |  **MTC ID:** S3-TC36
 **Description:** Confirm both notes are listed on the page at the same time.
 **Continues From:** S3-TC35 — two notes saved on the page.
 **Test Data:** Two notes expected on the page
@@ -589,6 +652,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC37 – Delete both notes
+**ATC ID:** `TST_NOTE_TC_14`  |  **MTC ID:** S3-TC37
 **Description:** Confirm all notes on the page can be removed cleanly.
 **Continues From:** S3-TC36 — two notes present.
 **Test Data:** —
@@ -599,6 +663,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC38 – Note with special characters and numbers
+**ATC ID:** `TST_NOTE_TC_15`  |  **MTC ID:** S3-TC38
 **Description:** Confirm a note containing symbols and numbers saves verbatim.
 **Continues From:** S3-TC37 — empty Notes list.
 **Test Data:** Note text `Notes #123 @ Test & Cambridge! [2026] $50% (A+B)=C`
@@ -609,6 +674,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC39 – Clean up the special-character note
+**ATC ID:** `TST_NOTE_TC_14`  |  **MTC ID:** S3-TC39
 **Description:** Remove the special-character note.
 **Continues From:** S3-TC38 — special-character note present.
 **Test Data:** —
@@ -619,6 +685,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC40 – Edit an existing note
+**ATC ID:** `TST_NOTE_TC_18`  |  **MTC ID:** S3-TC40
 **Description:** Confirm an existing note can be edited and the change persists.
 **Continues From:** S3-TC39 — empty Notes list (an initial note is created if none exist).
 **Test Data:** Updated text `Initial Note For Editing - Updated Version`
@@ -630,6 +697,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC41 – Clean up after editing
+**ATC ID:** `TST_NOTE_TC_14`  |  **MTC ID:** S3-TC41
 **Description:** Remove the edited note.
 **Continues From:** S3-TC40 — edited note present.
 **Test Data:** —
@@ -640,6 +708,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S3-TC42 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S3-TC42
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S3-TC41 — Notes cleaned up.
 **Test Data:** —
@@ -659,6 +728,7 @@ _Setup for this suite additionally opens **Tools → Drawing** before `S4-TC1`; 
 continues from the open Drawing tool._
 
 ### Test Case: S4-TC1 – Open the Pen colour selector
+**ATC ID:** `TST_DRAW_TC_2`  |  **MTC ID:** S4-TC1
 **Description:** Confirm the pen colour options open in the Drawing tool.
 **Starts Fresh:** Yes
 **Test Data:** Drawing tool open (via Tools)
@@ -669,6 +739,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC2 – Select a pen colour
+**ATC ID:** `TST_DRAW_TC_10`  |  **MTC ID:** S4-TC2
 **Description:** Confirm a pen colour can be chosen.
 **Continues From:** S4-TC1 — pen colour options open.
 **Test Data:** Colour **Green**
@@ -679,6 +750,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC3 – Open the Pen width selector
+**ATC ID:** `TST_DRAW_TC_3`  |  **MTC ID:** S4-TC3
 **Description:** Confirm the pen width options open.
 **Continues From:** S4-TC2 — a pen colour is selected.
 **Test Data:** —
@@ -689,6 +761,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC4 – Select a pen width
+**ATC ID:** `TST_DRAW_TC_14`  |  **MTC ID:** S4-TC4
 **Description:** Confirm a stroke width can be chosen.
 **Continues From:** S4-TC3 — pen width options open.
 **Test Data:** Width **4** (largest)
@@ -699,6 +772,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC5 – Draw with the pen
+**ATC ID:** `TST_DRAW_TC_1`  |  **MTC ID:** S4-TC5
 **Description:** Confirm a freehand line can be drawn with the selected pen.
 **Continues From:** S4-TC4 — pen colour and width are set.
 **Test Data:** —
@@ -709,6 +783,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC6 – Pen drawing is saved
+**ATC ID:** `TST_DRAW_TC_19`  |  **MTC ID:** S4-TC6
 **Description:** Confirm the pen drawing is stored so it persists.
 **Continues From:** S4-TC5 — a pen line is drawn.
 **Test Data:** —
@@ -719,6 +794,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC7 – Undo the drawing
+**ATC ID:** `TST_DRAW_TC_5`  |  **MTC ID:** S4-TC7
 **Description:** Confirm Undo removes the most recent stroke.
 **Continues From:** S4-TC6 — a pen line is drawn.
 **Test Data:** —
@@ -729,6 +805,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC8 – Redo the drawing
+**ATC ID:** `TST_DRAW_TC_6`  |  **MTC ID:** S4-TC8
 **Description:** Confirm Redo restores the undone stroke.
 **Continues From:** S4-TC7 — stroke undone.
 **Test Data:** —
@@ -739,6 +816,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC9 – Return to the dashboard (to reopen fresh)
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S4-TC9
 **Description:** Leave the eBook so the drawing can be checked on a fresh load.
 **Continues From:** S4-TC8 — drawing present on the page.
 **Test Data:** —
@@ -749,6 +827,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC10 – Reopen the eBook
+**ATC ID:** `TST_DASH_TC_5`  |  **MTC ID:** S4-TC10
 **Description:** Reopen the eBook from the dashboard.
 **Continues From:** S4-TC9 — on the dashboard.
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -759,6 +838,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC11 – Open the Tools pane
+**ATC ID:** `TST_EBOO_TC_3`  |  **MTC ID:** S4-TC11
 **Description:** Reopen Tools to reach the Drawing tool.
 **Continues From:** S4-TC10 — reader reopened.
 **Test Data:** —
@@ -769,6 +849,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC12 – Open the Drawing tool
+**ATC ID:** `TST_EBOO_TC_51`  |  **MTC ID:** S4-TC12
 **Description:** Open the Drawing tool.
 **Continues From:** S4-TC11 — Tools pane open.
 **Test Data:** —
@@ -779,6 +860,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC13 – Erase a drawing
+**ATC ID:** `TST_DRAW_TC_4`  |  **MTC ID:** S4-TC13
 **Description:** Confirm the eraser removes a drawn stroke.
 **Continues From:** S4-TC12 — Drawing tool open with a prior drawing.
 **Test Data:** —
@@ -789,6 +871,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC14 – All drawings cleared
+**ATC ID:** `TST_DRAW_TC_20`  |  **MTC ID:** S4-TC14
 **Description:** Confirm the stored drawing data is cleared once all strokes are erased.
 **Continues From:** S4-TC13 — strokes erased.
 **Test Data:** —
@@ -799,6 +882,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC15 – Return to the dashboard (to reopen fresh)
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S4-TC15
 **Description:** Leave the eBook again to test the highlighter on a fresh load.
 **Continues From:** S4-TC14 — drawings cleared.
 **Test Data:** —
@@ -809,6 +893,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC16 – Reopen the eBook
+**ATC ID:** `TST_DASH_TC_5`  |  **MTC ID:** S4-TC16
 **Description:** Reopen the eBook from the dashboard.
 **Continues From:** S4-TC15 — on the dashboard.
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -819,6 +904,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC17 – Open the Tools pane
+**ATC ID:** `TST_EBOO_TC_3`  |  **MTC ID:** S4-TC17
 **Description:** Reopen Tools to reach the Drawing tool.
 **Continues From:** S4-TC16 — reader reopened.
 **Test Data:** —
@@ -829,6 +915,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC18 – Open the Drawing tool
+**ATC ID:** `TST_EBOO_TC_51`  |  **MTC ID:** S4-TC18
 **Description:** Open the Drawing tool to use the highlighter.
 **Continues From:** S4-TC17 — Tools pane open.
 **Test Data:** —
@@ -839,6 +926,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC19 – Highlight an area
+**ATC ID:** `TST_DRAW_TC_9`  |  **MTC ID:** S4-TC19
 **Description:** Confirm the highlighter marks a selected area.
 **Continues From:** S4-TC18 — Drawing tool open.
 **Test Data:** —
@@ -849,6 +937,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC20 – Highlight is saved
+**ATC ID:** `TST_DRAW_TC_18`  |  **MTC ID:** S4-TC20
 **Description:** Confirm the highlight is stored so it persists.
 **Continues From:** S4-TC19 — a highlight is on the page.
 **Test Data:** —
@@ -859,6 +948,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC21 – Erase the highlight
+**ATC ID:** `TST_DRAW_TC_4`  |  **MTC ID:** S4-TC21
 **Description:** Confirm the eraser removes the highlight.
 **Continues From:** S4-TC20 — highlight present.
 **Test Data:** —
@@ -869,6 +959,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC22 – All drawings cleared
+**ATC ID:** `TST_DRAW_TC_20`  |  **MTC ID:** S4-TC22
 **Description:** Confirm the stored drawing data is cleared once everything is erased.
 **Continues From:** S4-TC21 — highlight erased.
 **Test Data:** —
@@ -879,6 +970,7 @@ continues from the open Drawing tool._
 
 ---
 ### Test Case: S4-TC23 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S4-TC23
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S4-TC22 — drawings cleared.
 **Test Data:** —
@@ -898,6 +990,7 @@ _Setup for this suite additionally opens **Tools → Timer** before `S5-TC1`; th
 continues from the open Timer panel._
 
 ### Test Case: S5-TC1 – Select Count down
+**ATC ID:** `TST_TIME_TC_9`  |  **MTC ID:** S5-TC1
 **Description:** Confirm the student can switch the Timer to Count down mode.
 **Starts Fresh:** Yes
 **Test Data:** Timer open (via Tools)
@@ -908,6 +1001,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC2 – Enter a countdown digit
+**ATC ID:** `TST_TIME_TC_6`  |  **MTC ID:** S5-TC2
 **Description:** Confirm digits can be entered on the countdown keypad.
 **Continues From:** S5-TC1 — Count-down mode is active.
 **Test Data:** Keypad digit **1**
@@ -918,6 +1012,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC3 – Enter another countdown digit
+**ATC ID:** `TST_TIME_TC_7`  |  **MTC ID:** S5-TC3
 **Description:** Confirm a second digit can be entered.
 **Continues From:** S5-TC2 — first digit entered.
 **Test Data:** Keypad digit **2**
@@ -928,6 +1023,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC4 – Mute the countdown
+**ATC ID:** `TST_TIME_TC_3`  |  **MTC ID:** S5-TC4
 **Description:** Confirm the countdown sound can be muted.
 **Continues From:** S5-TC3 — countdown time entered.
 **Test Data:** —
@@ -938,6 +1034,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC5 – Unmute the countdown
+**ATC ID:** `TST_TIME_TC_13`  |  **MTC ID:** S5-TC5
 **Description:** Confirm the countdown sound can be turned back on.
 **Continues From:** S5-TC4 — countdown muted.
 **Test Data:** —
@@ -948,6 +1045,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC6 – Start the countdown
+**ATC ID:** `TST_TIME_TC_2`  |  **MTC ID:** S5-TC6
 **Description:** Confirm the countdown can be started.
 **Continues From:** S5-TC5 — countdown unmuted.
 **Test Data:** —
@@ -958,6 +1056,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC7 – Enter a countdown digit
+**ATC ID:** `TST_TIME_TC_7`  |  **MTC ID:** S5-TC7
 **Description:** Confirm digits can be entered while adjusting the countdown.
 **Continues From:** S5-TC6 — countdown started.
 **Test Data:** Keypad digit **2**
@@ -968,6 +1067,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC8 – Enter a countdown digit
+**ATC ID:** `TST_TIME_TC_6`  |  **MTC ID:** S5-TC8
 **Description:** Confirm another digit can be entered.
 **Continues From:** S5-TC7 — digit entered.
 **Test Data:** Keypad digit **1**
@@ -978,6 +1078,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC9 – Pause the countdown
+**ATC ID:** `TST_TIME_TC_5`  |  **MTC ID:** S5-TC9
 **Description:** Confirm the running countdown can be paused.
 **Continues From:** S5-TC8 — countdown running.
 **Test Data:** —
@@ -988,6 +1089,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC10 – Reset the countdown
+**ATC ID:** `TST_TIME_TC_14`  |  **MTC ID:** S5-TC10
 **Description:** Confirm the countdown can be cleared/reset.
 **Continues From:** S5-TC9 — countdown paused.
 **Test Data:** —
@@ -998,6 +1100,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC11 – Select Count up
+**ATC ID:** `TST_TIME_TC_12`  |  **MTC ID:** S5-TC11
 **Description:** Confirm the student can switch the Timer to Count up mode.
 **Continues From:** S5-TC10 — countdown reset.
 **Test Data:** —
@@ -1008,6 +1111,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC12 – Start the count up
+**ATC ID:** `TST_TIME_TC_1`  |  **MTC ID:** S5-TC12
 **Description:** Confirm the count-up timer can be started.
 **Continues From:** S5-TC11 — Count-up mode active.
 **Test Data:** —
@@ -1018,6 +1122,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC13 – Pause the timer
+**ATC ID:** `TST_TIME_TC_11`  |  **MTC ID:** S5-TC13
 **Description:** Confirm the running timer can be paused.
 **Continues From:** S5-TC12 — count-up running.
 **Test Data:** —
@@ -1028,6 +1133,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC14 – Close the Timer
+**ATC ID:** `TST_TIME_TC_4`  |  **MTC ID:** S5-TC14
 **Description:** Confirm the Timer can be closed.
 **Continues From:** S5-TC13 — timer paused.
 **Test Data:** —
@@ -1038,6 +1144,7 @@ continues from the open Timer panel._
 
 ---
 ### Test Case: S5-TC15 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S5-TC15
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S5-TC14 — Timer closed.
 **Test Data:** —
@@ -1054,6 +1161,7 @@ _Note: after this case the session signs out (shared teardown)._
 **Suite purpose:** Prove page navigation — the "Go to page" entry plus the next and previous page controls.
 
 ### Test Case: S6-TC1 – Open "Go to page"
+**ATC ID:** `TST_EBOO_TC_9`  |  **MTC ID:** S6-TC1
 **Description:** Confirm the student can open the Go-to-page control.
 **Starts Fresh:** Yes
 **Test Data:** eBook reader open
@@ -1064,6 +1172,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC2 – Enter a page number
+**ATC ID:** `TST_PAGE_TC_1`  |  **MTC ID:** S6-TC2
 **Description:** Enter a page number using the keypad.
 **Continues From:** S6-TC1 — page-entry control is open.
 **Test Data:** Keypad digit **1**
@@ -1074,6 +1183,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC3 – Enter another page number
+**ATC ID:** `TST_PAGE_TC_2`  |  **MTC ID:** S6-TC3
 **Description:** Append a second digit to the page number.
 **Continues From:** S6-TC2 — first digit entered.
 **Test Data:** Keypad digit **2**
@@ -1084,6 +1194,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC4 – Go to the entered page
+**ATC ID:** `TST_PAGE_TC_4`  |  **MTC ID:** S6-TC4
 **Description:** Confirm Go-to navigates to the entered page.
 **Continues From:** S6-TC3 — page number entered.
 **Test Data:** —
@@ -1094,6 +1205,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC5 – Next page
+**ATC ID:** `TST_EBOO_TC_53`  |  **MTC ID:** S6-TC5
 **Description:** Confirm the Next-page control advances the reader.
 **Continues From:** S6-TC4 — reader on the entered page.
 **Test Data:** Expected page indicator `14-15 / 160`
@@ -1104,6 +1216,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC6 – Previous page
+**ATC ID:** `TST_EBOO_TC_54`  |  **MTC ID:** S6-TC6
 **Description:** Confirm the Previous-page control steps back.
 **Continues From:** S6-TC5 — reader on the next page.
 **Test Data:** Expected page indicator `12-13 / 160`
@@ -1114,6 +1227,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S6-TC7 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S6-TC7
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S6-TC6 — reader on the previous page.
 **Test Data:** —
@@ -1133,6 +1247,7 @@ _Setup for this suite additionally sets the reader to a double-page layout and o
 before `S7-TC1`; the first case continues from the open Tools pane._
 
 ### Test Case: S7-TC1 – Open the Show/Hide Selection tool
+**ATC ID:** `TST_EBOO_TC_23`  |  **MTC ID:** S7-TC1
 **Description:** Confirm the Show/Hide selection tool opens.
 **Starts Fresh:** Yes
 **Test Data:** Reader on double-page layout, Tools open
@@ -1143,6 +1258,7 @@ before `S7-TC1`; the first case continues from the open Tools pane._
 
 ---
 ### Test Case: S7-TC2 – Show a selection
+**ATC ID:** `TST_SHOW_TC_2`  |  **MTC ID:** S7-TC2
 **Description:** Confirm the Show control displays only the selected area.
 **Continues From:** S7-TC1 — Show/Hide tool active with a selection.
 **Test Data:** Control **Show Selection**
@@ -1153,6 +1269,7 @@ before `S7-TC1`; the first case continues from the open Tools pane._
 
 ---
 ### Test Case: S7-TC3 – Close the selection
+**ATC ID:** `TST_SHOW_TC_3`  |  **MTC ID:** S7-TC3
 **Description:** Confirm the selection can be cleared.
 **Continues From:** S7-TC2 — area shown.
 **Test Data:** Control **Close**
@@ -1163,6 +1280,7 @@ before `S7-TC1`; the first case continues from the open Tools pane._
 
 ---
 ### Test Case: S7-TC4 – Hide a selection
+**ATC ID:** `TST_SHOW_TC_1`  |  **MTC ID:** S7-TC4
 **Description:** Confirm the Hide control hides the selected area.
 **Continues From:** S7-TC3 — selection cleared, new selection made.
 **Test Data:** Control **Hide Selection**
@@ -1173,6 +1291,7 @@ before `S7-TC1`; the first case continues from the open Tools pane._
 
 ---
 ### Test Case: S7-TC5 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S7-TC5
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S7-TC4 — selection hidden.
 **Test Data:** —
@@ -1189,6 +1308,7 @@ _Note: after this case the session signs out (shared teardown)._
 **Suite purpose:** Prove the in-book interactive hotlinks — answer, video, audio, activity, external link, zoom hotspot, game and go-to-page — including an activity's own controls.
 
 ### Test Case: S8-TC1 – eBook reader opens
+**ATC ID:** `TST_EBOO_TC_1`  |  **MTC ID:** S8-TC1
 **Description:** Confirm the eBook reader opens after launch.
 **Starts Fresh:** Yes
 **Test Data:** eBook `vm_automation_ebook_latest_01`
@@ -1199,6 +1319,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC2 – Open the Table of Contents
+**ATC ID:** `TST_EBOO_TC_2`  |  **MTC ID:** S8-TC2
 **Description:** Confirm the Table of Contents can be opened.
 **Continues From:** S8-TC1 — reader loaded.
 **Test Data:** —
@@ -1209,6 +1330,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC3 – Open the Change Course Material selector
+**ATC ID:** `TST_EBOO_TC_6`  |  **MTC ID:** S8-TC3
 **Description:** Confirm the course-material switcher opens with the expected book.
 **Continues From:** S8-TC2 — contents panel is open.
 **Test Data:** Book `vm_automation_ebook_latest_01`
@@ -1220,6 +1342,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC4 – Switch to the second book
+**ATC ID:** `TST_EBOO_TC_7`  |  **MTC ID:** S8-TC4
 **Description:** Confirm the student can open the other book.
 **Continues From:** S8-TC3 — course-material dropdown open.
 **Test Data:** Book `vm_automation_ebook_latest_02`
@@ -1230,6 +1353,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC5 – Open "Go to page"
+**ATC ID:** `TST_EBOO_TC_9`  |  **MTC ID:** S8-TC5
 **Description:** Open the page-entry control to reach a page containing hotlinks.
 **Continues From:** S8-TC4 — reader on the second book.
 **Test Data:** —
@@ -1240,6 +1364,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC6 – Enter a page number
+**ATC ID:** `TST_PAGE_TC_1`  |  **MTC ID:** S8-TC6
 **Description:** Enter a page number using the keypad.
 **Continues From:** S8-TC5 — page-entry control open.
 **Test Data:** Keypad digit **1**
@@ -1250,6 +1375,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC7 – Enter another page number
+**ATC ID:** `TST_PAGE_TC_2`  |  **MTC ID:** S8-TC7
 **Description:** Append a second digit.
 **Continues From:** S8-TC6 — first digit entered.
 **Test Data:** Keypad digit **2**
@@ -1260,6 +1386,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC8 – Go to the entered page
+**ATC ID:** `TST_PAGE_TC_4`  |  **MTC ID:** S8-TC8
 **Description:** Navigate to the entered page.
 **Continues From:** S8-TC7 — page number entered.
 **Test Data:** —
@@ -1270,6 +1397,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC9 – Open the Answer hotlink
+**ATC ID:** `TST_PLAY_TC_8`  |  **MTC ID:** S8-TC9
 **Description:** Confirm an in-book Answer hotlink opens.
 **Continues From:** S8-TC8 — reader on the hotlink page.
 **Test Data:** —
@@ -1280,6 +1408,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC10 – Open the Video hotlink
+**ATC ID:** `TST_PLAY_TC_10`  |  **MTC ID:** S8-TC10
 **Description:** Confirm an in-book Video hotlink opens.
 **Continues From:** S8-TC9 — reader on the hotlink page.
 **Test Data:** —
@@ -1290,6 +1419,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC11 – Open the Audio hotlink
+**ATC ID:** `TST_PLAY_TC_9`  |  **MTC ID:** S8-TC11
 **Description:** Confirm an in-book Audio hotlink opens.
 **Continues From:** S8-TC10 — reader on the hotlink page.
 **Test Data:** —
@@ -1300,6 +1430,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC12 – Open the Activity hotlink
+**ATC ID:** `TST_PLAY_TC_1`  |  **MTC ID:** S8-TC12
 **Description:** Confirm an interactive Activity hotlink launches.
 **Continues From:** S8-TC11 — reader on the hotlink page.
 **Test Data:** Activity feedback **Good effort!**
@@ -1310,6 +1441,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC13 – Check the answer in the activity
+**ATC ID:** `TST_COMM_TC_1`  |  **MTC ID:** S8-TC13
 **Description:** Confirm the activity's Check-answer control works.
 **Continues From:** S8-TC12 — activity open.
 **Test Data:** —
@@ -1320,6 +1452,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC14 – Go to the next activity item
+**ATC ID:** `TST_COMM_TC_2`  |  **MTC ID:** S8-TC14
 **Description:** Confirm the activity's Next control works.
 **Continues From:** S8-TC13 — answer checked.
 **Test Data:** —
@@ -1330,6 +1463,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC15 – Start the activity again
+**ATC ID:** `TST_COMM_TC_4`  |  **MTC ID:** S8-TC15
 **Description:** Confirm the activity's Start-again control works.
 **Continues From:** S8-TC14 — advanced in the activity.
 **Test Data:** —
@@ -1340,6 +1474,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC16 – Close the activity
+**ATC ID:** `TST_COMM_TC_3`  |  **MTC ID:** S8-TC16
 **Description:** Confirm the activity can be closed back to the reader.
 **Continues From:** S8-TC15 — activity restarted.
 **Test Data:** —
@@ -1350,6 +1485,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC17 – Enter a page number
+**ATC ID:** `TST_PAGE_TC_2`  |  **MTC ID:** S8-TC17
 **Description:** Navigate to another hotlink page using the keypad.
 **Continues From:** S8-TC16 — back on the reader.
 **Test Data:** Keypad digit **2**
@@ -1360,6 +1496,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC18 – Go to the entered page
+**ATC ID:** `TST_PAGE_TC_4`  |  **MTC ID:** S8-TC18
 **Description:** Navigate to the entered page.
 **Continues From:** S8-TC17 — page number entered.
 **Test Data:** —
@@ -1370,6 +1507,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC19 – Open the Audio (no transcript) hotlink
+**ATC ID:** `TST_PLAY_TC_3`  |  **MTC ID:** S8-TC19
 **Description:** Confirm an audio hotlink without a transcript opens.
 **Continues From:** S8-TC18 — reader on the hotlink page.
 **Test Data:** —
@@ -1380,6 +1518,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC20 – Open the external-link hotlink
+**ATC ID:** `TST_PLAY_TC_2`  |  **MTC ID:** S8-TC20
 **Description:** Confirm an external-link hotlink opens in a new tab.
 **Continues From:** S8-TC19 — reader on the hotlink page.
 **Test Data:** —
@@ -1391,6 +1530,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC21 – Open the Zoom Hotspot hotlink
+**ATC ID:** `TST_PLAY_TC_6`  |  **MTC ID:** S8-TC21
 **Description:** Confirm a zoom-hotspot hotlink enlarges the target area.
 **Continues From:** S8-TC20 — back on the reader.
 **Test Data:** —
@@ -1401,6 +1541,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC22 – Close the Zoom Hotspot
+**ATC ID:** `TST_PLAY_TC_7`  |  **MTC ID:** S8-TC22
 **Description:** Confirm the zoom-hotspot view can be closed.
 **Continues From:** S8-TC21 — zoom hotspot open.
 **Test Data:** —
@@ -1411,6 +1552,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC23 – Open the Game hotlink
+**ATC ID:** `TST_PLAY_TC_4`  |  **MTC ID:** S8-TC23
 **Description:** Confirm a game hotlink launches.
 **Continues From:** S8-TC22 — back on the reader.
 **Test Data:** —
@@ -1421,6 +1563,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC24 – Open the Go-to-page hotlink
+**ATC ID:** `TST_PLAY_TC_5`  |  **MTC ID:** S8-TC24
 **Description:** Confirm an in-book Go-to-page hotlink jumps to its page.
 **Continues From:** S8-TC23 — reader on the hotlink page.
 **Test Data:** —
@@ -1431,6 +1574,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC25 – Open "Go to page"
+**ATC ID:** `TST_EBOO_TC_9`  |  **MTC ID:** S8-TC25
 **Description:** Open the page-entry control for the closing navigation.
 **Continues From:** S8-TC24 — reader on the jumped-to page.
 **Test Data:** —
@@ -1441,6 +1585,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC26 – Enter a page number
+**ATC ID:** `TST_PAGE_TC_2`  |  **MTC ID:** S8-TC26
 **Description:** Enter a page number using the keypad.
 **Continues From:** S8-TC25 — page-entry control open.
 **Test Data:** Keypad digit **2**
@@ -1451,6 +1596,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC27 – Go to the entered page
+**ATC ID:** `TST_PAGE_TC_4`  |  **MTC ID:** S8-TC27
 **Description:** Navigate to the entered page.
 **Continues From:** S8-TC26 — page number entered.
 **Test Data:** —
@@ -1461,6 +1607,7 @@ _Note: after this case the session signs out (shared teardown)._
 
 ---
 ### Test Case: S8-TC28 – Return to the dashboard
+**ATC ID:** `TST_EBOO_TC_5`  |  **MTC ID:** S8-TC28
 **Description:** Conclude the suite by leaving the eBook.
 **Continues From:** S8-TC27 — reader on the entered page.
 **Test Data:** —
