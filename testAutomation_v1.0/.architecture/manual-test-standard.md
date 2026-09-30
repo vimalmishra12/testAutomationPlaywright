@@ -143,7 +143,7 @@ Columns: `AC ID | AC Description | UC ID | UC Description | Scenario ID |
 Scenario Description | Type | Mapped TC ID | TC Title`
 
 **Tab 2 / Section 2 — Test Cases**
-Standard 14 columns (S.No. first; Test Case ID = compound ID).
+Standard 14 columns (S.No. first; Test Case ID = `TST_<MODULE>_TC_<N>`; the compound `AC<n>.UC<n>.S<n>.TC<n>` goes in Linked Requirement).
 Status column has a data-validation dropdown: `Not Run / Pass / Fail / Blocked / On Hold`.
 Header fill = Cambridge purple `#3D1A66`, white bold text. Freeze header row.
 

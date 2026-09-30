@@ -12,6 +12,7 @@
 
 const fs = require("fs");
 const path = require("path");
+// [2026-09-29] The register's "Read first" pointers now name the per-feature status files in .architecture/status/ (authoring-status.md is an index since then) — see walkthrough_status-per-feature_2026-09-29_05h-52m.md.
 const ExcelJS = require("exceljs");
 const D = require("./_tcdata.js");
 
@@ -139,7 +140,7 @@ ${modules.map(moduleLine).join("\n")}
 2. **Never automate a 🔴/🟡 row** — they are manual-only by user decision (${DATE}).
 3. **"EXISTING TC reused" rows** are already automated: confirm the existing function asserts the row's
    Expected Result, extend it if not — do not write a second function (ADR-011).
-4. **Read first:** \`.architecture/authoring-status.md\` → block \`onboarding\` → "NEXT BATCH" (batch order,
+4. **Read first:** \`.architecture/status/onboarding.md\` → "Start here" (batch order,
    open questions, constraints), then \`product-knowledge/ExperienceApp/c1-core-shared.md\` and \`onboarding.md\`,
    then follow \`.agent/skills/c1-test-authoring\`.
 5. **\`[ASSUMED]\` is a question, not a fact** — confirm it live and replace it with what was seen.

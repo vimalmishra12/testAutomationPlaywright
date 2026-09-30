@@ -1,19 +1,15 @@
 ---
 name: c1-test-authoring
 description: >
-  Authoring and maintaining tests in this C1 / Builder Playwright-as-library + Mocha automation
-  framework. Use whenever the user is writing or editing a test case, creating or changing a page
-  object, adding/updating selectors, building an execution file, adding a new application (appType),
-  running/verifying a test, or assessing/promoting visual tests. This is the AUTHORING skill — use it
-  when the test does not yet exist and needs to be built (to "automate" a NEW flow/feature/scenario),
-  or an in-flight authoring effort continues (run/fix phase, visual phase). If instead an existing
-  test must be copied/ported to another environment, use c1-environment-test-replicator. Trigger on
-  any mention of: add a test, write a test, fix a test, automate a flow, automate a new test,
-  automate this scenario, automate in qa/thor (new test), page object, selector, selectorFile,
-  isInitialized, execution file, TC repository, appType, css.ComproC1, css.Builder, css.Blackboard,
-  css.LTI, blackboard, lti, deeplink, integrations, protected files, walkthrough, run the test,
-  visual test, visual assessment, visualTest flag, visual promotion, novus/visual, lambdatest,
-  continue phase, phase status.
+  Authoring and maintaining tests in this C1 / Builder / Blackboard-LTI Playwright-as-library + Mocha
+  framework: test cases, page objects, selectors (css.ComproC1, css.Builder, css.Blackboard, css.LTI,
+  selectorFile), execution files, the TC repository, isInitialized, protected files, walkthroughs, a
+  new appType, running/fixing a test, and the visual assessment (visualTest flag, novus, lambdatest).
+  Use when a test does not exist yet and must be built ("automate this flow / scenario / these test
+  cases", "write / add / fix a test", automate in thor/qa) or an authoring effort continues (run &
+  fix, visual phase, phase status). If the test cases are not yet in a manual register under
+  test/Manual/, run c1-manual-test-authoring first to build it, then continue here. If an existing
+  test must be copied or ported to another environment, use c1-environment-test-replicator.
 ---
 
 # C1 / Builder Test Authoring Skill — Router
@@ -53,6 +49,11 @@ file, they win.
 7. **Per session, keep a walkthrough** under `.architecture/walkthroughs/` (see AGENTS.md §Walkthrough).
 8. **Every new TC starts `visualTest: false`.** Promotion to `true` happens ONLY in Phase 3 via the
    AGENTS.md §8 assessment + user confirmation — never during build or run/fix.
+9. **Checkpoint as you go.** The feature's status lives in `.architecture/status/<feature>.md`
+   (created when Phase 1 starts). After every major step — a Phase 1 step, a fix applied, a run
+   finished — **replace** its one `▶ Now: … · Next: …` line; never append. A session that breaks
+   mid-phase (closed, crashed, context full) then resumes from that line. Format and rules:
+   `.architecture/authoring-status.md` (the index).
 
 ---
 
@@ -62,11 +63,21 @@ Authoring is split into three phases with explicit handoffs. **Recommended: one 
 for anything non-trivial (keeps context focused); a single session MAY flow through multiple phases
 for small features — load each phase file only when you reach it.
 
+### Step 0 — Is there a manual register?
+
+If the request brings test cases or scenarios that are **not yet** in a register under
+`testAutomation_v1.0/test/Manual/`, run **`c1-manual-test-authoring`** first — it builds the `.md` +
+`.xlsx` register and hands back to this skill. People here do not name skills; decide this yourself
+and say which skill you are using.
+
 ### Step 1 — Read the status file
 
-Read `.architecture/authoring-status.md` (tiny, fixed path). It holds one PHASE STATUS block per
-in-flight test. If the request names a test that has a block, resume from its first ⬜ phase.
-Cross-check against the repo — never trust the block blindly (e.g. verify the files it claims exist).
+Each in-flight feature has its own small file, `.architecture/status/<feature>.md`; the index
+`.architecture/authoring-status.md` lists them (and the features whose Phase 3 is deferred). Read
+the file for the test the request names — look it up in the index if the name is unclear. If it
+exists, resume from its `▶ Now` line and first ⬜ phase. Cross-check against the repo — never trust
+the file blindly (e.g. verify the files it claims exist). No file = not started (Phase 1) or already
+closed (check the index and the walkthrough).
 
 ### Step 2 — Detect the phase
 
@@ -74,7 +85,7 @@ Cross-check against the repo — never trust the block blindly (e.g. verify the 
 |---|---|
 | Test files / TC-repo entries / exec file do not exist yet; user says "automate/write/add a test" | **1 — Build** |
 | Artifacts exist but no npm script or no evidence of a passing run; user says "run/fix/debug" | **2 — Run & fix** |
-| All TCs passing; status block shows Phase 3 ⬜; user says "visual" / "assess visual" | **3 — Visual** |
+| All TCs passing; status file shows Phase 3 ⬜; user says "visual" / "assess visual" | **3 — Visual** |
 
 An explicit user instruction ("do phase 2 for X") always wins over inference. If signals conflict
 or the test name is ambiguous, **ask**.
@@ -85,9 +96,9 @@ or the test name is ambiguous, **ask**.
 - Phase 2 → `.agent/skills/c1-test-authoring/phases/2-run-fix.md`
 - Phase 3 → `.agent/skills/c1-test-authoring/phases/3-visual.md`
 
-(Paths are relative to the repo root `D:\testAutomation\QATestAutomation\`.)
+(Paths are relative to the repository root — the folder that holds `.agent/` and `testAutomation_v1.0/`.)
 Do NOT read the other phase files. Every phase file ends with an **exit checklist** that updates
-`.architecture/authoring-status.md` — completing it is part of the phase, not optional.
+the feature's `.architecture/status/<feature>.md` — completing it is part of the phase, not optional.
 **A feature is NOT done until Phase 3 is complete** (even if the outcome is "no visual candidates").
 
 ### Special case — adding a NEW application (appType)
@@ -107,4 +118,5 @@ app's first test goes through Phases 1–3 as normal.
   as an interim, to be secured) — never paste secrets into committed config.
 - ❌ Claim a test passes without showing the real run output.
 - ❌ Set `visualTest: true` outside Phase 3, or skip Phase 3 because the run is green.
-- ❌ Close a feature with its authoring-status entry still showing a ⬜ phase.
+- ❌ Close a feature with its status file still showing a ⬜ phase.
+- ❌ Append history to a status file — replace the `▶ Now` line; the story goes in the walkthrough.

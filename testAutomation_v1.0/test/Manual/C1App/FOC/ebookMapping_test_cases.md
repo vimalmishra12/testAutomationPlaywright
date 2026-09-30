@@ -6,7 +6,7 @@
 **Page in scope:** Presentation Plus reader toolbar → *Change course material* dropdown — `/foc/<org>/class/<classId>/product/<productId>/studentbook/<bookId>/view?page=<page>`
 **Generated:** 2026-09-25 | **Total TCs:** 5 (3 Positive · 2 Edge · 0 Negative) — every sheet scenario is covered; 2 derived Edge cases and the owner-stated Book 3 → Book 1 mapping added
 **Execution status (2026-09-25):** **3 of 5 TCs automated and passing.**
-- Module **EMAP** (`TST_EMAP_TC_1–2, 6`, 3 TCs) — Requirements #1, #2, #4 — via `npm run eBookMappingTest_Thor` on **thor** (2026-09-25).
+- Module **EMAP** (`TST_EMAP_TC_1–2, 6`, 3 TCs) — Requirements #1, #2, #4 — first run via `npm run eBookMappingTest_Thor` on **thor** (2026-09-25). **Suite merged 2026-09-28:** the three automated TCs now run in **Suite7 (`Suite7_BookMappingPresentationPlus`) of `npm run ebookE2EteacherTest_thor`** — one suite, each scenario in its own re-login block (manual cases S7-TC6/7/8 in `ebookE2EteacherTest_thor_details.md`); the standalone `ebookMappingTest.json` is archived and its script kept in `package_copyDND.json`. This register stays the design/traceability home, including the 2 not-yet-automated Edge cases.
 
 The remaining **2 TCs are Not Run** (`TST_EMAP_TC_3–4` — derived, expected result unconfirmed, not automated).
 
@@ -70,7 +70,7 @@ The remaining **2 TCs are Not Run** (`TST_EMAP_TC_3–4` — derived, expected r
 | **Remarks** | Sheet row 1 (TC_FOCMap_web1), P1 Positive. Book 1 opens on its Cover by default, but the reader saves the last page visited in Book 1 and can reopen it there; automation therefore runs a conditional setup (Previous page until the Cover) and a teardown that does the same, per the product owner (2026-09-25). |
 | **Actual Result** | Automated run 2026-09-25: Book 2 opened on page ii (label ii-iii / 160); after switching back Book 1 opened on its Cover (?page=cover). |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated — ebookMapping.test.js, Suite1 (npm run eBookMappingTest_Thor, thor). Last runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
+| **Comments / Defect ID** | Automated — ebookMapping.test.js. Formerly Suite1 of ebookMappingTest.json (npm run eBookMappingTest_Thor); since 2026-09-28 runs as S7-TC6 of Suite7_BookMappingPresentationPlus in ebookE2EteacherTest_thor. Last standalone runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
 
 ---
 
@@ -91,7 +91,7 @@ The remaining **2 TCs are Not Run** (`TST_EMAP_TC_3–4` — derived, expected r
 | **Remarks** | Sheet row 2 (TC_FOCMap_web2), P1 Positive. Follows the sheet steps literally. Consistent with the mapping: Book 2 Cover -> Next page -> page ii -> Book 3 page ii. In the first automated run (2026-09-25) the final switch back to Book 2 did not take effect within 60 s once; it passed on the two reruns — see Open item 4. |
 | **Actual Result** | Automated run 2026-09-25: Book 3 opened on page ii (label ii-iii / 160); after switching back Book 2 opened on its Cover (?page=cover). |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated — ebookMapping.test.js, Suite2 (npm run eBookMappingTest_Thor, thor). Last runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
+| **Comments / Defect ID** | Automated — ebookMapping.test.js. Formerly Suite2 of ebookMappingTest.json (npm run eBookMappingTest_Thor); since 2026-09-28 runs as S7-TC7 of Suite7_BookMappingPresentationPlus in ebookE2EteacherTest_thor. Last standalone runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
 
 ---
 
@@ -152,7 +152,7 @@ The remaining **2 TCs are Not Run** (`TST_EMAP_TC_3–4` — derived, expected r
 | **Remarks** | Not a sheet row — the mapping was stated by the product owner on 2026-09-25 ('Book 3 page ii is mapped to page ii of Book 1'). Verified live and automated as TST_EMAP_TC_6 (Suite3). TST_EMAP_TC_5 is the automation-only Book 1 Cover setup/teardown step and has no manual case. |
 | **Actual Result** | Automated run 2026-09-25: Book 3 opened on page ii; switching to Book 1 opened it on page ii (label ii-iii / 160). Teardown then returned Book 1 to its Cover. |
 | **Status** | Pass |
-| **Comments / Defect ID** | Automated — ebookMapping.test.js, Suite3 (npm run eBookMappingTest_Thor, thor). Last runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
+| **Comments / Defect ID** | Automated — ebookMapping.test.js. Formerly Suite3 of ebookMappingTest.json (npm run eBookMappingTest_Thor); since 2026-09-28 runs as S7-TC8 of Suite7_BookMappingPresentationPlus in ebookE2EteacherTest_thor. Last standalone runs 2026-09-25: two consecutive 18/18 passing (incl. Book 1 Cover setup/teardown); an earlier run had one intermittent switch-back failure (Open item 4). |
 
 ---
 
