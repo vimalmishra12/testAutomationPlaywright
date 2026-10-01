@@ -256,13 +256,13 @@
       ]
     },
     "progressMarked": {
-      "_comment": "LP-034/035 — the progress views AFTER the teacher marked the PS (70, 'Good'), captured live on production 2026-09-24 (learner _yqma / teacher _4n9d). The marked PS counts as completed AND above target. SUMMARY totals lag the mark by minutes (learner ~3.5 min, teacher <= 5 min) — TC_1/TC_3 re-read every reloadEveryMs up to settleTimeoutMs; rows are immediate.",
+      "_comment": "LP-034/035 — the progress views AFTER the teacher marked the PS (70, 'Good'), captured live on production 2026-09-24 (learner _yqma / teacher _4n9d). The marked PS counts as completed AND above target. SUMMARY totals lag the mark by minutes (learner ~3.5 min, teacher <= 5 min) — TC_1/TC_3 re-read every reloadEveryMs up to settleTimeoutMs; rows are immediate. [2026-09-29] Totals updated after the Projects product update (HTML + PDF added 2026-09-25): overall /10 -> /11, Projects /5 -> /6, class average 40% -> 36% (seen live on prod 2026-09-29).",
       "className": "{{run.lpClassName}}",
       "learnerName": "Learner User",
       "product": "cqaautomationbundle1",
       "component": "Practice Extra",
       "learnerSummary": [
-        "Completed activities: 4/10",
+        "Completed activities: 4/11",
         "Activities completed above target score : 2/4",
         "85% Average score"
       ],
@@ -274,7 +274,7 @@
           "85%"
         ],
         "Projects": [
-          "Completed activities: 0/5"
+          "Completed activities: 0/6"
         ]
       },
       "activities": [
@@ -317,12 +317,12 @@
         }
       ],
       "teacherClass": [
-        "Average completed activities: 40%",
+        "Average completed activities: 36%",
         "2 /4",
         "85%"
       ],
       "teacherStudent": [
-        "Completed activities: 4/10",
+        "Completed activities: 4/11",
         "2/4",
         "85%"
       ],
@@ -334,7 +334,7 @@
           "85%"
         ],
         "Projects": [
-          "Completed activities: 0/5"
+          "Completed activities: 0/6"
         ]
       },
       "feedbackItem": "New feedback",

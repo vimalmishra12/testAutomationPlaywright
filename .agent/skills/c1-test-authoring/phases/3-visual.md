@@ -2,7 +2,7 @@
 
 **Goal:** every TC of the feature has an explicit visual-test decision. This phase exists because
 the assessment is MANDATORY for every new TC (AGENTS.md §8) — "the suite is green" does not close
-a feature. Entry condition: Phase 2 ✅ in `.architecture/authoring-status.md`.
+a feature. Entry condition: Phase 2 ✅ in `.architecture/status/<feature>.md`.
 
 **AGENTS.md §8 is the authoritative text for this phase** — the formats below mirror it; if they
 ever diverge, AGENTS.md wins.
@@ -11,7 +11,7 @@ ever diverge, AGENTS.md wins.
 
 ### 1. Build the worklist
 
-Take the TC list (and the visual candidates flagged in Phase 1's status block) and, for EACH TC,
+Take the TC list (and the visual candidates flagged in Phase 1's status file) and, for EACH TC,
 classify its test data against the decision table:
 
 | Data Type | Examples | Visual Test Candidate? |
@@ -61,8 +61,11 @@ Naming is Rule C: `visualAcceptance_<feature>_<env>` — no other pattern.
 
 - [ ] EVERY TC has an explicit decision (promoted / stays false with decision-table reason).
 - [ ] If promoted: both scripts exist (confirmed), both ran, baseline bootstrapped + compared.
-- [ ] Update `.architecture/authoring-status.md`: **remove the feature's block** (the file holds
-      in-flight work only). If nothing was promotable, remove it too — "assessed, no candidates"
-      goes in the walkthrough.
+- [ ] **Delete `.architecture/status/<feature>.md`** and its row in the index
+      `.architecture/authoring-status.md` (rule 4 there) — first make sure every open item (On Hold /
+      Blocked / Not built) is recorded in the register or the knowledge file. If nothing was
+      promotable, delete it too — "assessed, no candidates" goes in the walkthrough. If the user
+      **defers** Phase 3 instead, delete the file as well and add one line to the index's
+      "Deferred Phase 3" list.
 - [ ] Session walkthrough written/appended, recording each TC's decision and who confirmed.
 - [ ] Tell the user: feature closed.

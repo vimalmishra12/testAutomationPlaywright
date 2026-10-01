@@ -150,9 +150,14 @@
   + per student `div.student-level-metrics`; the student's product TITLE link `a[qid^=bundle-detail-title-]` (the
   card `a.bundle-card-container` does not carry the name) → `/class/teacher/…/learner/<id>/bundle/<id>` → the SAME
   component / activity rows as the learner.
-- After Suites 7–8 (every run): 3/10 overall, Practice Extra 3/4 (scorable, Flashcards, HTML), 1/3 above target,
+- After Suites 7–8 (every run): 3/11 overall, Practice Extra 3/4 (scorable, Flashcards, HTML), 1/3 above target,
   100%; **a submitted but unmarked PS is NOT counted as completed** ("evaluation pending", scores "-"); the PDF is
-  not counted either. Teacher class: 30% average completion.
+  not counted either. Teacher class: 27% average completion.
+- **Totals changed with the Projects product update `[2026-09-29, prod]`.** Projects gained its HTML + PDF activities
+  on 2026-09-25 (see `new-learning-path.md`), so the learner's overall denominator went **/10 → /11** and Projects
+  **/5 → /6** (7 activities, one not counted). Same work, new figures: pre-mark 3/10 · 30% → **3/11 · 27%**; after
+  marking 4/10 · 40% → **4/11 · 36%**. Figures dated 2026-09-24 below are the OLD totals. A content change to ANY
+  component of the bundle moves these denominators — re-read them live before blaming the suite.
 - Trap: `:text-is` on `p.bundle-title` matches nothing — the name is in an inner `<span>`.
 - **The SUMMARY totals lag the submissions by SEVERAL MINUTES** (batch analytics — user-confirmed EXPECTED,
   2026-09-24). Read right after the activities: learner 1/10 · 1/1 above target, teacher class 10%; ~2 min after
@@ -184,11 +189,13 @@
   → opens the PS in the player: "Score : 70 %", teacher block "Score: 70 % Feedback: Good", `strong.ml-1` = "70".
 - **Progress after marking:** per-activity PS row IMMEDIATELY "First score 70% · Best score 70% · Attempts 1", status
   "Completed above target"; lesson "4/4 Completed 85%". Summary totals lag (~3.5 min learner, ≤ 5 min teacher):
-  learner 4/10 · above target 2/4 · 85% (Practice Extra 4/4 · 2/4 · 0/4 · 85%); teacher class 40% · 2 /4 · 85%, student
-  4/10 · 2/4 · 85%. So a marked PS counts as completed AND above target (70% ≥ target).
+  learner 4/11 · above target 2/4 · 85% (Practice Extra 4/4 · 2/4 · 0/4 · 85%); teacher class 36% · 2 /4 · 85%, student
+  4/11 · 2/4 · 85% `[updated 2026-09-29 — was 4/10 · 40% before the Projects update]`. So a marked PS counts as completed
+  AND above target (70% ≥ target).
 - **"Show progress details"** (Class data): `input#progressSummary-summaries` is visually HIDDEN behind `label.switch` /
   `span.slider` — click the label. On: per student, `#classDataBundleCollapse00 .progress-info` per component —
-  Practice Extra 4/4 · 2/4 · 0/4 · 85%; Projects 0/5 · 0 Gold medals · "-"; Test "This student has not activated the code yet".
+  Practice Extra 4/4 · 2/4 · 0/4 · 85%; Projects 0/6 (was 0/5 before 2026-09-25) · 0 Gold medals · "-"; Test "This student
+  has not activated the code yet".
 
 - `isInitialized_player` (DASH_TC_14) waits for the iframe; a learner resuming at **PS has no iframe**, so
   use the activity title link (`#selectedActivitySidebarBtn`) as the "player ready" signal (DASH_TC_16).

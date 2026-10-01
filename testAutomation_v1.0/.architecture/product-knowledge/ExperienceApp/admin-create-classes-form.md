@@ -234,6 +234,10 @@ there is independent — and **once in the `Test` list** for the workflow suite,
 deliberately accumulate onto one row (name → dates → label → teacher → material → Create). One TC,
 two placements: that split is the whole reason the reset is its own composable unit (ADR-019).
 
+`TST_CCLS_TC_16` (label) **requires** a preceding `TST_CCLS_TC_23` in the workflow suite — a restored
+draft can already carry the label, and re-selecting it toggles it OFF. `[moved here from
+authoring-status.md, 2026-09-29]`
+
 ## Data notes
 
 - `TST_CCLS_TC_21` depends on `copySourceClass` = *"cqa test class 17aug2026 1"* existing in the
@@ -250,3 +254,5 @@ two placements: that split is the whole reason the reset is its own composable u
   index** (trap 2's family). It resolves today; it broke once when the draft's row count changed.
 - Phase 3 (visual) is still ⬜ pending for the bulk and validation suites, and for the workflow
   suite's later TCs (`TC_20`, `TC_23`).
+  **Update `[2026-09-29]`:** Phase 3 of all three suites was deferred by user decision on
+  2026-09-28 — live status in `.architecture/status/schoolAdminAddClass.md`.

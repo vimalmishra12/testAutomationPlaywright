@@ -305,6 +305,7 @@ so a new app can never collide with C1 and core files stay app-agnostic. Proven 
 - Each app owns its selector file + `css.<App>` namespace; never mix two apps in one file.
 - New-app credentials follow the existing plaintext-in-data-file convention for now (e.g.
   `builderLoginData.json`) — to be hardened to env vars later, same as LambdaTest.
+  *(Done `[2026-09-23]` — ADR-025: credentials are `{{env.*}}` tokens.)*
 - App login flows can differ wildly: Builder uses a **3-step cross-domain SSO** (pre-login org
   select → confirm → comproDLS Identity username/password → `/2024/dashboard`). Two reusable
   lessons from it: type credentials with `addValue`/`pressSequentially` (React/Angular IdP forms
@@ -879,7 +880,7 @@ before any such run existed; the runs have now actually been performed.
    - `ebookE2EteacherTest.json`: Comprehensive teacher journey spanning 6 sequential suites (Class 1RB materials, Class 2RB materials, Resource Banks 1 & 2, Presentation Plus launch, and Suite 6 Create Assignment from Presentation Plus).
    - `ebookFocusA11yMergedTest.json`: Collapses 4 single-test a11y focus suites into a single-login 19-step keyboard navigation journey. Superseded `[2026-09-23]` by **`ebookAccessibilityTest.json`**, which additionally folds in the 16 `TST_EBTF_TC_*` continuous-toolbar steps from `ebookToolbarFocusTest.json` — 35 steps, still one login — and is run by `ebookAccessibilityTest_thor` plus the Rule B companion `visualAcceptance_ebookAccessibility_thor`. Both superseded execution files remain on disk per r4.
 2. **Preserved Teardown Hooks (`APPS_1` / `APPS_2`):** In multi-suite sequential execution, every suite must conclude with an `After` hook triggering profile dropdown -> logout. This preserves session isolation and prevents subsequent suites from failing due to dirty authenticated state.
-3. **r4 Create-Only Archive Invariant:** Never delete, rename, or edit existing test execution files under `testResources/testExecutionFiles/ExperienceApp/thor/`. Merged suites are written to new files; superseded original execution files remain permanently on disk as unreferenced, frozen archives.
+3. **r4 Create-Only Archive Invariant:** When suites are merged, the merged suite is written to a **new** file. The superseded original execution files under `testResources/testExecutionFiles/ExperienceApp/thor/` are never deleted, renamed or edited — they remain permanently on disk as unreferenced, frozen archives. **Live** execution files (any file an npm script runs, including the merged suites themselves) are edited as normal work — adding TCs, fixing steps. *(Scope clarified `[2026-09-28]`, user confirmed: the earlier wording "never … edit existing test execution files" read as freezing every thor exec file; the intent was the superseded ones only.)*
 4. **New-Tab URL Commit Waiting:** Tab switches verifying target URLs (`notes.page.js`) must not rely on immediate `global.page.url()` reads. They must use `waitForURL({ waitUntil: "commit" })` with a fallback polling loop to guard against asynchronous tab navigation races.
 
 **Consequences:** ~62% execution runtime saved; single login for a11y focus traversal; existing execution files preserved for reproducibility; robust tab-switch URL verification.
@@ -936,6 +937,7 @@ The runner's reporter selection lives in protected files (`run.js`, `playwright.
 
 **Not decided yet (Step 2, needs protected-file confirmation):** per-assertion green / red element highlighting and
 pass-worded check lists need the action / assertion libraries to record the element read and the result.
+→ **Decided 2026-09-25 in ADR-026** (assertion evidence report, behind `--assertReport=true`).
 
 **Consequences:** one extra command after a run (a `package.json` script would be a protected change); the report is
 only as current as its inputs — build it before the next run overwrites `mochawesome/report.json`, or pass the saved
@@ -1027,3 +1029,106 @@ new token type). `testrunner.js` — untouched, despite being flagged as an expe
 change before Step 0 — the existing ADR-022 call site already covers this. 12 test-account fields
 + 7 infra fields migrated (pilot); 231 fields across 22 files remain (Step 5, tracked in
 `.env.example`).
+**Update `[2026-09-28]`:** the figures above are from the pilot. Step 5 finished the same day — all
+243 fields across 24 files are `{{env.*}}` tokens, `.env.example` has no ⬜ pending entry, and
+`tooling/secretScan.js` exits 0.
+
+---
+
+## ADR-026: Assertion Evidence Report — Pass / Fail Marks on the End-of-Test Screenshot
+
+**Status:** Accepted (2026-09-25, user request; pilot suite `adminStudentsTab`). Implements ADR-024's "Step 2".
+Protected-file changes confirmed by the user the same day.
+
+**Context:** The mochawesome report shows one screenshot per test but not *what was checked on it*. The
+request: a mochawesome-like report where every element an assertion checked is marked on that screenshot —
+✔ green for a passed check, ✘ red for the failed one. Two facts shape the design:
+1. **Assertions receive values, not elements.** `assertion.assertEqual(sts.searchBtnDisplayed, true, …)` never
+   sees `#searchBtn`; only `baseActionLibrary` does, one layer down.
+2. **Page objects batch their reads.** `schoolStudents.getData_studentsTabLayout()` reads 12 values into one
+   object and `TST_SLST_TC_1` then asserts 8 of them — all `true`. Linking a check to "the read that returned
+   the same value" would put most marks on the wrong element.
+
+**Decision:**
+1. **Opt-in flag `--assertReport=true`.** Off (the default) = no behaviour change: every hook returns on its
+   first line. Also off under `--skipAssertion=true` (ADR-008 — nothing is asserted). Verified on the fixture
+   below: flag-off results and mochawesome output are identical to `main`.
+2. **All logic in one non-protected module, `core/utils/assertionEvidence.js`.** The protected files only call it:
+   `baseActionLibrary` — one `evidence.recordRead(...)` line in each of the 11 read methods (isEnabled,
+   isClickable, isDisplayed, isSelected, getValue, getText, getTextIfPresent, getAttribute, getElementCount,
+   getCSSProperty, isExisting); clicks / typing are not recorded. `baseAssertionLibrary` — exports
+   `evidence.wrapAssertions(...)`, which runs the original assertion unchanged and re-throws its error as-is.
+   `playwright.setup.js` — `beginTest()` in the root beforeEach, `measure()` just BEFORE the existing screenshot
+   and `finishTest()` after it in the root afterEach, `finishRun()` in afterAll.
+3. **Checks are linked to reads BY NAME, from the source lines on the stack** — never by value alone:
+   - a read's *key* is the name its value is stored under on the page-object line that made it
+     (`searchBtnDisplayed: await action.isDisplayed(this.searchBtn)` → `searchBtnDisplayed`; `var label = await
+     action…` → `label`; `return await action…` → a returned read), plus the *test line* that was executing;
+   - a check's *first argument* is parsed from the test line (`sts.searchBtnDisplayed`, `rows[0].firstName`);
+   - they match when the read was made while the test ran the line that last assigned the variable (`sts = await
+     …`) AND its key is the referenced member. `rows[k].x` takes the k-th element read under key `x`. An inline
+     call (`assertEqual(await po.getCount(), …)`) matches the read made on the assertion's own line;
+   - nothing matched → the check is listed with **"no element"** (e.g. `clickStatus`, `rows.length`, a value read
+     via `browser.getUrl`). Several same-name candidates on different elements → **"inferred"** (dashed outline).
+4. **Measured at the end, on the captured frame.** Each linked element's box is measured just before the
+   full-page screenshot (viewport box + scroll offset — also for `position: fixed`, which Chromium's full-page
+   capture paints at the scroll position). An element is **not drawn** when it is gone (`absent`), was checked to
+   be absent (`absentAsChecked`), now shows a different value than the one checked (`changed` — covers positional
+   selectors that now point at another row, Invariant 2), is mostly hidden inside a scrolling panel (`clipped`), or
+   lies outside the image (`offscreen`). The check is still listed with that reason. Same-box checks share one
+   mark with a combined badge (`2·3·4 ✔`).
+5. **Output** `output/reports/TestReports/assertionReport/<exec>_<env>_<stamp>/`: `evidence.jsonl` (one record per
+   test, appended as each test ends, so a crashed run keeps what finished), `shots/NNNN.png`, `run.json`, and
+   `index.html` — one self-contained file built in afterAll by `core/utils/assertion-report/buildAssertionReport.js`
+   (rebuild by hand with `--from=<dir>`). It does not read mochawesome, so it also works with `--report=spec`.
+   The builder lives under `core/utils/`, not `tooling/`, because the runner calls it (AGENTS.md §9).
+
+**Verification (2026-09-25):** a scratch fixture app (never committed) with elements at known pixel positions, run
+through the real `run.js`: every mark was pixel-exact; all 8 `true` checks of a batched getter linked to the right
+element; rows, inline calls, failed / changed / clipped / absent / far-below-the-fold / fixed-header / scrolled
+page, a retried attempt and a non-assertion failure were all reported correctly. The parser also resolved all 63
+assertions of `adminStudentsTab.test.js` statically. **Not yet run live on thor** — the session's network policy
+blocked the host; the pilot run is the next step.
+
+**Consequences:**
+- A mark means "this check passed / failed on this element"; the screenshot is from the END of the test.
+  A ✔ does not claim the element still shows the checked state — changes are caught by the `changed` rule only
+  for re-readable reads (text, visibility, enabled, checked, input value, existence; not attributes, CSS, counts).
+- Linking depends on the house style (a named read in the page object, the value asserted through a variable or
+  an inline call). Values transformed in a helper before the test sees them (`getData_studentCount` parses a
+  number out of `raw`) show "no element" — honest, not wrong.
+- ADR-019 is unchanged: evidence is still the end-of-test frame, so cleanup must stay out of `AfterEach`.
+- A per-assertion snapshot (a picture at the moment of each check) would need a new capture point, not a redesign:
+  the per-check data is already recorded.
+
+**Amendment (2026-09-28, user request) — two report views: `--assertReport=true` and `--assertReport=debug`.**
+- `true` → **results view** `index.html`: summary, pass / fail, ✔ / ✘ marks, numbered check messages, and for a
+  failed check the expected vs actual. No selectors, action names, values read, technical "no mark" reasons or raw
+  record. Only confident (`exact`) links are drawn — a dashed "inferred" guess is not shown to non-technical
+  readers; any check without a mark carries one plain note, "not shown on screenshot".
+- `debug` → the **full view** `debug.html` (everything above in this ADR) **and** `index.html`, so a debug run
+  always also has a shareable copy.
+- **Both modes record the same data**; the mode only picks which files are built. A `true` run can be rebuilt as
+  debug later: `node core/utils/assertion-report/buildAssertionReport.js --from=<dir> --view=debug`.
+- The results view **removes** the technical fields from the embedded data at build time (not CSS-hidden): the file
+  is meant to be forwarded, and anything embedded — including test-account values read from the page — would
+  otherwise be readable in its source.
+- Values are case-insensitive; `false` / absent = off; an unknown value (typo) warns and builds the results view.
+- No protected-file change: the mode is resolved in `assertionEvidence.js` and applied in the builder / template.
+- Verified on the fixture for `true`, `debug`, `Debug`, `yes`, `false`: the right files each time; the results
+  file contains no selector / action / read value (grep); the `--view=debug` rebuild of a `true` run works.
+
+**Amendment 2 (2026-09-28, user review of the first live pilot run) — the results view is MARKS ONLY.**
+The first amendment kept the numbered check list in the results view, so on screen both reports looked the same
+(only the embedded data differed). The user's requirement: `--assertReport=true` shows **just the ✔ / ✘ marks on
+the screenshot — no numbering, no check list**; `debug` shows the complete report. Now: the results view renders
+the screenshot full width with plain ✔ / ✘ badges (merged per element, ✘ if any check on it failed), a failed
+test's one-line error, and nothing else; its embedded data holds only each check's pass / fail and confident box
+(no messages, numbers, selectors, values). Debug is unchanged.
+**First live pilot (thor, `adminStudentsTab`, 24 tests, 2026-09-28, run by the user):** 0 "inferred" links;
+every drawn mark checked against its screenshot landed on the checked element; unmarked checks were the expected
+kinds (click results, row counts / lengths, values read through sort-state helpers).
+
+**Amendment 3 (2026-09-28, user choice):** the report is titled **"Test Verification Report"** (results view) and
+**"Test Verification Report: Debug"** (debug view) in the page, the browser tab and the console line; ADR / code
+names ("assertion evidence") are unchanged.

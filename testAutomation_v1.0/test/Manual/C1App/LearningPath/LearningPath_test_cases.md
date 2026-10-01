@@ -40,7 +40,7 @@
 > Where SOURCE was wrong it is corrected and noted in Remarks (TOC close control, TOC on entry).
 >
 > **Data.** The learner, class and invite are created by the setup suites of `learningPath.json`
-> (ADR-022 run-generated users) — see `authoring-status.md`. **The scorable activity can be attempted
+> (ADR-022 run-generated users) — see `learning-path-player.md` Part C. **The scorable activity can be attempted
 > once per learner**: a finished or half-finished activity is not offered fresh again, so a failed run of
 > TC_4…TC_8 needs a new learner.
 
@@ -51,8 +51,8 @@
 1. **Do not redesign.** Every scenario of the source sheet is already mapped here — pick a row with
    Status `Not Run` and keep its **Test Case ID**; that ID is what goes into the test file, the TC
    repository and the execution file. Never renumber existing rows; a genuinely new case is appended.
-2. **Read first:** `.architecture/authoring-status.md` → the `learningPath` block (what exists, the
-   commands, the constraints), `product-knowledge/ExperienceApp/learning-path-player.md` (Part C =
+2. **Read first:** `.architecture/authoring-status.md` → "Deferred Phase 3" (the `learningPath` line;
+   full history in `archive/authoring-status_2026-09-29.md`), `product-knowledge/ExperienceApp/learning-path-player.md` (Part C =
    how to run and debug, what a run creates, what is once-per-learner) and `c1-core-shared.md`; then
    follow the `c1-test-authoring` skill (`.agent/skills/`).
 3. **`[ASSUMED]` is a question, not a fact.** Any expected result marked `[ASSUMED]` comes from the
@@ -66,8 +66,8 @@
    Nothing new may be created on a shared environment without asking (ADR-021).
 6. **Close the loop:** back-port into `_tcdata*.js`, run
    `node test/Manual/C1App/LearningPath/_generate.js` (it rewrites both the `.md` and the `.xlsx` —
-   never hand-edit them), set Status/Comments, and update the `learningPath` block in
-   `authoring-status.md`.
+   never hand-edit them), set Status/Comments, and create or update `.architecture/status/learningPath.md`
+   (format and rules: `authoring-status.md`).
 
 ---
 
@@ -884,7 +884,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Learner on the dashboard. |
 | **Test Steps** | 1. On the class card, click "My progress".<br>2. Read the summary and the Practice Extra / Projects blocks. |
 | **Test Data** | Class of the LP run; components Practice Extra, Projects |
-| **Expected Result** | "My progress" shows, once the batch job has updated it (minutes after the mark): Completed activities 4/10, Activities completed above target score 2/4, 85% Average score. Practice Extra: 4/4, above target 2/4, below target 0/4, 85%. Projects: 0/5. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking the same page showed 3/10 · 1/3 · 100% (the PS is not counted until evaluated). |
+| **Expected Result** | "My progress" shows, once the batch job has updated it (minutes after the mark): Completed activities 4/11, Activities completed above target score 2/4, 85% Average score. Practice Extra: 4/4, above target 2/4, below target 0/4, 85%. Projects: 0/6. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking the same page showed 3/11 · 1/3 · 100% (the PS is not counted until evaluated). [2026-09-29] Totals updated after the Projects update (HTML + PDF added 2026-09-25): /10 → /11, Projects /5 → /6. |
 | **Remarks** | Confirmed live on production 2026-09-23. The PS counts as completed only once it is evaluated, so 3 (scorable, Flashcards, HTML) of Practice Extra's 4; the PDF is not counted. Page object progress.page.js (module PROG). |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
@@ -922,7 +922,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | The learner has, in this run, completed the scorable activity (4/4), paged Flashcards, submitted the PS (not yet marked) and viewed the HTML activity and the PDF (Suites 7–8). Teacher on the class page (Class data tab). |
 | **Test Steps** | 1. Open the class from the teacher dashboard (Class data is the default tab).<br>2. Read Class performance and the learner's card. |
 | **Test Data** | Class of the LP run; learner "Learner User" |
-| **Expected Result** | Class data (once updated): Average completed activities 40%, Activities completed above target score 2 /4, 85% Average score; the learner's card 4/10, 2/4, 85%. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking: 30% · 1 /3 · 100% and 3/10. |
+| **Expected Result** | Class data (once updated): Average completed activities 36%, Activities completed above target score 2 /4, 85% Average score; the learner's card 4/11, 2/4, 85%. (after the teacher marked the PS 70 / "Good", Suite 8b) Before marking: 27% · 1 /3 · 100% and 3/11. [2026-09-29] Was 40% / 4/10 before the Projects update (2026-09-25). |
 | **Remarks** | Confirmed live on production 2026-09-23. The class has one learner, so the class figures follow that learner's. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |
@@ -1038,7 +1038,7 @@ _none — automation-mechanics scenario: SOURCE pages the flashcard deck a hardc
 | **Preconditions** | The teacher has marked the run's learner's PS (TST_MRKQ_TC_2, Suite 8b). Teacher on Class data. |
 | **Test Steps** | 1. Switch on "Show progress details".<br>2. Read the learner's Practice Extra and Projects blocks. |
 | **Test Data** | Learner "Learner User" |
-| **Expected Result** | Practice Extra: Completed activities 4/4, above target 2/4, below target 0/4, 85%. Projects: Completed activities 0/5 (0 Gold medals, "-" average). Test: "This student has not activated the code yet". |
+| **Expected Result** | Practice Extra: Completed activities 4/4, above target 2/4, below target 0/4, 85%. Projects: Completed activities 0/6 (0 Gold medals, "-" average). Test: "This student has not activated the code yet". |
 | **Remarks** | Confirmed live on production 2026-09-23. The switch's checkbox is visually hidden — its label is clicked. From SOURCE toggleProgressBar / verifyTeacherAnalyticsBundleLevel. |
 | **Actual Result** | *(blank in design)* |
 | **Status** | Pass |

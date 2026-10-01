@@ -42,6 +42,36 @@
       "extends": "learningPath.json",
       "title": "Cambridge One – Learning Path Debug Report",
       "mode": "Debug run — reuses the previous run's accounts and class (creates nothing)"
+    },
+    "newLearningPath.json": {
+      "title": "Cambridge One – New Learning Path (Projects) Test Report",
+      "mode": "Full run — creates a new teacher, class and two learners (A and B)",
+      "dataFile": [
+        "testResources/testcaseData/ExperienceApp/{env}/newLearningPathData.json",
+        "testResources/testcaseData/ExperienceApp/{env}/learningPathData.json"
+      ],
+      "register": "test/Manual/C1App/NewLearningPath/NewLearningPath_test_cases.md",
+      "accounts": {
+        "Student": "C1.learnerLogin.email",
+        "Teacher": "C1.teacherLogin.email",
+        "Admin": "C1.adminLogin.email"
+      },
+      "testData": [
+        { "label": "Class", "path": "C1.lpClass.name" },
+        { "label": "Class key", "value": "{{run.lpClassKey}}" },
+        { "label": "Learner B", "value": "{{run.lpLearner2Email}}" },
+        { "label": "Group", "value": "{{run.lpGroupName}}" },
+        { "label": "Product", "path": "C1.lpClass.material" },
+        { "label": "Component", "path": "C1.nlpAccess.componentName" },
+        { "label": "School key (admin)", "path": "C1.adminNlp.schoolKey" },
+        { "label": "PS mark", "paths": ["C1.nlpMarking.score", "C1.nlpMarking.feedback"], "join": " / " },
+        { "label": "Group PS mark", "paths": ["C1.nlpGroupMarking.score", "C1.nlpGroupMarking.feedback"], "join": " / " }
+      ]
+    },
+    "newLearningPathDebug.json": {
+      "extends": "newLearningPath.json",
+      "title": "Cambridge One – New Learning Path (Projects) Debug Report",
+      "mode": "Debug run — reuses the previous run's accounts, class and group (creates nothing)"
     }
   }
 }

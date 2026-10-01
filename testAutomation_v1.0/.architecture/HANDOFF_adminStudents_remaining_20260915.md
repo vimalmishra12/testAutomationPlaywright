@@ -4,8 +4,8 @@
 **Start from:** latest `main`.
 
 > **Status [2026-09-18]:** Group A is DONE (commit `ff17661`) and the register was reconciled
-> (`dc5ab6b`). Live results live in `authoring-status.md` (`adminStudentsTab`, `adminStudentProfile`,
-> `adminBulkStudents`). This file now holds only the **remaining** work: Groups B, C, D.
+> (`dc5ab6b`). Live results live in `status/adminStudents.md` (`SLST`, `SPRF`,
+> `SBLK`; the single-file `authoring-status.md` before 2026-09-29). This file now holds only the **remaining** work: Groups B, C, D.
 
 > **Give this file to Claude at the start of a new session with no other context.**
 > Everything needed to plan and build the remaining Students-tab automation is below.
@@ -45,7 +45,7 @@
 ---
 
 ## 1. Current state
-See `authoring-status.md` for the live counts. What still matters for the remaining work:
+See `status/adminStudents.md` for the live counts. What still matters for the remaining work:
 - **Reusable existing page objects** (from the NEMO-24306 CSV work — reuse, do not duplicate):
   `createAdultStudentAccounts.page.js` and `createNewAccountsForChildren.page.js`.
 - `bulkStudents.page.js` now exists (choosers + bulk activation). The only SBLK CSV fixture so far is
@@ -56,7 +56,7 @@ See `authoring-status.md` for the live counts. What still matters for the remain
 ## 2. Scope — what is left
 
 **Not in scope:** the `[EXTRA — Phase 1 exclusion]` cases and the **Blocked** ones (see
-`authoring-status.md`). Student removal is gone from the product, so `SPRF_TC_19–22` wait on the
+`status/adminStudents.md`). Student removal is gone from the product, so `SPRF_TC_19–22` wait on the
 Jira answer (`admin-students-tab.md` §5 / §9.7). Group A (9 cases) is **done**.
 
 
@@ -106,7 +106,7 @@ existing students by username — modifies class membership) · `SBLK_TC_5` (inv
 2. **Group C** — only after the user confirms school, npm script and data creation.
 3. **Group D** — do not start.
 4. After each group: 2 consecutive clean runs, evidence audit of screenshots (Phase 2 exit checklist),
-   update `authoring-status.md`, the register (`.md` + `.xlsx`), `admin-students-tab.md`, and a
+   update `status/adminStudents.md` (replace its `▶ Now` line), the register (`.md` + `.xlsx`), `admin-students-tab.md`, and a
    walkthrough under `.architecture/walkthroughs/` (name = test file + date-time).
 5. Phase 3 (visual): the user deferred visual assessment for recent batches — ask before doing it.
 

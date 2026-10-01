@@ -192,6 +192,126 @@ module.exports = {
   },
 
   /**
+   * Opens the Cambridge One password reset e-mail for `emailAddress` and follows its reset link
+   * in the CURRENT tab, landing on /new-password?pwrt=...
+   * Caller must be logged into Mailsac (loginToMailsac).
+   *
+   * @param {string} emailAddress - the target user email
+   * @param {number} timeoutMs - timeout in milliseconds (defaults to 300000)
+   * @returns {Promise<{ mailFound: boolean, resetHref: string|null, landedUrl: string|null }>}
+   */
+  openPasswordResetLink: async function (emailAddress, timeoutMs) {
+    await logger.logInto(await stackTrace.get(), "Waiting for password reset mail for " + emailAddress);
+    var resetRow = action.getFilteredLocator(ms.messageRow, /reset.*password|password/i);
+    var deadline = Date.now() + (timeoutMs || 300000);
+    var found = false;
+    while (Date.now() < deadline) {
+      await this.openInbox(emailAddress);
+      if (true == (await action.isDisplayed(resetRow))) {
+        found = true;
+        break;
+      }
+      await browser.pause(5000);
+    }
+    if (!found) return { mailFound: false, resetHref: null, landedUrl: null };
+
+    var res = await action.click(resetRow);
+    if (true == res) res = await action.waitForDisplayed(ms.unblockContentBtn, 15000);
+    if (true != res) return { mailFound: true, resetHref: null, landedUrl: null };
+    var unblockHref = await action.getAttribute(ms.unblockContentBtn, "href");
+    if (typeof unblockHref === "string" && unblockHref.length > 0) {
+      await browser.url(new URL(unblockHref, "https://mailsac.com").href);
+      await action.waitForDocumentLoad();
+    }
+
+    await action.switchToFrame(ms.emailHtmlFrame);
+    var resetHref = null;
+    var resetAnchor = ms.resetAnchor;
+    if (true == (await action.waitForDisplayed(resetAnchor, 15000))) {
+      resetHref = await action.getAttribute(resetAnchor, "href");
+    }
+    await action.switchToParentFrame();
+    if (typeof resetHref !== "string" || resetHref.length === 0) {
+      return { mailFound: true, resetHref: null, landedUrl: null };
+    }
+
+    await browser.url(resetHref);
+    var landed = await action.waitForUrl(new RegExp(new URL(appUrl).host.replace(/\./g, "\\.")), 120000);
+    return { mailFound: true, resetHref: resetHref, landedOnApp: true == landed, landedUrl: await browser.getUrl() };
+  },
+
+  /**
+   * Opens the Cambridge One class invitation e-mail for `emailAddress` and follows its
+   * "View invite" link in the CURRENT tab, or returns the invite link URL.
+   * Caller must be logged into Mailsac (loginToMailsac).
+   *
+   * ADR-2026-09-29: The email template's "View invite" anchor href resolves to
+   * assets.cambridgeone.org/email/templates/...?appsBasepath=&orgId=&contextId=&invitationId=
+   * which is the rendered template URL, NOT the direct C1 signup URL. We parse its
+   * query params and reconstruct the real C1 invite URL:
+   *   {appsBasepath}/{orgId}/{context}/{contextId}/invitation/{invitationId}
+   */
+  openClassInviteLink: async function (emailAddress, timeoutMs) {
+    await logger.logInto(await stackTrace.get(), "Waiting for class invitation mail for " + emailAddress);
+    var inviteRow = action.getFilteredLocator(ms.messageRow, /invit|invited|class/i);
+    var deadline = Date.now() + (timeoutMs || 300000);
+    var found = false;
+    while (Date.now() < deadline) {
+      await this.openInbox(emailAddress);
+      if (true == (await action.isDisplayed(inviteRow))) {
+        found = true;
+        break;
+      }
+      await browser.pause(5000);
+    }
+    if (!found) return { mailFound: false, inviteHref: null, landedUrl: null };
+
+    var res = await action.click(inviteRow);
+    if (true == res) res = await action.waitForDisplayed(ms.unblockContentBtn, 15000);
+    if (true != res) return { mailFound: true, inviteHref: null, landedUrl: null };
+    var unblockHref = await action.getAttribute(ms.unblockContentBtn, "href");
+    if (typeof unblockHref === "string" && unblockHref.length > 0) {
+      await browser.url(new URL(unblockHref, "https://mailsac.com").href);
+      await action.waitForDocumentLoad();
+    }
+
+    await action.switchToFrame(ms.emailHtmlFrame);
+    var rawHref = null;
+    var inviteAnchor = ms.inviteAnchor;
+    if (true == (await action.waitForDisplayed(inviteAnchor, 15000))) {
+      rawHref = await action.getAttribute(inviteAnchor, "href");
+    }
+    await action.switchToParentFrame();
+    if (typeof rawHref !== "string" || rawHref.length === 0) {
+      return { mailFound: true, inviteHref: null, landedUrl: null };
+    }
+
+    // If the href points to the Cambridge One email template renderer (assets.cambridgeone.org),
+    // reconstruct the real C1 invite URL from the query params embedded in that URL.
+    var inviteHref = rawHref;
+    try {
+      var rawUrl = new URL(rawHref);
+      if (rawUrl.hostname.includes("assets.cambridgeone.org")) {
+        var appsBase = rawUrl.searchParams.get("appsBasepath") || appUrl.replace(/\/$/, "");
+        var orgId    = rawUrl.searchParams.get("orgId");
+        var ctx      = rawUrl.searchParams.get("context") || "class_enrollment";
+        var ctxId    = rawUrl.searchParams.get("contextId");
+        var invId    = rawUrl.searchParams.get("invitationId");
+        if (orgId && ctxId && invId) {
+          inviteHref = appsBase.replace(/\/$/, "") + "/" + orgId + "/" + ctx + "/" + ctxId + "/invitation/" + invId;
+          await logger.logInto(await stackTrace.get(), "Reconstructed C1 invite URL: " + inviteHref);
+        }
+      }
+    } catch (urlParseErr) {
+      await logger.logInto(await stackTrace.get(), "Could not parse invite href, using raw: " + rawHref, "warn");
+    }
+
+    await browser.url(inviteHref);
+    var landed = await action.waitForUrl(new RegExp(new URL(appUrl).host.replace(/\./g, "\\.")), 120000);
+    return { mailFound: true, inviteHref: inviteHref, landedOnApp: true == landed, landedUrl: await browser.getUrl() };
+  },
+
+  /**
    * Helper to extract complete rendered text from page and all iframes.
    */
   getEmailBodyText: async function () {

@@ -1,0 +1,239 @@
+{
+  "Suite1": {
+    "Name": "Batch 2 - Password Reset Confirmations & Login Links",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Navigate to Login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_4",
+        "description": "Click Forgotten your password link",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_RESE_TC_7",
+        "description": "Generic confirmation shown when registered email is submitted for password reset",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB2Data.json",
+            "jsonPath": "onboardingB2.resetPassword"
+          }
+        ]
+      },
+      {
+        "id": "TST_RESE_TC_4",
+        "description": "Back to login from confirmation screen",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_4",
+        "description": "Click Forgotten your password link",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_RESE_TC_8",
+        "description": "Generic confirmation shown when unregistered email is submitted for password reset",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB2Data.json",
+            "jsonPath": "onboardingB2.resetPassword"
+          }
+        ]
+      },
+      {
+        "id": "TST_RESE_TC_4",
+        "description": "Back to login from confirmation screen",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_6",
+        "description": "Don't have an account yet link navigates to Sign up role selection",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite2": {
+    "Name": "Batch 2 - Themed Login Portals",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_8",
+        "description": "Primary login portal loads with brand logo, primary header, submit button and footer links",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_9",
+        "description": "Secondary login portal loads with brand logo, secondary header, submit button and footer links",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": []
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite3": {
+    "Name": "Batch 2 - Invalid Login & Role-Based Logins",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Navigate to Login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_8",
+        "description": "Verify generic error alert is shown when invalid password is submitted",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB2Data.json",
+            "jsonPath": "onboardingB2.invalidLogin"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_1",
+        "description": "Enter valid student username",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_2",
+        "description": "Enter valid student password",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/logindata.json",
+            "jsonPath": "C1.login.user.validStudent1"
+          }
+        ]
+      },
+      {
+        "id": "TST_LOGI_TC_5",
+        "description": "Click Login and verify student dashboard",
+        "testFile": "./test/ExperienceApp/login.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_1",
+        "description": "Open user dropdown",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_APPS_TC_2",
+        "description": "Logout and verify return to landing page",
+        "testFile": "./test/ExperienceApp/appShell.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Navigate to Login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_14",
+        "description": "Admin login via standard form lands on admin dashboard",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB2Data.json",
+            "jsonPath": "onboardingB2.adminLogin"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  },
+  "Suite4": {
+    "Name": "Batch 2 - Account Lockout",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_3",
+        "description": "Navigate to Login page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_LOGI_TC_9",
+        "description": "Verify account lockout after 5 consecutive failed login attempts",
+        "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB2Data.json",
+            "jsonPath": "onboardingB2.lockout"
+          }
+        ]
+      }
+    ],
+    "AfterEach": [],
+    "After": []
+  }
+}

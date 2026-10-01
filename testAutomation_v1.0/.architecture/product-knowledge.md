@@ -30,6 +30,7 @@
 | ↳ **Staff tab** — list, profile, admin rights, removal, bulk invitations — `STFL` / `STFP` / `STFB` | `ExperienceApp` | [`ExperienceApp/admin-staff-tab.md`](product-knowledge/ExperienceApp/admin-staff-tab.md) |
 | ↳ **Library tab** — list, sort, search, School licence, product materials view — `LIBR` / `UMBP` | `ExperienceApp` | [`ExperienceApp/admin-library-tab.md`](product-knowledge/ExperienceApp/admin-library-tab.md) |
 | ↳ **Generic / shell** — header, footer, language, notifications, My profile, school key, organisations, teacher view, setup wizard — `ASHL` / `FOOT` / `MYPR` / `SADB` / `SRQS` / `SKEY` / `INVI` | `ExperienceApp` | [`ExperienceApp/admin-generic-shell.md`](product-knowledge/ExperienceApp/admin-generic-shell.md) |
+| ↳ **Reports tab** — list, empty state, Create report flow — `MRPT` | `ExperienceApp` | [`ExperienceApp/admin-reports-tab.md`](product-knowledge/ExperienceApp/admin-reports-tab.md) |
 | ↳ Class grade settings — `CGST` | `ExperienceApp` | [`ExperienceApp/admin-class-grade-settings.md`](product-knowledge/ExperienceApp/admin-class-grade-settings.md) |
 | ↳ Grading scale / category details pages | `ExperienceApp` | [`ExperienceApp/admin-grading-details-pages.md`](product-knowledge/ExperienceApp/admin-grading-details-pages.md) |
 | ↳ Bulk new account creation via CSV — `NEMO24306` | `ExperienceApp` | [`ExperienceApp/admin-bulk-account-csv.md`](product-knowledge/ExperienceApp/admin-bulk-account-csv.md) |
@@ -37,6 +38,7 @@
 | ↳ Signup, e-mail verification, teacher account setup — `SNUP` / `TSET` | `ExperienceApp` | [`ExperienceApp/onboarding.md`](product-knowledge/ExperienceApp/onboarding.md) |
 | ↳ Teacher dashboard — create a class, invite; learner accepts — `ENTE` / `CREA` / `INVI` / `DASH` | `ExperienceApp` | [`ExperienceApp/teacher-dashboard-class-page.md`](product-knowledge/ExperienceApp/teacher-dashboard-class-page.md) |
 | ↳ Learning Path player (Practice Extra) — `PEXT` | `ExperienceApp` | [`ExperienceApp/learning-path-player.md`](product-knowledge/ExperienceApp/learning-path-player.md) |
+| ↳ New Learning Path (NLP — "Projects"), class groups — `NLPP` / `CGRP` | `ExperienceApp` | [`ExperienceApp/new-learning-path.md`](product-knowledge/ExperienceApp/new-learning-path.md) |
 | ↳ Class Materials — bundle & component launch — `CMAT` | `ExperienceApp` | [`ExperienceApp/foc-class-materials.md`](product-knowledge/ExperienceApp/foc-class-materials.md) |
 | ↳ Resource Bank — `RBNK` | `ExperienceApp` | [`ExperienceApp/foc-resource-bank.md`](product-knowledge/ExperienceApp/foc-resource-bank.md) |
 | ↳ eBook reader — shell, TOC, reader tools — `EBOO` `DRAW` `PLAY` `TIME` `SHOW` `KBOA` | `ExperienceApp` | [`ExperienceApp/foc-ebook-reader.md`](product-knowledge/ExperienceApp/foc-ebook-reader.md) |

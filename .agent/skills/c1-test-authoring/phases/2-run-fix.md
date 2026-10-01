@@ -1,7 +1,7 @@
 # Phase 2 — Run & Fix (make the suite pass deterministically)
 
 **Goal:** the execution file runs green, twice in a row, from real output. Entry condition: Phase 1
-complete (check `.architecture/authoring-status.md`; verify the artifacts actually exist).
+complete (check `.architecture/status/<feature>.md`; verify the artifacts actually exist).
 
 ## Steps
 
@@ -102,9 +102,10 @@ Two causes, both mechanical:
       any authorised workaround is marked `// WORKAROUND — <ref>`.
 - [ ] Any missing/invalid test data was raised with the user rather than silently substituted.
 - [ ] All applied fixes were proposed and confirmed first; inline comments added per AGENTS.md.
-- [ ] Update `.architecture/authoring-status.md` — mark Phase 2 ✅ (<date>, <N>/<N> passing, 2 consecutive
-      clean runs) per that file's **Block format** section, and record any On Hold / Blocked /
-      Not built cases there. Status + open items only — fix history goes in the walkthrough.
+- [ ] Update `.architecture/status/<feature>.md` — mark Phase 2 ✅ (<date>, <N>/<N> passing, 2
+      consecutive clean runs) per the **Status file format** in `.architecture/authoring-status.md`,
+      record any On Hold / Blocked / Not built cases, and set `▶ Now` to "Phase 2 done · Next:
+      Phase 3". Status + open items only — fix history goes in the walkthrough.
 
 - [ ] Session walkthrough written/appended.
 - [ ] Tell the user: Phase 2 complete → **Phase 3 (visual assessment) is still pending and

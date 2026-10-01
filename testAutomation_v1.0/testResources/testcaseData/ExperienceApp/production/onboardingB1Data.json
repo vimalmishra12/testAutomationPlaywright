@@ -1,0 +1,19 @@
+{
+  "onboardingB1": {
+    "env": "production",
+    "language": {
+      "lang": "Español",
+      "revertLang": "English"
+    },
+    "login": {
+      "password": "TestPassword123"
+    },
+    "roleSelection": {
+      "role": "Learner"
+    },
+    "ageGateUnder": {
+      "country": "Spain",
+      "age": "12"
+    }
+  }
+}

@@ -466,3 +466,15 @@ wizard stayed on the intro. Wait out `#loader-container .loader`, settle, click 
 
 > Submitting raises a **real institution request into a human queue**, not withdrawable from the UI.
 > `TST_SRQS_TC_2` is Blocked at design time for that reason.
+
+### `SADB_TC_7` — grounded design, not built `[grounded read-only 2026-09-14, nothing created; moved here from authoring-status.md 2026-09-29]`
+
+`TST_SADB_TC_7` creates a real class, so it needs its own data-owning suite on `KNF-XRD-QVE` and its
+own npm script (ask the user first). What the grounding found:
+
+- Do NOT use the per-school "Create class" (`a[qid=tDashboard-ncls-btn-1]`) — it exists only while the teacher has no class in that school.
+- Use the global `a.create-class` (beside "Active classes") → `/dashboard/teacher/create-class` "Enter class details": name `t-cc-cd-inpt-1` (**maxlength 50**) · start `t-cc-cd-inpt-2` · end `t-cc-cd-inpt-3` · school `#selected-school-dropdown[qid=t-cc-cd-inpt-4]` (**readonly**; focus opens `li.dropdown-item`; match by startsWith "3 July Test School 2" — exactly 1 item; **never click "Add a school / Join using a school key"**) · Cancel `t-cc-cd-btn-1` · Next `t-cc-cd-btn-2` (natively disabled). Where Cancel lands is unresolved (a synthetic click reached the admin dashboard; a real click stayed put) — do not rely on it.
+- Later steps (materials → "Add later" → success) are NOT grounded — the first run grounds them.
+- Reuse `createNewClass.page.js` `click_next_btn` / `click_addLater_Btn` / `getData_successfullyCreated`, but NOT `set_startDate` / `set_endDate` (hardcoded 2024 dates) or `set_enterYourSchool` (types into a readonly field).
+- Name `AutoClass_TeacherView_<RUN_ID>`. Verify in KNF's admin Classes tab by polling (creation is async, ~24 s to >90 s). Cleanup: CGST's `sweepClassesNamed` pattern (`adminClassGradeSettings.test.js`) — sweep BEFORE creating, bounded loop, assert every step.
+- Own exec file (e.g. `adminGenericCreate.json`) + own npm script (needs user confirmation).
