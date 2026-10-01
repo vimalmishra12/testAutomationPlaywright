@@ -1,0 +1,355 @@
+{
+  "Suite1": {
+    "Name": "Batch 3 - Registration Form Validations",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_2",
+        "description": "Navigate to role-selection page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SNUP_TC_77",
+        "description": "Verify validation errors and Terms alert on Teacher registration form",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.teacherValidation"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_75",
+        "description": "Verify Parent form does not submit when guardian checkbox is left unchecked",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.parentValidation"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite2": {
+    "Name": "Batch 3 - Learner Full Sign Up & Verification",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_LAND_TC_2",
+        "description": "Navigate to role-selection page",
+        "testFile": "./test/ExperienceApp/landing.test.js",
+        "testData": []
+      },
+      {
+        "id": "TST_SNUP_TC_59",
+        "description": "Select Learner and confirm role",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.learnerSignup.role"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_63",
+        "description": "Pass learner age gate (India, 18+)",
+        "testFile": "./test/ExperienceApp/signup.test.js",
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.learnerSignup.ageGate"
+          }
+        ]
+      },
+      {
+        "id": "TST_SNUP_TC_72",
+        "description": "Verify locked location, submit learner signup, verify via Mailsac, and reach dashboard",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.learnerSignup"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite3": {
+    "Name": "Batch 3 - Teacher Full Sign Up & Verification",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_73",
+        "description": "Verify no age gate, submit teacher signup, verify via Mailsac, and reach dashboard",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.teacherSignup"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite4": {
+    "Name": "Batch 3 - Parent Full Sign Up & Verification",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SNUP_TC_74",
+        "description": "Verify guardian checkbox, submit parent signup, verify via Mailsac, and reach dashboard",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.parentSignup"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite5": {
+    "Name": "Batch 3 - Password Reset & Login Verification",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_RESE_TC_9",
+        "description": "Verify the user can log in with the new password when it is set through the e-mailed reset link",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 480000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.passwordReset"
+          }
+        ]
+      },
+      {
+        "id": "TST_RESE_TC_10",
+        "description": "Verify a fresh login succeeds with the newly reset password after logging out",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.freshLoginAfterReset"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite6": {
+    "Name": "Batch 3 - Parent Child Account Creation & First Login",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_PCHD_TC_2",
+        "description": "Verify 'Next' on 'Create my child's account' stays blocked until every required field and consent checkbox are complete",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.childValidation"
+          }
+        ]
+      },
+      {
+        "id": "TST_PCHD_TC_1",
+        "description": "Verify a Parent can create a child's account from 'My children'",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.childCreation"
+          }
+        ]
+      },
+      {
+        "id": "TST_PCHD_TC_3",
+        "description": "Verify a newly created child's account reaches a learner dashboard when it logs in for the first time",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 120000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.childLogin"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite7": {
+    "Name": "Batch 3 - Class Invites (Not-Yet-Registered & Logged-In Learner)",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_INVI_TC_14",
+        "description": "Verify a not-yet-registered invitee can sign up from the class invite e-mail's 'View invite' link",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 540000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.classInviteNotRegistered"
+          }
+        ]
+      },
+      {
+        "id": "TST_INVI_TC_15",
+        "description": "Verify a logged-in, already-registered learner lands on their own dashboard when opening a class invite link",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 300000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.classInviteExistingLearner"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  },
+  "Suite8": {
+    "Name": "Batch 3 - Staff Set Temporary Password & Student First Login",
+    "TestCaseRepo": [
+      "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+    ],
+    "Before": [
+      {
+        "id": "launchUrl",
+        "description": "",
+        "testFile": "./core/runner/launchUrl.js",
+        "testData": []
+      }
+    ],
+    "BeforeEach": [],
+    "Test": [
+      {
+        "id": "TST_SPRF_TC_24",
+        "description": "Verify an Admin can set a temporary password for a student from Students tab Action Menu / Manage profile",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.adminSetTempPassword"
+          }
+        ]
+      },
+      {
+        "id": "TST_CREA_TC_31",
+        "description": "Verify a Teacher can set a temporary password for an enrolled student from the class roster's 'Change password'",
+        "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+        "timeout": 180000,
+        "testData": [
+          {
+            "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB3Data.json",
+            "jsonPath": "onboardingB3.teacherSetTempPassword"
+          }
+        ]
+      }
+    ],
+    "After": [],
+    "AfterEach": []
+  }
+}
+

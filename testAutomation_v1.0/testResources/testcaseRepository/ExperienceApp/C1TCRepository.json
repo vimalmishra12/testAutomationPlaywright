@@ -4386,6 +4386,109 @@
       ]
     },
     {
+      "modulename": "OnboardingBatch1",
+      "moduleId": "ONBD",
+      "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+      "testcase": [
+        {
+          "id": "TST_LAND_TC_6",
+          "description": "Pre-login homepage elements presence",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LAND_TC_7",
+          "description": "Language switcher changes language on pre-login homepage",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_FOOT_TC_4",
+          "description": "Our approach opens in new tab and refocuses",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_FOOT_TC_6",
+          "description": "FAQs opens in new tab and refocuses",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_FOOT_TC_8",
+          "description": "Help opens in new tab and refocuses",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_7",
+          "description": "Blank login form shows required field errors",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_10",
+          "description": "Show password toggle reveals and re-masks password",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_65",
+          "description": "Role selection page shows 3 roles and Next disabled",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_66",
+          "description": "Role confirm dialog names selected role",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_67",
+          "description": "No, go back closes dialog and keeps role",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_68",
+          "description": "Login on role selection page navigates to Login form",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_69",
+          "description": "Learner role leads to age and location check screen",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_71",
+          "description": "Learner under-age threshold options verification",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_70",
+          "description": "Under-age learner self-registration blocked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_76",
+          "description": "Learner registration form blank submission errors",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_78",
+          "description": "Login link on registration form navigates to Login form",
+          "tags": "P2",
+          "visualTest": false
+        }
+      ]
+    },
+    {
       "modulename": "Presentation Plus book-to-book page mapping",
       "moduleId": "EMAP",
       "testFile": "./test/ExperienceApp/ebookMapping.test.js",
@@ -4415,6 +4518,168 @@
           "visualTest": false
         }
       ]
+    },
+    {
+      "modulename": "OnboardingBatch2",
+      "moduleId": "ONBD2",
+      "testFile": "./test/ExperienceApp/onboardingBatch2.test.js",
+      "testcase": [
+        {
+          "id": "TST_RESE_TC_7",
+          "description": "Generic confirmation shown when registered email is submitted for password reset",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_8",
+          "description": "Generic confirmation shown when unregistered email is submitted for password reset",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_4",
+          "description": "Back to login from confirmation screen",
+          "tags": "P2",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_6",
+          "description": "Don't have an account yet link navigates to Sign up role selection",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LAND_TC_8",
+          "description": "Primary login portal loads with brand logo, primary header, submit button and footer links",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LAND_TC_9",
+          "description": "Secondary login portal loads with brand logo, secondary header, submit button and footer links",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_8",
+          "description": "Verify the generic credentials error is shown when the password is wrong",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_14",
+          "description": "Verify an Admin reaches the admin dashboard when logging in through the standard Log in form",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_9",
+          "description": "Verify the account is temporarily locked when 5 consecutive login attempts fail",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
+    },
+    {
+      "modulename": "OnboardingBatch3",
+      "moduleId": "ONBD3",
+      "testFile": "./test/ExperienceApp/onboardingBatch3.test.js",
+      "testcase": [
+        {
+          "id": "TST_SNUP_TC_77",
+          "description": "Verify validation errors and the Terms alert are shown when the Teacher form is submitted incomplete",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_75",
+          "description": "Verify the Parent form does not submit when the 'parent or guardian' checkbox is left unchecked",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_72",
+          "description": "Verify a Learner (16+, India) account is created and reaches the learner dashboard when the form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_73",
+          "description": "Verify a Teacher account is created and reaches the teacher dashboard when the registration form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SNUP_TC_74",
+          "description": "Verify a Parent account is created and reaches the parent dashboard when the registration form is submitted and verified",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_9",
+          "description": "Verify the user can log in with the new password when it is set through the e-mailed reset link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_RESE_TC_10",
+          "description": "Verify a fresh login succeeds with the newly reset password after logging out",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_2",
+          "description": "Verify 'Next' on 'Create my child's account' stays blocked until every required field and the consent checkbox are complete",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_1",
+          "description": "Verify a Parent can create a child's account from 'My children'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_PCHD_TC_3",
+          "description": "Verify a newly created child's account reaches a learner dashboard when it logs in for the first time",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_14",
+          "description": "Verify a not-yet-registered invitee can sign up from the class invite e-mail's 'View invite' link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_INVI_TC_15",
+          "description": "Verify a logged-in, already-registered learner lands on their own dashboard when opening a class invite link",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_SPRF_TC_24",
+          "description": "Verify an Admin can set a temporary password for a student from the Students tab row's Action Menu",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_CREA_TC_31",
+          "description": "Verify a Teacher can set a temporary password for an enrolled student from the class roster's 'Change password'",
+          "tags": "P1",
+          "visualTest": false
+        },
+        {
+          "id": "TST_LOGI_TC_18",
+          "description": "Verify a student who logs in with a temporary password must set a new password before reaching the dashboard",
+          "tags": "P1",
+          "visualTest": false
+        }
+      ]
     }
   ]
 }
+
+
+
+

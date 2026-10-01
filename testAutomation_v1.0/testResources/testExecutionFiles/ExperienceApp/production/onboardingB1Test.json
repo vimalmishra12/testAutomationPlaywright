@@ -1,0 +1,296 @@
+{
+    "Suite1": {
+        "Name": "Batch 1 - Homepage & Footer Links",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [
+            {
+                "id": "launchUrl",
+                "description": "",
+                "testFile": "./core/runner/launchUrl.js",
+                "testData": []
+            }
+        ],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "TST_LAND_TC_6",
+                "description": "Pre-login homepage elements presence",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_LAND_TC_7",
+                "description": "Language switcher changes language on pre-login homepage",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.language"
+                    }
+                ]
+            },
+            {
+                "id": "TST_FOOT_TC_1",
+                "description": "Terms of Use",
+                "testFile": "./test/ExperienceApp/footer.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_2",
+                "description": "Privacy Notice",
+                "testFile": "./test/ExperienceApp/footer.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_3",
+                "description": "Accessibility",
+                "testFile": "./test/ExperienceApp/footer.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_7",
+                "description": "Cambridge One for Schools",
+                "testFile": "./test/ExperienceApp/footer.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_4",
+                "description": "Our approach - new tab",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_6",
+                "description": "FAQs - new tab",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_FOOT_TC_8",
+                "description": "Help - new tab",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    },
+    "Suite2": {
+        "Name": "Batch 1 - Login Form Validations",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [
+            {
+                "id": "launchUrl",
+                "description": "",
+                "testFile": "./core/runner/launchUrl.js",
+                "testData": []
+            }
+        ],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "TST_LAND_TC_3",
+                "description": "Navigate to Login page",
+                "testFile": "./test/ExperienceApp/landing.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_LOGI_TC_7",
+                "description": "Blank login validation errors",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_LOGI_TC_10",
+                "description": "Show password toggle",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.login"
+                    }
+                ]
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    },
+    "Suite3": {
+        "Name": "Batch 1 - Reset Password Navigation & Validations",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [
+            {
+                "id": "launchUrl",
+                "description": "",
+                "testFile": "./core/runner/launchUrl.js",
+                "testData": []
+            }
+        ],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "TST_LAND_TC_3",
+                "description": "Navigate to Login page",
+                "testFile": "./test/ExperienceApp/landing.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_LOGI_TC_4",
+                "description": "Forgotten your password link",
+                "testFile": "./test/ExperienceApp/login.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_RESE_TC_2",
+                "description": "Blank reset password warning message",
+                "testFile": "./test/ExperienceApp/resetPassword.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/appLangEN.json",
+                        "jsonPath": [
+                            "C1.appContent.resetPassword"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "TST_RESE_TC_4",
+                "description": "Back to login link",
+                "testFile": "./test/ExperienceApp/resetPassword.test.js",
+                "testData": []
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    },
+    "Suite4": {
+        "Name": "Batch 1 - Sign Up Role Selection Validations",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [
+            {
+                "id": "launchUrl",
+                "description": "",
+                "testFile": "./core/runner/launchUrl.js",
+                "testData": []
+            }
+        ],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "TST_LAND_TC_2",
+                "description": "Navigate to Sign up page",
+                "testFile": "./test/ExperienceApp/landing.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_SNUP_TC_65",
+                "description": "Role selection page shows 3 roles and Next disabled",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_SNUP_TC_66",
+                "description": "Role confirm dialog names selected role",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.roleSelection"
+                    }
+                ]
+            },
+            {
+                "id": "TST_SNUP_TC_67",
+                "description": "No, go back closes dialog and keeps role",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.roleSelection"
+                    }
+                ]
+            },
+            {
+                "id": "TST_SNUP_TC_68",
+                "description": "Login on role selection page navigates to Login form",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    },
+    "Suite5": {
+        "Name": "Batch 1 - Learner Age Gate & Registration Validation",
+        "TestCaseRepo": [
+            "./testResources/testcaseRepository/ExperienceApp/C1TCRepository.json"
+        ],
+        "Before": [
+            {
+                "id": "launchUrl",
+                "description": "",
+                "testFile": "./core/runner/launchUrl.js",
+                "testData": []
+            }
+        ],
+        "BeforeEach": [],
+        "Test": [
+            {
+                "id": "TST_LAND_TC_2",
+                "description": "Navigate to Sign up page",
+                "testFile": "./test/ExperienceApp/landing.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_SNUP_TC_69",
+                "description": "Learner role leads to age check screen",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.roleSelection"
+                    }
+                ]
+            },
+            {
+                "id": "TST_SNUP_TC_71",
+                "description": "Learner under-age threshold options verification",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_SNUP_TC_70",
+                "description": "Under-age learner self-registration blocked",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": [
+                    {
+                        "dataFile": "./testResources/testcaseData/ExperienceApp/production/onboardingB1Data.json",
+                        "jsonPath": "onboardingB1.ageGateUnder"
+                    }
+                ]
+            },
+            {
+                "id": "TST_SNUP_TC_76",
+                "description": "Learner registration form blank submission errors",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            },
+            {
+                "id": "TST_SNUP_TC_78",
+                "description": "Login link on registration form navigates to Login form",
+                "testFile": "./test/ExperienceApp/onboardingBatch1.test.js",
+                "testData": []
+            }
+        ],
+        "AfterEach": [],
+        "After": []
+    }
+}

@@ -1,0 +1,142 @@
+{
+  "onboardingB3": {
+    "teacherValidation": {
+      "email": "not-an-email",
+      "password": "abc"
+    },
+    "parentValidation": {
+      "firstName": "TestParent",
+      "lastName": "AutoUser",
+      "email": "parent-probe-not-created@mailsac.com",
+      "password": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}",
+      "location": "India"
+    },
+    "learnerSignup": {
+      "role": {
+        "role": "Learner",
+        "expectedScreen": "ageGate"
+      },
+      "ageGate": {
+        "country": "India",
+        "age": "18"
+      },
+      "form": {
+        "firstName": "TestLearner",
+        "lastName": "AutoUser",
+        "email": "{{run.onbLearnerEmail}}",
+        "password": "{{env.C1_PROD_LEARNERFORM_PASSWORD}}",
+        "country": "India"
+      },
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "teacherSignup": {
+      "form": {
+        "firstName": "TestTeacher",
+        "lastName": "AutoUser",
+        "email": "{{run.onbTeacherEmail}}",
+        "password": "{{env.C1_PROD_TEACHERFORM_PASSWORD}}",
+        "country": "India"
+      },
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_TEACHERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "parentSignup": {
+      "form": {
+        "firstName": "TestParent",
+        "lastName": "AutoUser",
+        "email": "{{run.onbParentEmail}}",
+        "password": "{{env.C1_PROD_LEARNERFORM_PASSWORD}}",
+        "country": "India"
+      },
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "passwordReset": {
+      "email": "{{run.onbLearnerEmail}}",
+      "newPassword": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}",
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "freshLoginAfterReset": {
+      "email": "{{run.onbLearnerEmail}}",
+      "newPassword": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}"
+    },
+    "childValidation": {
+      "parentEmail": "{{run.onbParentEmail}}",
+      "parentPassword": "{{env.C1_PROD_LEARNERFORM_PASSWORD}}",
+      "firstName": "Alex",
+      "lastName": "Junior",
+      "birthMonth": "6",
+      "birthYear": "2016"
+    },
+    "childCreation": {
+      "parentEmail": "{{run.onbParentEmail}}",
+      "parentPassword": "{{env.C1_PROD_LEARNERFORM_PASSWORD}}",
+      "firstName": "Alex",
+      "lastName": "Junior",
+      "birthMonth": "6",
+      "birthYear": "2016",
+      "username": "{{run.onbChildUsername}}",
+      "password": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}"
+    },
+    "childLogin": {
+      "username": "{{run.onbChildUsername}}",
+      "password": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}"
+    },
+    "classInviteNotRegistered": {
+      "teacherEmail": "comprotestuser+prodvmtea1@gmail.com",
+      "teacherPassword": "{{env.C1_PROD_VALIDINSTRUCTORUSER1_PASSWORD}}",
+      "inviteeEmail": "{{run.onbInviteeEmail}}",
+      "firstName": "Alex",
+      "lastName": "Invitee",
+      "password": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}",
+      "location": "India",
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "classInviteExistingLearner": {
+      "teacherEmail": "comprotestuser+prodvmtea1@gmail.com",
+      "teacherPassword": "{{env.C1_PROD_VALIDINSTRUCTORUSER1_PASSWORD}}",
+      "existingLearnerEmail": "{{run.onbInviteeEmail}}",
+      "learnerPassword": "{{env.C1_PROD_ACCEPTANCESTUDENT_PASSWORD}}",
+      "mailsac": {
+        "mailsacUser": "comproqatest21@gmail.com",
+        "mailsacPassword": "{{env.C1_PROD_LEARNERVERIFY_PASSWORD}}",
+        "mailTimeoutMs": 300000
+      }
+    },
+    "adminSetTempPassword": {
+      "adminEmail": "prod_admin_mqa@yopmail.com",
+      "adminPassword": "{{env.C1_PROD_ADMINLOGIN_PASSWORD}}",
+      "temporaryPassword": "{{run.onbTempPassword}}",
+      "adminLearnersUrl": "https://www.cambridgeone.org/admin/admin/org_mqa-sierra-prod1/learner"
+    },
+    "teacherSetTempPassword": {
+      "teacherEmail": "comprotestuser+prodvmtea1@gmail.com",
+      "teacherPassword": "{{env.C1_PROD_VALIDINSTRUCTORUSER1_PASSWORD}}",
+      "temporaryPassword": "{{run.onbTempPassword}}"
+    },
+    "studentTempPasswordLogin": {
+      "username": "{{run.onbInviteeEmail}}",
+      "temporaryPassword": "{{run.onbTempPassword}}",
+      "newPassword": "{{run.onbNewPassword}}"
+    }
+  }
+}
+
